@@ -42,8 +42,7 @@ import cmk.gui.inventory as inventory
 from cmk.gui.i18n import _
 from cmk.gui.globals import g, html
 from cmk.gui.htmllib import HTML
-
-from cmk.gui.valuespec import Checkbox, Hostname
+from cmk.gui.valuespec import Dictionary, Checkbox, Hostname
 
 from cmk.gui.exceptions import MKUserError
 from cmk.gui.plugins.visuals import (
@@ -181,6 +180,15 @@ def declare_inv_column(invpath, datatype, title, short=None):
         "title": invpath == "." and _("Inventory Tree") or (_("Inventory") + ": " + title),
         "columns": ["host_inventory", "host_structured_status"],
         "options": ["show_internal_tree_paths"],
+        "params": Dictionary(title=_("Report options"),
+                             elements=[
+                                 ("use_short",
+                                  Checkbox(
+                                      title=_("Use short title in reports header"),
+                                      default_value=False,
+                                  )),
+                             ],
+                             required_keys=['use_short']),
         # Only leaf nodes can be shown in reports. There is currently no way to render trees.
         # The HTML code would simply be stripped by the default rendering mechanism which does
         # not look good for the HW/SW inventory tree
@@ -316,34 +324,25 @@ def inv_paint_generic(v):
 
 @decorate_inv_paint
 def inv_paint_hz(hz):
-    if hz < 10:
-        return "number", "%.2f" % hz
-    elif hz < 100:
-        return "number", "%.1f" % hz
-    elif hz < 1500:
-        return "number", "%.0f" % hz
-    elif hz < 1000000:
-        return "number", "%.1f kHz" % (hz / 1000.0)
-    elif hz < 1000000000:
-        return "number", "%.1f MHz" % (hz / 1000000.0)
-    return "number", "%.2f GHz" % (hz / 1000000000.0)
+    return "number", cmk.utils.render.fmt_number_with_precision(hz, drop_zeroes=False, unit="Hz")
 
 
 @decorate_inv_paint
 def inv_paint_bytes(b):
     if b == 0:
         return "number", "0"
-
-    units = ['B', 'kB', 'MB', 'GB', 'TB']
-    i = 0
-    while b % 1024 == 0 and i + 1 < len(units):
-        b = int(b / 1024.0)
-        i += 1
-    return "number", "%d %s" % (b, units[i])
+    return "number", cmk.utils.render.fmt_bytes(b, precision=0)
 
 
 @decorate_inv_paint
 def inv_paint_size(b):
+    return "number", cmk.utils.render.fmt_bytes(b)
+
+
+@decorate_inv_paint
+def inv_paint_bytes_rounded(b):
+    if b == 0:
+        return "number", "0"
     return "number", cmk.utils.render.fmt_bytes(b)
 
 
@@ -361,41 +360,8 @@ def inv_paint_count(b):
 
 
 @decorate_inv_paint
-def inv_paint_bytes_rounded(b):
-    if b == 0:
-        return "number", "0"
-
-    units = ['B', 'kB', 'MB', 'GB', 'TB']
-    i = len(units) - 1
-    fac = 1024**(len(units) - 1)
-    while b < fac * 1.5 and i > 0:
-        i -= 1
-        fac = fac / 1024.0
-
-    if i:
-        return "number", "%.2f&nbsp;%s" % (b / fac, units[i])  # fixed: true-division
-    return "number", "%d&nbsp;%s" % (b, units[0])
-
-
-def _nic_speed_human_readable(bits_per_second):
-    if bits_per_second == 10000000:
-        return "10 Mbit/s"
-    elif bits_per_second == 100000000:
-        return "100 Mbit/s"
-    elif bits_per_second == 1000000000:
-        return "1 Gbit/s"
-    elif bits_per_second < 1500:
-        return "%d bit/s" % bits_per_second
-    elif bits_per_second < 1000000:
-        return "%s Kbit/s" % cmk.utils.render.drop_dotzero(bits_per_second / 1000.0, digits=1)
-    elif bits_per_second < 1000000000:
-        return "%s Mbit/s" % cmk.utils.render.drop_dotzero(bits_per_second / 1000000.0, digits=2)
-    return "%s Gbit/s" % cmk.utils.render.drop_dotzero(bits_per_second / 1000000000.0, digits=2)
-
-
-@decorate_inv_paint
 def inv_paint_nic_speed(bits_per_second):
-    return "number", _nic_speed_human_readable(int(bits_per_second))
+    return "number", cmk.utils.render.fmt_nic_speed(bits_per_second)
 
 
 @decorate_inv_paint

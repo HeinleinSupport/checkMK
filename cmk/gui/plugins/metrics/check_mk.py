@@ -6189,6 +6189,7 @@ metric_info['pending_requests'] = {
     "unit": "count",
     "color": "16/a",
 }
+
 metric_info['unacknowledged_requests'] = {
     "title": _("Unacknowledged requests"),
     "unit": "count",
@@ -6204,6 +6205,24 @@ metric_info['application_pending_requests'] = {
 metric_info['epoch_objects'] = {
     "title": _("Epoch objects"),
     "unit": "count",
+    "color": "42/a",
+}
+
+metric_info['graylog_input'] = {
+    "title": _("Input traffic"),
+    "unit": "bytes",
+    "color": "16/b",
+}
+
+metric_info['graylog_output'] = {
+    "title": _("Output traffic"),
+    "unit": "bytes",
+    "color": "23/a",
+}
+
+metric_info['graylog_decoded'] = {
+    "title": _("Decoded traffic"),
+    "unit": "bytes",
     "color": "42/a",
 }
 
@@ -8927,6 +8946,19 @@ perfometer_info.append({
 })
 
 perfometer_info.append({
+    "type": "linear",
+    "segments": ["mem_used"],
+    "total": "mem_used:max",
+})
+
+perfometer_info.append({
+    "type": "logarithmic",
+    "metric": "mem_used",
+    "half_value": GB,
+    "exponent": 4.0,
+})
+
+perfometer_info.append({
     "type": "logarithmic",
     "metric": "time_offset",
     "half_value": 1.0,
@@ -9079,12 +9111,6 @@ perfometer_info.append({
 perfometer_info.append({
     "type": "linear",
     "segments": ["sort_overflow"],
-})
-
-perfometer_info.append({
-    "type": "linear",
-    "segments": ["mem_used"],
-    "total": "mem_used:max",
 })
 
 perfometer_info.append({
