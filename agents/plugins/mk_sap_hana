@@ -492,13 +492,14 @@ function do_query () {
 
 # pgrep might not be available on older distros:
 # shellcheck disable=SC2009
-ps -efw | grep "[H]DB.*sapstartsrv" | while read -r line; do
+ps -efw | grep -E "[H]DB.*sapstartsrv|[t]race/hdb" | while read -r line; do
     # 'sapstartsrv' may have different base paths:
     # /hana/shared/ABC/HDB10/exe/sapstartsrv pf=/hana/shared/ABC/profile/ABC_HDB10_FOOBAR -D -u USER
     # /usr/sap/ABC/HDB10/exe/sapstartsrv pf=/hana/shared/ABC/profile/ABC_HDB10_FOOBAR -D -u USER
+    # /usr/sap/ABC/HDB10/ardag1dbdv1/trace/hdb.sapABC_HDB10 -d -nw -f /usr/sap/ABC/HDB10/ardag1dbdv1/daemon.ini pf=/usr/sap/ABC/SYS/profile/ABC_HDB10_ardag1dbdv1
     # From these paths we extract: SID=ABC, INSTANCE=10
-    SID=$(echo "$line" | sed 's/.*\/\(.*\)\/.*\/exe\/sapstartsrv.*/\1/g')
-    INSTANCE=$(echo "$line" | sed -e 's/.*\/\(.*\)\/exe\/sapstartsrv.*/\1/g' -e 's/[^0-9]//g')
+    SID=$(echo "$line" | sed 's#.* /[^/]*/[^/]*/\([^/]*\)/.*#\1#g')
+    INSTANCE=$(echo "$line" | sed -e 's#.* /[^/]*/[^/]*/[^/]*/\([^/]*\)/.*#\1#g' -e 's/[^0-9]//g')
 
     # grep only the first word = the user running the instance
     INSTANCE_USER=$(echo "$line" | grep -Po "^\s*(\w+)")
