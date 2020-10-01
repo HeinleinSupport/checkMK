@@ -21,6 +21,13 @@ import requests
 import urllib3  # type: ignore[import]
 from dateutil import tz
 
+from pyVim import connect
+vsphere_connect = connect
+from pyVmomi import vmodl
+from pyVmomi import vim
+import atexit
+import ssl
+
 import cmk.utils.password_store
 import cmk.utils.paths
 
@@ -1705,59 +1712,55 @@ def eval_datastores(info, datastores):
     return "@@".join(response)
 
 
-def fetch_host_systems(connection):
-    hostsystems_response = connection.query_server('hostsystems')
-    elements = get_pattern(
-        '<obj type="HostSystem">(.*?)</obj>.*?<val xsi:type="xsd:string">(.*?)</val>',
-        hostsystems_response)
+def fetch_objects(content, opt):
+    objects = {}
 
-    # On some ESX systems the cookie login does not work as expected, when the agent_vsphere
-    # is called only once or twice a day. The cookie is somehow outdated, but there is no
-    # authentification failed message. Instead, the query simply returns an empty data set..
-    # We try to detect this here (there is always a hostsystem) and raise a MKQueryServerException
-    # which forces a new login
-    if not elements:
-        raise ESXCookieInvalid("Login cookie is no longer valid")
+    container = content.rootFolder
+    viewTypes = [vim.HostSystem, vim.Datastore, vim.VirtualMachine]
+    recursive = True
 
-    return dict(elements)
+    for viewType in viewTypes:
+        objects[viewType] = {}
 
+    containerView = content.viewManager.CreateContainerView(container, viewTypes, recursive)
 
-def fetch_datastores(connection):
-    datastores_response = connection.query_server('datastores')
-    elements = get_pattern('<objects><obj type="Datastore">(.*?)</obj>(.*?)</objects>',
-                           datastores_response)
-    datastores: Dict[str, Dict[str, Any]] = {}
-    for datastore, content in elements:
-        entries = get_pattern('<name>(.*?)</name><val xsi:type.*?>(.*?)</val>', content)
-        datastores[datastore] = {}
-        for name, value in entries:
-            datastores[datastore][name] = value
-    return datastores
+    children = containerView.view
+    for kid in children:
+        objects[type(kid)][kid.name] = kid
+    
+    return objects
 
 
-def get_section_datastores(datastores):
+def get_section_datastores(datastores, opt):
+    keys = ['accessible', 'capacity', 'freeSpace', 'type', 'uncommitted', 'url']
     section_lines = ["<<<esx_vsphere_datastores:sep(9)>>>"]
-    for _key, data in sorted(datastores.items()):
-        section_lines.append("[%s]" % data.get("name"))
-        for ds_key in sorted(data.keys()):
-            if ds_key == "name":
-                continue
-            section_lines.append("%s\t%s" % (ds_key.split(".")[1], data[ds_key]))
+    for name, data in sorted(datastores.items()):
+        if opt.debug:
+            print(data.summary)
+        section_lines.append("[%s]" % name)
+        for ds_key in sorted(keys):
+            section_lines.append("%s\t%s" % (ds_key, data.summary.__getattribute__(ds_key)))
     return section_lines
 
 
-def get_section_licenses(connection):
+def get_section_licenses(content, opt):
     section_lines = ["<<<esx_vsphere_licenses:sep(9)>>>"]
-    licenses_response = connection.query_server('licensesused')
-    root_node = minidom.parseString(licenses_response)
-    licenses_node = root_node.getElementsByTagName("LicenseManagerLicenseInfo")
-    for license_node in licenses_node:
-        total = license_node.getElementsByTagName("total")[0].firstChild.data
-        if total == "0":
-            continue
-        name = license_node.getElementsByTagName("name")[0].firstChild.data
-        used = license_node.getElementsByTagName("used")[0].firstChild.data
-        section_lines.append("%s\t%s %s" % (name, used, total))
+    try:
+        licenses = content.licenseManager.licenses
+    except:
+        licenses = []
+        #if opt.debug:
+        #    raise
+    for license_node in licenses:
+        if opt.debug:
+            print(license_node)
+
+        #total = license_node.getElementsByTagName("total")[0].firstChild.data
+        #if total == "0":
+        #    continue
+        #name = license_node.getElementsByTagName("name")[0].firstChild.data
+        #used = license_node.getElementsByTagName("used")[0].firstChild.data
+        #section_lines.append("%s\t%s %s" % (name, used, total))
     return section_lines
 
 
@@ -1848,68 +1851,90 @@ def _retrieve_system_time(connection):
             if elements else 0)
 
 
-def fetch_data(connection, opt):
+def fetch_data(service_instance, opt):
     output = []
 
+    content = service_instance.RetrieveContent()
+
+    if opt.debug:
+        print(content)
+
     output.append("<<<esx_systeminfo>>>")
-    output += ["%s %s" % entry for entry in connection.system_info.items()]
+    systemfields = [
+        "apiVersion",
+        "name",
+        "version",
+        "build",
+        "vendor",
+        "osType",
+    ]
+
+    for entry in systemfields:
+        try:
+            output.append("%s %s" % (entry, content.about.__getattribute__(entry)))
+        except AttributeError:
+            pass
+
+    if opt.debug:
+        print(output)
 
     #############################
     # Determine available host systems
     #############################
-    hostsystems = fetch_host_systems(connection)
+    all_objects = fetch_objects(content, opt)
+    hostsystems = all_objects[vim.HostSystem]
 
     ###########################
     # Licenses
     ###########################
     if "licenses" in opt.modules:
-        output += get_section_licenses(connection)
+        output += get_section_licenses(content, opt)
 
     ###########################
     # Datastores
     ###########################
     # We need the datastore info later on in the virtualmachines and counter sections
-    datastores = fetch_datastores(connection)
+    datastores = all_objects[vim.Datastore]
     if "datastore" in opt.modules:
-        output += get_section_datastores(datastores)
+        output += get_section_datastores(datastores, opt)
 
     ###########################
     # Counters
     ###########################
-    if "counters" in opt.modules:
-        output += get_section_counters(connection, hostsystems, datastores, opt)
+    #if "counters" in opt.modules:
+    #    output += get_section_counters(connection, hostsystems, datastores, opt)
 
     ###########################
     # Hostsystem
     ###########################
-    if "hostsystem" in opt.modules:
-        hostsystems_properties, hostsystems_sensors = fetch_hostsystem_data(connection)
-        output += get_sections_hostsystem_sensors(hostsystems_properties, hostsystems_sensors, opt)
+    #if "hostsystem" in opt.modules:
+    #    hostsystems_properties, hostsystems_sensors = fetch_hostsystem_data(connection)
+    #    output += get_sections_hostsystem_sensors(hostsystems_properties, hostsystems_sensors, opt)
 
     ###########################
     # Virtual machines
     ###########################
-    if "virtualmachine" in opt.modules:
-        time_reference = _retrieve_system_time(connection)
-        vms, vm_esx_host = fetch_virtual_machines(connection, hostsystems, datastores, opt)
-        output += get_section_vm(vms, time_reference)
+    #if "virtualmachine" in opt.modules:
+    #    time_reference = _retrieve_system_time(connection)
+    #    vms, vm_esx_host = fetch_virtual_machines(connection, hostsystems, datastores, opt)
+    #    output += get_section_vm(vms, time_reference)
 
-        used_hostsystems = hostsystems if opt.snapshot_display == 'esxhost' else None
-        output += get_sections_aggregated_snapshots(vms, used_hostsystems, time_reference)
-    else:
-        vms, vm_esx_host = {}, {}
+    #    used_hostsystems = hostsystems if opt.snapshot_display == 'esxhost' else None
+    #    output += get_sections_aggregated_snapshots(vms, used_hostsystems, time_reference)
+    #else:
+    #    vms, vm_esx_host = {}, {}
 
-    if not opt.direct:
-        output += get_sections_clusters(connection, vm_esx_host, opt)
+    #if not opt.direct:
+    #    output += get_sections_clusters(connection, vm_esx_host, opt)
 
     ###########################
     # Objects
     ###########################
-    output += get_vm_power_states(vms, hostsystems, opt)
-    if "hostsystem" in opt.modules:
-        output += get_hostsystem_power_states(vms, hostsystems, hostsystems_properties, opt)
+    #output += get_vm_power_states(vms, hostsystems, opt)
+    #if "hostsystem" in opt.modules:
+    #    output += get_hostsystem_power_states(vms, hostsystems, hostsystems_properties, opt)
 
-    output += get_section_systemtime(connection, opt)
+    #output += get_section_systemtime(connection, opt)
 
     return output
 
@@ -1935,21 +1960,24 @@ def main(argv=None):
     socket.setdefaulttimeout(opt.timeout)
 
     try:
-        esx_connection = ESXConnection(opt.host_address, opt.port, opt)
+        ctx = ssl.create_default_context()
+        if opt.no_cert_check:
+            ctx.check_hostname = False
+            ctx.verify_mode = ssl.CERT_NONE
+        service_instance = vsphere_connect.SmartConnect(host=opt.host_address,
+                                                        user=opt.user,
+                                                        pwd=opt.secret,
+                                                        port=opt.port,
+                                                        sslContext=ctx)
+        atexit.register(vsphere_connect.Disconnect, service_instance)
 
-        esx_connection.login(opt.user, opt.secret)
-        try:
-            vsphere_output = fetch_data(esx_connection, opt)
-        except ESXCookieInvalid:
-            esx_connection.delete_server_cookie()
-            esx_connection.login(opt.user, opt.secret)
-            vsphere_output = fetch_data(esx_connection, opt)
+        vsphere_output = fetch_data(service_instance, opt)
 
     except Exception as exc:
         if opt.debug:
             raise
         sys.stderr.write("%s\n" % exc)
-        return 0 if opt.agent else 1
+        return 1
 
     write_output(vsphere_output, opt)
 
