@@ -1456,6 +1456,57 @@ def fetch_hostsystem_data(connection):
     return hostsystems_properties, hostsystems_sensors
 
 
+def get_sections_hostsystem(hostsystems, opt):
+    print("get_sections_hostsystem")
+    
+    section_lines = []
+
+    section_keys = {
+        'config': {'storageDevice': {'multipathInfo': []}},
+        'hardware': {'biosInfo': {'biosVersion': ''},
+                     'biosInfo': {'releaseDate': ''},
+                     'cpuInfo': {'hz': 0,
+                                 'numCpuCores': '',
+                                 'numCpuPackages': '',
+                                 'numCpuThreads': '',},
+                     'cpuPkg': {'busHz': '',
+                                'description': '',
+                                'hz': '',
+                                'index': '',
+                                'vendor': '', },
+                     'memorySize': '',
+                     'systemInfo': {'model': '',
+                                    'otherIdentifyingInfo': { 'AssetTag': '',
+                                                              'EnclosureSerialNumberTag': '',
+                                                              'SerialNumberTag': '',
+                                                              'ServiceTag': '' },
+                                    'uuid': '',
+                                    'vendor': '',}},
+        'name': '',
+        'overallStatus': '',
+        'runtime': {'inMaintenanceMode': '',
+                    'powerState': '' },
+        'summary': {'quickStats': {'overallCpuUsage': '',
+                                   'overallMemoryUsage': ''}}
+    }
+
+    if opt.debug:
+        print(section_keys)
+
+    for hostname, hostsystem in hostsystems.items():
+        if not opt.direct:
+            section_lines.append("<<<<%s>>>>" % convert_hostname(hostname, opt))
+        
+        section_lines.append("<<<esx_vsphere_hostsystem>>>")
+        for key in section_keys:
+            section_lines.append("%s %s" % (key, hostsystem.__getattribute__(key)))
+
+
+    if not opt.direct:
+        section_lines.append("<<<<>>>>")
+
+    return section_lines
+
 def get_sections_hostsystem_sensors(hostsystems_properties, hostsystems_sensors, opt):
     # TODO: improve error handling: check if multiple results
     section_lines = []
@@ -1735,8 +1786,6 @@ def get_section_datastores(datastores, opt):
     keys = ['accessible', 'capacity', 'freeSpace', 'type', 'uncommitted', 'url']
     section_lines = ["<<<esx_vsphere_datastores:sep(9)>>>"]
     for name, data in sorted(datastores.items()):
-        if opt.debug:
-            print(data.summary)
         section_lines.append("[%s]" % name)
         for ds_key in sorted(keys):
             section_lines.append("%s\t%s" % (ds_key, data.summary.__getattribute__(ds_key)))
@@ -1907,9 +1956,10 @@ def fetch_data(service_instance, opt):
     ###########################
     # Hostsystem
     ###########################
-    #if "hostsystem" in opt.modules:
-    #    hostsystems_properties, hostsystems_sensors = fetch_hostsystem_data(connection)
-    #    output += get_sections_hostsystem_sensors(hostsystems_properties, hostsystems_sensors, opt)
+    if "hostsystem" in opt.modules:
+        #hostsystems_properties, hostsystems_sensors = fetch_hostsystem_data(connection)
+        #output += get_sections_hostsystem_sensors(hostsystems_properties, hostsystems_sensors, opt)
+        output += get_sections_hostsystem(hostsystems, opt)
 
     ###########################
     # Virtual machines
@@ -1979,7 +2029,7 @@ def main(argv=None):
         sys.stderr.write("%s\n" % exc)
         return 1
 
-    write_output(vsphere_output, opt)
+    # write_output(vsphere_output, opt)
 
     return 0
 
