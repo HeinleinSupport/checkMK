@@ -1271,6 +1271,8 @@ def test_no_new_or_vanished_legacy_checks(config_check_info):
         'bluenet2_powerrail.rcm',
         'bluenet2_powerrail.temp',
         'bluenet2_powerrail.humidity',
+        'bluenet2_powerrail.sockets',
+        'bluenet2_powerrail.fuses',
         'bluenet_meter',
         'bluenet_sensor',
         'bluenet_sensor.hum',
