@@ -39,7 +39,7 @@ class OracleDatabase:
     def __init__(
         self,
         client: docker.client.DockerClient,
-        checkmk: CheckmkApp,
+        checkmk: CheckmkApp | None,
         *,  # enforce named arguments
         temp_dir: Path,
         name: str = "oracle",
@@ -315,7 +315,8 @@ class OracleDatabase:
             ]
             try:
                 wait_until(
-                    lambda: self.checkmk.container.exec_run(cmk_dump_cmd)[0] == 0,
+                    lambda: self.checkmk is not None
+                    and self.checkmk.container.exec_run(cmk_dump_cmd)[0] == 0,
                     timeout=300,
                     interval=20,
                 )
@@ -342,6 +343,7 @@ class OracleDatabase:
             )
 
             def _host_has_prefixed_services(host_name: str, prefix: str, min_count: int) -> bool:
+                assert self.checkmk is not None
                 services = self.checkmk.openapi.services.get_host_services(
                     host_name,
                     columns=["description", "has_been_checked"],
@@ -462,7 +464,7 @@ class OracleDatabase:
 @pytest.fixture(name="oracle", scope="session")
 def _oracle(
     client: docker.client.DockerClient,
-    checkmk: CheckmkApp,
+    checkmk: CheckmkApp | None,
     tmp_path_session: Path,
 ) -> Iterator[OracleDatabase]:
     with OracleDatabase(
@@ -479,7 +481,7 @@ def _oracle(
 @pytest.mark.skip_if_not_edition("pro")
 @pytest.mark.parametrize("auth_mode", ["wallet", "credential"])
 def test_docker_oracle(
-    checkmk: CheckmkApp,
+    checkmk: CheckmkApp | None,
     oracle: OracleDatabase,
     auth_mode: Literal["wallet", "credential"],
 ) -> None:
