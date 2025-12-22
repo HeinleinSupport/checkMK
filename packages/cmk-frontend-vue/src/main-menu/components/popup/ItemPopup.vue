@@ -22,7 +22,6 @@ const mainMenu = getInjectedMainMenu()
 const props = defineProps<{
   item: NavItem
   active?: boolean | undefined
-  small?: boolean | undefined
 }>()
 
 const vueApp = computed(() => {
@@ -75,13 +74,21 @@ onMounted(() => {
 
 <template>
   <div :id="`main_menu_${props.item.id}`">
-    <template v-if="props.item.vue_app"
-      ><component :is="vueApp" v-bind="props.item.vue_app.data"
-    /></template>
+    <template v-if="props.item.vue_app">
+      <div
+        class="mm-item-popup"
+        :class="{
+          'mm-item-popup--active': active,
+          'mm-item-popup--small': props.item.popup_small
+        }"
+      >
+        <component :is="vueApp" v-bind="props.item.vue_app.data" />
+      </div>
+    </template>
     <DefaultPopup
       v-else
       class="mm-item-popup"
-      :class="{ 'mm-item-popup--active': active, 'mm-item-popup--small': small }"
+      :class="{ 'mm-item-popup--active': active, 'mm-item-popup--small': props.item.popup_small }"
       :nav-item-id="props.item.id"
       :header="props.item.header"
       :small="props.item.popup_small"
@@ -93,8 +100,7 @@ onMounted(() => {
         <template v-for="topic in item.topics" :key="topic.title">
           <ItemTopic
             v-if="
-              (!topic.show_more_mode &&
-                topic.entries.filter((e) => !e.show_more_mode).length > 0) ||
+              (!topic.is_show_more && topic.entries.filter((e) => !e.is_show_more).length > 0) ||
               mainMenu.showMoreIsActive(item.id)
             "
             :topic="topic"
@@ -107,10 +113,6 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.mm-item-popup--active {
-  display: flex;
-}
-
 .mm-item-popup__topics {
   display: flex;
   flex-flow: column wrap;

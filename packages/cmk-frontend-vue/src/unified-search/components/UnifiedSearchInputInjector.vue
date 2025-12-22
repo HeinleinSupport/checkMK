@@ -10,6 +10,8 @@ import usei18n from '@/lib/i18n'
 
 import CmkIcon from '@/components/CmkIcon/CmkIcon.vue'
 
+import { getInjectedMainMenu } from '@/main-menu/provider/main-menu'
+
 import { getSearchUtils } from '../providers/search-utils'
 import type { SearchProviderKeys } from '../providers/search-utils.types'
 import { availableProviderOptions } from './header/QueryOptions'
@@ -21,6 +23,7 @@ const searchUtils = getSearchUtils()
 const props = defineProps<{
   providers: SearchProviderKeys[]
 }>()
+const mainMenu = getInjectedMainMenu()
 
 function goToSearch(e: Event, provider: ProviderName) {
   const input = e.target
@@ -34,7 +37,7 @@ function goToSearch(e: Event, provider: ProviderName) {
     availableProviderOptions.filter((f) => f.value === provider)[0]
   )
 
-  searchUtils.openSearch()
+  mainMenu.navigate('search')
 }
 </script>
 
@@ -42,7 +45,8 @@ function goToSearch(e: Event, provider: ProviderName) {
   <Teleport
     v-for="provider in props.providers"
     :key="provider"
-    :to="`#main_menu_${provider}>div>div`"
+    :to="`#main_menu_${provider}>div>div>div.mm-default-popup__header-left`"
+    defer
   >
     <div class="unified-search-input-injector__root">
       <UnifiedSearchProviderSelect
@@ -73,7 +77,7 @@ function goToSearch(e: Event, provider: ProviderName) {
   border: 1px solid var(--default-form-element-border-color);
   line-height: 15px;
   height: 27px;
-  margin: 0 var(--dimension-7);
+  margin: 0 var(--dimension-7) 0 0;
   position: relative;
   display: flex;
   align-items: center;

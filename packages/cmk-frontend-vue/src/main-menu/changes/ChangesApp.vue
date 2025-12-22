@@ -20,6 +20,7 @@ import CmkIcon from '@/components/CmkIcon'
 import { showLoadingTransition } from '@/loading-transition/loadingTransition'
 import { useSiteStatus } from '@/main-menu/changes/useSiteStatus'
 
+import { getInjectedMainMenu } from '../provider/main-menu'
 import type {
   ActivatePendingChangesResponse,
   ActivationStatusResponse,
@@ -39,6 +40,7 @@ const props = defineProps<{
   user_has_activate_foreign: boolean
   user_name: string
 }>()
+const mainMenu = getInjectedMainMenu()
 
 const numberOfChangesLastActivation = ref<number>(0)
 const selectedSites = ref<string[]>([])
@@ -56,9 +58,6 @@ const sitesAndChanges = ref<SitesAndChanges>({
 
 const sitesRef = computed(() => sitesAndChanges.value.sites)
 const { hasSitesWithChangesOrErrors } = useSiteStatus(sitesRef)
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-declare const cmk: any
 
 const activationPollStartTime = ref<number | null>(null)
 const restartInfoShown = ref(false)
@@ -193,13 +192,13 @@ async function fetchPendingChangesAjax(): Promise<void> {
 }
 
 function openActivateChangesPage() {
-  cmk.popup_menu.close_popup()
+  mainMenu.close()
   showLoadingTransition('table', _t('Activate pending changes'))
   window.open(props.activate_changes_url, 'main')
 }
 
 async function checkIfMenuActive(): Promise<void> {
-  if (cmk.popup_menu.is_open('main_menu_changes')) {
+  if (mainMenu.isNavItemActive('changes')) {
     if (!alreadyMadeAjaxCall.value) {
       recentlyActivatedSites.value = []
       await fetchPendingChangesAjax()

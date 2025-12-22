@@ -8,10 +8,18 @@ conditions defined in the file COPYING, which is part of this source code packag
 import { getInjectedMainMenu } from '@/main-menu/provider/main-menu'
 
 const mainMenu = getInjectedMainMenu()
+
+function backdropClick(e: MouseEvent) {
+  if (e.target instanceof HTMLDivElement) {
+    if (e.target.classList.contains('mm-popup-backdrop')) {
+      mainMenu.close()
+    }
+  }
+}
 </script>
 
 <template>
-  <div class="mm-popup-backdrop" @click="mainMenu.close()">
+  <div class="mm-popup-backdrop" @click="backdropClick">
     <slot />
   </div>
 </template>

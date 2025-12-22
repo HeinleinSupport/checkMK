@@ -16,6 +16,7 @@ import { Api } from '@/lib/api-client'
 import type { TranslatedString } from '@/lib/i18nString'
 
 import DefaultPopup from '@/main-menu/changes/components/DefaultPopup.vue'
+import { getInjectedMainMenu } from '@/main-menu/provider/main-menu'
 import {
   type SearchHistoryResult,
   SearchHistorySearchProvider
@@ -39,10 +40,8 @@ import { setRecentSearch } from './lib/search-debug'
 import { initSearchUtils, provideSearchUtils } from './providers/search-utils'
 import type { UnifiedSearchQueryLike } from './providers/search-utils.types'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-declare const cmk: any
-
 const props = defineProps<UnifiedSearchProps>()
+const mainMenu = getInjectedMainMenu()
 
 const searchId = `unified-search-${props.user_id}-${props.edition}`
 
@@ -156,7 +155,7 @@ searchUtils.onResetSearch(() => {
 })
 
 searchUtils.onCloseSearch(() => {
-  cmk.popup_menu.close_popup()
+  mainMenu.close()
 })
 
 searchUtils.input.onSetQuery((query?: UnifiedSearchQueryLike) => {

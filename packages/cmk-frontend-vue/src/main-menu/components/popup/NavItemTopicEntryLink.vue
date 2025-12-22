@@ -10,6 +10,7 @@ import type { NavItemIdEnum, NavItemTopicEntry } from 'cmk-shared-typing/typescr
 import type { TranslatedString } from '@/lib/i18nString'
 
 import CmkChip from '@/components/CmkChip.vue'
+import CmkDynamicIcon from '@/components/CmkIcon/CmkDynamicIcon/CmkDynamicIcon.vue'
 import CmkIcon from '@/components/CmkIcon/CmkIcon.vue'
 
 import { getInjectedMainMenu } from '@/main-menu/provider/main-menu'
@@ -25,14 +26,7 @@ defineProps<{
 <template>
   <a :href="entry.url || 'javascript:void(0)'" :target="entry.target || 'main'">
     <span v-if="entry.icon" class="mm-nav-item-topic-entry-link__icon">
-      <img :src="entry.icon.src" width="18" height="14" />
-      <img
-        v-if="entry.icon.emblem"
-        class="mm-nav-item-topic-entry-link__icon-emblem"
-        :src="entry.icon.emblem"
-        width="10"
-        height="10"
-      />
+      <CmkDynamicIcon :spec="entry.icon" />
     </span>
     <span>{{ entry.title }}</span>
 

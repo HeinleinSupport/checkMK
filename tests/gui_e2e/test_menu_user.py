@@ -18,13 +18,13 @@ from tests.gui_e2e.testlib.playwright.pom.monitor.dashboard import MainDashboard
 def test_user_color_theme(dashboard_page: MainDashboard, credentials: CmkCredentials) -> None:
     # Open user menu and locate `color theme button`.
     _loc = dashboard_page.main_menu.user_color_theme_button
-    default_label = str(_loc.get_attribute("value"))
+    default_label = str(_loc.text_content())
     default_value = str(dashboard_page.page.locator("body").get_attribute("data-theme"))
     # Click on color theme button
     _loc.click()
     # User menu closes; theme changes
-    expect(_loc).not_to_have_value(default_label)
-    changed_label = str(_loc.get_attribute("value"))
+    expect(_loc).not_to_have_text(default_label)
+    changed_label = str(_loc.text_content())
     changed_value = str(dashboard_page.page.locator("body").get_attribute("data-theme"))
     assert default_label != changed_label, "Changed color theme is not properly displayed!"
     assert default_value != changed_value, "Changed color theme is not properly reflected!"
@@ -33,15 +33,17 @@ def test_user_color_theme(dashboard_page: MainDashboard, credentials: CmkCredent
     dashboard_page.main_menu.logout()
     login_page = LoginPage(dashboard_page.page, navigate_to_page=False)
     login_page.login(credentials)
-    saved_label = _loc.get_attribute("value")
+    _loc = dashboard_page.main_menu.user_color_theme_button
+    saved_label = str(_loc.text_content())
     saved_value = str(dashboard_page.page.locator("body").get_attribute("data-theme"))
     assert saved_label == changed_label, "Saved color theme is not properly displayed!"
     assert saved_value == changed_value, "Saved color theme is not properly reflected!"
 
     # Open user menu and click on `color theme button`.
-    dashboard_page.main_menu.user_color_theme_button.click()
-    expect(_loc).not_to_have_value(saved_label)
-    reverted_label = _loc.get_attribute("value")
+    _loc = dashboard_page.main_menu.user_color_theme_button
+    _loc.click()
+    expect(_loc).not_to_have_text(saved_label)
+    reverted_label = str(_loc.text_content())
     reverted_value = str(dashboard_page.page.locator("body").get_attribute("data-theme"))
     assert reverted_label == default_label, "Reverted color theme is not properly displayed!"
     assert reverted_value == default_value, "Reverted color theme is not properly reflected!"
@@ -50,13 +52,13 @@ def test_user_color_theme(dashboard_page: MainDashboard, credentials: CmkCredent
 def test_user_sidebar_position(dashboard_page: MainDashboard, credentials: CmkCredentials) -> None:
     # Open user menu and locate `sidebar position button`.
     _loc = dashboard_page.main_menu.user_sidebar_position_button
-    default_label = str(_loc.get_attribute("value"))
+    default_label = str(_loc.text_content())
     default_value = str(dashboard_page.sidebar.locator().get_attribute("class"))
     # Click on sidebar position button
     _loc.click()
     # User menu closes; Sidebar position changes
-    expect(_loc).not_to_have_value(default_label)
-    changed_label = _loc.get_attribute("value")
+    expect(_loc).not_to_have_text(default_label)
+    changed_label = str(_loc.text_content())
     changed_value = dashboard_page.sidebar.locator().get_attribute("class")
     assert default_label != changed_label, "Changed sidebar position is not properly displayed!"
     assert default_value != changed_value, "Changed sidebar position is not properly reflected!"
@@ -65,15 +67,15 @@ def test_user_sidebar_position(dashboard_page: MainDashboard, credentials: CmkCr
     dashboard_page.main_menu.logout()
     login_page = LoginPage(dashboard_page.page, navigate_to_page=False)
     login_page.login(credentials)
-    saved_label = str(_loc.get_attribute("value"))
+    saved_label = str(_loc.text_content())
     saved_value = str(dashboard_page.sidebar.locator().get_attribute("class"))
     assert saved_label == changed_label, "Saved sidebar position is not properly displayed!"
     assert saved_value == changed_value, "Saved sidebar position is not properly reflected!"
 
     # Open user menu and click on `sidebar position button`.
     dashboard_page.main_menu.user_sidebar_position_button.click()
-    expect(_loc).not_to_have_value(saved_label)
-    reverted_label = str(_loc.get_attribute("value"))
+    expect(_loc).not_to_have_text(saved_label)
+    reverted_label = str(_loc.text_content())
     reverted_value = str(dashboard_page.sidebar.locator().get_attribute("class"))
     assert reverted_label == default_label, "Reverted sidebar position is not properly displayed!"
     assert reverted_value == default_value, "Reverted sidebar position is not properly reflected!"

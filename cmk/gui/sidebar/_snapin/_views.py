@@ -11,16 +11,16 @@ from cmk.gui import pagetypes
 from cmk.gui.config import Config
 from cmk.gui.dashboard import get_permitted_dashboards
 from cmk.gui.http import response
-from cmk.gui.i18n import _, _l
+from cmk.gui.i18n import _
 from cmk.gui.logged_in import user
 from cmk.gui.main_menu import MainMenuRegistry
-from cmk.gui.main_menu_types import MainMenu, MainMenuTopic, UnifiedSearch
+from cmk.gui.main_menu_types import MainMenuItem
 from cmk.gui.nodevis.topology import ParentChildTopologyPage
 from cmk.gui.pages import PageContext, PageEndpoint, PageRegistry
 from cmk.gui.permissions import permission_registry
-from cmk.gui.type_defs import IconNames, StaticIcon
 from cmk.gui.utils.roles import UserPermissions
 from cmk.gui.views.store import get_permitted_views
+from cmk.shared_typing.main_menu import NavItemHeader, NavItemIdEnum, NavItemShortcut, NavItemTopic
 
 from ._base import SidebarSnapin
 from ._helpers import (
@@ -38,19 +38,21 @@ def register(
     page_registry: PageRegistry,
     snapin_registry: SnapinRegistry,
     main_menu_registry: MainMenuRegistry,
-    view_menu_topics: Callable[[UserPermissions], list[MainMenuTopic]],
+    view_menu_topics: Callable[[UserPermissions], list[NavItemTopic]],
 ) -> None:
     snapin_registry.register(Views)
     page_registry.register(PageEndpoint("export_views", ajax_export_views))
 
     main_menu_registry.register(
-        MainMenu(
-            name="monitoring",
-            title=_l("Monitor"),
-            icon=StaticIcon(IconNames.main_monitoring),
+        MainMenuItem(
+            id=NavItemIdEnum.monitoring,
+            title=_("Monitor"),
             sort_index=5,
-            topics=view_menu_topics,
-            search=UnifiedSearch("monitoring_search", "unified-search-input-monitoring"),
+            get_topics=view_menu_topics,
+            shortcut=NavItemShortcut(key="m", alt=True),
+            header=NavItemHeader(show_more=True),
+            set_focus_on_element_by_id="unified-search-input-monitoring",
+            hint=_("Monitor hosts and services"),
         )
     )
 
@@ -94,7 +96,7 @@ def ajax_export_views(ctx: PageContext) -> None:
     response.set_data(pprint.pformat(get_permitted_views()))
 
 
-def default_view_menu_topics(user_permissions: UserPermissions) -> list[MainMenuTopic]:
+def default_view_menu_topics(user_permissions: UserPermissions) -> list[NavItemTopic]:
     return make_main_menu(
         view_menu_items(user_permissions),
         user_permissions,

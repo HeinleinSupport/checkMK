@@ -9,6 +9,7 @@ import { ref, useTemplateRef } from 'vue'
 import usei18n from '@/lib/i18n'
 import useClickOutside from '@/lib/useClickOutside'
 
+import { getInjectedMainMenu } from '@/main-menu/provider/main-menu'
 import type { UnifiedSearchProvider } from '@/unified-search/lib/providers/unified'
 import { getSearchUtils } from '@/unified-search/providers/search-utils'
 import type { ProviderOption, QueryProvider } from '@/unified-search/providers/search-utils.types'
@@ -32,6 +33,7 @@ const props = defineProps<{
   provider?: QueryProvider
   openSearchOnChange?: boolean
 }>()
+const mainMenu = getInjectedMainMenu()
 
 const vClickOutside = useClickOutside()
 function handleOptionSelect(selected: ProviderOption): void {
@@ -50,7 +52,7 @@ function onSetProviderValue(
   }
 
   if (props.openSearchOnChange) {
-    searchUtils.openSearch()
+    mainMenu.navigate('search')
   }
 
   hideProviderOptions()

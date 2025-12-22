@@ -82,11 +82,16 @@ export class MainMenuService extends ServiceBase {
   public navigate(id: NavItemIdEnum) {
     this.showKeyHints.value = false
     const item = this.getItemById(id)
-    if (this.currentItem.value !== null) {
-      this.dispatchCallback('close', this.currentItem.value.id)
+
+    if (item.type === 'item') {
+      if (this.currentItem.value !== null) {
+        this.dispatchCallback('close', this.currentItem.value.id)
+      }
+      this.currentItem.value = item
+      this.dispatchCallback('navigate', item)
+    } else {
+      this.currentItem.value = null
     }
-    this.currentItem.value = item
-    this.dispatchCallback('navigate', item)
   }
 
   public onNavigate(callback: OnNavigateCallback) {
@@ -235,7 +240,7 @@ export class MainMenuService extends ServiceBase {
       this.itemBadge[item.id] = ref<MenuItemBadge | null>(null)
 
       if ('show_more' in item && item.show_more) {
-        this.showMoreActive[item.id] = ref<boolean>(item.show_more.active || false)
+        this.showMoreActive[item.id] = ref<boolean>(item.show_more.active)
       }
 
       if (item.shortcut) {

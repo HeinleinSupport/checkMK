@@ -1355,6 +1355,7 @@ class MonitorMenuMatchPlugin(ABCBasicMatchPlugin):
 
     @override
     def get_results(self, query: str, user_permissions: UserPermissions) -> list[SearchResult]:
+        monitor_menu = main_menu_registry.menu_monitoring()
         return [
             SearchResult(
                 title=main_menu_item.title,
@@ -1362,16 +1363,17 @@ class MonitorMenuMatchPlugin(ABCBasicMatchPlugin):
                 loading_transition=main_menu_item.loading_transition,
             )
             for main_menu_topic in (
-                main_menu_registry["monitoring"].topics(user_permissions)
-                if main_menu_registry["monitoring"].topics
-                else []
+                monitor_menu.get_topics(user_permissions)
+                if callable(monitor_menu.get_topics)
+                else monitor_menu.topics or []
             )
             for main_menu_item in get_main_menu_items_prefixed_by_segment(main_menu_topic)
-            if any(
+            if main_menu_item.url
+            and any(
                 query.lower() in match_text.lower()
                 for match_text in [
                     main_menu_item.title,
-                    *main_menu_item.main_menu_search_terms,
+                    *(main_menu_item.main_menu_search_terms or []),
                 ]
             )
         ]

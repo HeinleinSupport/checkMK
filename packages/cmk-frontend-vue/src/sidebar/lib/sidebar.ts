@@ -14,6 +14,9 @@ import { SIDEBAR_UPDATE_SNAPIN_CONTENT_EVENT } from './constants'
 import { SidebarApiClient } from './sidebar-api-client'
 import type { OnUpdateSnapinContent, SidebarSnapinContents } from './type-defs'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+declare const cmk: any
+
 const active = ref<boolean>(true)
 const ajaxCall = new Api()
 
@@ -177,14 +180,18 @@ export class SidebarService extends ServiceBase {
 
   public static toggle(): void {
     active.value = !active.value
-    const container = document.getElementById('sidebar')
-    if (container) {
-      if (active.value) {
-        container?.classList.add('unfolded')
-      } else {
-        container?.classList.remove('unfolded')
-      }
-    }
+    cmk.sidebar.toggle_sidebar()
+    /*
+    This is the way to disable the sidebar in the future. Will be enable as soon as the iframe is removed
+    */
+    // const container = document.getElementById('sidebar')
+    // if (container) {
+    //   if (active.value) {
+    //     container?.classList.add('unfolded')
+    //   } else {
+    //     container?.classList.remove('unfolded')
+    //   }
+    // }
   }
 
   public static isActive(): boolean {

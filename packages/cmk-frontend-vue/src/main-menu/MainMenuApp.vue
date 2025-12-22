@@ -5,7 +5,7 @@ conditions defined in the file COPYING, which is part of this source code packag
 -->
 
 <script setup lang="ts">
-import { type MainMenuConfig } from 'cmk-shared-typing/typescript/main_menu'
+import { type MainMenuConfig, type NavItemIdEnum } from 'cmk-shared-typing/typescript/main_menu'
 import { provide, ref } from 'vue'
 
 import usei18n from '@/lib/i18n'
@@ -33,23 +33,46 @@ provide(mainMenuKey, mainMenu)
 
 const usePopupMessages = ref<UserPopupMessageRef[]>([])
 
+function onClick(id: NavItemIdEnum) {
+  if (mainMenu.isNavItemActive(id)) {
+    mainMenu.close()
+  } else {
+    mainMenu.navigate(id)
+  }
+}
+
 mainMenu.onUserPopupMessages((msgs) => {
   usePopupMessages.value = msgs
 })
+
+function navElClick(e: MouseEvent) {
+  if (e.target instanceof HTMLUListElement) {
+    if (e.target.id === 'main-menu') {
+      mainMenu.close()
+    }
+  }
+}
 </script>
 
 <template>
-  <nav>
-    <a id="home" :href="props.start.url || '/'" :title="props.start.title">
-      <img :src="props.start.icon?.src || 'themes/facelift/images/icon_checkmk_logo.svg'" />
+  <nav :class="{ 'mm-app--small': props.hide_item_title }" @click="navElClick">
+    <a id="home" :href="props.start.url || '/'" :title="props.start.title" target="main">
+      <img
+        :src="
+          props.start.icon_path || props.hide_item_title
+            ? 'themes/facelift/images/icon_checkmk_logo_min.svg'
+            : 'themes/facelift/images/icon_checkmk_logo.svg'
+        "
+      />
     </a>
     <ul id="main-menu">
       <NavItem
         v-for="item in props.main"
         :key="`nav-item-${item.id}`"
         :item="item"
+        :hide-item-title="props.hide_item_title"
         :active="mainMenu.isNavItemActive(item.id)"
-        @click="mainMenu.navigate(item.id)"
+        @click.stop="onClick(item.id)"
         @mouseover="mainMenu.navigateIfAnyNavItemIsActive(item.id)"
       />
       <div class="mm-app__key-hint-wrapper">
@@ -73,15 +96,19 @@ mainMenu.onUserPopupMessages((msgs) => {
         v-for="item in props.user"
         :key="item.id"
         :item="item"
+        :hide-item-title="props.hide_item_title"
         :active="mainMenu.isNavItemActive(item.id)"
-        @click="mainMenu.navigate(item.id)"
+        @click.stop="onClick(item.id)"
         @mouseover="mainMenu.navigateIfAnyNavItemIsActive(item.id)"
       />
-      <SidebarToggle />
+      <SidebarToggle :hide-item-title="props.hide_item_title" />
     </ul>
-    <template v-for="item in props.main.concat(props.user)" :key="`nav-popup-${item.id}`">
-      <PopupBackdrop v-show="mainMenu.isNavItemActive(item.id)" class="mm-app__popup-backdrop">
-        <ItemPopup :item="item" @click.stop />
+    <template
+      v-for="item in props.main.concat(props.user).filter((i) => i.type === 'item')"
+      :key="`nav-popup-${item.id}`"
+    >
+      <PopupBackdrop v-show="mainMenu.isNavItemActive(item.id)">
+        <ItemPopup :item="item" :active="mainMenu.isNavItemActive(item.id)" />
       </PopupBackdrop>
     </template>
   </nav>
@@ -122,6 +149,17 @@ nav {
     img {
       width: 48px;
       height: 48px;
+    }
+  }
+
+  &.mm-app--small {
+    width: 48px;
+
+    #home {
+      img {
+        width: 28px;
+        height: 28px;
+      }
     }
   }
 

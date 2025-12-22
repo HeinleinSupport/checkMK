@@ -5,7 +5,7 @@ conditions defined in the file COPYING, which is part of this source code packag
 -->
 
 <script setup lang="ts">
-import type { NavItem } from 'cmk-shared-typing/typescript/main_menu'
+import type { NavItem, NavLinkItem } from 'cmk-shared-typing/typescript/main_menu'
 import { computed } from 'vue'
 
 import CmkBadge from '@/components/CmkBadge.vue'
@@ -19,7 +19,8 @@ const mainMenu = getInjectedMainMenu()
 
 const props = defineProps<{
   active?: boolean | undefined
-  item: NavItem
+  item: NavItem | NavLinkItem
+  hideItemTitle: boolean
 }>()
 
 const color = computed<CmkMultitoneIconColor>(() => {
@@ -29,18 +30,28 @@ const color = computed<CmkMultitoneIconColor>(() => {
 const icon = computed<OneColorIcons>(() => {
   return props.item.id as OneColorIcons
 })
+
+const href = computed<string | undefined>(() => {
+  return props.item.type === 'link' ? props.item.url : 'javascript:void(0)'
+})
+
+const target = computed<string | undefined>(() => {
+  return props.item.type === 'link' ? props.item.target : undefined
+})
 </script>
 
 <template>
   <li
     :id="`nav-item-${item.id}`"
     class="mm-nav-item__li"
-    :class="{ 'mm-nav-item__li--active': active }"
+    :class="{ 'mm-nav-item__li--active': active, 'mm-nav-item__li--small': hideItemTitle }"
+    :title="hideItemTitle ? item.title : item.hint"
   >
-    <a href="javascript:void(0)">
+    <a :href="href" :target="target">
       <CmkMultitoneIcon
         :name="icon"
         :primary-color="color"
+        :title="hideItemTitle ? item.title : item.hint"
         size="xlarge"
         class="mm-nav-item__icon"
       />
@@ -57,7 +68,7 @@ const icon = computed<OneColorIcons>(() => {
         :color="mainMenu.getNavItemBadge(item.id)?.color"
         >{{ mainMenu.getNavItemBadge(item.id)?.content }}</CmkBadge
       >
-      <span>{{ item.title }}</span>
+      <span v-if="!hideItemTitle">{{ item.title }}</span>
     </a>
   </li>
 </template>
@@ -102,6 +113,14 @@ const icon = computed<OneColorIcons>(() => {
       right: var(--dimension-3);
       padding: 0;
       margin: 0;
+    }
+  }
+
+  &.mm-nav-item__li--small {
+    height: 48px;
+
+    .mm-nav-item__icon {
+      margin-bottom: 0;
     }
   }
 

@@ -40,6 +40,8 @@ body.side {
   float: left;
   width: 64px;
   height: 100%;
+  z-index: 3000;
+  position: relative;
 
   &.min {
     width: 48px;

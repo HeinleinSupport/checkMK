@@ -211,13 +211,13 @@ class MainMenu(LocatorHelper):
 
         Return `locator` of `menu`, if `sub_menu` is `None`.
         """
+
         _loc = self.locator().get_by_role(role="link", name=menu)
         if sub_menu:
             _loc.click()
             if show_more:
-                self.page.get_by_role(role="link", name="show more", exact=True)
-            _popup_menu = self.page.locator("div.popup_trigger.active").locator("div.popup_menu")
-            _loc = _popup_menu.get_by_role(role="link", name=sub_menu, exact=exact)
+                self.locator().get_by_role(role="link", name="show more", exact=True)
+            _loc = self.locator().get_by_role(role="link", name=sub_menu, exact=exact)
         self._unique_web_element(_loc)
         return _loc
 
@@ -265,8 +265,13 @@ class MainMenu(LocatorHelper):
     def rest_api_help_menu(self, sub_menu: str | None = None, exact: bool = False) -> Locator:
         """main menu -> Open help -> REST API -> sub menu"""
         rest_api_text = "REST API"
-        self.help_menu(rest_api_text)
-        return self._sub_menu(rest_api_text, sub_menu, show_more=False, exact=exact)
+
+        _loc = self.help_menu(rest_api_text)
+
+        if sub_menu:
+            return self._sub_menu(sub_menu, None, show_more=False, exact=exact)
+        else:
+            return _loc
 
     @property
     def active_side_menu_popup(self) -> Locator:
@@ -274,7 +279,8 @@ class MainMenu(LocatorHelper):
 
         As only one side menu can be interacted with at a time.
         """
-        loc = self.page.locator("div.popup_trigger.active").locator("div.popup_menu_handler")
+
+        loc = self.page.locator("div.mm-item-popup--active")
         expect(loc, message="None of the side menu popups are open!").to_have_count(1)
         return loc
 

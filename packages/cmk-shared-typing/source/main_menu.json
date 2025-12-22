@@ -3,6 +3,7 @@
   "type": "object",
   "title": "main_menu_config",
   "properties": {
+    "hide_item_title": { "type": "boolean", "default": false },
     "start": { "$ref": "#/$defs/start_item" },
     "main": { "$ref": "#/$defs/nav_items" },
     "user": { "$ref": "#/$defs/nav_items" }
@@ -14,7 +15,7 @@
       "properties": {
         "title": { "type": "string" },
         "url": { "type": "string" },
-        "icon": { "$ref": "#/$defs/cmk_nav_icon" }
+        "icon_path": { "type": "string" }
       },
       "required": ["title", "url"]
     },
@@ -28,16 +29,20 @@
       "type": "object",
       "properties": {
         "id": { "$ref": "#/$defs/nav_item_id_enum" },
+        "type": { "$ref": "#/$defs/nav_item_type" },
         "title": { "type": "string" },
-        "sort": { "type": "number" },
-        "shortcut": { "$ref": "#/$defs/nav_item_shortcut" }
+        "sort_index": { "type": "number" },
+        "shortcut": { "$ref": "#/$defs/nav_item_shortcut" },
+        "is_user_nav": { "type": "boolean", "default": false },
+        "hint": { "type": "string" }
       },
-      "required": ["id", "title", "sort", "shortcut_hint"]
+      "required": ["id", "title", "sort_index", "shortcut", "type"]
     },
     "nav_item": {
       "allOf": [{ "$ref": "#/$defs/nav_base_item" }],
       "type": "object",
       "properties": {
+        "type": { "type": "string", "const": "item" },
         "topics": {
           "type": "array",
           "items": { "$ref": "#/$defs/nav_item_topic" }
@@ -53,6 +58,7 @@
       "allOf": [{ "$ref": "#/$defs/nav_base_item" }],
       "type": "object",
       "properties": {
+        "type": { "type": "string", "const": "link" },
         "url": { "type": "string" },
         "target": { "type": "string" }
       },
@@ -61,41 +67,50 @@
     "nav_item_topic": {
       "type": "object",
       "properties": {
+        "id": { "type": "string" },
         "title": { "type": "string" },
-        "icon": { "$ref": "#/$defs/cmk_nav_icon" },
-        "show_more_mode": { "type": "boolean" },
+        "icon": { "$ref": "icon.json#/$defs/dynamic_icon" },
+        "is_show_more": { "type": "boolean" },
+        "sort_index": { "type": "number" },
         "entries": {
           "type": "array",
           "items": { "$ref": "#/$defs/nav_item_topic_entry" }
         }
       },
-      "required": ["title", "entries"]
+      "required": ["id", "title", "entries", "sort_index"]
     },
     "nav_item_topic_entry": {
       "type": "object",
       "properties": {
+        "id": { "type": "string" },
         "title": { "type": "string" },
         "url": { "type": "string" },
         "target": { "type": "string" },
-        "show_more_mode": { "type": "boolean" },
-        "icon": { "$ref": "#/$defs/cmk_nav_icon" },
+        "loading_transition": { "$ref": "loading_transition.json" },
+        "is_show_more": { "type": "boolean" },
+        "icon": { "$ref": "icon.json#/$defs/dynamic_icon" },
         "toggle": { "$ref": "#/$defs/nav_item_topic_entry_toggle" },
         "chip": { "$ref": "#/$defs/nav_item_topic_entry_chip" },
         "mode": { "$ref": "#/$defs/topic_item_mode" },
+        "main_menu_search_terms": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
         "entries": {
           "type": "array",
           "items": { "$ref": "#/$defs/nav_item_topic_entry" }
-        }
+        },
+        "sort_index": { "type": "number" }
       },
-      "required": ["title"]
+      "required": ["id", "title", "sort_index"]
     },
     "nav_item_vue_app": {
       "type": "object",
       "properties": {
-        "id": { "type": "string" },
+        "id": { "$ref": "#/$defs/nav_vue_app_id_enum" },
         "data": { "type": "object", "additionalProperties": true }
       },
-      "required": ["id", "data"]
+      "required": ["id"]
     },
     "nav_item_header": {
       "type": "object",
@@ -153,16 +168,11 @@
       },
       "required": ["mode"]
     },
-    "cmk_nav_icon": {
-      "type": "object",
-      "properties": {
-        "src": { "type": "string" },
-        "emblem": { "type": "string" }
-      },
-      "required": ["src"]
-    },
     "nav_item_id_enum": {
-      "enum": ["search", "monitoring", "customize", "setup", "changes", "help", "user"]
+      "enum": ["search", "monitoring", "customize", "setup", "changes", "saas", "help", "user"]
+    },
+    "nav_vue_app_id_enum": {
+      "enum": ["cmk-activate-changes", "cmk-unified-search"]
     },
     "color_enum": {
       "enum": ["default", "success", "warning", "danger"]
@@ -175,6 +185,9 @@
     },
     "topic_item_mode": {
       "enum": ["item", "multilevel", "indented"]
+    },
+    "nav_item_type": {
+      "enum": ["item", "link"]
     }
   }
 }

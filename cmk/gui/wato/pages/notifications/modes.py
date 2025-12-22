@@ -55,7 +55,6 @@ from cmk.gui.http import Request, request
 from cmk.gui.i18n import _, ungettext
 from cmk.gui.logged_in import user
 from cmk.gui.main_menu import main_menu_registry
-from cmk.gui.main_menu_types import MainMenu
 from cmk.gui.mkeventd import syslog_facilities, syslog_priorities
 from cmk.gui.page_menu import (
     make_display_options_dropdown,
@@ -180,6 +179,7 @@ from cmk.gui.watolib.timeperiods import TimeperiodSelection
 from cmk.gui.watolib.user_scripts import load_notification_scripts
 from cmk.gui.watolib.users import notification_script_choices
 from cmk.rulesets.v1.rule_specs import NotificationParameters
+from cmk.shared_typing.main_menu import NavItem
 from cmk.shared_typing.notifications import (
     NotificationCoreStats,
     NotificationCoreStatsI18n,
@@ -2757,7 +2757,7 @@ class ModePersonalUserNotifications(ABCUserNotificationsMode):
         super().__init__()
         user.need_permission("general.edit_notifications")
 
-    def main_menu(self) -> MainMenu:
+    def main_menu(self) -> NavItem:
         return main_menu_registry.menu_user()
 
     def page_menu(self, config: Config, breadcrumb: Breadcrumb) -> PageMenu:

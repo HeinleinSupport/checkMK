@@ -9,38 +9,52 @@ from collections.abc import Callable
 from typing import override
 
 from cmk.gui.exceptions import MKUserError
-from cmk.gui.i18n import _, _l
+from cmk.gui.i18n import _
 from cmk.gui.logged_in import user
 from cmk.gui.main_menu import MainMenuRegistry
-from cmk.gui.main_menu_types import MainMenu, MainMenuItem, MainMenuTopic, MainMenuTopicEntries
+from cmk.gui.main_menu_types import MainMenuItem
 from cmk.gui.pages import AjaxPage, PageContext, PageEndpoint, PageRegistry, PageResult
 from cmk.gui.theme.choices import theme_choices
 from cmk.gui.theme.current_theme import theme
-from cmk.gui.type_defs import HTTPVariables, IconNames, StaticIcon
+from cmk.gui.type_defs import HTTPVariables, IconNames
 from cmk.gui.userdb import remove_custom_attr, validate_start_url
 from cmk.gui.userdb.store import load_custom_attr, save_custom_attr
 from cmk.gui.utils.csrf_token import check_csrf_token
 from cmk.gui.utils.roles import UserPermissions
 from cmk.gui.utils.urls import makeuri_contextless
+from cmk.shared_typing.main_menu import (
+    ChipModeEnum,
+    ColorEnum,
+    DefaultIcon,
+    NavItemIdEnum,
+    NavItemShortcut,
+    NavItemTopic,
+    NavItemTopicEntry,
+    NavItemTopicEntryChip,
+    NavItemTopicEntryToggle,
+)
 
 
 def register(
     page_registry: PageRegistry,
     main_menu_registry: MainMenuRegistry,
-    user_menu_topics: Callable[[UserPermissions], list[MainMenuTopic]],
+    user_menu_topics: Callable[[UserPermissions], list[NavItemTopic]],
 ) -> None:
     page_registry.register(PageEndpoint("ajax_ui_theme", ModeAjaxCycleThemes()))
     page_registry.register(PageEndpoint("ajax_sidebar_position", ModeAjaxCycleSidebarPosition()))
     page_registry.register(PageEndpoint("ajax_set_dashboard_start_url", ModeAjaxSetStartURL()))
 
     main_menu_registry.register(
-        MainMenu(
-            name="user",
-            title=_l("User"),
-            icon=StaticIcon(IconNames.main_user),
+        MainMenuItem(
+            id=NavItemIdEnum.user,
+            title=_("User"),
             sort_index=20,
-            topics=user_menu_topics,
+            get_topics=user_menu_topics,
+            is_user_nav=True,
+            shortcut=NavItemShortcut(key="u", alt=True),
             info_line=lambda: f"{user.id} ({'+'.join(user.role_ids)})",
+            popup_small=True,
+            hint=_("Manage personal settings"),
         )
     )
 
@@ -72,36 +86,46 @@ def default_user_menu_topics(
     user_permissions: UserPermissions,
     add_change_password_menu_item: bool = True,
     add_two_factor_menu_item: bool = True,
-) -> list[MainMenuTopic]:
-    quick_entries: MainMenuTopicEntries = [
-        MainMenuItem(
-            name="ui_theme",
+) -> list[NavItemTopic]:
+    quick_entries: list[NavItemTopicEntry] = [
+        NavItemTopicEntry(
+            id="ui_theme",
             title=_("Color theme"),
-            url='javascript:cmk.sidebar.toggle_user_attribute("ajax_ui_theme.py")',
-            target="",
+            url=None,
+            target=None,
+            icon=DefaultIcon(id=IconNames.color_mode),
+            toggle=NavItemTopicEntryToggle(
+                mode="ajax_ui_theme.py",
+                value=_get_current_theme_title(),
+                color=ColorEnum.success,
+                reload=True,
+            ),
             sort_index=10,
-            icon=StaticIcon(IconNames.color_mode),
-            button_title=_get_current_theme_title(),
         ),
-        MainMenuItem(
-            name="sidebar_position",
+        NavItemTopicEntry(
+            id="sidebar_position",
             title=_("Sidebar position"),
-            url='javascript:cmk.sidebar.toggle_user_attribute("ajax_sidebar_position.py")',
-            target="",
+            url=None,
+            target=None,
+            icon=DefaultIcon(id=IconNames.sidebar_position),
+            toggle=NavItemTopicEntryToggle(
+                mode="ajax_sidebar_position.py",
+                value=_sidebar_position_title(_get_sidebar_position()),
+                color=ColorEnum.success,
+                reload=True,
+            ),
             sort_index=20,
-            icon=StaticIcon(IconNames.sidebar_position),
-            button_title=_sidebar_position_title(_get_sidebar_position()),
         ),
     ]
 
-    entries: MainMenuTopicEntries = (
+    entries: list[NavItemTopicEntry] = (
         [
-            MainMenuItem(
-                name="user_profile",
+            NavItemTopicEntry(
+                id="user_profile",
                 title=_("Edit profile"),
                 url="user_profile.py",
                 sort_index=10,
-                icon=StaticIcon(IconNames.topic_profile),
+                icon=DefaultIcon(id=IconNames.topic_profile),
             ),
         ]
         if user.may("general.edit_profile")
@@ -110,75 +134,80 @@ def default_user_menu_topics(
 
     if user.may("general.change_password") and add_change_password_menu_item:
         entries.append(
-            MainMenuItem(
-                name="change_password",
+            NavItemTopicEntry(
+                id="change_password",
                 title=_("Change password"),
                 url="user_change_pw.py",
-                sort_index=30,
-                icon=StaticIcon(IconNames.topic_change_password),
+                icon=DefaultIcon(id=IconNames.topic_change_password),
+                sort_index=20,
             )
         )
 
     if user.may("general.manage_2fa") and add_two_factor_menu_item:
         entries.append(
-            MainMenuItem(
-                name="two_factor",
+            NavItemTopicEntry(
+                id="two_factor",
                 title=_("Two-factor authentication"),
                 url="user_two_factor_overview.py",
+                icon=DefaultIcon(id=IconNames.topic_2fa),
                 sort_index=30,
-                icon=StaticIcon(IconNames.topic_2fa),
             ),
         )
 
     entries.append(
-        MainMenuItem(
-            name="logout",
+        NavItemTopicEntry(
+            id="logout",
             title=_("Logout"),
             url="logout.py",
-            sort_index=40,
-            icon=StaticIcon(IconNames.sidebar_logout),
+            icon=DefaultIcon(id=IconNames.sidebar_logout),
             target="_self",
+            sort_index=40,
         )
     )
 
     if user.may("general.edit_notifications"):
-        entries.insert(
-            1,
-            MainMenuItem(
-                name="notification_rules",
+        entries.append(
+            NavItemTopicEntry(
+                id="notification_rules",
                 title=_("Notification rules"),
                 url="wato.py?mode=user_notifications_p",
-                sort_index=20,
-                icon=StaticIcon(IconNames.topic_events),
+                icon=DefaultIcon(id=IconNames.topic_events),
+                sort_index=5,
             ),
         )
 
     return [
-        MainMenuTopic(
-            name="user_interface",
+        NavItemTopic(
+            id="user_interface",
             title=_("User interface"),
-            icon=StaticIcon(IconNames.topic_user_interface),
+            icon=DefaultIcon(id=IconNames.topic_user_interface),
             entries=quick_entries,
+            sort_index=10,
         ),
-        MainMenuTopic(
-            name="user_messages",
+        NavItemTopic(
+            id="user_messages",
             title=_("User messages"),
-            icon=StaticIcon(IconNames.topic_events),
+            icon=DefaultIcon(id=IconNames.topic_events),
             entries=[
-                MainMenuItem(
-                    name="user_messages",
+                NavItemTopicEntry(
+                    id="user_messages",
                     title=_("Received messages"),
                     url="user_message.py",
-                    sort_index=1,
-                    icon=StaticIcon(IconNames.topic_events),
+                    icon=DefaultIcon(id=IconNames.topic_events),
+                    chip=NavItemTopicEntryChip(
+                        color=ColorEnum.danger, mode=ChipModeEnum.user_messages_hint
+                    ),
+                    sort_index=10,
                 )
             ],
+            sort_index=20,
         ),
-        MainMenuTopic(
-            name="user_profile",
+        NavItemTopic(
+            id="user_profile",
             title=_("User profile"),
-            icon=StaticIcon(IconNames.topic_profile),
+            icon=DefaultIcon(id=IconNames.topic_profile),
             entries=entries,
+            sort_index=30,
         ),
     ]
 
@@ -188,7 +217,7 @@ class ModeAjaxCycleThemes(AjaxPage):
 
     @override
     def page(self, ctx: PageContext) -> PageResult:
-        check_csrf_token()
+        check_csrf_token(ctx.request.get_json()["_csrf_token"])
         themes = [theme for theme, _title in theme_choices()]
         # TODO: avoid global theme if possible
         current_theme = theme.get()
@@ -211,7 +240,7 @@ class ModeAjaxCycleSidebarPosition(AjaxPage):
 
     @override
     def page(self, ctx: PageContext) -> PageResult:
-        check_csrf_token()
+        check_csrf_token(ctx.request.get_json()["_csrf_token"])
         set_user_attribute(
             "ui_sidebar_position",
             None if _sidebar_position_id(_get_sidebar_position()) == "left" else "left",

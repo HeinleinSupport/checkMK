@@ -15,15 +15,17 @@ from cmk.gui.htmllib.foldable_container import foldable_container
 from cmk.gui.htmllib.generator import HTMLWriter
 from cmk.gui.htmllib.html import html
 from cmk.gui.i18n import _
+from cmk.gui.icon_helpers import migrate_to_dynamic_icon, migrate_to_static_icon
 from cmk.gui.logged_in import user
 from cmk.gui.main_menu import get_main_menu_items_prefixed_by_segment
-from cmk.gui.main_menu_types import MainMenuItem, MainMenuTopic
 from cmk.gui.sites import SiteStatus, states
 from cmk.gui.type_defs import Choices, DynamicIcon, IconNames, StaticIcon, Visual
 from cmk.gui.utils.html import HTML
 from cmk.gui.utils.loading_transition import LoadingTransition
 from cmk.gui.utils.roles import UserPermissions
 from cmk.gui.visuals import visual_title
+from cmk.shared_typing.main_menu import LoadingTransition as SharedLoadingTransition
+from cmk.shared_typing.main_menu import NavItemTopic, NavItemTopicEntry
 
 # Constants to be used in snap-ins
 snapin_width = 240
@@ -77,21 +79,25 @@ def link(text: str | HTML, url: str, target: str = "main", onclick: str | None =
     html.write_html(render_link(text, url, target=target, onclick=onclick))
 
 
-def bulletlink(text: str, url: str, target: str = "main", onclick: str | None = None) -> None:
-    html.open_li(class_="sidebar")
-    link(text, url, target, onclick)
-    html.close_li()
+def bulletlink(
+    text: str, url: str | None, target: str = "main", onclick: str | None = None
+) -> None:
+    if url:
+        html.open_li(class_="sidebar")
+        link(text, url, target, onclick)
+        html.close_li()
 
 
-def iconlink(text: str, url: str, icon: StaticIcon | DynamicIcon) -> None:
-    html.open_a(class_=["iconlink", "link"], target="main", href=url)
-    if isinstance(icon, StaticIcon):
-        html.static_icon(icon, css_classes=["inline"])
-    else:
-        html.dynamic_icon(icon, css_classes=["inline"])
-    html.write_text_permissive(text)
-    html.close_a()
-    html.br()
+def iconlink(text: str, url: str | None, icon: StaticIcon | DynamicIcon) -> None:
+    if url:
+        html.open_a(class_=["iconlink", "link"], target="main", href=url)
+        if isinstance(icon, StaticIcon):
+            html.static_icon(icon, css_classes=["inline"])
+        else:
+            html.dynamic_icon(icon, css_classes=["inline"])
+        html.write_text_permissive(text)
+        html.close_a()
+        html.br()
 
 
 def write_snapin_exception(e: Exception) -> None:
@@ -160,7 +166,7 @@ def _filter_available_site_choices(choices: list[tuple[SiteId, str]]) -> list[tu
 
 def make_main_menu(
     visuals: Sequence[VisualMenuItem], user_permissions: UserPermissions
-) -> list[MainMenuTopic]:
+) -> list[NavItemTopic]:
     topics = {
         p.name(): p
         for p in pagetypes.PagetypeTopics.load(user_permissions).permitted_instances_sorted(
@@ -168,7 +174,7 @@ def make_main_menu(
         )
     }
 
-    by_topic: dict[pagetypes.PagetypeTopics, MainMenuTopic] = {}
+    by_topic: dict[pagetypes.PagetypeTopics, list[NavItemTopicEntry]] = {}
 
     for visual_type_name, (name, visual) in visuals:
         if visual["hidden"] or visual.get("mobile"):
@@ -189,42 +195,41 @@ def make_main_menu(
             case _:
                 loading_transition = None
 
-        main_menu_topic = by_topic.setdefault(
-            topic,
-            MainMenuTopic(
-                name=topic.name(),
-                title=topic.title(),
-                max_entries=topic.max_entries(),
-                entries=[],
-                icon=topic.icon_name(),
-                hide=topic.hide(),
-            ),
-        )
-        main_menu_topic.entries.append(
-            MainMenuItem(
-                name=name,
+        entries = by_topic.setdefault(topic, [])
+        entries.append(
+            NavItemTopicEntry(
+                id=name,
                 title=visual_title(
                     visual_type_name, visual, visual["context"], skip_title_context=True
                 ),
                 url=url,
                 sort_index=visual["sort_index"],
                 is_show_more=visual["is_show_more"],
-                icon=visual["icon"],
-                main_menu_search_terms=visual["main_menu_search_terms"],
-                loading_transition=loading_transition,
+                icon=migrate_to_dynamic_icon(visual["icon"]),
+                main_menu_search_terms=list(visual["main_menu_search_terms"]),
+                loading_transition=SharedLoadingTransition(loading_transition)
+                if loading_transition
+                else None,
             )
         )
 
-    # Sort the entries of all topics
-    for main_menu in by_topic.values():
-        main_menu.entries.sort(key=lambda i: (i.sort_index, i.title))
+    # Sort the entries and create NavItemTopic objects
+    nav_topics: list[NavItemTopic] = []
+    for topic, entries in by_topic.items():
+        entries.sort(key=lambda i: (i.sort_index, i.title))
+        nav_item = NavItemTopic(
+            id=topic.name(),
+            title=topic.title(),
+            entries=entries,
+            icon=migrate_to_dynamic_icon(topic.icon_name()),
+            is_show_more=topic.hide(),
+            sort_index=topic.sort_index(),
+        )
+        if not nav_item.is_show_more:
+            nav_topics.append(nav_item)
 
     # Return the sorted topics
-    return [
-        v
-        for k, v in sorted(by_topic.items(), key=lambda e: (e[0].sort_index(), e[0].title()))
-        if not v.hide
-    ]
+    return sorted(nav_topics, key=lambda t: (t.sort_index, t.title))
 
 
 def _visual_url(visual_type_name: VisualMenuItemType, name: str, visual: Visual) -> str:
@@ -246,18 +251,18 @@ def _visual_url(visual_type_name: VisualMenuItemType, name: str, visual: Visual)
             assert_never(other)
 
 
-def show_main_menu(treename: str, menu: list[MainMenuTopic], show_item_icons: bool = False) -> None:
+def show_main_menu(treename: str, menu: list[NavItemTopic], show_item_icons: bool = False) -> None:
     for topic in menu:
         _show_topic(treename, topic, show_item_icons)
 
 
-def _show_topic(treename: str, topic: MainMenuTopic, show_item_icons: bool) -> None:
+def _show_topic(treename: str, topic: NavItemTopic, show_item_icons: bool) -> None:
     if not topic.entries:
         return
 
     with foldable_container(
         treename=treename,
-        id_=topic.name,
+        id_=topic.id,
         isopen=False,
         title=topic.title,
         indent=True,
@@ -265,7 +270,11 @@ def _show_topic(treename: str, topic: MainMenuTopic, show_item_icons: bool) -> N
         for item in get_main_menu_items_prefixed_by_segment(topic):
             if show_item_icons:
                 html.open_li(class_=["sidebar"] + (["show_more_mode"] if item.is_show_more else []))
-                iconlink(item.title, item.url, item.icon or StaticIcon(IconNames.missing))
+                iconlink(
+                    item.title,
+                    item.url,
+                    migrate_to_static_icon(item.icon) or StaticIcon(IconNames.missing),
+                )
                 html.close_li()
             else:
                 bulletlink(

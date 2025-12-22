@@ -14,6 +14,7 @@ import type {
 import usei18n from '@/lib/i18n'
 
 import CmkButton from '@/components/CmkButton.vue'
+import CmkDynamicIcon from '@/components/CmkIcon/CmkDynamicIcon/CmkDynamicIcon.vue'
 import CmkIcon from '@/components/CmkIcon/CmkIcon.vue'
 import CmkScrollContainer from '@/components/CmkScrollContainer.vue'
 import CmkHeading from '@/components/typography/CmkHeading.vue'
@@ -37,7 +38,7 @@ function getActiveEntries() {
   return (
     props.topic.entries?.filter(
       (e: NavItemTopic | INavItemTopicEntry) =>
-        !e.show_more_mode || mainMenu.showMoreIsActive(props.navItemId)
+        !e.is_show_more || mainMenu.showMoreIsActive(props.navItemId)
     ) ?? []
   )
 }
@@ -67,20 +68,16 @@ function getEntries2Render() {
     </div>
 
     <CmkHeading type="h3" class="mm-nav-item-topic__header">
-      <img
-        v-if="topic.icon"
-        :src="topic.icon.src"
-        class="mm-nav-item-topic__icon"
-        width="18"
-        height="18"
-      />
+      <span v-if="topic.icon" class="mm-nav-item-topic__icon">
+        <CmkDynamicIcon :spec="topic.icon"
+      /></span>
       <span>{{ topic.title }}</span>
     </CmkHeading>
     <CmkScrollContainer max-height="calc(100vh - 240px)">
       <ul>
         <template v-for="entry in getEntries2Render()" :key="entry.title">
           <NavItemTopicEntry
-            v-if="!entry.show_more_mode || mainMenu.showMoreIsActive(props.navItemId) || isShowAll"
+            v-if="!entry.is_show_more || mainMenu.showMoreIsActive(props.navItemId) || isShowAll"
             :entry="entry"
             :nav-item-id="navItemId"
           />
@@ -132,6 +129,7 @@ function getEntries2Render() {
 
     .mm-nav-item-topic__icon {
       margin-right: var(--dimension-4);
+      display: flex;
     }
   }
 

@@ -46,7 +46,6 @@ from cmk.gui.dashboard import registration as dashboard_registration
 from cmk.gui.data_source import DataSourceRegistry
 from cmk.gui.form_specs import registration as vue_registration
 from cmk.gui.main_menu import MainMenuRegistry
-from cmk.gui.main_menu_types import MainMenuTopicEntries
 from cmk.gui.nodevis import nodevis
 from cmk.gui.oauth2_connections.registration import register as register_oauth2_connections
 from cmk.gui.openapi import registration as openapi_registration
@@ -107,6 +106,7 @@ from cmk.gui.watolib.notification_parameter import notification_parameter_regist
 from cmk.gui.watolib.rulespecs import RulespecGroupRegistry, RulespecRegistry
 from cmk.gui.watolib.simple_config_file import ConfigFileRegistry
 from cmk.gui.watolib.timeperiods import TimeperiodUsageFinderRegistry
+from cmk.shared_typing.main_menu import NavItemTopicEntry
 from cmk.utils import paths
 from cmk.utils.licensing.registry import register_cre_licensing_handler
 
@@ -159,9 +159,9 @@ def register(
     user_attribute_registry: UserAttributeRegistry,
     quick_setup_registry: QuickSetupRegistry,
     help_info_line: Callable[[], str],
-    help_learning_entries: Callable[[], MainMenuTopicEntries],
-    help_developer_entries: Callable[[], MainMenuTopicEntries],
-    help_about_checkmk_entries: Callable[[], MainMenuTopicEntries],
+    help_learning_entries: Callable[[], list[NavItemTopicEntry]],
+    help_developer_entries: Callable[[], list[NavItemTopicEntry]],
+    help_about_checkmk_entries: Callable[[], list[NavItemTopicEntry]],
     token_authenticated_page_registry: TokenAuthenticatedPageRegistry,
     builtin_pagetype_topic_registry: pagetypes.BuiltinPagetypeTopicRegistry,
     *,

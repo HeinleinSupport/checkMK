@@ -57,9 +57,7 @@ class ActivateChangesSlideout(LocatorHelper):
     @property
     def slideout(self) -> Locator:
         return (
-            self.cmk_page.locator("#popup_menu_changes div")
-            .filter(has_text=self.slide_title)
-            .nth(1)
+            self.cmk_page.locator("#main_menu_changes div").filter(has_text=self.slide_title).nth(1)
         )
 
     @property

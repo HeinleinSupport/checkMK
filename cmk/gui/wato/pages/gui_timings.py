@@ -15,7 +15,7 @@ from cmk.gui.pages import Page, PageContext, PageEndpoint, PageRegistry, PageRes
 class GuiTimingsPage(Page):
     @override
     def page(self, ctx: PageContext) -> PageResult:
-        breadcrumb = make_simple_page_breadcrumb(main_menu_registry["help"], _("Info"))
+        breadcrumb = make_simple_page_breadcrumb(main_menu_registry.menu_help(), _("Info"))
         make_header(
             html,
             "GUI timings",

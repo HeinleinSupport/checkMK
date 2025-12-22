@@ -579,99 +579,6 @@ export function refresh_single_snapin(name: string) {
   window.dispatchEvent(event)
 }
 
-export function reset_sidebar_scheduler() {
-  if (g_sidebar_scheduler_timer !== null) {
-    clearTimeout(g_sidebar_scheduler_timer)
-    g_sidebar_scheduler_timer = null
-  }
-  g_seconds_to_update = 1
-  g_sidebar_full_reload = true
-  execute_sidebar_scheduler()
-}
-
-export function execute_sidebar_scheduler() {
-  g_seconds_to_update =
-    g_seconds_to_update !== null ? g_seconds_to_update - 1 : sidebar_update_interval
-
-  // Stop reload of the snapins in case the browser window / tab is not visible
-  // for the user. Retry after short time.
-  if (!is_window_active()) {
-    g_sidebar_scheduler_timer = window.setTimeout(function () {
-      execute_sidebar_scheduler()
-    }, 250)
-    return
-  }
-
-  const to_be_updated: string[] = []
-
-  let url
-  for (let i = 0; i < refresh_snapins.length; i++) {
-    const name = refresh_snapins[i][0]
-    if (refresh_snapins[i][1] !== '') {
-      // Special handling for snapins like the nagvis maps snapin which request
-      // to be updated from a special URL, use direct update of those snapins
-      // from this url
-      url = refresh_snapins[i][1]
-
-      if (g_seconds_to_update && g_seconds_to_update <= 0) {
-        call_ajax(url, {
-          response_handler: update_contents,
-          handler_data: 'snapin_' + name
-        })
-      }
-    } else {
-      // Internal update handling, use bulk update
-      to_be_updated.push(name)
-    }
-  }
-
-  if (g_sidebar_full_reload) {
-    g_sidebar_full_reload = false
-    for (const name of static_snapins) {
-      to_be_updated.push(name)
-    }
-  }
-
-  // Are there any snapins to be bulk updated?
-  if (to_be_updated.length > 0 && g_seconds_to_update && g_seconds_to_update <= 0) {
-    url = 'sidebar_snapin.py?names=' + to_be_updated.join(',')
-    if (sidebar_restart_time !== null) url += '&since=' + sidebar_restart_time
-
-    const ids: string[] = [],
-      len = to_be_updated.length
-    for (let i = 0; i < len; i++) {
-      ids.push('snapin_' + to_be_updated[i])
-    }
-
-    call_ajax(url, {
-      response_handler: bulk_update_contents,
-      handler_data: ids
-    })
-  }
-
-  if (g_sidebar_notify_interval !== null) {
-    if (g_seconds_to_update == 0) {
-      update_messages()
-      if (g_may_ack) {
-        update_unack_incomp_werks()
-      }
-    }
-  }
-
-  // Detect page changes and re-register the mousemove event handler
-  // in the content frame. another bad hack ... narf
-  if (is_content_frame_accessible() && g_content_loc != parent.frames[0].document.location.href) {
-    register_edge_listeners(parent.frames[0])
-    update_content_location()
-  }
-
-  if (g_seconds_to_update && g_seconds_to_update <= 0) g_seconds_to_update = sidebar_update_interval
-
-  g_sidebar_scheduler_timer = window.setTimeout(function () {
-    execute_sidebar_scheduler()
-  }, 1000)
-}
-
 /************************************************
  * Save/Restore scroll position
  *************************************************/
@@ -1054,24 +961,6 @@ function move_needle(from_perc: number, to_perc: number) {
 let g_sidebar_notify_interval: null | number
 let g_may_ack = false
 
-export function init_messages_and_werks(interval: null | number, may_ack: boolean) {
-  g_sidebar_notify_interval = interval
-  create_initial_ids('user', 'messages', 'user_message.py')
-  create_initial_ids('changes', 'changes', 'wato.py?mode=changelog')
-
-  // Are there pending messages? Render the initial state of
-  // trigger button
-  update_messages()
-
-  g_may_ack = may_ack
-  if (!may_ack) {
-    return
-  }
-
-  create_initial_ids('help', 'werks', 'change_log.py?show_unack=1&wo_compatibility=3')
-  update_unack_incomp_werks()
-}
-
 interface AjaxSidebarGetMessages {
   popup_messages: { id: string; text: string }[]
   hint_messages: {
@@ -1177,26 +1066,6 @@ export function update_werks_trigger(werks_count: number, text: string, tooltip:
     werks_link.setAttribute('title', tooltip.toString())
   }
 }
-function create_initial_ids(menu: string, what: string, start_url: string) {
-  const main_menu_help_div = document.getElementById('popup_trigger_main_menu_' + menu)!.firstChild
-  const help_div = main_menu_help_div!.childNodes[2]
-
-  const l = document.createElement('span')
-  l.setAttribute('id', what + '_label')
-  l.style.display = 'none'
-  main_menu_help_div?.insertBefore(l, help_div)
-
-  // Also update popup content
-  const info_line_span = document.getElementById('info_line_' + menu)
-  const span = document.createElement('span')
-  span.setAttribute('id', what + '_link')
-  const a = document.createElement('a')
-  a.href = 'index.py?start_url=' + start_url
-  a.setAttribute('id', what + '_link_to')
-  span.appendChild(a)
-  info_line_span?.insertAdjacentElement('beforebegin', span)
-}
-
 /************************************************
  * user menu callbacks
  *************************************************/

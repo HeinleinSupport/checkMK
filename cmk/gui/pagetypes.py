@@ -51,15 +51,10 @@ from cmk.gui.htmllib.header import make_header
 from cmk.gui.htmllib.html import html
 from cmk.gui.http import Request, request, response
 from cmk.gui.i18n import _, _l, _u
+from cmk.gui.icon_helpers import migrate_to_dynamic_icon
 from cmk.gui.logged_in import save_user_file, user
 from cmk.gui.main_menu import main_menu_registry, MainMenuRegistry
-from cmk.gui.main_menu_types import (
-    MainMenu,
-    MainMenuItem,
-    MainMenuTopic,
-    MainMenuTopicEntries,
-    UnifiedSearch,
-)
+from cmk.gui.main_menu_types import MainMenuItem
 from cmk.gui.page_menu import (
     doc_reference_to_page_menu,
     make_confirmed_form_submit_link,
@@ -126,6 +121,14 @@ from cmk.gui.valuespec import (
     ValueSpec,
 )
 from cmk.gui.watolib.groups_io import all_groups
+from cmk.shared_typing.main_menu import (
+    DefaultIcon,
+    NavItemHeader,
+    NavItemIdEnum,
+    NavItemShortcut,
+    NavItemTopic,
+    NavItemTopicEntry,
+)
 
 SubPagesSpec = list[tuple[str, str, StaticIcon]]
 PagetypePhrase = Literal["title", "title_plural", "add_to", "clone", "create", "edit", "new"]
@@ -209,14 +212,16 @@ def register(
     builtin_pagetype_topic_registry_: BuiltinPagetypeTopicRegistry,
 ) -> None:
     main_menu_registry_.register(
-        MainMenu(
-            name="customize",
-            title=_l("Customize"),
-            icon=StaticIcon(IconNames.main_customize),
+        MainMenuItem(
+            id=NavItemIdEnum.customize,
+            title=_("Customize"),
             sort_index=10,
-            topics=_customize_menu_topics,
+            get_topics=_customize_menu_topics,
+            shortcut=NavItemShortcut(key="c", alt=True),
+            header=NavItemHeader(show_more=False),
+            set_focus_on_element_by_id="unified-search-input-customize",
             hide=hide_customize_menu,
-            search=UnifiedSearch("customize_search", "unified-search-input-customize"),
+            hint=_("Customize dashboards and views"),
         )
     )
     for pagetype_topic in _default_pagetype_topics():
@@ -2419,45 +2424,45 @@ def _no_bi_aggregate_active() -> bool:
 # .
 
 
-def _customize_menu_topics(user_permissions: UserPermissions) -> list[MainMenuTopic]:
-    general_entries: MainMenuTopicEntries = []
-    monitoring_entries: MainMenuTopicEntries = []
-    graph_entries: MainMenuTopicEntries = []
-    business_reporting_entries: MainMenuTopicEntries = []
+def _customize_menu_topics(user_permissions: UserPermissions) -> list[NavItemTopic]:
+    general_entries: list[NavItemTopicEntry] = []
+    monitoring_entries: list[NavItemTopicEntry] = []
+    graph_entries: list[NavItemTopicEntry] = []
+    business_reporting_entries: list[NavItemTopicEntry] = []
 
     if user.may("general.edit_views"):
         monitoring_entries.append(
-            MainMenuItem(
-                name="views",
+            NavItemTopicEntry(
+                id="views",
                 title=_("Views"),
                 url="edit_views.py",
                 sort_index=10,
                 is_show_more=False,
-                icon=StaticIcon(IconNames.view),
+                icon=DefaultIcon(id=IconNames.view),
             ),
         )
 
     if user.may("general.edit_dashboards"):
         monitoring_entries.append(
-            MainMenuItem(
-                name="dashboards",
+            NavItemTopicEntry(
+                id="dashboards",
                 title=_("Dashboards"),
                 url="edit_dashboards.py",
                 sort_index=20,
                 is_show_more=False,
-                icon=StaticIcon(IconNames.dashboard),
+                icon=DefaultIcon(id=IconNames.dashboard),
             ),
         )
 
     if user.may("general.edit_reports"):
         business_reporting_entries.append(
-            MainMenuItem(
-                name="reports",
+            NavItemTopicEntry(
+                id="reports",
                 title=_("Reports"),
                 url="edit_reports.py",
                 sort_index=10,
                 is_show_more=False,
-                icon=StaticIcon(IconNames.report),
+                icon=DefaultIcon(id=IconNames.report),
             )
         )
 
@@ -2465,13 +2470,13 @@ def _customize_menu_topics(user_permissions: UserPermissions) -> list[MainMenuTo
         if not user.may(f"general.edit_{page_type_.type_name()}"):
             continue
 
-        item = MainMenuItem(
-            name=page_type_.type_name(),
+        item = NavItemTopicEntry(
+            id=page_type_.type_name(),
             title=page_type_.phrase("title_plural"),
             url="%ss.py" % page_type_.type_name(),
             sort_index=40 + (index * 10),
             is_show_more=False,
-            icon=page_type_.type_icon(),
+            icon=migrate_to_dynamic_icon(page_type_.type_icon()),
         )
 
         if page_type_.type_name() in (
@@ -2488,33 +2493,37 @@ def _customize_menu_topics(user_permissions: UserPermissions) -> list[MainMenuTo
             monitoring_entries.append(item)
 
     topics = [
-        MainMenuTopic(
-            name="general",
+        NavItemTopic(
+            id="general",
             title=_("General"),
-            icon=StaticIcon(IconNames.topic_general),
+            icon=DefaultIcon(id=IconNames.topic_general),
             entries=general_entries,
+            sort_index=10,
         ),
-        MainMenuTopic(
-            name="visualization",
+        NavItemTopic(
+            id="visualization",
             title=_("Visualization"),
-            icon=StaticIcon(IconNames.topic_visualization),
+            icon=DefaultIcon(id=IconNames.topic_visualization),
             entries=monitoring_entries,
+            sort_index=20,
         ),
-        MainMenuTopic(
-            name="graphs",
+        NavItemTopic(
+            id="graphs",
             title=_("Graphs"),
-            icon=StaticIcon(IconNames.topic_graphs),
+            icon=DefaultIcon(id=IconNames.topic_graphs),
             entries=graph_entries,
+            sort_index=30,
         ),
     ]
 
     if _has_reporting():
         topics.append(
-            MainMenuTopic(
-                name="business_reporting",
+            NavItemTopic(
+                id="business_reporting",
                 title=_("Business reporting"),
-                icon=StaticIcon(IconNames.topic_reporting),
+                icon=DefaultIcon(id=IconNames.topic_reporting),
                 entries=business_reporting_entries,
+                sort_index=40,
             )
         )
 

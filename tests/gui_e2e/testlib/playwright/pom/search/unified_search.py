@@ -45,7 +45,7 @@ class UnifiedSearchSlideout(LocatorHelper):
     ) -> Locator:
         if not selector:
             selector = "xpath=."
-        _loc = self.cmk_page.locator("#check_mk_sidebar").locator(selector)
+        _loc = self.cmk_page.locator("#check_mk_navigation").locator(selector)
         kwargs = self._build_locator_kwargs(
             has_text=has_text,
             has_not_text=has_not_text,

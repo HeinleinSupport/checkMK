@@ -133,7 +133,7 @@ class ChangeLogPage(Page):
     @override
     def page(self, ctx: PageContext) -> PageResult:
         breadcrumb = make_simple_page_breadcrumb(
-            main_menu_registry["help"], _("Change log (Werks)")
+            main_menu_registry.menu_help(), _("Change log (Werks)")
         )
 
         werk_table_options = _werk_table_options_from_request(ctx.request)
@@ -287,7 +287,7 @@ def page_werk(ctx: PageContext) -> None:
         werk.title,
     )
 
-    breadcrumb = make_main_menu_breadcrumb(main_menu_registry["help"])
+    breadcrumb = make_main_menu_breadcrumb(main_menu_registry.menu_help())
     breadcrumb.append(
         BreadcrumbItem(
             title=_("Change log (Werks)"),

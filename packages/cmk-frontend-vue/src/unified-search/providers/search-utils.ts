@@ -21,8 +21,6 @@ import type {
   UnifiedSearchQueryLike
 } from './search-utils.types'
 
-declare const cmk: any
-
 const queryInput = ref<string>('')
 const queryProvider = ref<QueryProvider>('all')
 const queryFilters = ref<FilterOption[]>([])
@@ -143,11 +141,6 @@ function setResultGrouping(grouping: boolean) {
 
 function onSetResultGrouping(cb: typeof setResultGrouping): string {
   return pushCallBack('setResultGrouping', cb)
-}
-
-function openSearch() {
-  cmk.popup_menu.close_popup()
-  cmk.handle_main_menu('search')
 }
 
 function resetSearch() {
@@ -357,7 +350,6 @@ export interface SearchResultOptions {
   grouping: Ref<boolean>
 }
 export interface InitSearchUtils {
-  openSearch: typeof openSearch
   resetSearch: typeof resetSearch
   onResetSearch: typeof onResetSearch
   closeSearch: typeof closeSearch
@@ -381,7 +373,6 @@ export const searchUtilsProvider = Symbol() as InjectionKey<SearchUtils>
 export function initSearchUtils(id: string): SearchUtils {
   return {
     id,
-    openSearch,
     resetSearch,
     onResetSearch,
     closeSearch,

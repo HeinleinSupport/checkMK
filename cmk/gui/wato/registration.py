@@ -8,7 +8,6 @@ from collections.abc import Callable
 
 from cmk.gui.background_job import BackgroundJobRegistry
 from cmk.gui.main_menu import MainMenuRegistry
-from cmk.gui.main_menu_types import MainMenuTopic
 from cmk.gui.pages import PageEndpoint, PageRegistry
 from cmk.gui.painter.v0 import PainterRegistry
 from cmk.gui.permissions import PermissionRegistry, PermissionSectionRegistry
@@ -35,6 +34,7 @@ from cmk.gui.watolib.main_menu import MainModuleRegistry, MainModuleTopicRegistr
 from cmk.gui.watolib.mode import ModeRegistry
 from cmk.gui.watolib.notification_parameter import NotificationParameterRegistry
 from cmk.gui.watolib.rulespecs import RulespecGroupRegistry
+from cmk.shared_typing.main_menu import NavItemTopic
 
 from . import (
     _ac_tests,
@@ -91,7 +91,7 @@ def register(
     contact_group_usage_finder_registry: ContactGroupUsageFinderRegistry,
     notification_parameter_registry: NotificationParameterRegistry,
     replication_path_registry: ReplicationPathRegistry,
-    user_menu_topics: Callable[[UserPermissions], list[MainMenuTopic]],
+    user_menu_topics: Callable[[UserPermissions], list[NavItemTopic]],
 ) -> None:
     painter_registry.register(PainterHostFilename)
     painter_registry.register(PainterWatoFolderAbs)

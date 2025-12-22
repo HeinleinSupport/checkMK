@@ -15,10 +15,14 @@ from cmk.gui.dashboard import get_permitted_dashboards
 from cmk.gui.htmllib.foldable_container import foldable_container
 from cmk.gui.htmllib.generator import HTMLWriter
 from cmk.gui.htmllib.html import html
-from cmk.gui.i18n import _, _l
+from cmk.gui.i18n import _
+from cmk.gui.icon_helpers import migrate_to_dynamic_icon, migrate_to_static_icon
 from cmk.gui.logged_in import user
-from cmk.gui.main_menu import get_main_menu_items_prefixed_by_segment, MainMenuRegistry
-from cmk.gui.main_menu_types import MainMenu, MainMenuItem, MainMenuTopic, UnifiedSearch
+from cmk.gui.main_menu import (
+    get_main_menu_items_prefixed_by_segment,
+    MainMenuRegistry,
+)
+from cmk.gui.main_menu_types import MainMenuItem
 from cmk.gui.permissions import permission_registry
 from cmk.gui.search import (
     ABCMatchItemGenerator,
@@ -41,6 +45,17 @@ from cmk.gui.views.store import get_permitted_views
 from cmk.gui.watolib.activate_changes import ActivateChanges
 from cmk.gui.watolib.hosts_and_folders import folder_tree, FolderTree
 from cmk.gui.watolib.main_menu import main_module_registry, MainModuleTopic
+from cmk.shared_typing.loading_transition import LoadingTransition
+from cmk.shared_typing.main_menu import (
+    LoadingTransition as MainMenuLoadingTransition,
+)
+from cmk.shared_typing.main_menu import (
+    NavItemHeader,
+    NavItemIdEnum,
+    NavItemShortcut,
+    NavItemTopic,
+    NavItemTopicEntry,
+)
 
 
 def register(
@@ -69,7 +84,7 @@ def render_wato(config: Config, mini: bool) -> None:
                     url=item.url,
                     class_=["show_more_mode"] if item.is_show_more else [],
                     title=item.title,
-                    icon=item.icon or StaticIcon(IconNames.wato),
+                    icon=migrate_to_static_icon(item.icon) or StaticIcon(IconNames.wato),
                     target="main",
                 )
     else:
@@ -82,42 +97,45 @@ def render_wato(config: Config, mini: bool) -> None:
         html.div("", class_="clear")
 
 
-def get_wato_menu_items(user_permissions: UserPermissions) -> list[MainMenuTopic]:
-    by_topic: dict[MainModuleTopic, MainMenuTopic] = {}
+def get_wato_menu_items(user_permissions: UserPermissions) -> list[NavItemTopic]:
+    by_topic: dict[MainModuleTopic, list[NavItemTopicEntry]] = {}
     for module_class in main_module_registry.values():
         module = module_class()
 
         if not module.may_see():
             continue
 
-        topic = by_topic.setdefault(
-            module.topic,
-            MainMenuTopic(
-                name=module.topic.name,
-                title=str(module.topic.title),
-                icon=module.topic.icon_name,
-                entries=[],
-            ),
-        )
-        topic.entries.append(
-            MainMenuItem(
-                name=module.mode_or_url,
+        entries = by_topic.setdefault(module.topic, [])
+        entries.append(
+            NavItemTopicEntry(
+                id=module.mode_or_url,
                 title=module.title,
                 url=module.get_url(),
                 sort_index=module.sort_index,
                 is_show_more=module.is_show_more,
-                icon=module.icon,
-                main_menu_search_terms=module.main_menu_search_terms(),
-                loading_transition=module.loading_transition,
+                icon=migrate_to_dynamic_icon(module.icon),
+                main_menu_search_terms=list(module.main_menu_search_terms()),
+                loading_transition=MainMenuLoadingTransition(module.loading_transition)
+                if module.loading_transition
+                else None,
             )
         )
 
-    # Sort the entries of all topics
-    for topic in by_topic.values():
-        topic.entries.sort(key=lambda i: (i.sort_index, i.title))
+    # Sort the entries and create NavItemTopic objects
+    topics = []
+    for topic, entries in by_topic.items():
+        entries.sort(key=lambda i: (i.sort_index, i.title))
+        topics.append(
+            NavItemTopic(
+                id=topic.name,
+                title=str(topic.title),
+                icon=migrate_to_dynamic_icon(topic.icon_name),
+                entries=entries,
+                sort_index=topic.sort_index,
+            )
+        )
 
-    # Return the sorted topics
-    return [v for k, v in sorted(by_topic.items(), key=lambda e: (e[0].sort_index, e[0].title))]
+    return sorted(topics, key=lambda t: (t.sort_index, t.title))
 
 
 def _hide_menu() -> bool:
@@ -127,14 +145,16 @@ def _hide_menu() -> bool:
     )
 
 
-MainMenuSetup = MainMenu(
-    name="setup",
-    title=_l("Setup"),
-    icon=StaticIcon(IconNames.main_setup),
+MainMenuSetup = MainMenuItem(
+    id=NavItemIdEnum.setup,
+    title=_("Setup"),
     sort_index=15,
-    topics=get_wato_menu_items,
+    get_topics=get_wato_menu_items,
+    shortcut=NavItemShortcut(key="s", alt=True),
     hide=_hide_menu,
-    search=UnifiedSearch("setup_search", "unified-search-input-setup"),
+    header=NavItemHeader(show_more=True),
+    set_focus_on_element_by_id="unified-search-input-setup",
+    hint=_("Add and configure hosts and services"),
 )
 
 
@@ -142,7 +162,7 @@ class MatchItemGeneratorSetupMenu(ABCMatchItemGenerator):
     def __init__(
         self,
         name: str,
-        topic_generator: Callable[[UserPermissions], Iterable[MainMenuTopic]] | None,
+        topic_generator: Callable[[UserPermissions], Iterable[NavItemTopic]] | None,
     ) -> None:
         super().__init__(name)
         self._topic_generator = topic_generator
@@ -155,14 +175,17 @@ class MatchItemGeneratorSetupMenu(ABCMatchItemGenerator):
                 url=main_menu_item.url,
                 match_texts=[
                     main_menu_item.title,
-                    *main_menu_item.main_menu_search_terms,
+                    *(main_menu_item.main_menu_search_terms or []),
                 ],
-                loading_transition=main_menu_item.loading_transition,
+                loading_transition=LoadingTransition(main_menu_item.loading_transition)
+                if main_menu_item.loading_transition
+                else None,
             )
             for main_menu_topic in (
                 self._topic_generator(user_permissions) if self._topic_generator else []
             )
             for main_menu_item in get_main_menu_items_prefixed_by_segment(main_menu_topic)
+            if main_menu_item.url
         )
 
     @staticmethod
@@ -174,7 +197,7 @@ class MatchItemGeneratorSetupMenu(ABCMatchItemGenerator):
         return True
 
 
-MatchItemGeneratorSetup = MatchItemGeneratorSetupMenu("setup", MainMenuSetup.topics)
+MatchItemGeneratorSetup = MatchItemGeneratorSetupMenu("setup", MainMenuSetup.get_topics)
 
 
 class SidebarSnapinWATOMini(SidebarSnapin):
@@ -397,10 +420,10 @@ class SidebarSnapinWATOFoldertree(SidebarSnapin):
             targets: Choices = []
             for item in get_main_menu_items_prefixed_by_segment(topic):
                 if item.url and item.url.startswith("dashboard.py"):
-                    name = "dashboard|" + item.name
+                    id = "dashboard|" + item.id
                 else:
-                    name = item.name
-                targets.append((name, item.title))
+                    id = item.id
+                targets.append((id, item.title))
 
             if topic.title.lower() != selected_topic_name.lower():
                 default = ""

@@ -7,9 +7,9 @@ from cmk.gui.config import Config
 from cmk.gui.dashboard import get_permitted_dashboards
 from cmk.gui.i18n import _
 from cmk.gui.logged_in import user
-from cmk.gui.main_menu_types import MainMenuTopic
 from cmk.gui.permissions import permission_registry
 from cmk.gui.utils.roles import UserPermissions
+from cmk.shared_typing.main_menu import NavItemTopic
 
 from ._base import SidebarSnapin
 from ._helpers import footnotelinks, make_main_menu, show_main_menu, VisualItem, VisualMenuItem
@@ -43,7 +43,7 @@ class Dashboards(SidebarSnapin):
             links.append((_("Edit"), "edit_dashboards.py"))
             footnotelinks(links)
 
-    def _get_dashboard_menu_items(self, user_permissions: UserPermissions) -> list[MainMenuTopic]:
+    def _get_dashboard_menu_items(self, user_permissions: UserPermissions) -> list[NavItemTopic]:
         return make_main_menu(
             [
                 VisualMenuItem("dashboards", VisualItem(k, v))

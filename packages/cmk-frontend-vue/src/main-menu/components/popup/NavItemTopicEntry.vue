@@ -7,6 +7,7 @@ conditions defined in the file COPYING, which is part of this source code packag
 <script setup lang="ts">
 import type { NavItemIdEnum, NavItemTopicEntry } from 'cmk-shared-typing/typescript/main_menu'
 
+import CmkDynamicIcon from '@/components/CmkIcon/CmkDynamicIcon/CmkDynamicIcon.vue'
 import CmkHeading from '@/components/typography/CmkHeading.vue'
 
 import { getInjectedMainMenu } from '@/main-menu/provider/main-menu'
@@ -36,18 +37,11 @@ function clickLi(entry: NavItemTopicEntry) {
 </script>
 
 <template>
-  <li @click="clickLi(entry)">
+  <li :id="entry.id" @click="clickLi(entry)">
     <div v-if="entry.mode === 'indented'" class="mm-nav-item-topic-entry">
       <CmkHeading type="h4" class="mm-nav-item-topic-entry__indented-header">
         <span v-if="entry.icon" class="mm-nav-item-topic-entry__header-icon">
-          <img :src="entry.icon.src" width="18" height="18" />
-          <img
-            v-if="entry.icon.emblem"
-            class="mm-nav-item-topic-entry__icon-emblem"
-            :src="entry.icon.emblem"
-            width="10"
-            height="10"
-          />
+          <CmkDynamicIcon :spec="entry.icon" />
         </span>
         <span>{{ entry.title }}</span>
       </CmkHeading>

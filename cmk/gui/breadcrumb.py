@@ -14,9 +14,9 @@ from collections.abc import Iterable, MutableSequence
 from typing import NamedTuple, overload
 
 import cmk.gui.htmllib.html
-from cmk.gui.main_menu_types import MainMenu
 from cmk.gui.utils.html import HTML
 from cmk.gui.utils.speaklater import LazyString
+from cmk.shared_typing.main_menu import NavItem
 
 
 class BreadcrumbItem(NamedTuple):
@@ -84,7 +84,7 @@ class BreadcrumbRenderer:
         cmk.gui.htmllib.html.html.close_div()
 
 
-def make_simple_page_breadcrumb(menu: MainMenu, title: str) -> Breadcrumb:
+def make_simple_page_breadcrumb(menu: NavItem, title: str) -> Breadcrumb:
     """Helper to create breadcrumbs for simple pages
 
     This can be used to create breadcrumbs for pages that are on the level
@@ -105,7 +105,7 @@ def make_current_page_breadcrumb_item(title: str) -> BreadcrumbItem:
 
 
 def make_topic_breadcrumb(
-    menu: MainMenu,
+    menu: NavItem,
     topic_title: str | LazyString,
 ) -> Breadcrumb:
     """Helper to create a breadcrumb down to topic level"""
@@ -123,7 +123,7 @@ def make_topic_breadcrumb(
     return breadcrumb
 
 
-def make_main_menu_breadcrumb(menu: MainMenu) -> Breadcrumb:
+def make_main_menu_breadcrumb(menu: NavItem) -> Breadcrumb:
     """Create a breadcrumb for the main menu level"""
     return Breadcrumb(
         [

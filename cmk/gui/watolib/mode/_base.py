@@ -16,12 +16,12 @@ from cmk.gui.http import Request, request
 from cmk.gui.i18n import _
 from cmk.gui.logged_in import user
 from cmk.gui.main_menu import main_menu_registry
-from cmk.gui.main_menu_types import MainMenu
 from cmk.gui.page_menu import PageMenu
 from cmk.gui.type_defs import ActionResult, HTTPVariables, PermissionName
 from cmk.gui.utils.transaction_manager import transactions
 from cmk.gui.utils.urls import makeuri_contextless
 from cmk.gui.watolib.main_menu import main_module_registry
+from cmk.shared_typing.main_menu import NavItem
 
 
 class WatoMode[RequestOK](abc.ABC):
@@ -82,7 +82,7 @@ class WatoMode[RequestOK](abc.ABC):
 
     # Currently only needed for a special Setup module "user_notifications_p" that
     # is not part of the Setup main menu but the user menu.
-    def main_menu(self) -> MainMenu:
+    def main_menu(self) -> NavItem:
         """Specify the top-level breadcrumb item of this mode"""
         return main_menu_registry.menu_setup()
 

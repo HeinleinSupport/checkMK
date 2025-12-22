@@ -21,9 +21,9 @@ from typing import Any, override
 
 from cmk.ccc.exceptions import MKGeneralException
 from cmk.ccc.site import SiteId
-from cmk.gui import hooks, pagetypes, sites
+from cmk.gui import pagetypes, sites
 from cmk.gui.breadcrumb import Breadcrumb, make_simple_page_breadcrumb
-from cmk.gui.config import Config
+from cmk.gui.config import active_config, Config
 from cmk.gui.dashboard import DashletRegistry
 from cmk.gui.exceptions import MKUserError
 from cmk.gui.htmllib.header import make_header
@@ -33,12 +33,12 @@ from cmk.gui.i18n import _
 from cmk.gui.log import logger
 from cmk.gui.logged_in import LoggedInUser, user
 from cmk.gui.main_menu import main_menu_registry, MainMenuRegistry
-from cmk.gui.main_menu_types import MainMenuTopic
 from cmk.gui.page_menu import PageMenu, PageMenuDropdown, PageMenuTopic
 from cmk.gui.pages import AjaxPage, PageContext, PageEndpoint, PageRegistry, PageResult
 from cmk.gui.permissions import permission_registry, PermissionSectionRegistry
+from cmk.gui.product_usage_analytics_popup import render_product_usage_analytics_popup
 from cmk.gui.theme.current_theme import theme
-from cmk.gui.type_defs import IconNames, IconSizes, StaticIcon
+from cmk.gui.type_defs import IconNames, StaticIcon
 from cmk.gui.user_sites import get_configured_site_choices
 from cmk.gui.userdb import load_custom_attr
 from cmk.gui.utils import load_web_plugins
@@ -47,7 +47,7 @@ from cmk.gui.utils.html import HTML
 from cmk.gui.utils.output_funnel import output_funnel
 from cmk.gui.utils.roles import UserPermissions
 from cmk.gui.utils.urls import makeuri_contextless
-from cmk.gui.werks import may_acknowledge
+from cmk.shared_typing.main_menu import NavItemTopic
 from cmk.shared_typing.sidebar import SidebarConfig
 from cmk.shared_typing.sidebar import SidebarSnapin as SidebarSnapinConfig
 
@@ -81,7 +81,7 @@ from ._snapin_dashlet import SnapinDashlet, SnapinWidgetIFramePage
 from ._snapin_dashlet import SnapinDashletConfig as SnapinDashletConfig
 from .main_menu import (
     ajax_message_read,
-    MainMenuRenderer,
+    MainMenuConfigCreator,
     PageAjaxSidebarChangesMenu,
     PageAjaxSidebarGetMessages,
     PageAjaxSidebarGetUnackIncompWerks,
@@ -98,7 +98,7 @@ def register(
     snapin_registry_: SnapinRegistry,
     dashlet_registry: DashletRegistry,
     main_menu_registry_: MainMenuRegistry,
-    view_menu_topics: Callable[[UserPermissions], list[MainMenuTopic]],
+    view_menu_topics: Callable[[UserPermissions], list[NavItemTopic]],
 ) -> None:
     page_registry.register(PageEndpoint("sidebar_fold", AjaxFoldSnapin()))
     page_registry.register(PageEndpoint("sidebar_openclose", AjaxOpenCloseSnapin()))
@@ -455,10 +455,9 @@ class SidebarRenderer:
             html.open_body(class_=body_classes, data_theme=theme.get())
             return
 
-        interval = sidebar_notify_interval if sidebar_notify_interval is not None else "null"
         html.open_body(
             class_=body_classes,
-            onload=f"cmk.sidebar.initialize_scroll_position(); cmk.sidebar.init_messages_and_werks({json.dumps(interval)}, {json.dumps(bool(may_acknowledge()))}); ",
+            onload="cmk.sidebar.initialize_scroll_position(); ",
             data_theme=theme.get(),
         )
 
@@ -482,7 +481,10 @@ class SidebarRenderer:
             id_="check_mk_navigation",
             class_="min" if user.get_attribute("nav_hide_icons_title") else None,
         )
-        self._show_sidebar_head(start_url, user_permissions)
+        self._show_main_menu(start_url, user_permissions)
+        render_product_usage_analytics_popup(
+            active_config=active_config, user=user, request=request, response=response
+        )
         html.close_div()
 
         assert user.id is not None
@@ -706,44 +708,21 @@ class SidebarRenderer:
             html.write_html(content)
         html.close_div()
 
-    def _show_sidebar_head(self, start_url: str, user_permissions: UserPermissions) -> None:
-        html.open_div(id_="side_header")
-        html.open_a(
-            href=user.start_url or start_url,
-            target="main",
-            title=_("Go to main page"),
+    def _show_main_menu(self, start_url: str, user_permissions: UserPermissions) -> None:
+        html.vue_component(
+            "cmk-main-menu",
+            data=asdict(
+                MainMenuConfigCreator(user_permissions=user_permissions, request=request).create(
+                    start_url=user.start_url or start_url, home_icon_path=_get_icon_path()
+                )
+            ),
         )
-        _render_header_icon()
-        html.close_a()
-        html.close_div()
-
-        MainMenuRenderer().show(user_permissions)
-
-        hooks.call("show-main-menu-bottom")
-
-        html.open_div(
-            id_="side_fold",
-            title=_("Toggle the sidebar"),
-            onclick="cmk.sidebar.toggle_sidebar()",
-        )
-        html.static_icon(
-            StaticIcon(IconNames.sidebar_folded), size=IconSizes.xlarge, css_classes=["folded"]
-        )
-        html.static_icon(StaticIcon(IconNames.sidebar), size=IconSizes.xlarge)
-        if not user.get_attribute("nav_hide_icons_title"):
-            html.div(_("Sidebar"))
-        html.close_div()
 
 
-def _render_header_icon() -> None:
+def _get_icon_path() -> str | None:
     if theme.has_custom_logo("navbar_logo"):
-        html.img(theme.detect_icon_path(icon_name="navbar_logo", prefix=""), class_="custom")
-    else:
-        html.static_icon(
-            StaticIcon(IconNames.checkmk_logo_min)
-            if user.get_attribute("nav_hide_icons_title")
-            else StaticIcon(IconNames.checkmk_logo)
-        )
+        return theme.detect_icon_path(icon_name="navbar_logo", prefix="")
+    return None
 
 
 def page_side(ctx: PageContext) -> None:

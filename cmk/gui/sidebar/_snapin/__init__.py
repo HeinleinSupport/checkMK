@@ -6,9 +6,9 @@
 from collections.abc import Callable
 
 from cmk.gui.main_menu import MainMenuRegistry
-from cmk.gui.main_menu_types import MainMenuTopic
 from cmk.gui.pages import PageRegistry
 from cmk.gui.utils.roles import UserPermissions
+from cmk.shared_typing.main_menu import NavItemTopic
 
 from . import _views
 from ._base import CustomizableSidebarSnapin as CustomizableSidebarSnapin
@@ -54,7 +54,7 @@ def register(
     snapin_registry_: SnapinRegistry,
     page_registry: PageRegistry,
     main_menu_registry: MainMenuRegistry,
-    view_menu_topics: Callable[[UserPermissions], list[MainMenuTopic]],
+    view_menu_topics: Callable[[UserPermissions], list[NavItemTopic]],
 ) -> None:
     snapin_registry_.register(Bookmarks)
     snapin_registry_.register(Dashboards)

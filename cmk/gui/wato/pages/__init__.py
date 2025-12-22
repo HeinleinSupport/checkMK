@@ -7,13 +7,13 @@ from collections.abc import Callable
 
 from cmk.gui.background_job import BackgroundJobRegistry
 from cmk.gui.main_menu import MainMenuRegistry
-from cmk.gui.main_menu_types import MainMenuTopic
 from cmk.gui.pages import PageRegistry
 from cmk.gui.quick_setup.v0_unstable._registry import QuickSetupRegistry
 from cmk.gui.search import MatchItemGeneratorRegistry
 from cmk.gui.utils.roles import UserPermissions
 from cmk.gui.watolib.automation_commands import AutomationCommandRegistry
 from cmk.gui.watolib.mode import ModeRegistry
+from cmk.shared_typing.main_menu import NavItemTopic
 
 from . import (
     activate_changes,
@@ -73,7 +73,7 @@ def register(
     job_registry: BackgroundJobRegistry,
     match_item_generator_registry: MatchItemGeneratorRegistry,
     main_menu_registry: MainMenuRegistry,
-    user_menu_topics: Callable[[UserPermissions], list[MainMenuTopic]],
+    user_menu_topics: Callable[[UserPermissions], list[NavItemTopic]],
 ) -> None:
     activate_changes.register(page_registry, mode_registry, automation_command_registry)
     analyze_configuration.register(mode_registry)

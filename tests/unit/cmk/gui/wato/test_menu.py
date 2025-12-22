@@ -7,10 +7,10 @@
 import pytest
 
 import cmk.ccc.version as cmk_version
-from cmk.gui.main_menu_types import MainMenuItem, MainMenuTopic
 from cmk.gui.search import MatchItem
 from cmk.gui.utils.roles import UserPermissions
 from cmk.gui.wato._snapins import get_wato_menu_items, MatchItemGeneratorSetupMenu
+from cmk.shared_typing.main_menu import NavItemTopic, NavItemTopicEntry
 from cmk.utils import paths
 
 
@@ -157,9 +157,9 @@ def expected_items() -> dict[str, list[str]]:
 def test_get_wato_menu_items() -> None:
     items_by_topic: dict[str, list[str]] = {}
     for topic in get_wato_menu_items(UserPermissions({}, {}, {}, [])):
-        items = items_by_topic.setdefault(topic.name, [])
+        items = items_by_topic.setdefault(topic.id, [])
         for item in topic.entries:
-            items.append(item.name)
+            items.append(item.id)
 
     assert expected_items() == items_by_topic
 
@@ -179,13 +179,14 @@ def test_match_item_generator_setup_menu() -> None:
         MatchItemGeneratorSetupMenu(
             "setup",
             lambda p: [
-                MainMenuTopic(
-                    name="topic",
+                NavItemTopic(
+                    id="topic",
                     title="Topic",
                     entries=[
-                        MainMenuItem(name="item 1", title="Item 1", sort_index=0, url="url 1"),
-                        MainMenuItem(name="item 2", title="Item 2", sort_index=1, url="url 2"),
+                        NavItemTopicEntry(id="item 1", title="Item 1", sort_index=0, url="url 1"),
+                        NavItemTopicEntry(id="item 2", title="Item 2", sort_index=1, url="url 2"),
                     ],
+                    sort_index=0,
                 )
             ],
         ).generate_match_items(UserPermissions({}, {}, {}, []))

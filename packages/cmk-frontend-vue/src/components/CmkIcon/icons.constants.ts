@@ -39,6 +39,7 @@ export const oneColorIcons = [
   'help',
   'menu',
   'monitoring',
+  'saas',
   'search',
   'services',
   'setup',

@@ -20,6 +20,10 @@ import { SidebarService } from '@/sidebar/lib/sidebar'
 const { _t } = usei18n()
 const mainMenu = getInjectedMainMenu()
 
+defineProps<{
+  hideItemTitle: boolean
+}>()
+
 const shortCut: NavItemShortcut = {
   key: '/',
   ctrl: true
@@ -34,7 +38,11 @@ const color = computed<CmkMultitoneIconColor>(() => {
   <li
     id="nav-item-sidebar"
     class="mm-sidebar-toggle__li"
-    :class="{ 'mm-sidebar-toggle__li--active': SidebarService.isActive() }"
+    :class="{
+      'mm-sidebar-toggle__li--active': SidebarService.isActive(),
+      'mm-sidebar-toggle__li--small': hideItemTitle
+    }"
+    :title="_t('Toggle sidebar')"
   >
     <a href="javascript:void(0)" @click="SidebarService.toggle()">
       <CmkMultitoneIcon
@@ -49,7 +57,7 @@ const color = computed<CmkMultitoneIconColor>(() => {
         size="small"
         class="mm-sidebar-toggle__key-hint"
       />
-      <span>{{ _t('Sidebar') }}</span>
+      <span v-if="!hideItemTitle">{{ _t('Sidebar') }}</span>
     </a>
   </li>
 </template>
@@ -92,6 +100,14 @@ const color = computed<CmkMultitoneIconColor>(() => {
   &.mm-sidebar-toggle__li--active {
     a {
       color: var(--success);
+    }
+  }
+
+  &.mm-sidebar-toggle__li--small {
+    height: 48px;
+
+    .mm-sidebar-toggle__icon {
+      margin-bottom: 0;
     }
   }
 }

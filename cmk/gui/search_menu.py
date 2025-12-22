@@ -4,35 +4,24 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 
-from dataclasses import dataclass
-
 from cmk.ccc.version import edition
 from cmk.gui.http import Request
-from cmk.gui.i18n import _l
+from cmk.gui.i18n import _
 from cmk.gui.logged_in import user
 from cmk.gui.main_menu import MainMenuRegistry
-from cmk.gui.main_menu_types import (
-    MainMenu,
-    MainMenuData,
-    MainMenuVueApp,
-    UnifiedSearch,
+from cmk.gui.main_menu_types import MainMenuItem
+from cmk.shared_typing.main_menu import (
+    NavItemIdEnum,
+    NavItemShortcut,
+    NavItemVueApp,
+    NavVueAppIdEnum,
 )
-from cmk.gui.type_defs import IconNames, StaticIcon
-from cmk.shared_typing.unified_search import (
-    Edition,
-    Provider,
-    Providers,
-    UnifiedSearchProps,
-)
+from cmk.shared_typing.unified_search import Edition, Provider, Providers, UnifiedSearchProps
 from cmk.utils import paths
 
 
-@dataclass(frozen=True, kw_only=True)
-class UnifiedSearchMainMenuData(UnifiedSearchProps, MainMenuData): ...
-
-
-def get_unified_search_config(request: Request) -> UnifiedSearchMainMenuData:
-    return UnifiedSearchMainMenuData(
+def get_unified_search_props(request: Request) -> UnifiedSearchProps:
+    return UnifiedSearchProps(
         providers=Providers(
             monitoring=Provider(active=True, sort=0),
             customize=Provider(active=False, sort=1),
@@ -44,18 +33,20 @@ def get_unified_search_config(request: Request) -> UnifiedSearchMainMenuData:
     )
 
 
+def _get_unified_search_app(request: Request) -> NavItemVueApp:
+    return NavItemVueApp(id=NavVueAppIdEnum.cmk_unified_search)
+
+
 def register(mega_menu_registry: MainMenuRegistry) -> None:
     mega_menu_registry.register(
-        MainMenu(
-            name="search",
-            title=_l("Search"),
-            icon=StaticIcon(IconNames.main_search),
+        MainMenuItem(
+            id=NavItemIdEnum.search,
+            title=_("Search"),
             sort_index=1,
             topics=None,
-            search=UnifiedSearch("unified_search", "unified-search-input"),
-            vue_app=MainMenuVueApp(
-                name="cmk-unified-search",
-                data=get_unified_search_config,
-            ),
+            set_focus_on_element_by_id="unified-search-input",
+            shortcut=NavItemShortcut(key="k", alt=True),
+            get_vue_app=_get_unified_search_app,
+            hint=_("Search accross Checkmk"),
         )
     )
