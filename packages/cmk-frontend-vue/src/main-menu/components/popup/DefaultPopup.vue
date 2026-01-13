@@ -118,7 +118,7 @@ function navigateUrl(url: string) {
     justify-content: space-between;
     height: 60px;
     border-bottom: 1px solid var(--default-nav-border-color);
-    padding: 0 var(--dimension-5) 0 var(--dimension-8);
+    padding: 0 var(--dimension-5) 0 var(--dimension-7);
 
     .mm-default-popup__header-trigger-button {
       left: 0;
