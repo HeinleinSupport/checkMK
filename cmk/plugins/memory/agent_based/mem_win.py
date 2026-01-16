@@ -6,7 +6,7 @@
 
 import time
 from collections.abc import MutableMapping
-from typing import Generic, NotRequired, TypedDict, TypeVar
+from typing import NotRequired, TypedDict
 
 from cmk.agent_based.v2 import (
     check_levels,
@@ -30,12 +30,9 @@ def discovery_mem_win(section: memory.SectionMem) -> DiscoveryResult:
         yield Service()
 
 
-_NumberT = TypeVar("_NumberT", int, float)
-
-
-class _DualLevels(TypedDict, Generic[_NumberT]):
-    lower: LevelsT[_NumberT]
-    upper: LevelsT[_NumberT]
+class _DualLevels[T: (int, float)](TypedDict):
+    lower: LevelsT[T]
+    upper: LevelsT[T]
 
 
 class _Levels(TypedDict):

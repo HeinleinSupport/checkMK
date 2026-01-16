@@ -7,7 +7,7 @@
 
 # mypy: disable-error-code="type-arg"
 
-from typing import Generic, NotRequired, TypedDict, TypeVar
+from typing import NotRequired, TypedDict
 
 from cmk.rulesets.v1 import Help, rule_specs, Title
 from cmk.rulesets.v1.form_specs import (
@@ -29,12 +29,10 @@ from cmk.rulesets.v1.form_specs import (
     validators,
 )
 
-_NumberT = TypeVar("_NumberT", int, float)
 
-
-class _DualLevels(TypedDict, Generic[_NumberT]):
-    upper: LevelsConfigModel[_NumberT]
-    lower: LevelsConfigModel[_NumberT]
+class _DualLevels[T: (int, float)](TypedDict):
+    upper: LevelsConfigModel[T]
+    lower: LevelsConfigModel[T]
 
 
 class _LevelsModel(TypedDict):
