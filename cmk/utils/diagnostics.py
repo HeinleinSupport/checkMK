@@ -1071,10 +1071,10 @@ CheckmkFileInfoByRelFilePathMap: dict[str, CheckmkFileInfo] = {
         description="Log file of the stunnel, which handles encrypted communication between sites.",
         encryption=CheckmkFileEncryption.none,
     ),
-    "telemetry.log": CheckmkFileInfo(
+    "product_usage_analytics.log": CheckmkFileInfo(
         components=[],
         sensitivity=CheckmkFileSensitivity.sensitive,
-        description="This log files contains all activity and errors of the product telemetry module.",
+        description="This log files contains all activity and errors of the product usage analytics module.",
         encryption=CheckmkFileEncryption.none,
     ),
     "ui-job-scheduler/access.log": CheckmkFileInfo(
