@@ -4,20 +4,24 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 # mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
 # mypy: disable-error-code="type-arg"
 
 
-from collections.abc import Iterable
+from collections.abc import Iterable, Mapping
+from typing import Any
 
-from cmk.agent_based.legacy.v0_unstable import check_levels, LegacyCheckDefinition
+from cmk.agent_based.legacy.v0_unstable import (
+    check_levels,
+    LegacyCheckDefinition,
+    LegacyCheckResult,
+)
 from cmk.agent_based.v2 import render
 from cmk.base.check_legacy_includes.mem import check_memory_element
 from cmk.plugins.couchbase.lib import parse_couchbase_lines, Section
 
-check_info = {}
+check_info: dict[str, Any] = {}
 
-DiscoveryResult = Iterable[tuple[str, dict]]
+DiscoveryResult = Iterable[tuple[str, dict[str, Any]]]
 
 
 def discover_couchbase_buckets_mem(section: Section) -> DiscoveryResult:
@@ -26,7 +30,9 @@ def discover_couchbase_buckets_mem(section: Section) -> DiscoveryResult:
     )
 
 
-def check_couchbase_bucket_mem(item, params, parsed):
+def check_couchbase_bucket_mem(
+    item: str, params: Mapping[str, Any], parsed: Section
+) -> LegacyCheckResult:
     if not (data := parsed.get(item)):
         return
     levels = params.get("levels")
