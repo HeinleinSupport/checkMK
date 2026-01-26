@@ -4,17 +4,19 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 # mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
-
-
 # mypy: disable-error-code="var-annotated"
 
+from collections.abc import Iterable, Mapping
+from typing import Any
+
 from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
-from cmk.agent_based.v2 import render, Service
+from cmk.agent_based.v2 import render, Service, StringTable
 from cmk.base.check_legacy_includes.cpu_util import check_cpu_util
 from cmk.base.check_legacy_includes.ibm_svc import parse_ibm_svc_with_header
 
-check_info = {}
+check_info: dict[str, Any] = {}
+
+Section = Mapping[str, Mapping[str, float]]
 
 # newer Firmware versions may return decimal values, not just integer
 # <<<ibm_svc_nodestats:sep(58)>>>
@@ -105,7 +107,7 @@ check_info = {}
 # [...]
 
 
-def parse_ibm_svc_nodestats(info):
+def parse_ibm_svc_nodestats(info: StringTable) -> Section:
     dflt_header = [
         "node_id",
         "node_name",
@@ -176,7 +178,7 @@ check_info["ibm_svc_nodestats"] = LegacyCheckDefinition(
 #   '----------------------------------------------------------------------'
 
 
-def discover_ibm_svc_nodestats_diskio(section):
+def discover_ibm_svc_nodestats_diskio(section: Section) -> list[tuple[str, None]]:
     return [
         (node_name, None)
         for node_name, data in section.items()
@@ -184,7 +186,9 @@ def discover_ibm_svc_nodestats_diskio(section):
     ]
 
 
-def check_ibm_svc_nodestats_diskio(item, _no_params, section):
+def check_ibm_svc_nodestats_diskio(
+    item: str, _no_params: Mapping[str, Any], section: Section
+) -> tuple[int, str, list[tuple[str, float]]] | None:
     data = section.get(item)
     if data is None:
         return None
@@ -219,7 +223,7 @@ check_info["ibm_svc_nodestats.diskio"] = LegacyCheckDefinition(
 #   '----------------------------------------------------------------------'
 
 
-def discover_ibm_svc_nodestats_iops(section):
+def discover_ibm_svc_nodestats_iops(section: Section) -> list[tuple[str, None]]:
     return [
         (node_name, None)
         for node_name, data in section.items()
@@ -227,7 +231,9 @@ def discover_ibm_svc_nodestats_iops(section):
     ]
 
 
-def check_ibm_svc_nodestats_iops(item, _no_params, section):
+def check_ibm_svc_nodestats_iops(
+    item: str, _no_params: Mapping[str, Any], section: Section
+) -> tuple[int, str, list[tuple[str, float]]] | None:
     data = section.get(item)
     if data is None:
         return None
@@ -258,7 +264,7 @@ check_info["ibm_svc_nodestats.iops"] = LegacyCheckDefinition(
 #   '----------------------------------------------------------------------'
 
 
-def discover_ibm_svc_nodestats_disk_latency(section):
+def discover_ibm_svc_nodestats_disk_latency(section: Section) -> list[tuple[str, None]]:
     return [
         (node_name, None)
         for node_name, data in section.items()
@@ -266,7 +272,9 @@ def discover_ibm_svc_nodestats_disk_latency(section):
     ]
 
 
-def check_ibm_svc_nodestats_disk_latency(item, _no_params, section):
+def check_ibm_svc_nodestats_disk_latency(
+    item: str, _no_params: Mapping[str, Any], section: Section
+) -> tuple[int, str, list[tuple[str, float]]] | None:
     data = section.get(item)
     if data is None:
         return None
@@ -298,11 +306,11 @@ check_info["ibm_svc_nodestats.disk_latency"] = LegacyCheckDefinition(
 #   '----------------------------------------------------------------------'
 
 
-def discover_ibm_svc_nodestats_cpu(section):
+def discover_ibm_svc_nodestats_cpu(section: Section) -> Iterable[Service]:
     yield from (Service(item=node_name) for node_name, data in section.items() if "cpu_pc" in data)
 
 
-def check_ibm_svc_nodestats_cpu(item, params, section):
+def check_ibm_svc_nodestats_cpu(item: str, params: Mapping[str, Any], section: Section) -> Any:
     data = section.get(item)
     if data is None:
         return None
@@ -330,7 +338,7 @@ check_info["ibm_svc_nodestats.cpu_util"] = LegacyCheckDefinition(
 #   '----------------------------------------------------------------------'
 
 
-def discover_ibm_svc_nodestats_cache(section):
+def discover_ibm_svc_nodestats_cache(section: Section) -> list[tuple[str, None]]:
     return [
         (node_name, None)
         for node_name, data in section.items()
@@ -338,7 +346,9 @@ def discover_ibm_svc_nodestats_cache(section):
     ]
 
 
-def check_ibm_svc_nodestats_cache(item, _no_params, section):
+def check_ibm_svc_nodestats_cache(
+    item: str, _no_params: Mapping[str, Any], section: Section
+) -> tuple[int, str, list[Any]] | None:
     data = section.get(item)
     if data is None:
         return None

@@ -177,6 +177,7 @@ def test_discover_ibm_svc_nodestats_disk_latency(parsed: Mapping[str, Any]) -> N
 def test_check_ibm_svc_nodestats_cache(parsed: Mapping[str, Any]) -> None:
     """Test cache usage monitoring."""
     result = check_ibm_svc_nodestats_cache("BLUBBSVC01", {}, parsed)
+    assert result is not None
 
     assert result[0] == 0  # OK state
     assert "Write cache usage is 0 %" in result[1]
@@ -208,6 +209,7 @@ def test_check_ibm_svc_nodestats_cpu(parsed: Mapping[str, Any]) -> None:
 def test_check_ibm_svc_nodestats_diskio_vdisks(parsed: Mapping[str, Any]) -> None:
     """Test disk I/O monitoring for VDisks."""
     result = check_ibm_svc_nodestats_diskio("VDisks BLUBBSVC01", {}, parsed)
+    assert result is not None
 
     assert result[0] == 0  # OK state
     assert "0.00 B/s read, 0.00 B/s write" in result[1]
@@ -217,6 +219,7 @@ def test_check_ibm_svc_nodestats_diskio_vdisks(parsed: Mapping[str, Any]) -> Non
 def test_check_ibm_svc_nodestats_diskio_mdisks(parsed: Mapping[str, Any]) -> None:
     """Test disk I/O monitoring for MDisks."""
     result = check_ibm_svc_nodestats_diskio("MDisks BLUBBSVC01", {}, parsed)
+    assert result is not None
 
     assert result[0] == 0  # OK state
     assert "1.05 MB/s read" in result[1]
@@ -227,6 +230,7 @@ def test_check_ibm_svc_nodestats_diskio_mdisks(parsed: Mapping[str, Any]) -> Non
 def test_check_ibm_svc_nodestats_diskio_drives(parsed: Mapping[str, Any]) -> None:
     """Test disk I/O monitoring for Drives."""
     result = check_ibm_svc_nodestats_diskio("Drives BLUBBSVC01", {}, parsed)
+    assert result is not None
 
     assert result[0] == 0  # OK state
     assert "0.00 B/s read, 0.00 B/s write" in result[1]
@@ -236,6 +240,7 @@ def test_check_ibm_svc_nodestats_diskio_drives(parsed: Mapping[str, Any]) -> Non
 def test_check_ibm_svc_nodestats_iops_vdisks(parsed: Mapping[str, Any]) -> None:
     """Test IOPS monitoring for VDisks."""
     result = check_ibm_svc_nodestats_iops("VDisks BLUBBSVC01", {}, parsed)
+    assert result is not None
 
     assert result[0] == 0  # OK state
     assert "19.0 IO/s read, 110.0 IO/s write" in result[1]
@@ -245,6 +250,7 @@ def test_check_ibm_svc_nodestats_iops_vdisks(parsed: Mapping[str, Any]) -> None:
 def test_check_ibm_svc_nodestats_iops_mdisks(parsed: Mapping[str, Any]) -> None:
     """Test IOPS monitoring for MDisks."""
     result = check_ibm_svc_nodestats_iops("MDisks BLUBBSVC01", {}, parsed)
+    assert result is not None
 
     assert result[0] == 0  # OK state
     assert "15.0 IO/s read, 865.0 IO/s write" in result[1]
@@ -254,6 +260,7 @@ def test_check_ibm_svc_nodestats_iops_mdisks(parsed: Mapping[str, Any]) -> None:
 def test_check_ibm_svc_nodestats_iops_drives(parsed: Mapping[str, Any]) -> None:
     """Test IOPS monitoring for Drives."""
     result = check_ibm_svc_nodestats_iops("Drives BLUBBSVC01", {}, parsed)
+    assert result is not None
 
     assert result[0] == 0  # OK state
     assert "0.0 IO/s read, 0.0 IO/s write" in result[1]
@@ -263,6 +270,7 @@ def test_check_ibm_svc_nodestats_iops_drives(parsed: Mapping[str, Any]) -> None:
 def test_check_ibm_svc_nodestats_disk_latency_vdisks(parsed: Mapping[str, Any]) -> None:
     """Test disk latency monitoring for VDisks."""
     result = check_ibm_svc_nodestats_disk_latency("VDisks BLUBBSVC01", {}, parsed)
+    assert result is not None
 
     assert result[0] == 0  # OK state
     assert "Latency is 2.0 ms for read, 0.0 ms for write" in result[1]
@@ -272,6 +280,7 @@ def test_check_ibm_svc_nodestats_disk_latency_vdisks(parsed: Mapping[str, Any]) 
 def test_check_ibm_svc_nodestats_disk_latency_mdisks(parsed: Mapping[str, Any]) -> None:
     """Test disk latency monitoring for MDisks."""
     result = check_ibm_svc_nodestats_disk_latency("MDisks BLUBBSVC01", {}, parsed)
+    assert result is not None
 
     assert result[0] == 0  # OK state
     assert "Latency is 5.0 ms for read, 1.0 ms for write" in result[1]
@@ -281,6 +290,7 @@ def test_check_ibm_svc_nodestats_disk_latency_mdisks(parsed: Mapping[str, Any]) 
 def test_check_ibm_svc_nodestats_disk_latency_drives(parsed: Mapping[str, Any]) -> None:
     """Test disk latency monitoring for Drives."""
     result = check_ibm_svc_nodestats_disk_latency("Drives BLUBBSVC01", {}, parsed)
+    assert result is not None
 
     assert result[0] == 0  # OK state
     assert "Latency is 0.0 ms for read, 0.0 ms for write" in result[1]
