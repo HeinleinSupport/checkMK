@@ -3,22 +3,27 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
+
+from collections.abc import Iterator
+from typing import Any
 
 from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
 from cmk.agent_based.v2 import SNMPTree, StringTable
 from cmk.base.check_legacy_includes.temperature import check_temperature
 from cmk.plugins.f5_bigip.lib import F5_BIGIP
+from cmk.plugins.lib.temperature import TempParamDict
 
 check_info = {}
 
 
-def discover_f5_bigip_chassis_temp(info):
+def discover_f5_bigip_chassis_temp(info: StringTable) -> Iterator[tuple[str, dict[str, object]]]:
     for line in info:
         yield line[0], {}
 
 
-def check_f5_bigip_chassis_temp(item, params, info):
+def check_f5_bigip_chassis_temp(
+    item: str, params: TempParamDict, info: StringTable
+) -> tuple[int, str, list[Any]] | None:
     for name, temp in info:
         if name == item:
             return check_temperature(int(temp), params, "f5_bigip_chassis_temp_%s" % item)

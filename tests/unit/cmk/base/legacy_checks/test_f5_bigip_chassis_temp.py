@@ -17,6 +17,7 @@ from cmk.base.legacy_checks.f5_bigip_chassis_temp import (
     discover_f5_bigip_chassis_temp,
     parse_f5_bigip_chassis_temp,
 )
+from cmk.plugins.lib.temperature import TempParamDict
 
 
 @pytest.mark.parametrize(
@@ -55,7 +56,7 @@ def test_discover_f5_bigip_chassis_temp(
     ],
 )
 def test_check_f5_bigip_chassis_temp(
-    item: str, params: Mapping[str, Any], string_table: StringTable, expected_results: Sequence[Any]
+    item: str, params: TempParamDict, string_table: StringTable, expected_results: Sequence[Any]
 ) -> None:
     """Test check function for f5_bigip_chassis_temp check."""
     parsed = parse_f5_bigip_chassis_temp(string_table)
