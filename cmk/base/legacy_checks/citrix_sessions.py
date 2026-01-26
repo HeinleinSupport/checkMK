@@ -3,34 +3,37 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
-
 # <<<citrix_sessions>>>
 # sessions 1
 # active_sessions 1
 # inactive_sessions 0
 
 
-# mypy: disable-error-code="var-annotated"
+from collections.abc import Iterator, Mapping
+from typing import Any
 
 from cmk.agent_based.legacy.v0_unstable import check_levels, LegacyCheckDefinition
 from cmk.agent_based.v2 import StringTable
 
 check_info = {}
 
-citrix_sessions_default_levels = {
+citrix_sessions_default_levels: dict[str, tuple[int, int]] = {
     "total": (60, 65),
     "active": (60, 65),
     "inactive": (10, 15),
 }
 
 
-def discover_citrix_sessions(info):
+def discover_citrix_sessions(
+    info: StringTable,
+) -> list[tuple[None, dict[str, tuple[int, int]]]]:
     return [(None, citrix_sessions_default_levels)]
 
 
-def check_citrix_sessions(_no_item, params, info):
-    session = {}
+def check_citrix_sessions(
+    _no_item: None, params: Mapping[str, Any], info: StringTable
+) -> Iterator[tuple[int, str] | tuple[int, str, list[Any]]]:
+    session: dict[str, int] = {}
     for line in info:
         if len(line) > 1:
             session.setdefault(line[0], int(line[1]))

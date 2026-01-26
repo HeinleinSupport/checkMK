@@ -29,7 +29,8 @@ from cmk.base.legacy_checks.citrix_sessions import (
     ],
 )
 def test_discover_citrix_sessions(
-    string_table: StringTable, expected_discoveries: Sequence[tuple[str, Mapping[str, Any]]]
+    string_table: StringTable,
+    expected_discoveries: Sequence[tuple[None, dict[str, tuple[int, int]]]],
 ) -> None:
     """Test discovery function for citrix_sessions check."""
     parsed = parse_citrix_sessions(string_table)
@@ -53,7 +54,10 @@ def test_discover_citrix_sessions(
     ],
 )
 def test_check_citrix_sessions(
-    item: str, params: Mapping[str, Any], string_table: StringTable, expected_results: Sequence[Any]
+    item: None,
+    params: Mapping[str, Any],
+    string_table: StringTable,
+    expected_results: Sequence[Any],
 ) -> None:
     """Test check function for citrix_sessions check."""
     parsed = parse_citrix_sessions(string_table)
