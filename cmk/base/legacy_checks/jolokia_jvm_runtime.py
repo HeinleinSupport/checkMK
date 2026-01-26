@@ -4,26 +4,31 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 # mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
-
 
 import time
+from collections.abc import Iterator, Mapping
 from datetime import timedelta
+from typing import Any
 
 from cmk.agent_based.legacy.v0_unstable import check_levels, LegacyCheckDefinition
+from cmk.agent_based.v2 import StringTable
 from cmk.plugins.jolokia.agent_based.lib import parse_jolokia_json_output
 
 check_info = {}
 
+Section = Mapping[str, Any]
 
-def parse_jolokia_jvm_runtime(string_table):
+
+def parse_jolokia_jvm_runtime(string_table: StringTable) -> Section:
     return {
         instance: json_data
         for instance, _mbean, json_data in parse_jolokia_json_output(string_table)
     }
 
 
-def check_jolokia_jvm_runtime_uptime(item, params, parsed):
+def check_jolokia_jvm_runtime_uptime(
+    item: str, params: Mapping[str, Any], parsed: Section
+) -> Iterator[tuple[int, str] | tuple[int, str, list[Any]]]:
     if not (data := parsed.get(item)):
         return
     milli_uptime = data.get("Uptime")
@@ -42,7 +47,7 @@ def check_jolokia_jvm_runtime_uptime(item, params, parsed):
     )
 
 
-def discover_jolokia_jvm_runtime(section):
+def discover_jolokia_jvm_runtime(section: Section) -> Iterator[tuple[str, Mapping[str, Any]]]:
     yield from ((item, {}) for item in section)
 
 
