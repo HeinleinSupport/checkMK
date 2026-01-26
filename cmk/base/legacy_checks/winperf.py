@@ -3,9 +3,10 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
 # mypy: disable-error-code="type-arg"
 
+from collections.abc import Mapping
+from typing import Any
 
 from cmk.agent_based.legacy.v0_unstable import check_levels, LegacyCheckDefinition
 from cmk.agent_based.v2 import get_rate, get_value_store, IgnoreResultsError, render, StringTable
@@ -13,7 +14,7 @@ from cmk.agent_based.v2 import get_rate, get_value_store, IgnoreResultsError, re
 check_info = {}
 
 
-def discover_win_cpuusage(info):
+def discover_win_cpuusage(info: StringTable) -> list[tuple[None, dict[str, object]]]:
     for line in info:
         try:
             if line[0] == "238:6":
@@ -23,9 +24,11 @@ def discover_win_cpuusage(info):
     return []
 
 
-def check_win_cpuusage(item, params, info):
+def check_win_cpuusage(
+    item: None, params: Mapping[str, Any] | tuple[float, float] | None, info: StringTable
+) -> tuple[int, str, list[Any]] | tuple[int, str]:
     if isinstance(params, tuple):
-        levels: tuple | None = params
+        levels: tuple[float, float] | None = params
     elif isinstance(params, dict):
         levels = params.get("levels")
     else:  # legacy: old params may be None
@@ -70,7 +73,7 @@ def check_win_cpuusage(item, params, info):
     return (3, "counter for cpu (238:6) not found")
 
 
-def discover_win_diskstat(info):
+def discover_win_diskstat(info: StringTable) -> list[tuple[None, None]]:
     for line in info:
         try:
             if line[0] == "2:16" or line[0] == "2:18":
@@ -80,7 +83,9 @@ def discover_win_diskstat(info):
     return []
 
 
-def check_win_diskstat(item, params, info):
+def check_win_diskstat(
+    item: None, params: Mapping[str, Any] | None, info: StringTable
+) -> tuple[int, str, list[Any]] | None:
     read_bytes_ctr = 0
     write_bytes_ctr = 0
     this_time = None
