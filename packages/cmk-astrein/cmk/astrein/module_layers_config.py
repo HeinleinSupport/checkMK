@@ -374,7 +374,8 @@ COMPONENTS: Mapping[Component, ImportCheckerProtocol] = {
         "cmk.base.config",
         "cmk.ccc",
         "cmk.fetchers",
-        "cmk.plugins.otel.special_agents.nonfree.ultimate.agent_otel",
+        "cmk.utils.paths",
+        "cmk.metric_backend.fetcher.agent_otel",
     ),
     Component("cmk.base.nonfree.bakery"): _allow(
         "cmk.bakery",
@@ -419,6 +420,7 @@ COMPONENTS: Mapping[Component, ImportCheckerProtocol] = {
         "cmk.nonfree.pro.robotmk",
         "cmk.checkengine",
         "cmk.fetchers",
+        "cmk.helper_interface",
         "cmk.inventory",
         "cmk.rrd",
         "cmk.utils",
@@ -435,6 +437,7 @@ COMPONENTS: Mapping[Component, ImportCheckerProtocol] = {
         "cmk.checkengine.plugins",
         "cmk.relay_fetcher_trigger",
         "cmk.fetchers",
+        "cmk.helper_interface",
         "cmk.inventory",
         "cmk.rrd",
         "cmk.utils",
@@ -609,6 +612,7 @@ COMPONENTS: Mapping[Component, ImportCheckerProtocol] = {
         "cmk.relay_protocols",
         "cmk.check_helper_protocol",
         "cmk.relay_fetcher_trigger",
+        "cmk.metric_backend.fetcher.agent_otel",
     ),
     Component("cmk.gui.cmkcert"): _allow(
         *PACKAGE_CCC,
@@ -626,7 +630,7 @@ COMPONENTS: Mapping[Component, ImportCheckerProtocol] = {
         "cmk.utils",
     ),
     Component("cmk.metric_backend"): _allow(
-        *PACKAGE_CCC,
+        *PACKAGE_CCC, *PACKAGE_PLUGIN_APIS, "cmk.discover_plugins"
     ),
     Component("cmk.mkp_tool"): _allow(),
     Component("cmk.cmkpasswd"): _allow(
