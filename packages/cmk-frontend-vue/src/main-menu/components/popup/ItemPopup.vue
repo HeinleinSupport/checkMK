@@ -10,7 +10,7 @@ import type {
   NavItemTopic,
   NavItemTopicEntry
 } from 'cmk-shared-typing/typescript/main_menu'
-import { computed, nextTick, onMounted, ref } from 'vue'
+import { computed, nextTick, ref } from 'vue'
 
 import DefaultPopup from '@/main-menu/components/popup/DefaultPopup.vue'
 import { definedMainMenuItemVueApps } from '@/main-menu/provider/item-vue-apps.ts'
@@ -50,10 +50,8 @@ mainMenu.onCloseShowAllEntriesOfTopic((id) => {
 })
 
 mainMenu.onNavigate((item: NavItem) => {
-  if (item.id === props.item.id) {
-    const searchInput = document.getElementById(
-      `unified-search-input-${item.id}`
-    ) as HTMLInputElement
+  if (item.id === props.item.id && item.set_focus_on_element_by_id) {
+    const searchInput = document.getElementById(item.set_focus_on_element_by_id) as HTMLInputElement
 
     if (searchInput) {
       void nextTick(() => {
@@ -62,12 +60,6 @@ mainMenu.onNavigate((item: NavItem) => {
     }
   } else {
     showAllTopic.value = null
-  }
-})
-
-onMounted(() => {
-  if (props.item.set_focus_on_element_by_id) {
-    document.getElementById(props.item.set_focus_on_element_by_id)?.focus()
   }
 })
 </script>
