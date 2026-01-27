@@ -3,8 +3,6 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-any-return"
-
 from __future__ import annotations
 
 import abc
@@ -77,6 +75,7 @@ from cmk.diagnostics import (
     OPT_LOCAL_FILES,
     OPT_OMD_CONFIG,
     OPT_PERFORMANCE_GRAPHS,
+    redact_passwords_in_file,
 )
 from cmk.inventory.structured_data import (
     InventoryStore,
@@ -296,6 +295,10 @@ def _format_description(description: str) -> str:
 
 def _format_error(error: str) -> str:
     return f"{2 * _GAP}{tty.error} - {error}"
+
+
+def _format_info(info: str) -> str:
+    return f"{2 * _GAP}{tty.blue}{tty.bold}{info}{tty.normal}"
 
 
 # .
@@ -1057,8 +1060,8 @@ class MKPFindTextDiagnosticsElement(ABCDiagnosticsElementJSONDump):
 
     def _collect_infos(self) -> DiagnosticsElementJSONResult:
         try:
-            return json.loads(
-                subprocess.check_output(["mkp", "find", "--all", "--json"], text=True)
+            return dict(
+                json.loads(subprocess.check_output(["mkp", "find", "--all", "--json"], text=True))
             )
         except subprocess.CalledProcessError as e:
             console.info(f"{_format_error(str(e.stderr))}\n")
@@ -1086,7 +1089,9 @@ class MKPShowTextDiagnosticsElement(ABCDiagnosticsElementJSONDump):
 
     def _collect_infos(self) -> DiagnosticsElementJSONResult:
         try:
-            return json.loads(subprocess.check_output(["mkp", "show-all", "--json"], text=True))
+            return dict(
+                json.loads(subprocess.check_output(["mkp", "show-all", "--json"], text=True))
+            )
         except subprocess.CalledProcessError as e:
             console.info(f"{_format_error(str(e.stderr))}\n")
             return {}
@@ -1112,7 +1117,7 @@ class MKPListTextDiagnosticsElement(ABCDiagnosticsElementJSONDump):
 
     def _collect_infos(self) -> DiagnosticsElementJSONResult:
         try:
-            return json.loads(subprocess.check_output(["mkp", "list", "--json"], text=True))
+            return dict(json.loads(subprocess.check_output(["mkp", "list", "--json"], text=True)))
         except subprocess.CalledProcessError as e:
             console.info(f"{_format_error(str(e.stderr))}\n")
             return {}
@@ -1295,6 +1300,12 @@ class ABCCheckmkFilesDiagnosticsElement(ABCDiagnosticsElement):
             )
         else:
             shutil.copy(str(filepath), str(tmp_filepath))
+
+        passwords_redacted = redact_passwords_in_file(tmp_filepath, rel_filepath)
+
+        if passwords_redacted:
+            redact_message = f"Redacted {passwords_redacted} passwords in file {rel_filepath}"
+            console.info(f"{_format_info(redact_message)}")
 
         return tmp_filepath
 

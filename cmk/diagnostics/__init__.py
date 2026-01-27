@@ -47,4 +47,7 @@ from ._unsorted import OPT_LOCAL_FILES as OPT_LOCAL_FILES
 from ._unsorted import OPT_OMD_CONFIG as OPT_OMD_CONFIG
 from ._unsorted import OPT_PERFORMANCE_GRAPHS as OPT_PERFORMANCE_GRAPHS
 from ._unsorted import OSWalk as OSWalk
+from ._unsorted import redact_passwords_in_content as redact_passwords_in_content
+from ._unsorted import redact_passwords_in_file as redact_passwords_in_file
+from ._unsorted import REDACT_STRING as REDACT_STRING
 from ._unsorted import serialize_wato_parameters as serialize_wato_parameters
