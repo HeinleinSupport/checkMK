@@ -29,6 +29,7 @@ const props = withDefaults(
     disableValuesOnEmptyKey?: boolean
     indent?: boolean
     orientation?: 'horizontal' | 'vertical'
+    ariaLabel?: string | undefined
     getAutoCompleterContext: (
       key: string | null,
       ignoreExisting: { index: number } | null
@@ -37,7 +38,8 @@ const props = withDefaults(
   {
     disableValuesOnEmptyKey: false,
     indent: false,
-    orientation: 'horizontal'
+    orientation: 'horizontal',
+    ariaLabel: undefined
   }
 )
 
@@ -52,6 +54,10 @@ const valueCellWrapperComponent = computed(() => (props.indent ? 'div' : 'td'))
 const currentAttribute = ref<Attribute>({
   key: null,
   value: null
+})
+
+const ariaLabel = computed(() => {
+  return props.ariaLabel ? `${props.ariaLabel}` : 'Attribute'
 })
 
 function clearAttributeSelection() {
@@ -122,6 +128,7 @@ function deleteAttribute(index: number) {
                   attributeAutoCompleter(key, isForKey, index)
               "
               :disable-values-on-empty-key="disableValuesOnEmptyKey"
+              :aria-label="`${ariaLabel} item ${index + 1}`"
               @update:model-value="addAttribute"
             />
           </template>
@@ -130,6 +137,7 @@ function deleteAttribute(index: number) {
           v-model="currentAttribute"
           :autocompleter-getter="attributeAutoCompleter"
           :disable-values-on-empty-key="disableValuesOnEmptyKey"
+          :aria-label="ariaLabel"
           @update:model-value="addAttribute"
         />
       </component>

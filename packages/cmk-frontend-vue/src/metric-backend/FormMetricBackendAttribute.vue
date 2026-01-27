@@ -15,10 +15,17 @@ const { _t } = usei18n()
 
 export type Attribute = { key: string | null; value: string | null }
 
-const props = defineProps<{
-  autocompleterGetter: (key: string | null, isForKey: boolean) => Autocompleter
-  disableValuesOnEmptyKey?: boolean
-}>()
+const props = withDefaults(
+  defineProps<{
+    autocompleterGetter: (key: string | null, isForKey: boolean) => Autocompleter
+    disableValuesOnEmptyKey?: boolean
+    ariaLabel?: string | undefined
+  }>(),
+  {
+    disableValuesOnEmptyKey: false,
+    ariaLabel: undefined
+  }
+)
 
 const attribute = defineModel<Attribute>({
   required: true
@@ -42,6 +49,7 @@ function onValueUpdate(newValue: string | null) {
       v-model="attribute.key"
       :autocompleter="props.autocompleterGetter(attribute.key, true)"
       :placeholder="_t('Attribute key')"
+      :label="`${props.ariaLabel} key` || _t('Attribute key')"
       @update:model-value="attribute.value = null"
     />
   </div>
@@ -50,6 +58,7 @@ function onValueUpdate(newValue: string | null) {
       v-model="attribute.value"
       :autocompleter="props.autocompleterGetter(attribute.key, false)"
       :placeholder="_t('Attribute value')"
+      :label="`${props.ariaLabel} value` || _t('Attribute value')"
       :disabled="props.disableValuesOnEmptyKey && (attribute.key === null || attribute.key === '')"
       @update:model-value="onValueUpdate"
     />

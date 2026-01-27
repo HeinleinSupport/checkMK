@@ -31,6 +31,7 @@ const props = defineProps<{
   displayedMagnitudes: Magnitude[]
   validators: Validator[]
   backendValidation: ValidationMessages
+  ariaLabel?: string
 }>()
 const selectedMagnitudes = ref<Array<Magnitude>>([])
 
@@ -107,10 +108,11 @@ const localValidation = ref<Array<string>>([])
 <template>
   <FormValidation :validation="[...validation, ...localValidation]" />
   {{ props.label }}
-  <span role="group" :aria-label="props.label || props.title">
+  <span role="group" :aria-label="props.ariaLabel || props.label || props.title">
     <label v-for="magnitude in selectedMagnitudes" :key="magnitude">
       <CmkInput
         v-model="values[magnitude]"
+        :aria-label="`${props.ariaLabel} ${i18n[magnitude]}`"
         :placeholder="getPlaceholder(magnitude)"
         step="any"
         size="5"

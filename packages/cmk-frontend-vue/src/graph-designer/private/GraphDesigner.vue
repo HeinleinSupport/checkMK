@@ -1151,7 +1151,7 @@ const graphDesignerContentAsJson = computed(() => {
           v-model:aggregation-histogram-percentile="dataQuery.aggregationHistogramPercentile"
           :backend-validation="validateFormMetricBackendCustomQuery(dataQuery)"
         />
-        <CmkButton @click="addQuery">
+        <CmkButton :aria-label="_t('Add query')" @click="addQuery">
           {{ _t('Add') }}
         </CmkButton>
       </div>

@@ -143,6 +143,7 @@ const metricNameAutocompleter = computed<Autocompleter>(() => ({
           <FormValidation :validation="validationByLocation.metric_name"></FormValidation>
           <FormAutocompleter
             v-model="metricName"
+            :label="_t('Metric name')"
             :autocompleter="metricNameAutocompleter"
             :placeholder="_t('Metric name')"
             :has-error="validationByLocation.metric_name.length > 0"
@@ -165,6 +166,7 @@ const metricNameAutocompleter = computed<Autocompleter>(() => ({
           <FormValidation :validation="validationByLocation.aggregation_lookback"></FormValidation>
           <CmkTimeSpan
             v-model:data="aggregationLookback"
+            :aria-label="_t('Aggregation lookback')"
             :label="''"
             :title="''"
             :input-hint="1"
@@ -182,6 +184,7 @@ const metricNameAutocompleter = computed<Autocompleter>(() => ({
         <td>
           <CmkInput
             v-model="aggregationHistogramPercentile"
+            :aria-label="_t('Percentile for histogram aggregation')"
             type="number"
             :unit="'%'"
             :external-errors="validationByLocation.aggregation_histogram_percentile"
