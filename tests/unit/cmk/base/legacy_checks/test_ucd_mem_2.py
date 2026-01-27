@@ -60,21 +60,21 @@ def test_check_ucd_mem_with_swap_error(parsed: Mapping[str, int]) -> None:
     assert len(result_list) == 4
 
     # RAM usage check
-    state, summary, metrics = result_list[0]
-    assert state == 0
-    assert "RAM: 78.09%" in summary
-    assert "47.9 GiB of 61.3 GiB" in summary
-    assert len(metrics) == 2
-    assert metrics[0][0] == "mem_used"
-    assert metrics[1][0] == "mem_used_percent"
+    assert result_list[0][0] == 0
+    assert "RAM: 78.09%" in result_list[0][1]
+    assert "47.9 GiB of 61.3 GiB" in result_list[0][1]
+    assert len(result_list[0]) == 3
+    assert len(result_list[0][2]) == 2
+    assert result_list[0][2][0][0] == "mem_used"
+    assert result_list[0][2][1][0] == "mem_used_percent"
 
     # Swap usage check
-    state, summary, metrics = result_list[1]
-    assert state == 0
-    assert "Swap: 0%" in summary
-    assert "0 B of 8.00 GiB" in summary
-    assert len(metrics) == 1
-    assert metrics[0][0] == "swap_used"
+    assert result_list[1][0] == 0
+    assert "Swap: 0%" in result_list[1][1]
+    assert "0 B of 8.00 GiB" in result_list[1][1]
+    assert len(result_list[1]) == 3
+    assert len(result_list[1][2]) == 1
+    assert result_list[1][2][0][0] == "swap_used"
 
     # Total virtual memory check
     state, summary = result_list[2][:2]

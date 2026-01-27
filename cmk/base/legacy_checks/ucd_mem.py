@@ -4,10 +4,11 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 # mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
 
+from collections.abc import Iterable, Mapping
+from typing import Any
 
-from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
+from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition, LegacyResult
 from cmk.base.check_legacy_includes.mem import check_memory_dict
 
 check_info = {}
@@ -31,12 +32,14 @@ check_info = {}
 # .1.3.6.1.4.1.2021.4.101.0         --> UCD-SNMP-MIB::smemSwapErrorMsg.0
 
 
-def discover_ucd_mem(parsed):
+def discover_ucd_mem(parsed: Mapping[str, int | str]) -> Iterable[tuple[None, dict[str, Any]]]:
     if parsed:
         yield None, {}
 
 
-def check_ucd_mem(_no_item, params, parsed):
+def check_ucd_mem(
+    _no_item: None, params: dict[str, Any], parsed: Mapping[str, int | str]
+) -> Iterable[LegacyResult]:
     if not parsed:
         return
 

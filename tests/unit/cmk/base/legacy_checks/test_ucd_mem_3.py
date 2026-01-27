@@ -65,23 +65,29 @@ def test_check_ucd_mem_with_warning_thresholds(parsed: Mapping[str, int]) -> Non
     assert "Error: foobar" in summary
 
     # RAM usage check - should trigger CRIT since 78% > 30%
-    state, summary, metrics = result_list[1]
-    assert state == 2  # CRIT
-    assert "RAM: 78.09%" in summary
-    assert "warn/crit at 20.00%/30.00% used" in summary
-    assert len(metrics) == 2
-    assert metrics[0][0] == "mem_used"
-    assert metrics[1][0] == "mem_used_percent"
+    assert result_list[1][0] == 2  # CRIT
+    assert "RAM: 78.09%" in result_list[1][1]
+    assert "warn/crit at 20.00%/30.00% used" in result_list[1][1]
+    assert len(result_list[1]) == 3
+    ram_metrics = result_list[1][2]
+    assert len(ram_metrics) == 2
+    assert ram_metrics[0][0] == "mem_used"
+    assert ram_metrics[1][0] == "mem_used_percent"
     # Check thresholds are properly set
-    assert metrics[1][2] == 20.0  # warn threshold
-    assert abs(metrics[1][3] - 30.0) < 0.1  # crit threshold (allowing for floating point)
+    mem_used_percent = ram_metrics[1]
+    assert len(mem_used_percent) >= 4
+    warn_val = mem_used_percent[2]
+    crit_val = mem_used_percent[3]
+    assert warn_val == 20.0  # warn threshold
+    assert isinstance(crit_val, float)
+    assert abs(crit_val - 30.0) < 0.1  # crit threshold (allowing for floating point)
 
     # Swap usage check
-    state, summary, metrics = result_list[2]
-    assert state == 0
-    assert "Swap: 0%" in summary
-    assert len(metrics) == 1
-    assert metrics[0][0] == "swap_used"
+    assert result_list[2][0] == 0
+    assert "Swap: 0%" in result_list[2][1]
+    assert len(result_list[2]) == 3
+    assert len(result_list[2][2]) == 1
+    assert result_list[2][2][0][0] == "swap_used"
 
     # Total virtual memory check
     state, summary = result_list[3][:2]
@@ -123,5 +129,5 @@ def test_check_ucd_mem_no_thresholds() -> None:
 
     # All should be OK since no thresholds set
     for item in result:
-        if len(item) >= 2 and "Total virtual memory" not in item[1]:  # Skip summary
+        if "Total virtual memory" not in item[1]:
             assert item[0] == 0  # OK state

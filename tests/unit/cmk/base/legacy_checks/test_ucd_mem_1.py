@@ -57,20 +57,20 @@ def test_ucd_mem_1_check():
     assert len(result) == 3
 
     # Check RAM result
-    state, message, metrics = result[0]
-    assert state == 0
-    assert "RAM:" in message
-    assert "78.09%" in message
-    assert "47.9 GiB of 61.3 GiB" in message
-    assert ("mem_used", 51426668544, None, None, 0, 65857241088) in metrics
-    assert ("mem_used_percent", 78.08810040384546, None, None, 0.0, None) in metrics
+    assert result[0][0] == 0
+    assert "RAM:" in result[0][1]
+    assert "78.09%" in result[0][1]
+    assert "47.9 GiB of 61.3 GiB" in result[0][1]
+    assert len(result[0]) == 3
+    assert ("mem_used", 51426668544, None, None, 0, 65857241088) in result[0][2]
+    assert ("mem_used_percent", 78.08810040384546, None, None, 0.0, None) in result[0][2]
 
     # Check Swap result
-    state, message, metrics = result[1]
-    assert state == 0
-    assert "Swap:" in message
-    assert "0% - 0 B of 8.00 GiB" in message
-    assert ("swap_used", 0, None, None, 0, 8589930496) in metrics
+    assert result[1][0] == 0
+    assert "Swap:" in result[1][1]
+    assert "0% - 0 B of 8.00 GiB" in result[1][1]
+    assert len(result[1]) == 3
+    assert ("swap_used", 0, None, None, 0, 8589930496) in result[1][2]
 
     # Check Total virtual memory result
     state, message = result[2][:2]
