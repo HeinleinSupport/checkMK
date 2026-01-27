@@ -7,7 +7,6 @@
 
 #include <cstdlib>
 #include <functional>
-#include <unordered_map>
 #include <utility>
 
 #include "livestatus/Interface.h"

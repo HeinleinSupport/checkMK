@@ -5,7 +5,6 @@
 
 #include "livestatus/TableComments.h"
 
-#include <chrono>
 #include <cstdint>
 #include <functional>
 #include <memory>

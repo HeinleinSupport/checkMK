@@ -5,7 +5,6 @@
 
 #include "livestatus/TableStatus.h"
 
-#include <chrono>
 #include <cstdint>
 #include <filesystem>
 #include <functional>

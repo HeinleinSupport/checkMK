@@ -9,7 +9,6 @@
 #include <compare>
 #include <mutex>
 #include <optional>
-#include <ratio>
 #include <vector>
 
 #include "livestatus/ChronoUtils.h"

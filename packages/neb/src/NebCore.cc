@@ -13,6 +13,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <system_error>
+#include <tuple>
 
 #include "livestatus/Attributes.h"
 #include "livestatus/Average.h"

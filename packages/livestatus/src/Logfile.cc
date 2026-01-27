@@ -5,8 +5,6 @@
 
 #include "livestatus/Logfile.h"
 
-#include <fcntl.h>
-
 #include <cerrno>
 #include <chrono>
 #include <fstream>

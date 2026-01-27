@@ -10,6 +10,7 @@
 #include <memory>
 #include <string_view>
 #include <unordered_set>
+#include <utility>
 
 #include "livestatus/Column.h"
 #include "livestatus/ICore.h"

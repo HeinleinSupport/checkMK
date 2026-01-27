@@ -6,7 +6,6 @@
 #include "test_utilities.h"
 
 #include <string>
-#include <unordered_map>
 #include <utility>
 
 #include "neb/nagios.h"

@@ -7,7 +7,6 @@
 #include <functional>
 #include <memory>
 #include <string>
-#include <utility>
 
 #include "gtest/gtest.h"
 #include "livestatus/Column.h"
