@@ -17,23 +17,19 @@ import subprocess
 from collections.abc import Iterator
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import Any, NamedTuple
+from typing import NamedTuple
 
 import psutil
 import pytest
-from pysnmp.hlapi.asyncio import (
+from pysnmp.hlapi.asyncio import (  # type: ignore[attr-defined]
     CommunityData,
     ContextData,
-    getCmd,
-    Integer32,
+    get_cmd,
     ObjectIdentity,
     ObjectType,
     SnmpEngine,
     UdpTransportTarget,
-    UsmUserData,
 )
-from pysnmp.hlapi.transport import AbstractTransportTarget
-from pysnmp.proto.errind import ErrorIndication
 
 from cmk.ccc import debug
 from cmk.snmplib import SNMPBackendEnum
@@ -253,12 +249,15 @@ def _is_listening(process_def: ProcessDef) -> bool:
     def _snmp_response_is_available() -> bool:
         # We got the expected number of listen sockets. One for IPv4 and one for IPv6. Now test
         # whether or not snmpsimd is already answering.
-        g = getCmdSync(
-            SnmpEngine(),
-            CommunityData("public"),
-            UdpTransportTarget(("127.0.0.1", port)),
-            ContextData(),
-            ObjectType(ObjectIdentity("SNMPv2-MIB", "sysDescr", 0)),
+        transport_target = wait_sync(UdpTransportTarget.create(("127.0.0.1", port)))
+        g = wait_sync(
+            get_cmd(
+                SnmpEngine(),
+                CommunityData("public"),
+                transport_target,
+                ContextData(),
+                ObjectType(ObjectIdentity("SNMPv2-MIB", "sysDescr", 0)),
+            )
         )
         _error_indication, _error_status, _error_index, var_binds = g
         try:
@@ -281,26 +280,14 @@ def _is_listening(process_def: ProcessDef) -> bool:
     return True
 
 
-# This is basically pysnmp.hlapi.asyncio.sync.getCmd() before the synchronous API was removed in
-# pysnmp 6.2.
-def getCmdSync(
-    snmpEngine: SnmpEngine,
-    authData: CommunityData | UsmUserData,
-    transportTarget: AbstractTransportTarget,
-    contextData: ContextData,
-    *varBinds: Any,
-    **options: Any,
-) -> tuple[ErrorIndication, Integer32 | int, Integer32 | int, tuple[ObjectType]]:
-    loop = asyncio.get_event_loop()
-    if loop.is_running():
-        future = asyncio.ensure_future(
-            getCmd(snmpEngine, authData, transportTarget, contextData, *varBinds, **options)
-        )
-        return loop.run_until_complete(future)
+# To help with async APIs from pysnmp.
+def wait_sync(coro):
+    try:
+        loop = asyncio.get_running_loop()
+    except RuntimeError:
+        return asyncio.run(coro)
     else:
-        return loop.run_until_complete(
-            getCmd(snmpEngine, authData, transportTarget, contextData, *varBinds, **options)
-        )
+        return loop.run_until_complete(coro)
 
 
 def _snmpsimd_process(process_def: ProcessDef) -> psutil.Process | None:
