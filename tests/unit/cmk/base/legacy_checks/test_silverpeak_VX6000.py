@@ -18,6 +18,8 @@ from cmk.base.legacy_checks.silverpeak_VX6000 import (
     parse_silverpeak,
 )
 
+type InfoType = Sequence[StringTable]
+
 
 @pytest.mark.parametrize(
     "info, expected_discoveries",
@@ -37,10 +39,11 @@ from cmk.base.legacy_checks.silverpeak_VX6000 import (
     ],
 )
 def test_discover_silverpeak_VX6000(
-    info: StringTable, expected_discoveries: Sequence[tuple[str | None, Mapping[str, Any]]]
+    info: InfoType, expected_discoveries: Sequence[tuple[str | None, Mapping[str, Any]]]
 ) -> None:
     """Test discovery function for silverpeak_VX6000 check."""
     parsed = parse_silverpeak(info)
+    assert parsed is not None
     result = list(discover_silverpeak_VX6000(parsed))
     assert sorted(result) == sorted(expected_discoveries)
 
@@ -77,9 +80,10 @@ def test_discover_silverpeak_VX6000(
     ],
 )
 def test_check_silverpeak_VX6000(
-    item: str, params: Mapping[str, Any], info: StringTable, expected_results: Sequence[Any]
+    item: str, params: Mapping[str, Any], info: InfoType, expected_results: Sequence[Any]
 ) -> None:
     """Test check function for silverpeak_VX6000 check."""
     parsed = parse_silverpeak(info)
+    assert parsed is not None
     result = list(check_silverpeak(item, params, parsed))
     assert result == expected_results

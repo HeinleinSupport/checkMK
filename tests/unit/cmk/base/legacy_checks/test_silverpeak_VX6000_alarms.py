@@ -23,7 +23,7 @@ from cmk.base.legacy_checks.silverpeak_VX6000 import (
 
 def parsed() -> Mapping[str, Any]:
     """Return parsed data from actual parse function."""
-    return parse_silverpeak(
+    result = parse_silverpeak(
         [
             [["4"]],
             [
@@ -34,6 +34,8 @@ def parsed() -> Mapping[str, Any]:
             ],
         ]
     )
+    assert result is not None
+    return result
 
 
 def test_silverpeak_VX6000_discovery() -> None:
@@ -88,13 +90,16 @@ def test_silverpeak_VX6000_check_no_alarms() -> None:
             [],
         ]
     )
+    assert no_alarms_section is not None
 
     results = list(check_silverpeak(None, {}, no_alarms_section))
 
     # Should have single result indicating no alarms
     assert len(results) == 1
 
-    state, summary = results[0]
+    first_result = results[0]
+    assert len(first_result) == 2  # state, summary
+    state, summary = first_result
     assert state == 0  # OK state
     assert "No active alarms" in summary
 

@@ -3,7 +3,6 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
 # mypy: disable-error-code="type-arg"
 # mypy: disable-error-code="var-annotated"
 
@@ -23,11 +22,14 @@
 
 # Taken from SILVERPEAK-TC.txt: translates silverpeak severities to checkmk's OK,WARN,CRIT
 
-from collections.abc import Iterable, Mapping
+from collections.abc import Iterable, Mapping, Sequence
 from typing import Any
 
-from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
-from cmk.agent_based.v2 import SNMPTree, startswith
+from cmk.agent_based.legacy.v0_unstable import (
+    LegacyCheckDefinition,
+    LegacyCheckResult,
+)
+from cmk.agent_based.v2 import SNMPTree, startswith, StringTable
 
 check_info = {}
 
@@ -47,12 +49,12 @@ severity_to_states = {
 }
 
 
-def parse_silverpeak(string_table):
+def parse_silverpeak(string_table: Sequence[StringTable]) -> Section | None:
     alarm_count, alarms = string_table
     if not alarm_count:
         return None
 
-    parsed = {}
+    parsed: dict[str, Any] = {}
 
     # We currently do not know if any (alarm) OIDs will be delivered in case no alarm is active.
     # Therefore acquire the alarm count in any case.
@@ -83,7 +85,9 @@ def discover_silverpeak_VX6000(section: Section) -> Iterable[tuple[None, dict]]:
         yield None, {}
 
 
-def check_silverpeak(_item, _params, parsed):
+def check_silverpeak(
+    _item: object, _params: Mapping[str, Any], parsed: Section
+) -> LegacyCheckResult:
     alarm_cnt = parsed.get("alarm_count", 0)
     if alarm_cnt == 0:
         yield 0, "No active alarms."
