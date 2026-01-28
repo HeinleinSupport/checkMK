@@ -49,17 +49,16 @@ def test_check_hwg_humidity_normal_levels() -> None:
     # Should return one result
     assert len(result) == 2
 
-    state, summary, perfdata = result[0]
-
     # 45.5% is below warning level (60%), so should be OK
-    assert state == 0
-    assert "45.5" in summary
+    assert result[0][0] == 0
+    assert "45.5" in result[0][1]
     # Should have performance data
-    assert perfdata
+    assert len(result[0]) == 3
+    assert result[0][2]
 
-    state, summary = result[1]
-    assert "Office Humidity" in summary
-    assert "Status:" in summary
+    assert result[1][0] == 0
+    assert "Office Humidity" in result[1][1]
+    assert "Status:" in result[1][1]
 
 
 def test_check_hwg_humidity_warning_level() -> None:
@@ -76,16 +75,14 @@ def test_check_hwg_humidity_warning_level() -> None:
     # Should return one result
     assert len(result) == 2
 
-    state, summary, perfdata = result[0]
-
     # 65% is above warning (60%) but below critical (70%), so should be WARNING
-    assert state == 1
-    assert "65.0" in summary
+    assert result[0][0] == 1
+    assert "65.0" in result[0][1]
     # Should have performance data
-    assert perfdata
+    assert len(result[0]) == 3
+    assert result[0][2]
 
-    state, summary = result[1]
-    assert "Warehouse Humidity" in summary
+    assert "Warehouse Humidity" in result[1][1]
 
 
 def test_check_hwg_humidity_critical_level() -> None:
@@ -102,16 +99,14 @@ def test_check_hwg_humidity_critical_level() -> None:
     # Should return one result
     assert len(result) == 2
 
-    state, summary, perfdata = result[0]
-
     # 75% is above critical (70%), so should be CRITICAL
-    assert state == 2
-    assert "75.0" in summary
+    assert result[0][0] == 2
+    assert "75.0" in result[0][1]
     # Should have performance data
-    assert perfdata is not None
+    assert len(result[0]) == 3
+    assert result[0][2]
 
-    state, summary = result[1]
-    assert "Server Room" in summary
+    assert "Server Room" in result[1][1]
 
 
 def test_check_hwg_humidity_device_status() -> None:
@@ -128,10 +123,9 @@ def test_check_hwg_humidity_device_status() -> None:
     # Should return one result
     assert len(result) == 2
 
-    state, summary = result[1]
     # Should include device status in summary
-    assert "Test Sensor" in summary
-    assert "Status:" in summary
+    assert "Test Sensor" in result[1][1]
+    assert "Status:" in result[1][1]
 
 
 def test_check_hwg_humidity_missing_item() -> None:

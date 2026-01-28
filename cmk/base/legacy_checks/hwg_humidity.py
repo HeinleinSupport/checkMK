@@ -3,11 +3,10 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
+from collections.abc import Iterable, Mapping
+from typing import Any
 
-
-from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
+from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition, LegacyResult
 from cmk.agent_based.v2 import contains, SNMPTree
 from cmk.base.check_legacy_includes.humidity import check_humidity
 from cmk.base.check_legacy_includes.hwg import parse_hwg
@@ -17,13 +16,17 @@ check_info = {}
 HWG_HUMIDITY_DEFAULTLEVELS = {"levels": (60.0, 70.0)}
 
 
-def discover_hwg_humidity(parsed):
+def discover_hwg_humidity(
+    parsed: Mapping[str, Mapping[str, Any]],
+) -> Iterable[tuple[str, dict[str, Any]]]:
     for index, attrs in parsed.items():
         if attrs.get("humidity"):
             yield index, {}
 
 
-def check_hwg_humidity(item, params, parsed):
+def check_hwg_humidity(
+    item: str, params: Mapping[str, Any], parsed: Mapping[str, Mapping[str, Any]]
+) -> Iterable[LegacyResult | tuple[int, str]]:
     if not (data := parsed.get(item)):
         return
 
