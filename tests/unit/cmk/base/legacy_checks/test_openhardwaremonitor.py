@@ -275,5 +275,6 @@ def test_check_openhardwaremonitor(
 ) -> None:
     """Test check function for openhardwaremonitor check."""
     parsed = parse_openhardwaremonitor(string_table)
-    result = list(check_openhardwaremonitor_clock(item, params, parsed))
-    assert result == expected_results
+    result = check_openhardwaremonitor_clock(item, params, parsed)
+    assert result is not None
+    assert list(result) == expected_results

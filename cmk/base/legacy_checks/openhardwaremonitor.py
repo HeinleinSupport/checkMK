@@ -3,18 +3,15 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
-
-
 import re
-from collections.abc import Mapping
-from typing import NamedTuple, NotRequired, TypedDict
+from collections.abc import Generator, Mapping, Sequence
+from typing import cast, NamedTuple, NotRequired, TypedDict
 
-from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
+from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition, LegacyResult
 from cmk.agent_based.v2 import IgnoreResultsError
 from cmk.base.check_legacy_includes.fan import check_fan
 from cmk.base.check_legacy_includes.temperature import check_temperature
+from cmk.plugins.lib.temperature import TempParamType
 
 check_info = {}
 
@@ -75,7 +72,15 @@ class OpenhardwaremonitorSensor(NamedTuple):
     WMIstatus: str
 
 
-def parse_openhardwaremonitor(string_table):
+class _SmartReading(TypedDict, total=False):
+    name: str
+    key: str
+    lower_bounds: bool
+
+
+def parse_openhardwaremonitor(
+    string_table: Sequence[Sequence[str]],
+) -> dict[str, dict[str, OpenhardwaremonitorSensor]]:
     parsed: dict[str, dict[str, OpenhardwaremonitorSensor]] = {}
     for line in string_table:
         if line[0] == "Index":
@@ -105,8 +110,8 @@ def parse_openhardwaremonitor(string_table):
     return parsed
 
 
-def _create_openhardwaremonitor_full_name(parent, name):
-    def dict_replace(input_, replacements):
+def _create_openhardwaremonitor_full_name(parent: str, name: str) -> str:
+    def dict_replace(input_: str, replacements: Mapping[str, str]) -> str:
         pattern = re.compile(r"\b(" + "|".join(replacements) + r")\b")
         return pattern.sub(lambda x: replacements[x.group()], input_)
 
@@ -115,22 +120,29 @@ def _create_openhardwaremonitor_full_name(parent, name):
     return (parent.replace("/", "") + " " + name).strip()
 
 
-def _openhardwaremonitor_worst_status(*args):
+def _openhardwaremonitor_worst_status(*args: int) -> int:
     order = [0, 1, 3, 2]
     return sorted(args, key=lambda x: order[x], reverse=True)[0]
 
 
-def _openhardwaremonitor_expect_order(*args):
+def _openhardwaremonitor_expect_order(*args: float | None) -> int:
     arglist = [x for x in args if x is not None]
     sorted_by_val = sorted(enumerate(arglist), key=lambda x: x[1])
     return max(abs(x[0] - x[1][0]) for x in enumerate(sorted_by_val))
 
 
-def inventory_openhardwaremonitor(sensor_type, parsed):
+def inventory_openhardwaremonitor(
+    sensor_type: str, parsed: Mapping[str, Mapping[str, OpenhardwaremonitorSensor]]
+) -> list[tuple[str, dict[str, object]]]:
     return [(key, {}) for key in parsed.get(sensor_type, {})]
 
 
-def check_openhardwaremonitor(sensor_type, item, params, parsed):
+def check_openhardwaremonitor(
+    sensor_type: str,
+    item: str,
+    params: Mapping[str, Sequence[float]],
+    parsed: Mapping[str, Mapping[str, OpenhardwaremonitorSensor]],
+) -> tuple[int, str, list[tuple[str, float]]] | None:
     if item in parsed.get(sensor_type, {}):
         data = parsed[sensor_type][item]
         _check_openhardwaremonitor_wmistatus(data)
@@ -159,16 +171,22 @@ def check_openhardwaremonitor(sensor_type, item, params, parsed):
     return None
 
 
-def _check_openhardwaremonitor_wmistatus(data):
+def _check_openhardwaremonitor_wmistatus(data: OpenhardwaremonitorSensor) -> None:
     if data.WMIstatus.lower() == "timeout":
         raise IgnoreResultsError("WMI query timed out")
 
 
-def discover_openhardwaremonitor(parsed):
+def discover_openhardwaremonitor(
+    parsed: Mapping[str, Mapping[str, OpenhardwaremonitorSensor]],
+) -> list[tuple[str, dict[str, object]]]:
     return inventory_openhardwaremonitor("Clock", parsed)
 
 
-def check_openhardwaremonitor_clock(item, params, parsed):
+def check_openhardwaremonitor_clock(
+    item: str,
+    params: Mapping[str, Sequence[float]],
+    parsed: Mapping[str, Mapping[str, OpenhardwaremonitorSensor]],
+) -> tuple[int, str, list[tuple[str, float]]] | None:
     return check_openhardwaremonitor("Clock", item, params, parsed)
 
 
@@ -200,18 +218,29 @@ check_info["openhardwaremonitor"] = LegacyCheckDefinition(
 #   '----------------------------------------------------------------------'
 
 
-def check_openhardwaremonitor_temperature(item, params, parsed):
-    if "levels" not in params:
-        params = next((v for k, v in params.items() if k in item), params["_default"])
+def check_openhardwaremonitor_temperature(
+    item: str,
+    params: Mapping[str, object],
+    parsed: Mapping[str, Mapping[str, OpenhardwaremonitorSensor]],
+) -> LegacyResult | None:
+    if "levels" in params:
+        resolved_params = cast(TempParamType, params)
+    else:
+        resolved_params = cast(
+            TempParamType,
+            next((v for k, v in params.items() if k in item), params["_default"]),
+        )
 
     if item in parsed.get("Temperature", {}):
         data = parsed["Temperature"][item]
         _check_openhardwaremonitor_wmistatus(data)
-        return check_temperature(data.reading, params, "openhardwaremonitor_%s" % item)
+        return check_temperature(data.reading, resolved_params, "openhardwaremonitor_%s" % item)
     return None
 
 
-def discover_openhardwaremonitor_temperature(parsed):
+def discover_openhardwaremonitor_temperature(
+    parsed: Mapping[str, Mapping[str, OpenhardwaremonitorSensor]],
+) -> list[tuple[str, dict[str, object]]]:
     return inventory_openhardwaremonitor("Temperature", parsed)
 
 
@@ -232,11 +261,17 @@ check_info["openhardwaremonitor.temperature"] = LegacyCheckDefinition(
 )
 
 
-def discover_openhardwaremonitor_power(parsed):
+def discover_openhardwaremonitor_power(
+    parsed: Mapping[str, Mapping[str, OpenhardwaremonitorSensor]],
+) -> list[tuple[str, dict[str, object]]]:
     return inventory_openhardwaremonitor("Power", parsed)
 
 
-def check_openhardwaremonitor_power(item, params, parsed):
+def check_openhardwaremonitor_power(
+    item: str,
+    params: Mapping[str, Sequence[float]],
+    parsed: Mapping[str, Mapping[str, OpenhardwaremonitorSensor]],
+) -> tuple[int, str, list[tuple[str, float]]] | None:
     return check_openhardwaremonitor("Power", item, params, parsed)
 
 
@@ -269,7 +304,11 @@ check_info["openhardwaremonitor.power"] = LegacyCheckDefinition(
 #   '----------------------------------------------------------------------'
 
 
-def check_openhardwaremonitor_fan(item, params, parsed):
+def check_openhardwaremonitor_fan(
+    item: str,
+    params: Mapping[str, object],
+    parsed: Mapping[str, Mapping[str, OpenhardwaremonitorSensor]],
+) -> LegacyResult | None:
     if item in parsed.get("Fan", {}):
         data = parsed["Fan"][item]
         _check_openhardwaremonitor_wmistatus(data)
@@ -277,7 +316,9 @@ def check_openhardwaremonitor_fan(item, params, parsed):
     return None
 
 
-def discover_openhardwaremonitor_fan(parsed):
+def discover_openhardwaremonitor_fan(
+    parsed: Mapping[str, Mapping[str, OpenhardwaremonitorSensor]],
+) -> list[tuple[str, dict[str, object]]]:
     return inventory_openhardwaremonitor("Fan", parsed)
 
 
@@ -301,12 +342,14 @@ check_info["openhardwaremonitor.fan"] = LegacyCheckDefinition(
 #   |                                                                      |
 #   '----------------------------------------------------------------------'
 
-openhardwaremonitor_smart_readings = {
+openhardwaremonitor_smart_readings: dict[str, list[_SmartReading]] = {
     "Level": [{"name": "Remaining Life", "key": "remaining_life", "lower_bounds": True}],
 }
 
 
-def discover_openhardwaremonitor_smart(parsed):
+def discover_openhardwaremonitor_smart(
+    parsed: Mapping[str, Mapping[str, OpenhardwaremonitorSensor]],
+) -> list[tuple[str, dict[str, object]]]:
     devices = set()
     # find all devices for which at least one known smart reading is available
     for sensor_type in openhardwaremonitor_smart_readings:
@@ -316,7 +359,11 @@ def discover_openhardwaremonitor_smart(parsed):
     return [(dev, {}) for dev in devices]
 
 
-def check_openhardwaremonitor_smart(item, params, parsed):
+def check_openhardwaremonitor_smart(
+    item: str,
+    params: Mapping[str, tuple[float, float]],
+    parsed: Mapping[str, Mapping[str, OpenhardwaremonitorSensor]],
+) -> Generator[tuple[int, str, list[tuple[str, float]]]]:
     for sensor_type, readings in openhardwaremonitor_smart_readings.items():
         for reading in readings:
             reading_name = "{} {}".format(item, reading["name"])
