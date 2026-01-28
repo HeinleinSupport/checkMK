@@ -3,11 +3,12 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
 
+from collections.abc import Mapping
+from typing import Any
 
-from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
-from cmk.agent_based.v2 import SNMPTree
+from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition, LegacyResult
+from cmk.agent_based.v2 import DiscoveryResult, SNMPTree
 from cmk.base.check_legacy_includes.didactum import (
     discover_didactum_sensors,
     parse_didactum_sensors,
@@ -17,11 +18,15 @@ from cmk.plugins.didactum.lib import DETECT_DIDACTUM
 check_info = {}
 
 
-def discover_didactum_sensors_outlet_relay(parsed):
+def discover_didactum_sensors_outlet_relay(
+    parsed: Mapping[str, Mapping[str, Mapping[str, Any]]],
+) -> DiscoveryResult:
     return discover_didactum_sensors(parsed, "relay")
 
 
-def check_didactum_sensors_outlet_relay(item, params, parsed):
+def check_didactum_sensors_outlet_relay(
+    item: str, params: Any, parsed: Mapping[str, Mapping[str, Mapping[str, Any]]]
+) -> LegacyResult | None:
     if item in parsed.get("relay", {}):
         data = parsed["relay"][item]
         return data["state"], "Status: %s" % data["state_readable"]
