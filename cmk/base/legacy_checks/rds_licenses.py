@@ -4,12 +4,12 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 # mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
-
-
 # mypy: disable-error-code="var-annotated"
 
-from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
+from collections.abc import Iterable, Mapping, Sequence
+from typing import Any
+
+from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition, LegacyCheckResult
 from cmk.base.check_legacy_includes.license import license_check_levels
 
 check_info = {}
@@ -42,8 +42,10 @@ rds_licenses_product_versionid_map = {
 }
 
 
-def parse_rds_licenses(string_table):
-    parsed = {}
+def parse_rds_licenses(
+    string_table: Sequence[Sequence[str]],
+) -> dict[str, list[dict[str, str]]]:
+    parsed: dict[str, list[dict[str, str]]] = {}
     if not string_table:
         return parsed
     headers = string_table[0]
@@ -58,21 +60,38 @@ def parse_rds_licenses(string_table):
     return parsed
 
 
-def check_rds_licenses(item, params, parsed):
+def check_rds_licenses(
+    item: str,
+    params: Mapping[str, Any],
+    parsed: Mapping[str, list[dict[str, str]]],
+) -> LegacyCheckResult:
     if not (data := parsed.get(item)):
         return
     total = 0
     used = 0
     for pack in data:
-        pack_total = int(pack.get("TotalLicenses"))
-        pack_issued = int(pack.get("IssuedLicenses"))
+        pack_total = int(pack.get("TotalLicenses", "0"))
+        pack_issued = int(pack.get("IssuedLicenses", "0"))
         total += pack_total
         used += pack_issued
 
-    yield license_check_levels(total, used, params["levels"][1])
+    state, text, perfdata = license_check_levels(total, used, params["levels"][1])
+    converted: list[
+        tuple[
+            str,
+            float,
+            float | int | None,
+            float | int | None,
+            float | int | None,
+            float | int | None,
+        ]
+    ] = [(n, float(v), w, c, float(mn), float(mx)) for n, v, w, c, mn, mx in perfdata]
+    yield state, text, converted
 
 
-def discover_rds_licenses(section):
+def discover_rds_licenses(
+    section: Mapping[str, list[dict[str, str]]],
+) -> Iterable[tuple[str, dict[str, Any]]]:
     yield from ((item, {}) for item in section)
 
 
