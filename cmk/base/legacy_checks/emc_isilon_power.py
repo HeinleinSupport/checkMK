@@ -4,10 +4,16 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 # mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
 
 
-from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
+from collections.abc import Mapping
+from typing import Any
+
+from cmk.agent_based.legacy.v0_unstable import (
+    LegacyCheckDefinition,
+    LegacyCheckResult,
+    LegacyDiscoveryResult,
+)
 from cmk.agent_based.v2 import SNMPTree, StringTable
 from cmk.plugins.emc.lib import DETECT_ISILON
 
@@ -17,18 +23,20 @@ check_info = {}
 # Power Supply 1 Input Voltage --> Power Supply 1 Input
 # Battery 1 Voltage (now) --> Battery 1 (now)
 # Voltage 1.5v --> 1.5v
-def isilon_power_item_name(sensor_name):
+def isilon_power_item_name(sensor_name: str) -> str:
     return sensor_name.replace("Voltage", "").replace("  ", " ").strip()
 
 
-def discover_emc_isilon_power(info):
+def discover_emc_isilon_power(info: StringTable) -> LegacyDiscoveryResult:
     for line in info:
         # only monitor power supply currently
         if "Power Supply" in line[0] or "PS" in line[0]:
             yield isilon_power_item_name(line[0]), {}
 
 
-def check_emc_isilon_power(item, params, info):
+def check_emc_isilon_power(
+    item: str, params: Mapping[str, Any], info: StringTable
+) -> LegacyCheckResult:
     for line in info:
         if item == isilon_power_item_name(line[0]):
             volt = float(line[1])
@@ -46,8 +54,8 @@ def check_emc_isilon_power(item, params, info):
             else:
                 state = 0
 
-            return state, infotext
-    return None
+            yield state, infotext
+            return
 
 
 def parse_emc_isilon_power(string_table: StringTable) -> StringTable:
