@@ -3,11 +3,8 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
-
 # No faults:
 # Agent section is empty
-
 # From https://docs.oracle.com/cd/E23824_01/html/821-1451/glisy.html
 # One fault:
 # <<<solaris_fmadm:sep(58)>>>
@@ -41,7 +38,6 @@
 #               Please refer to the associated reference document at
 #               http://sun.com/msg/SUN4V-8001-8H for the latest service
 #               procedures and policies regarding this diagnosis.
-
 # Multiple faults:
 # <<<solaris_fmadm:sep(58)>>>
 # --------------- ------------------------------------  -------------- -------
@@ -76,7 +72,6 @@
 #                 Please refer to the associated reference document at
 #                 http://sun.com/msg/PCIEX-8000-5Y for the latest service
 #                 procedures and policies regarding this diagnosis.
-
 # Newer outputs:
 # <<<solaris_fmadm:sep(58)>>>
 # --------------- ------------------------------------  -------------- ---------
@@ -137,13 +132,22 @@
 #      Location         : "iou#0-pci#1"
 # ...
 
+from __future__ import annotations
 
-from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
+from collections.abc import Mapping
+from typing import Any
+
+from cmk.agent_based.legacy.v0_unstable import (
+    LegacyCheckDefinition,
+    LegacyCheckResult,
+    LegacyDiscoveryResult,
+)
+from cmk.agent_based.v2 import StringTable
 
 check_info = {}
 
 
-def parse_solaris_fmadm(string_table):
+def parse_solaris_fmadm(string_table: StringTable) -> Mapping[str, Any]:
     if len(string_table) < 4:
         return {}
 
@@ -170,11 +174,13 @@ def parse_solaris_fmadm(string_table):
     }
 
 
-def discover_solaris_fmadm(parsed):
-    return [(None, None)]
+def discover_solaris_fmadm(parsed: Mapping[str, Any]) -> LegacyDiscoveryResult:
+    return [(None, {})]
 
 
-def check_solaris_fmadm(_no_item, params, parsed):
+def check_solaris_fmadm(
+    _no_item: str | None, params: Mapping[str, Any], parsed: Mapping[str, Any]
+) -> LegacyCheckResult:
     if not parsed:
         yield 0, "No faults detected"
         return
