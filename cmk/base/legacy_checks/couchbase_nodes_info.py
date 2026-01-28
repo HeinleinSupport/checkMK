@@ -3,16 +3,18 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
-
+from collections.abc import Iterable, Mapping
+from typing import Any
 
 from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
-from cmk.plugins.couchbase.lib import parse_couchbase_lines
+from cmk.plugins.couchbase.lib import parse_couchbase_lines, Section
 
 check_info = {}
 
 
-def check_couchbase_nodes_status(item, params, parsed):
+def check_couchbase_nodes_status(
+    item: str, params: Mapping[str, Any], parsed: Section
+) -> Iterable[tuple[int, str]]:
     if not (data := parsed.get(item)):
         return
     health = data.get("status")
@@ -44,7 +46,7 @@ def check_couchbase_nodes_status(item, params, parsed):
     yield status, "Cluster membership: %s" % membership
 
 
-def discover_couchbase_nodes_info(section):
+def discover_couchbase_nodes_info(section: Section) -> Iterable[tuple[str, Mapping[str, Any]]]:
     yield from ((item, {}) for item in section)
 
 
