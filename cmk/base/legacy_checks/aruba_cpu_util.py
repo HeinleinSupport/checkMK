@@ -4,20 +4,20 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 # mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
-
-
 # mypy: disable-error-code="var-annotated"
 
-from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
+from collections.abc import Iterable, Mapping, Sequence
+from typing import Any
+
+from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition, LegacyCheckResult
 from cmk.agent_based.v2 import SNMPTree, startswith
 from cmk.base.check_legacy_includes.cpu_util import check_cpu_util
 
 check_info = {}
 
 
-def parse_aruba_cpu_util(string_table):
-    parsed = {}
+def parse_aruba_cpu_util(string_table: Sequence[Sequence[str]]) -> dict[str, float]:
+    parsed: dict[str, float] = {}
     for description, raw_cpu_util in string_table:
         try:
             parsed.setdefault(description, float(raw_cpu_util))
@@ -28,14 +28,18 @@ def parse_aruba_cpu_util(string_table):
 
 # no get_parsed_item_data because the cpu utilization can be exactly 0 for some devices, which would
 # result in "UNKN - Item not found in monitoring data", because parsed[item] evaluates to False
-def check_aruba_cpu_util(item, params, parsed):
+def check_aruba_cpu_util(
+    item: str, params: Mapping[str, Any], parsed: Mapping[str, float]
+) -> LegacyCheckResult:
     measured_cpu_util = parsed.get(item)
     if measured_cpu_util is None:
-        return None
-    return check_cpu_util(measured_cpu_util, params)
+        return
+    yield from check_cpu_util(measured_cpu_util, params)
 
 
-def discover_aruba_cpu_util(section):
+def discover_aruba_cpu_util(
+    section: Mapping[str, float],
+) -> Iterable[tuple[str, dict[str, Any]]]:
     yield from ((item, {}) for item in section)
 
 
