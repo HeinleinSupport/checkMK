@@ -3,25 +3,34 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
+from collections.abc import Mapping
+from typing import Any
 
-
-from cmk.agent_based.legacy.v0_unstable import check_levels, LegacyCheckDefinition
-from cmk.agent_based.v2 import render, SNMPTree
+from cmk.agent_based.legacy.v0_unstable import (
+    check_levels,
+    LegacyCheckDefinition,
+    LegacyCheckResult,
+    LegacyDiscoveryResult,
+)
+from cmk.agent_based.v2 import render, SNMPTree, StringTable
 from cmk.plugins.sophos.lib import DETECT_SOPHOS
 
 check_info = {}
 
 
-def parse_sophos_memory(string_table):
+def parse_sophos_memory(string_table: StringTable) -> int | None:
     try:
         return int(string_table[0][0])
     except (ValueError, IndexError):
         return None
 
 
-def check_sophos_memory(_item, params, parsed):
-    return check_levels(
+def check_sophos_memory(
+    _item: str | None, params: Mapping[str, Any], parsed: int | None
+) -> LegacyCheckResult:
+    if parsed is None:
+        return
+    yield check_levels(
         parsed,
         "memory_util",
         params.get("memory_levels", (None, None)),
@@ -30,8 +39,9 @@ def check_sophos_memory(_item, params, parsed):
     )
 
 
-def discover_sophos_memory(parsed):
-    yield None, {}
+def discover_sophos_memory(parsed: int | None) -> LegacyDiscoveryResult:
+    if parsed is not None:
+        yield None, {}
 
 
 check_info["sophos_memory"] = LegacyCheckDefinition(
