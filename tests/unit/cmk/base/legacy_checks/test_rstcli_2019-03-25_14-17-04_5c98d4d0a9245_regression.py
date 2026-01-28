@@ -74,7 +74,7 @@ def test_discover_rstcli_pdisks_regression(
     ],
 )
 def test_check_rstcli_regression(
-    item: str | None,
+    item: str,
     params: Mapping[str, Any],
     string_table: StringTable,
     expected_result_length: int,
@@ -88,22 +88,22 @@ def test_check_rstcli_regression(
 
 
 @pytest.mark.parametrize(
-    "item, params, string_table, expected_result",
+    "item, params, string_table, expected_result_length",
     [
         (
             "nonexistent/disk",
             {},
             [["rstcli not found"]],
-            None,  # No check result when rstcli not found
+            0,  # No check results when rstcli not found
         ),
     ],
 )
 def test_check_rstcli_pdisks_regression(
-    item: str | None, params: Mapping[str, Any], string_table: StringTable, expected_result: Any
+    item: str, params: Mapping[str, Any], string_table: StringTable, expected_result_length: int
 ) -> None:
     """Test pdisks check function for rstcli regression test."""
     parsed = parse_rstcli(string_table)
-    result = check_rstcli_pdisks(item, params, parsed)
+    result = list(check_rstcli_pdisks(item, params, parsed))
 
-    # When rstcli is not found, check should return None
-    assert result == expected_result
+    # When rstcli is not found, check should return empty list
+    assert len(result) == expected_result_length

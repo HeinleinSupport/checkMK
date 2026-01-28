@@ -3,9 +3,10 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
-# mypy: disable-error-code="unreachable"
+from __future__ import annotations
+
+from collections.abc import Generator, Mapping
+from typing import Any
 
 # --VOLUME INFORMATION--
 #
@@ -43,20 +44,24 @@
 # Usage:             Array member
 # Serial Number:     AB-CDEF123457
 # Model:             AB CD EF
-
-
 # split output into the --xxx-- sections
-
-
 # mypy: disable-error-code="var-annotated"
-
-from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
+from cmk.agent_based.legacy.v0_unstable import (
+    LegacyCheckDefinition,
+    LegacyCheckResult,
+    LegacyDiscoveryResult,
+)
+from cmk.agent_based.v2 import StringTable
 
 check_info = {}
 
+type Section = Mapping[str, Mapping[str, Any]]
 
-def parse_rstcli_sections(info):
-    current_section = None
+
+def parse_rstcli_sections(
+    info: StringTable,
+) -> Generator[tuple[str, list[list[str]]] | None]:
+    current_section: tuple[str, list[list[str]]] | None = None
     for line in info:
         if line[0].startswith("--"):
             if current_section is not None:
@@ -75,9 +80,9 @@ def parse_rstcli_sections(info):
 
 
 # interpret the volumes section
-def parse_rstcli_volumes(rows):
-    volumes = {}
-    current_volume = {}
+def parse_rstcli_volumes(rows: list[list[str]]) -> dict[str, dict[str, Any]]:
+    volumes: dict[str, dict[str, Any]] = {}
+    current_volume: dict[str, Any] = {}
 
     for row in rows:
         if row[0] == "Name":
@@ -90,9 +95,9 @@ def parse_rstcli_volumes(rows):
 
 
 # interpret the disks section
-def parse_rstcli_disks(rows):
-    disks = []
-    current_disk = {}
+def parse_rstcli_disks(rows: list[list[str]]) -> list[dict[str, str]]:
+    disks: list[dict[str, str]] = []
+    current_disk: dict[str, str] = {}
 
     for row in rows:
         if row[0] == "ID":
@@ -104,16 +109,14 @@ def parse_rstcli_disks(rows):
     return disks
 
 
-def parse_rstcli(string_table):
+def parse_rstcli(string_table: StringTable) -> Section:
     if string_table == [["rstcli not found"]]:
         return {}
 
-    rstcli_sections = parse_rstcli_sections(string_table)
-    if rstcli_sections is None:
-        return {}
-
-    volumes = {}
-    for section in rstcli_sections:
+    volumes: dict[str, dict[str, Any]] = {}
+    for section in parse_rstcli_sections(string_table):
+        if section is None:
+            continue
         if section[0] == "VOLUME INFORMATION":
             volumes.update(parse_rstcli_volumes(section[1]))
         elif section[0].startswith("DISKS IN VOLUME"):
@@ -125,8 +128,8 @@ def parse_rstcli(string_table):
     return volumes
 
 
-def discover_rstcli(parsed):
-    return [(name, None) for name in parsed]
+def discover_rstcli(parsed: Section) -> LegacyDiscoveryResult:
+    return [(name, {}) for name in parsed]
 
 
 # Help! There is no documentation, what are the possible values?
@@ -135,7 +138,7 @@ rstcli_states = {
 }
 
 
-def check_rstcli(item, _no_params, parsed):
+def check_rstcli(item: str, _no_params: object, parsed: Section) -> LegacyCheckResult:
     if not (volume := parsed.get(item)):
         return
     yield (
@@ -159,13 +162,13 @@ check_info["rstcli"] = LegacyCheckDefinition(
 )
 
 
-def discover_rstcli_pdisks(parsed):
+def discover_rstcli_pdisks(parsed: Section) -> LegacyDiscoveryResult:
     for key, volume in parsed.items():
         for disk in volume["Disks"]:
-            yield "{}/{}".format(key, disk["ID"]), None
+            yield "{}/{}".format(key, disk["ID"]), {}
 
 
-def check_rstcli_pdisks(item, _no_params, parsed):
+def check_rstcli_pdisks(item: str, _no_params: object, parsed: Section) -> LegacyCheckResult:
     volume, disk_id = item.rsplit("/", 1)
 
     disks = parsed.get(volume, {}).get("Disks", [])
@@ -179,8 +182,8 @@ def check_rstcli_pdisks(item, _no_params, parsed):
                 disk["Model"],
                 disk["Serial Number"],
             )
-            return rstcli_states.get(disk["State"], 2), infotext
-    return None
+            yield rstcli_states.get(disk["State"], 2), infotext
+            return
 
 
 check_info["rstcli.pdisks"] = LegacyCheckDefinition(
