@@ -3,22 +3,22 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
-
 
 from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
 from cmk.agent_based.v2 import SNMPTree, StringTable
 from cmk.plugins.juniper.lib import DETECT_JUNIPER_SCREENOS
 
+type CheckResult = tuple[int, str]
+
 check_info = {}
 
 
-def discover_juniper_screenos_fan(info):
+def discover_juniper_screenos_fan(info: StringTable) -> list[tuple[str, None]]:
     # SNMP outputs "Fan 1". Our item is just '1'
     return [(line[0].split()[-1], None) for line in info]
 
 
-def check_juniper_screenos_fan(item, params, info):
+def check_juniper_screenos_fan(item: str, params: object, info: StringTable) -> CheckResult:
     for fan_id, fan_status in info:
         if fan_id.split()[-1] == item:
             if fan_status == "1":
