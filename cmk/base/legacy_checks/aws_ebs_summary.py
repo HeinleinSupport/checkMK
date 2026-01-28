@@ -3,15 +3,20 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
 # mypy: disable-error-code="type-arg"
 
 
 # mypy: disable-error-code="var-annotated"
 
-from collections.abc import Iterable
+from collections.abc import Iterable, Mapping
+from typing import Any
 
-from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
+from cmk.agent_based.legacy.v0_unstable import (
+    LegacyCheckDefinition,
+    LegacyCheckResult,
+    LegacyDiscoveryResult,
+)
+from cmk.agent_based.v2 import StringTable
 from cmk.base.check_legacy_includes.aws import inventory_aws_generic
 from cmk.plugins.aws.lib import GenericAWSSection, parse_aws
 
@@ -28,8 +33,8 @@ AWSEBSStorageTypes = {
 }
 
 
-def parse_aws_summary(string_table):
-    parsed = {}
+def parse_aws_summary(string_table: StringTable) -> dict[str, Any]:
+    parsed: dict[str, Any] = {}
     for row in parse_aws(string_table):
         if (vid := row["VolumeId"]) not in parsed:
             parsed[vid] = row
@@ -54,9 +59,11 @@ def discover_aws_ebs_summary(section: GenericAWSSection) -> Iterable[tuple[None,
         yield None, {}
 
 
-def check_aws_ebs_summary(item, params, parsed):
-    stores_by_state = {}
-    stores_by_type = {}
+def check_aws_ebs_summary(
+    item: None, params: Mapping[str, Any], parsed: Mapping[str, Any]
+) -> LegacyCheckResult:
+    stores_by_state: dict[str, list[str]] = {}
+    stores_by_type: dict[str, list[str]] = {}
     long_output = []
     for volume_id, row in parsed.items():
         stores_by_state.setdefault(row["State"], []).append(volume_id)
@@ -95,7 +102,9 @@ check_info["aws_ebs_summary"] = LegacyCheckDefinition(
 #   '----------------------------------------------------------------------'
 
 
-def check_aws_ebs_summary_health(item, params, parsed):
+def check_aws_ebs_summary_health(
+    item: str, params: Mapping[str, Any], parsed: Mapping[str, Any]
+) -> LegacyCheckResult:
     if not (ebs_data := parsed.get(item)):
         return
     metrics = ebs_data["VolumeStatus"]
@@ -105,7 +114,7 @@ def check_aws_ebs_summary_health(item, params, parsed):
         yield 0, "{}: {}".format(row["Name"], row["Status"])
 
 
-def discover_aws_ebs_summary_health(p):
+def discover_aws_ebs_summary_health(p: Mapping[str, Any]) -> LegacyDiscoveryResult:
     return inventory_aws_generic(p, ["VolumeStatus"])
 
 
