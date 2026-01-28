@@ -3,7 +3,6 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
 
 # Some relevant OIDs are
 # sysUpTime: 1.3.6.1.4.1.11.2.3.1.1.1
@@ -36,7 +35,11 @@
 
 import time
 
-from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
+from cmk.agent_based.legacy.v0_unstable import (
+    LegacyCheckDefinition,
+    LegacyDiscoveryResult,
+    LegacyResult,
+)
 from cmk.agent_based.v2 import (
     get_rate,
     get_value_store,
@@ -50,13 +53,13 @@ from cmk.agent_based.v2 import (
 check_info = {}
 
 
-def discover_hpux_snmp_cpu(info):
+def discover_hpux_snmp_cpu(info: StringTable) -> LegacyDiscoveryResult:
     if len(info) > 0:
-        return [(None, None)]
+        return [(None, {})]
     return []
 
 
-def check_hpux_snmp_cpu(item, _no_params, info):
+def check_hpux_snmp_cpu(item: None, _no_params: None, info: StringTable) -> LegacyResult:
     parts = dict(info)
     this_time = time.time()
     total_rate = 0.0
@@ -72,12 +75,21 @@ def check_hpux_snmp_cpu(item, _no_params, info):
     if total_rate == 0:
         raise IgnoreResultsError("No counter counted. Time has ceased to flow.")
 
-    perfdata = []
+    perfdata: list[
+        tuple[
+            str,
+            float,
+            int | float | None,
+            int | float | None,
+            int | float | None,
+            int | float | None,
+        ]
+    ] = []
     infos = []
     for what, rate in zip(["user", "system", "idle", "nice"], rates):
         part = rate / total_rate  # fixed: true-division
         perc = part * 100
-        perfdata.append((what, perc, None, None, 0, 100))
+        perfdata.append((what, perc, None, None, 0.0, 100.0))
         infos.append(f"{what}: {perc:.0f}%")
 
     return (0, ", ".join(infos), perfdata)
