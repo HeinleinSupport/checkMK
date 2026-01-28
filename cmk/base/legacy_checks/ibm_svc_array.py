@@ -4,12 +4,12 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 # mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
-
 
 # mypy: disable-error-code="var-annotated"
 
-from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
+from collections.abc import Iterable, Mapping, Sequence
+
+from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition, LegacyResult
 from cmk.base.check_legacy_includes.ibm_svc import parse_ibm_svc_with_header
 
 check_info = {}
@@ -22,7 +22,9 @@ check_info = {}
 # 30:SSD_mdisk1:online:2:POOL_1_V7000_BRZ:372.1GB:online:raid1:1:256:generic_ssd
 
 
-def parse_ibm_svc_array(string_table):
+def parse_ibm_svc_array(
+    string_table: Sequence[Sequence[str]],
+) -> Mapping[str, Mapping[str, str]]:
     dflt_header = [
         "mdisk_id",
         "mdisk_name",
@@ -37,7 +39,7 @@ def parse_ibm_svc_array(string_table):
         "tier",
         "encrypt",
     ]
-    parsed = {}
+    parsed: dict[str, Mapping[str, str]] = {}
     for id_, rows in parse_ibm_svc_with_header(string_table, dflt_header).items():
         try:
             data = rows[0]
@@ -47,7 +49,9 @@ def parse_ibm_svc_array(string_table):
     return parsed
 
 
-def check_ibm_svc_array(item, _no_params, parsed):
+def check_ibm_svc_array(
+    item: str, _no_params: object, parsed: Mapping[str, Mapping[str, str]]
+) -> Iterable[LegacyResult]:
     if not (data := parsed.get(item)):
         return
     raid_status = data["raid_status"]
@@ -69,7 +73,9 @@ def check_ibm_svc_array(item, _no_params, parsed):
     yield status, message
 
 
-def discover_ibm_svc_array(section):
+def discover_ibm_svc_array(
+    section: Mapping[str, Mapping[str, str]],
+) -> Iterable[tuple[str, dict[str, object]]]:
     yield from ((item, {}) for item in section)
 
 
