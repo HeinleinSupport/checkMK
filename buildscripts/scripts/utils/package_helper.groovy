@@ -94,7 +94,6 @@ void provide_agent_binaries(Map args) {
                 # check-mk-agent-*.{deb,rpm}
                 cp *.deb *.rpm ${checkout_dir}/agents/
                 # artifact file flags are not being kept - building a tar would be better..
-                install -m 755 -D cmk-agent-ctl* mk-sql -t ${checkout_dir}/agents/linux/
                 if [ "${args.edition}" != "community" ]; then
                     echo "edition is ${args.edition} => copy Linux agent updater binary"
                     install -m 755 -D cmk-update-agent -t ${checkout_dir}/non-free/packages/cmk-update-agent/

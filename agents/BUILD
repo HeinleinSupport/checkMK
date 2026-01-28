@@ -58,18 +58,6 @@ filegroup(
 )
 
 filegroup(
-    name = "agents-linux",
-    srcs = [
-        "linux/cmk-agent-ctl",
-        "linux/cmk-agent-ctl.gz",
-        "linux/cmk-agent-ctl-aarch64",
-        "linux/cmk-agent-ctl-aarch64.gz",
-        "linux/mk-sql",
-    ],
-    visibility = ["//omd:__subpackages__"],
-)
-
-filegroup(
     name = "srcs",
     srcs = [
         "scripts/manage-agent-user.sh",

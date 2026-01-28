@@ -23,22 +23,13 @@ HOST_PACKAGES_DIR := $(REPO_PATH)/packages
 
 AGENT_CTL := $(AGENTS_DIR)/linux/cmk-agent-ctl
 AGENT_CTL_GZ := $(AGENT_CTL).gz
-AGENT_CTL_AARCH64 := $(AGENTS_DIR)/linux/cmk-agent-ctl-aarch64
-AGENT_CTL_AARCH64_GZ := $(AGENT_CTL_AARCH64).gz
-
 AGENT_CTL_DIR := $(HOST_PACKAGES_DIR)/cmk-agent-ctl
-
-MK_SQL := $(AGENTS_DIR)/linux/mk-sql
-MK_SQL_DIR := $(HOST_PACKAGES_DIR)/mk-sql
 
 BUILDROOT_DEPS := \
 	conffiles/super-server.cfg \
 	check_mk_agent.linux \
 	check_mk_caching_agent.linux \
-	$(MK_SQL) \
 	$(AGENT_CTL_GZ) \
-	$(AGENT_CTL_AARCH64) \
-	$(AGENT_CTL_AARCH64_GZ) \
 	mk-job \
 	waitmax \
 	$(shell find scripts/ -type f)
@@ -102,7 +93,7 @@ setversion:
 	sed -i 's/define ProductName = "Checkmk Agent [^"]*"/define ProductName = "Checkmk Agent $(NEW_VERSION_MAJOR)"/' wnx/install/version.wxi
 	sed -i 's/define ServiceDescription = "Checkmk monitoring agent service - [^"]*"/define ServiceDescription = "Checkmk monitoring agent service - $(NEW_VERSION_MAJOR)"/' wnx/install/Product.wxs
 
-build: $(DEB_PACKAGE) $(RPM_PACKAGE) $(WIN_PACKAGE) $(AGENT_CTL) $(AGENT_CTL_AARCH64) $(MK_SQL)
+build: $(DEB_PACKAGE) $(RPM_PACKAGE) $(WIN_PACKAGE) $(AGENT_CTL)
 
 .PHONY: $(AGENT_CTL)
 $(AGENT_CTL):
@@ -112,20 +103,6 @@ $(AGENT_CTL):
 
 $(AGENT_CTL_GZ): $(AGENT_CTL)
 	gzip --best --keep --force $(AGENT_CTL)
-
-.PHONY: $(AGENT_CTL_AARCH64)
-$(AGENT_CTL_AARCH64):
-	bazel build //packages/cmk-agent-ctl:cmk-agent-ctl-musl-aarch64 --cmk_version=$(NEW_VERSION)
-	mkdir -p linux
-	install -m 755 $(REPO_PATH)/bazel-bin/packages/cmk-agent-ctl/cmk-agent-ctl-musl-aarch64 $(AGENT_CTL_AARCH64)
-
-$(AGENT_CTL_AARCH64_GZ): $(AGENT_CTL_AARCH64)
-	gzip --best --keep --force $(AGENT_CTL_AARCH64)
-
-$(MK_SQL):
-	bazel build //packages/mk-sql:mk-sql-musl --cmk_version=$(NEW_VERSION)
-	mkdir -p linux
-	install -m 755 $(REPO_PATH)/bazel-bin/packages/mk-sql/mk-sql-musl $(MK_SQL)
 
 packages: $(DEB_PACKAGE) $(RPM_PACKAGE)
 deb: $(DEB_PACKAGE)
@@ -186,4 +163,4 @@ $(BUILDROOT_STAMP): $(BUILDROOT_DEPS)
 	touch $@
 
 clean:
-	rm -rf *~ waitmax *.rpm *.deb $(AGENT_CTL) $(AGENT_CTL_GZ) $(AGENT_CTL_AARCH64) "$(BUILDROOT)" "$(BUILDROOT_STAMP)" "$(DEB_BUILDDIR)" "$(RPM_BUILDDIR)" "$(RPM_TOPDIR)"
+	rm -rf *~ waitmax *.rpm *.deb $(AGENT_CTL) $(AGENT_CTL_GZ) "$(BUILDROOT)" "$(BUILDROOT_STAMP)" "$(DEB_BUILDDIR)" "$(RPM_BUILDDIR)" "$(RPM_TOPDIR)"

@@ -2,6 +2,7 @@ load("@aspect_rules_py//py:defs.bzl", "py_binary")
 load("@bazel_skylib//rules:run_binary.bzl", "run_binary")
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
 load("@cmk_requirements//:requirements.bzl", "requirement")
+load("@rules_gzip//gzip/compress:defs.bzl", "gzip_compress")
 load("@rules_pkg//pkg:deb.bzl", "pkg_deb")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_attributes", "pkg_files", "pkg_mkdirs", "strip_prefix")
 load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
@@ -380,13 +381,67 @@ pkg_files(
 )
 
 pkg_files(
+    name = "cmk-agent-ctl-files",
+    srcs = [
+        "//packages/cmk-agent-ctl:cmk-agent-ctl-musl",
+        "//packages/cmk-agent-ctl:cmk-agent-ctl-musl-aarch64",
+    ],
+    prefix = "share/check_mk/agents",
+    renames = {
+        "//packages/cmk-agent-ctl:cmk-agent-ctl-musl-aarch64": "cmk-agent-ctl-aarch64",
+        "//packages/cmk-agent-ctl:cmk-agent-ctl-musl": "cmk-agent-ctl",
+    },
+)
+
+pkg_files(
+    name = "mk-sql-files",
+    srcs = [
+        "//packages/mk-sql:mk-sql-musl",
+    ],
+    prefix = "share/check_mk/agents",
+    renames = {
+        "//packages/mk-sql:mk-sql-musl": "mk-sql",
+    },
+)
+
+genrule(
+    name = "cmk-agent-ctl-renamed",
+    srcs = ["//packages/cmk-agent-ctl:cmk-agent-ctl-musl"],
+    outs = ["cmk-agent-ctl"],
+    cmd = "cp $< $@",
+)
+
+gzip_compress(
+    name = "cmk-agent-ctl-gz",
+    src = ":cmk-agent-ctl",
+)
+
+pkg_tar(
+    name = "cmk-agent-ctl-aarch64-gz",
+    srcs = ["//packages/cmk-agent-ctl:cmk-agent-ctl-musl-aarch64"],
+    out = "cmk-agent-ctl-aarch64.gz",
+    extension = "tar.gz",
+    remap_paths = {
+        "/cmk-agent-ctl-musl-aarch64": "cmk-agent-ctl-aarch64",
+    },
+)
+
+pkg_files(
     name = "agents_linux",
     srcs = [
-        "//agents:agents-linux",
+        ":cmk-agent-ctl-aarch64-gz",
+        ":cmk-agent-ctl-gz",
+        "//packages/cmk-agent-ctl:cmk-agent-ctl-musl",
+        "//packages/cmk-agent-ctl:cmk-agent-ctl-musl-aarch64",
+        "//packages/mk-sql:mk-sql-musl",
     ],
     attributes = pkg_attributes(mode = "0755"),
-    prefix = "share/check_mk/agents",
-    strip_prefix = strip_prefix.from_pkg(""),
+    prefix = "share/check_mk/agents/linux",
+    renames = {
+        "//packages/mk-sql:mk-sql-musl": "mk-sql",
+        "//packages/cmk-agent-ctl:cmk-agent-ctl-musl-aarch64": "cmk-agent-ctl-aarch64",
+        "//packages/cmk-agent-ctl:cmk-agent-ctl-musl": "cmk-agent-ctl",
+    },
 )
 
 pkg_files(

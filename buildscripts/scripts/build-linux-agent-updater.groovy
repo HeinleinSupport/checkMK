@@ -85,8 +85,6 @@ void main() {
                 sh("""
                     cp ${package_name_rpm} .
                     cp ${package_name_deb} .
-                    cp ${checkout_dir}/agents/linux/cmk-agent-ctl* .
-                    cp ${checkout_dir}/agents/linux/mk-sql* .
                 """);
             }
         }

@@ -14,11 +14,8 @@ CHECK_MK_ANNOUNCE_TXT := $(CHECK_MK_ANNOUNCE_FOLDER)/announce-$(CHECK_MK_ANNOUNC
 SOURCE_BUILT_LINUX_AGENTS := \
 	$(REPO_PATH)/agents/check-mk-agent.noarch.rpm \
 	$(REPO_PATH)/agents/check-mk-agent_all.deb \
-	$(REPO_PATH)/agents/linux/mk-sql \
 	$(REPO_PATH)/agents/linux/cmk-agent-ctl \
-	$(REPO_PATH)/agents/linux/cmk-agent-ctl.gz \
-	$(REPO_PATH)/agents/linux/cmk-agent-ctl-aarch64 \
-	$(REPO_PATH)/agents/linux/cmk-agent-ctl-aarch64.gz
+	$(REPO_PATH)/agents/linux/cmk-agent-ctl.gz
 ifneq ($(EDITION),community)
 SOURCE_BUILT_AGENT_UPDATER := $(REPO_PATH)/non-free/packages/cmk-update-agent/cmk-update-agent
 else
