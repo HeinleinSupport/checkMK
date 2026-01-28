@@ -3,7 +3,6 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
 
 # upsBatteryStatus              1.3.6.1.4.1.4555.1.1.1.1.2.1
 # upsSecondsOnBattery           1.3.6.1.4.1.4555.1.1.1.1.2.2
@@ -12,20 +11,21 @@
 # upsBatteryVoltage             1.3.6.1.4.1.4555.1.1.1.1.2.5
 # upsBatteryTemperature         1.3.6.1.4.1.4555.1.1.1.1.2.6
 
-from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
+
+from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition, LegacyCheckResult
 from cmk.agent_based.v2 import SNMPTree, StringTable
 from cmk.plugins.ups_socomec.lib import DETECT_SOCOMEC
 
 check_info = {}
 
 
-def discover_ups_socomec_capacity(info):
+def discover_ups_socomec_capacity(info: StringTable) -> list[tuple[None, dict[str, object]]]:
     if len(info) > 0:
         return [(None, {})]
     return []
 
 
-def check_ups_socomec_capacity(item, params, info):
+def check_ups_socomec_capacity(item: None, params: object, info: StringTable) -> LegacyCheckResult:
     # To support inventories with the old version
     # TODO This needs to be reworked. Defaults should not be coded into a check in such a fashion.
     if isinstance(params, tuple):  # old format with 2 params in tuple
@@ -51,10 +51,12 @@ def check_ups_socomec_capacity(item, params, info):
             levelsinfo = " (warn at %d min)" % cap_warn
         else:
             state = 0
+        warn_float: float | int | None = float(warn) if warn else None
+        crit_float: float | int | None = float(crit) if crit else None
         yield (
             state,
             "%d min left on battery" % minutes_left + levelsinfo,
-            [("capacity", minutes_left, warn, crit)],
+            [("capacity", float(minutes_left), warn_float, crit_float)],
         )
 
     # Check percentual capacity
@@ -67,10 +69,12 @@ def check_ups_socomec_capacity(item, params, info):
         levelsinfo = " (warn at %d%%)" % cap_warn
     else:
         state = 0
+    cap_warn_float: float | int | None = float(cap_warn) if cap_warn else None
+    cap_crit_float: float | int | None = float(cap_crit) if cap_crit else None
     yield (
         state,
         "capacity: %d%%" % percent_fuel + levelsinfo,
-        [("percent", percent_fuel, cap_warn, cap_crit)],
+        [("percent", float(percent_fuel), cap_warn_float, cap_crit_float)],
     )
 
     # Output time on battery
