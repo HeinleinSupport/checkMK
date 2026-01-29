@@ -3,8 +3,6 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
-
 # .1.3.6.1.4.1.2604.1.1.1.4.1.2.1 Legit --> SOPHOS::counterType.1
 # .1.3.6.1.4.1.2604.1.1.1.4.1.2.2 Blocked --> SOPHOS::counterType.2
 # .1.3.6.1.4.1.2604.1.1.1.4.1.2.9 InvalidRecipient --> SOPHOS::counterType.9
@@ -21,18 +19,26 @@
 
 
 import time
+from collections.abc import Mapping
+from typing import Any
 
-from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
+from cmk.agent_based.legacy.v0_unstable import (
+    LegacyCheckDefinition,
+    LegacyDiscoveryResult,
+    LegacyResult,
+)
 from cmk.agent_based.v2 import equals, get_rate, get_value_store, SNMPTree, StringTable
 
 check_info = {}
 
 
-def discover_sophos_messages(info):
-    return [(line[0].replace("InvalidRecipient", "Invalid Recipient"), None) for line in info]
+def discover_sophos_messages(info: StringTable) -> LegacyDiscoveryResult:
+    return [(line[0].replace("InvalidRecipient", "Invalid Recipient"), {}) for line in info]
 
 
-def check_sophos_messages(item, params, info):
+def check_sophos_messages(
+    item: str, params: Mapping[str, Any], info: StringTable
+) -> LegacyResult | None:
     for counter_type, inbound_str, outbound_str in info:
         if counter_type.replace("InvalidRecipient", "Invalid Recipient") == item:
             now = time.time()
