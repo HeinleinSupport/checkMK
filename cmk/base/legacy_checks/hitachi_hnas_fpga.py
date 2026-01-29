@@ -3,8 +3,8 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
-
+from collections.abc import Mapping
+from typing import Any
 
 from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
 from cmk.agent_based.v2 import DiscoveryResult, Service, SNMPTree, StringTable
@@ -18,22 +18,32 @@ def discover_hitachi_hnas_fpga(string_table: StringTable) -> DiscoveryResult:
         yield Service(item=clusternode + "." + id_ + " " + name)
 
 
-def check_hitachi_hnas_fpga(item, params, info):
+def check_hitachi_hnas_fpga(
+    item: str, params: Mapping[str, Any], info: StringTable
+) -> (
+    tuple[int, str]
+    | tuple[
+        int,
+        str,
+        list[tuple[str, float, float | None, float | None, float | None, float | None]],
+    ]
+):
+    warn: float
+    crit: float
     warn, crit = params["levels"]
     rc = 0
 
-    for clusternode, id_, name, util in info:
+    for clusternode, id_, name, util_str in info:
         if clusternode + "." + id_ + " " + name == item:
-            util = float(util)
+            util = float(util_str)
             if util > warn:
                 rc = 1
             if util > crit:
                 rc = 2
-            perfdata = [("fpga_util", str(util) + "%", warn, crit, 0, 100)]
             return (
                 rc,
                 f"PNode {clusternode} FPGA {id_} {name} utilization is {util}%",
-                perfdata,
+                [("fpga_util", util, warn, crit, 0.0, 100.0)],
             )
 
     return 3, "No utilization found for FPGA %s" % item
