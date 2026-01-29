@@ -3,24 +3,24 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
 
-
-from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
+from cmk.agent_based.legacy.v0_unstable import (
+    LegacyCheckDefinition,
+    LegacyCheckResult,
+    LegacyDiscoveryResult,
+)
 from cmk.agent_based.v2 import SNMPTree, StringTable
 from cmk.plugins.hitachi_hnas.lib import DETECT
 
 check_info = {}
 
 
-def discover_hitachi_hnas_psu(info):
-    inventory = []
+def discover_hitachi_hnas_psu(info: StringTable) -> LegacyDiscoveryResult:
     for clusternode, id_, _status in info:
-        inventory.append((clusternode + "." + id_, None))
-    return inventory
+        yield clusternode + "." + id_, {}
 
 
-def check_hitachi_hnas_psu(item, _no_params, info):
+def check_hitachi_hnas_psu(item: str, _no_params: object, info: StringTable) -> LegacyCheckResult:
     statusmap = (
         ("", 3),  # 0
         ("ok", 0),  # 1
@@ -29,16 +29,19 @@ def check_hitachi_hnas_psu(item, _no_params, info):
         ("unknown", 3),  # 4
     )
 
-    for clusternode, id_, status in info:
+    for clusternode, id_, status_str in info:
         if clusternode + "." + id_ == item:
-            status = int(status)
-            if status == 0 or status >= len(statusmap):
-                return 3, f"PNode {clusternode} PSU {id_} reports unidentified status {status}"
-            return statusmap[status][
-                1
-            ], f"PNode {clusternode} PSU {id_} reports status {statusmap[status][0]}"
+            status_int = int(status_str)
+            if status_int == 0 or status_int >= len(statusmap):
+                yield 3, f"PNode {clusternode} PSU {id_} reports unidentified status {status_int}"
+                return
+            yield (
+                statusmap[status_int][1],
+                f"PNode {clusternode} PSU {id_} reports status {statusmap[status_int][0]}",
+            )
+            return
 
-    return 3, "SNMP did not report a status of this PSU"
+    yield 3, "SNMP did not report a status of this PSU"
 
 
 def parse_hitachi_hnas_psu(string_table: StringTable) -> StringTable:
