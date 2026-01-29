@@ -472,7 +472,7 @@ function renderDict(
     const trProps: Record<string, string> = {}
     if (group.title) {
       dictElements.push(
-        h('tr', [h('td', { colspan: 2, class: 'dict_group_title' }, [group.title])])
+        h('tr', [h('td', { colspan: 2, class: 'dict_group_title' }, [`${group.title}:`])])
       )
       trProps['class'] = 'dict_group'
     }
@@ -546,9 +546,9 @@ function renderPassword(formSpec: Password, value: (string | boolean)[]): VNode 
     (choice) => choice.password_id === value[1]
   )
   if (storeChoice) {
-    return h('div', [`${formSpec.i18n.password_store}, ${storeChoice.name}`])
+    return h('div', [`${formSpec.i18n.password_store}: ${storeChoice.name}`])
   } else {
-    return h('div', [`${formSpec.i18n.password_store}, ${formSpec.i18n.password_choice_invalid}`])
+    return h('div', [`${formSpec.i18n.password_store}: ${formSpec.i18n.password_choice_invalid}`])
   }
 }
 
