@@ -213,7 +213,7 @@ py_library(
     imports = ["."],
     visibility = ["//:__subpackages__"],
     deps = [
-        "//cmk:lib_cmk",
+        "//cmk:cmk_cmk",
         "//packages/cmk-ccc:archive",
         "//packages/cmk-ccc:exceptions",
         "//packages/cmk-ccc:resulttype",

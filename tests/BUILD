@@ -18,7 +18,7 @@ py_library(
     ),
     imports = [".."],
     deps = [
-        "//cmk:lib_cmk",
+        "//cmk:cmk_cmk",
         requirement("beautifulsoup4"),
         requirement("clickhouse-connect"),
         requirement("cryptography"),
@@ -66,7 +66,7 @@ py_library(
     ),
     imports = [".."],
     deps = [
-        "//cmk:lib_cmk",
+        "//cmk:cmk_cmk",
         requirement("beautifulsoup4"),
         requirement("clickhouse-connect"),
         requirement("cryptography"),
@@ -110,7 +110,7 @@ py_library(
     imports = [".."],
     deps = [
         ":testlib",
-        "//cmk:lib_cmk",
+        "//cmk:cmk_cmk",
         requirement("pexpect"),
         requirement("pytest"),
         requirement("pyyaml"),

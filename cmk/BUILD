@@ -114,65 +114,6 @@ REQUIRED_EXTERNAL_DEPS = [
     "werkzeug",
 ]
 
-COMMUNITY_PY = glob(
-    include = [
-        "**/community/**/*.py",
-    ],
-    allow_empty = True,
-    exclude = DO_NOT_DEPLOY + ["**/nonfree/**"],
-)
-
-ULTIMATE_PY = glob(
-    include = [
-        "**/ultimate/**/*.py",
-        "**/nonfree/**/*.py",
-    ],
-    allow_empty = True,
-    exclude = DO_NOT_DEPLOY + [
-        # ultimate includes pro, but not cloud or ultimatemt
-        "**/nonfree/**/cloud/**",
-        "**/nonfree/**/ultimatemt/**",
-    ],
-)
-
-PRO_PY = glob(
-    [
-        "**/pro/**/*.py",
-        "**/nonfree/**/*.py",
-    ],
-    allow_empty = True,
-    exclude = DO_NOT_DEPLOY + [
-        # pro doesn't include any other enterprise edition
-        "**/nonfree/**/cloud/**",
-        "**/nonfree/**/ultimate/**",
-        "**/nonfree/**/ultimatemt/**",
-    ],
-)
-
-ULTIMATEMT_PY = glob(
-    [
-        "**/ultimatemt/**/*.py",
-        "**/nonfree/**/*.py",
-    ],
-    allow_empty = True,
-    exclude = DO_NOT_DEPLOY + [
-        # ultimate includes pro and ultimate but not cloud
-        "**/nonfree/**/cloud/**",
-    ],
-)
-
-CLOUD_PY = glob(
-    [
-        "**/cloud/**/*.py",
-        "**/nonfree/**/*.py",
-    ],
-    allow_empty = True,
-    exclude = DO_NOT_DEPLOY + [
-        # cloud includes pro and ultimate but not ultimatemt
-        "**/nonfree/**/ultimatemt/**",
-    ],
-)
-
 filegroup(
     name = "checkman_free",
     srcs = glob(
@@ -313,22 +254,15 @@ CMK_PACKAGES = [
 })
 
 py_library(
-    name = "lib_cmk",
+    name = "cmk_cmk",
     srcs = glob(
-        # Keep in sync with `REPO_PATCH_RULES` from `versioning.groovy`.
         include = ["**/*.py"],
-        exclude = (
-            ["plugins/**/agents/*"] +
-            COMMUNITY_PY +
-            ULTIMATE_PY +
-            PRO_PY +
-            ULTIMATEMT_PY +
-            CLOUD_PY +
-            DO_NOT_DEPLOY + [
-                "base/legacy_checks/*",
-                "**/nonfree/**",
-            ]
-        ),
+        exclude = DO_NOT_DEPLOY + [
+            "base/legacy_checks/*",
+            "plugins/**/agents/*",
+            "**/community/**",
+            "**/nonfree/**",
+        ],
     ),
     data = ["gui/wsgi/applications/index.wsgi"],
     imports = [".."],
@@ -342,18 +276,36 @@ py_library(
 
 py_library(
     name = "cmk_community",
-    srcs = COMMUNITY_PY,
+    srcs = glob(
+        include = ["**/community/**/*.py"],
+        allow_empty = True,
+        exclude = DO_NOT_DEPLOY + ["**/nonfree/**"],
+    ),
     imports = [".."],
     visibility = ["//:__subpackages__"],
-    deps = [":lib_cmk"] + [requirement(dep) for dep in REQUIRED_EXTERNAL_DEPS],
+    deps = [":cmk_cmk"] + [requirement(dep) for dep in REQUIRED_EXTERNAL_DEPS],
 )
 
 py_library(
-    name = "cmk_cloud",
-    srcs = CLOUD_PY,
+    name = "cmk_pro",
+    srcs = glob(
+        include = [
+            "**/nonfree/**/pro/**/*.py",
+            "**/nonfree/**/*.py",
+        ],
+        allow_empty = True,
+        exclude = DO_NOT_DEPLOY + [
+            "**/nonfree/**/cloud/**",
+            "**/nonfree/**/ultimate/**",
+            "**/nonfree/**/ultimatemt/**",
+        ],
+    ),
     imports = [".."],
     visibility = ["//:__subpackages__"],
-    deps = [":lib_cmk"] + select({
+    deps = [
+        ":cmk_cmk",
+        ":cmk_community",
+    ] + select({
         "@//:gpl+nonfree_repo": [
             "//non-free/packages/cmc-protocols:py_config_proto",
             "//non-free/packages/cmc-protocols:py_cycletime_proto",
@@ -370,10 +322,42 @@ py_library(
 
 py_library(
     name = "cmk_ultimate",
-    srcs = ULTIMATE_PY,
+    srcs = glob(
+        include = ["**/nonfree/**/ultimate/**/*.py"],
+        allow_empty = True,
+        exclude = DO_NOT_DEPLOY,
+    ),
     imports = [".."],
     visibility = ["//:__subpackages__"],
-    deps = [":lib_cmk"] + select({
+    deps = [
+        ":cmk_cmk",
+        ":cmk_community",
+        ":cmk_pro",
+    ] + select({
+        "@//:gpl+nonfree_repo": [
+            "//non-free/packages/cmc-protocols:py_config_proto",
+            "//non-free/packages/cmc-protocols:py_cycletime_proto",
+            "//non-free/packages/cmc-protocols:py_state_proto",
+        ],
+        "@//:gpl_repo": [],
+    }) + [requirement(dep) for dep in REQUIRED_EXTERNAL_DEPS],
+)
+
+py_library(
+    name = "cmk_cloud",
+    srcs = glob(
+        include = ["**/nonfree/**/cloud/**/*.py"],
+        allow_empty = True,
+        exclude = DO_NOT_DEPLOY,
+    ),
+    imports = [".."],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        ":cmk_cmk",
+        ":cmk_community",
+        ":cmk_pro",
+        ":cmk_ultimate",
+    ] + select({
         "@//:gpl+nonfree_repo": [
             "//non-free/packages/cmc-protocols:py_config_proto",
             "//non-free/packages/cmc-protocols:py_cycletime_proto",
@@ -382,23 +366,6 @@ py_library(
             "//non-free/packages/cmk-metric-backend",
             "//non-free/packages/cmk-mknotifyd",
             "//non-free/packages/cmk-otel-collector",
-            "//non-free/packages/cmk-update-agent:cmk-update-agent-py",
-        ],
-        "@//:gpl_repo": [],
-    }) + [requirement(dep) for dep in REQUIRED_EXTERNAL_DEPS],
-)
-
-py_library(
-    name = "cmk_pro",
-    srcs = PRO_PY,
-    imports = [".."],
-    visibility = ["//:__subpackages__"],
-    deps = [":lib_cmk"] + select({
-        "@//:gpl+nonfree_repo": [
-            "//non-free/packages/cmc-protocols:py_config_proto",
-            "//non-free/packages/cmc-protocols:py_cycletime_proto",
-            "//non-free/packages/cmc-protocols:py_state_proto",
-            "//non-free/packages/cmk-mknotifyd",
             "//non-free/packages/cmk-update-agent:cmk-update-agent-py",
         ],
         "@//:gpl_repo": [],
@@ -407,10 +374,19 @@ py_library(
 
 py_library(
     name = "cmk_ultimatemt",
-    srcs = ULTIMATEMT_PY,
+    srcs = glob(
+        include = ["**/nonfree/**/ultimatemt/**/*.py"],
+        allow_empty = True,
+        exclude = DO_NOT_DEPLOY,
+    ),
     imports = [".."],
     visibility = ["//:__subpackages__"],
-    deps = [":lib_cmk"] + select({
+    deps = [
+        ":cmk_cmk",
+        ":cmk_community",
+        ":cmk_pro",
+        ":cmk_ultimate",
+    ] + select({
         "@//:gpl+nonfree_repo": [
             "//non-free/packages/cmc-protocols:py_config_proto",
             "//non-free/packages/cmc-protocols:py_cycletime_proto",
@@ -423,19 +399,6 @@ py_library(
         ],
         "@//:gpl_repo": [],
     }) + [requirement(dep) for dep in REQUIRED_EXTERNAL_DEPS],
-)
-
-py_library(
-    name = "cmk",
-    imports = [".."],
-    visibility = ["//tests:__subpackages__"],
-    deps = ["lib_cmk"] + select({
-        "@cmk//edition:community": [":cmk_community"],
-        "@cmk//edition:cloud": [":cmk_cloud"],
-        "@cmk//edition:ultimate": [":cmk_ultimate"],
-        "@cmk//edition:pro": [":cmk_pro"],
-        "@cmk//edition:ultimatemt": [":cmk_ultimatemt"],
-    }),
 )
 
 py_wheel(
@@ -454,32 +417,36 @@ py_wheel(
     deps = select({
         "@cmk//edition:community": [
             ":cmk_community",
-            ":lib_cmk",
         ],
-        "@cmk//edition:ultimate": [
-            ":cmk_ultimate",
-            ":lib_cmk",
+        "@cmk//edition:pro": [
+            ":cmk_community",
+            ":cmk_pro",
             "//non-free/packages/cmc-protocols:py_config_proto",
             "//non-free/packages/cmc-protocols:py_cycletime_proto",
             "//non-free/packages/cmc-protocols:py_state_proto",
         ],
-        "@cmk//edition:pro": [
+        "@cmk//edition:ultimate": [
+            ":cmk_community",
             ":cmk_pro",
-            ":lib_cmk",
+            ":cmk_ultimate",
             "//non-free/packages/cmc-protocols:py_config_proto",
             "//non-free/packages/cmc-protocols:py_cycletime_proto",
             "//non-free/packages/cmc-protocols:py_state_proto",
         ],
         "@cmk//edition:ultimatemt": [
+            ":cmk_community",
+            ":cmk_pro",
+            ":cmk_ultimate",
             ":cmk_ultimatemt",
-            ":lib_cmk",
             "//non-free/packages/cmc-protocols:py_config_proto",
             "//non-free/packages/cmc-protocols:py_cycletime_proto",
             "//non-free/packages/cmc-protocols:py_state_proto",
         ],
         "@cmk//edition:cloud": [
             ":cmk_cloud",
-            ":lib_cmk",
+            ":cmk_community",
+            ":cmk_pro",
+            ":cmk_ultimate",
             "//non-free/packages/cmc-protocols:py_config_proto",
             "//non-free/packages/cmc-protocols:py_cycletime_proto",
             "//non-free/packages/cmc-protocols:py_state_proto",
@@ -488,7 +455,7 @@ py_wheel(
         ":agents",
         ":checkman_edition_specific",
         ":checkman_free",
-        ":cmk",
+        ":cmk_cmk",
         ":miscellaneous",
     ],
 )
@@ -517,8 +484,8 @@ py_pytest_main(
 py_doc_test(
     name = "doctest",
     srcs = [
-        ":cmk",
         ":cmk_cloud",
+        ":cmk_cmk",
         ":cmk_community",
         ":cmk_pro",
         ":cmk_ultimate",
