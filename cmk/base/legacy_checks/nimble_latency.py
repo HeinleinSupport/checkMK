@@ -6,13 +6,21 @@
 # mypy: disable-error-code="arg-type"
 # mypy: disable-error-code="index"
 # mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
 # mypy: disable-error-code="var-annotated"
 
-import collections
+from __future__ import annotations
 
-from cmk.agent_based.legacy.v0_unstable import check_levels, LegacyCheckDefinition
-from cmk.agent_based.v2 import render, SNMPTree, startswith
+import collections
+from collections.abc import Mapping
+from typing import Any, TypedDict
+
+from cmk.agent_based.legacy.v0_unstable import (
+    check_levels,
+    LegacyCheckDefinition,
+    LegacyCheckResult,
+    LegacyDiscoveryResult,
+)
+from cmk.agent_based.v2 import render, SNMPTree, startswith, StringTable
 
 check_info = {}
 
@@ -21,8 +29,20 @@ check_info = {}
 NimbleReadsType = "read"
 NimbleWritesType = "write"
 
+# Type aliases for the parsed data structure
+type LatencyRanges = collections.OrderedDict[str, tuple[str, int]]
 
-def parse_nimble_read_latency(string_table):
+
+class LatencyData(TypedDict):
+    total: int
+    ranges: LatencyRanges
+
+
+type VolumeData = dict[str, LatencyData]
+type ParsedNimbleLatency = dict[str, VolumeData]
+
+
+def parse_nimble_read_latency(string_table: StringTable) -> ParsedNimbleLatency:
     range_keys = [
         ("total", "Total"),
         ("0.1", "0-0.1 ms"),
@@ -64,13 +84,15 @@ def parse_nimble_read_latency(string_table):
     return parsed
 
 
-def inventory_nimble_latency(parsed, ty):
+def inventory_nimble_latency(parsed: ParsedNimbleLatency, ty: str) -> LegacyDiscoveryResult:
     for vol_name, vol_attrs in parsed.items():
         if vol_attrs[ty]:
             yield vol_name, {}
 
 
-def _check_nimble_latency(item, params, data, ty):
+def _check_nimble_latency(
+    item: str, params: Mapping[str, Any], data: VolumeData, ty: str
+) -> LegacyCheckResult:
     ty_data = data.get(ty)
     if ty_data is None:
         return
@@ -81,7 +103,7 @@ def _check_nimble_latency(item, params, data, ty):
         return
 
     range_reference = float(params["range_reference"])
-    running_total_percent = 0
+    running_total_percent = 0.0
     results = []
     for key, (title, value) in ty_data["ranges"].items():
         metric_name = "nimble_{}_latency_{}".format(ty, key.replace(".", ""))
@@ -113,13 +135,15 @@ def _check_nimble_latency(item, params, data, ty):
         yield 0, infotext, perfdata
 
 
-def check_nimble_latency_reads(item, params, parsed):
+def check_nimble_latency_reads(
+    item: str, params: Mapping[str, Any], parsed: ParsedNimbleLatency
+) -> LegacyCheckResult:
     if not (data := parsed.get(item)):
         return
     yield from _check_nimble_latency(item, params, data, NimbleReadsType)
 
 
-def discover_nimble_latency(parsed):
+def discover_nimble_latency(parsed: ParsedNimbleLatency) -> LegacyDiscoveryResult:
     return inventory_nimble_latency(parsed, NimbleReadsType)
 
 
@@ -177,13 +201,15 @@ check_info["nimble_latency"] = LegacyCheckDefinition(
 )
 
 
-def check_nimble_latency_writes(item, params, parsed):
+def check_nimble_latency_writes(
+    item: str, params: Mapping[str, Any], parsed: ParsedNimbleLatency
+) -> LegacyCheckResult:
     if not (data := parsed.get(item)):
         return
     yield from _check_nimble_latency(item, params, data, NimbleWritesType)
 
 
-def discover_nimble_latency_write(parsed):
+def discover_nimble_latency_write(parsed: ParsedNimbleLatency) -> LegacyDiscoveryResult:
     return inventory_nimble_latency(parsed, NimbleWritesType)
 
 
