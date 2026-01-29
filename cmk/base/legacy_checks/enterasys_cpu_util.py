@@ -4,10 +4,16 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 # mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
 
 
-from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
+from collections.abc import Mapping
+from typing import Any
+
+from cmk.agent_based.legacy.v0_unstable import (
+    LegacyCheckDefinition,
+    LegacyCheckResult,
+    LegacyDiscoveryResult,
+)
 from cmk.agent_based.v2 import OIDEnd, SNMPTree, StringTable
 from cmk.base.check_legacy_includes.cpu_util import check_cpu_util
 from cmk.plugins.enterasys.lib import DETECT_ENTERASYS
@@ -15,17 +21,18 @@ from cmk.plugins.enterasys.lib import DETECT_ENTERASYS
 check_info = {}
 
 
-def discover_enterasys_cpu_util(info):
+def discover_enterasys_cpu_util(info: StringTable) -> LegacyDiscoveryResult:
     # [:-2] to remove the oid end
     return [(x[0][:-2], {}) for x in info]
 
 
-def check_enterasys_cpu_util(item, params, info):
+def check_enterasys_cpu_util(
+    item: str, params: Mapping[str, Any], info: StringTable
+) -> LegacyCheckResult:
     for core, util in info:
         if item == core[:-2]:
             usage = int(util) / 10.0
-            return check_cpu_util(usage, params)
-    return None
+            yield from check_cpu_util(usage, params)
 
 
 def parse_enterasys_cpu_util(string_table: StringTable) -> StringTable:
