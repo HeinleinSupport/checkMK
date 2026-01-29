@@ -3,12 +3,11 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
-
+from typing import Any
 
 from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
 from cmk.agent_based.v2 import all_of, contains, equals, SNMPTree, StringTable
-from cmk.base.check_legacy_includes.temperature import check_temperature
+from cmk.base.check_legacy_includes.temperature import check_temperature, TempParamType
 
 check_info = {}
 
@@ -17,16 +16,20 @@ check_info = {}
 # suggested by customer
 
 
-def discover_artec_temp(info):
+def discover_artec_temp(info: StringTable) -> list[tuple[str, dict[str, Any]]]:
     return [("Disk", {})]
 
 
-def check_artec_temp(item, params, info):
+def check_artec_temp(
+    item: str, params: TempParamType, info: StringTable
+) -> tuple[
+    int, str, list[tuple[str, float, float | None, float | None, float | None, float | None]]
+]:
     return check_temperature(int(info[0][0]), params, "artec_%s" % item)
 
 
-def parse_artec_temp(string_table: StringTable) -> StringTable | None:
-    return string_table or None
+def parse_artec_temp(string_table: StringTable) -> StringTable:
+    return string_table
 
 
 check_info["artec_temp"] = LegacyCheckDefinition(
