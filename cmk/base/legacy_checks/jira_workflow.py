@@ -3,23 +3,28 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
-
 # <<<jira_workflow>>>
 # {'my_project': {'in progress': 29}}
 
-
-# mypy: disable-error-code="var-annotated"
-
 import json
+from collections.abc import Mapping
+from typing import Any
 
-from cmk.agent_based.legacy.v0_unstable import check_levels, LegacyCheckDefinition
+from cmk.agent_based.legacy.v0_unstable import (
+    check_levels,
+    LegacyCheckDefinition,
+    LegacyCheckResult,
+    LegacyDiscoveryResult,
+)
+from cmk.agent_based.v2 import StringTable
 
 check_info = {}
 
+Section = dict[str, dict[str, int | str]]
 
-def parse_jira_workflow(string_table):
-    parsed = {}
+
+def parse_jira_workflow(string_table: StringTable) -> Section:
+    parsed: Section = {}
 
     for line in string_table:
         projects = json.loads(" ".join(line))
@@ -44,7 +49,7 @@ def parse_jira_workflow(string_table):
     return parsed
 
 
-def check_jira_workflow(item, params, parsed):
+def check_jira_workflow(item: str, params: Mapping[str, Any], parsed: Section) -> LegacyCheckResult:
     if not (item_data := parsed.get(item)):
         return
     if not item_data:
@@ -56,6 +61,8 @@ def check_jira_workflow(item, params, parsed):
         return
 
     for _workflow, issue_count in item_data.items():
+        if not isinstance(issue_count, int):
+            continue
         issue_nr_levels = params.get("workflow_count_upper", (None, None))
         issue_nr_levels_lower = params.get("workflow_count_lower", (None, None))
         yield check_levels(
@@ -67,7 +74,7 @@ def check_jira_workflow(item, params, parsed):
         )
 
 
-def discover_jira_workflow(section):
+def discover_jira_workflow(section: Section) -> LegacyDiscoveryResult:
     yield from ((item, {}) for item in section)
 
 
