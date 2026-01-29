@@ -4,28 +4,32 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 # mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
 
 
-from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
+from collections.abc import Iterable
+from typing import Any
+
+from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition, LegacyResult
 from cmk.agent_based.v2 import SNMPTree, StringTable
 from cmk.base.check_legacy_includes.checkpoint import SENSOR_STATUS_TO_CMK_STATUS
-from cmk.base.check_legacy_includes.temperature import check_temperature
+from cmk.base.check_legacy_includes.temperature import check_temperature, TempParamType
 from cmk.plugins.checkpoint.lib import DETECT
 
 check_info = {}
 
 
-def format_item_checkpoint_temp(name):
+def format_item_checkpoint_temp(name: str) -> str:
     return name.upper().replace(" TEMP", "")
 
 
-def discover_checkpoint_temp(info):
+def discover_checkpoint_temp(info: StringTable) -> Iterable[tuple[str, dict[str, Any]]]:
     for name, _value, _unit, _dev_status in info:
         yield format_item_checkpoint_temp(name), {}
 
 
-def check_checkpoint_temp(item, params, info):
+def check_checkpoint_temp(
+    item: str, params: TempParamType, info: StringTable
+) -> LegacyResult | None:
     for name, value, unit, dev_status in info:
         if format_item_checkpoint_temp(name) == item:
             unit = unit.replace("degree", "").strip().lower()
