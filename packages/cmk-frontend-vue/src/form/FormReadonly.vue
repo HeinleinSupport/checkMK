@@ -598,7 +598,7 @@ function renderList(
   if (!value) {
     return h([])
   }
-  const listResults = [h('label', [formSpec.element_template.title])]
+  const listResults = []
   listValidations.forEach((validation: string) => {
     listResults.push(h('label', [validation]))
   })
