@@ -65,6 +65,25 @@ py_test(
 )
 
 py_test(
+    name = "omdlib_unit",
+    srcs = ["__test__.py"] + glob(
+        include = ["omdlib/*.py"],
+    ),
+    args = [
+        "--config-file=$(location @//:pyproject.toml)",
+        "--import-mode=importlib",
+    ],
+    data = ["@//:pyproject.toml"],
+    main = ":__test__.py",
+    deps = [
+        ":__test__",
+        "//omd/packages/omd:omdlib",
+        requirement("pytest-mock"),
+        requirement("cryptography"),
+    ],
+)
+
+py_test(
     name = "repo",
     # https://bazel.build/reference/be/common-definitions#test.size
     size = "large",

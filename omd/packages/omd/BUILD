@@ -2,6 +2,7 @@ load("@aspect_rules_py//py:defs.bzl", "py_library")
 load("@cmk_requirements//:requirements.bzl", "requirement")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_attributes", "pkg_files", "pkg_mkdirs", "pkg_mklink", "strip_prefix")
 load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
+load("//bazel/rules:doctest.bzl", "py_doc_test")
 load("//bazel/rules:file_from_flag.bzl", "file_from_flag")
 load("//bazel/rules:replace_string_in_file.bzl", "replace_string_in_file")
 
@@ -220,6 +221,17 @@ py_library(
         "//packages/cmk-ccc:version",
         requirement("psutil"),
     ],
+)
+
+py_doc_test(
+    name = "doctest",
+    srcs = [
+        ":omdlib",
+    ],
+    env = {
+        "PYTHONWARNINGS": "ignore",
+    },
+    tags = ["no-mypy"],
 )
 
 pkg_files(

@@ -358,16 +358,6 @@ test-cycles:
 		--threshold 0 \
 		--verbose
 
-test-unit-omdlib:
-	cd .. && TZ=$(RANDOM_TZ) $(PYTEST) \
-		--config-file=pyproject.toml \
-		--doctest-modules \
-		--override-ini="pythonpath=. omd/packages/omd/" \
-		$(PYTEST_OPTS_UNIT_SKIP_SLOW) \
-		-- \
-		omd/packages/omd/ \
-		tests/unit/omdlib/
-
 test-doctest:
 	mkdir -p ../results; \
 	bazel test //cmk:doctest | tee ../results/$@.txt; \
