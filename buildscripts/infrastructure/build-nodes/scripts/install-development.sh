@@ -56,7 +56,7 @@ install_basic_tools() {
         "curl"           # curl is used to download artifacts from Nexus
         "doxygen"        # to be able to create docs in the unlikely event
         "gawk"           # TBC
-        "git"            # git is used by install-[bazel, cmake, iwyu, patchelf, protobuf-cpp].sh
+        "git"            # git is used by install-[bazel, cmake, patchelf, protobuf-cpp].sh
         "gnupg"          # "apt-key" used by install-docker
         "lsb-release"    # lsb is used by install-[clang, docker, packer].sh
         "make"           # don't forget your towel when you're taveling :)

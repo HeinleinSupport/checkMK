@@ -29,7 +29,6 @@ COPY \
     package_versions.bzl \
     build_lib.sh \
     Check_MK-pubkey.gpg \
-    install-iwyu.sh \
     install-clang.sh \
     install-packer.sh \
     install-make-dist-deps.sh \

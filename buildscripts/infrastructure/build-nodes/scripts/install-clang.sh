@@ -82,5 +82,3 @@ apt-get install -y \
 if [ "$CLANG_VERSION" = 16 ]; then
     (cd /usr/lib/llvm-16/lib/clang && ln -s 16 16.0.0)
 fi
-
-"${SCRIPT_DIR}/install-iwyu.sh" --clang-version="$CLANG_VERSION"

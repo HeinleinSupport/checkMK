@@ -14,7 +14,7 @@ TARGET_DIR="$(realpath "${1:-.}")"
     cp \
         build_lib.sh \
         Check_MK-pubkey.gpg \
-        install-iwyu.sh install-clang.sh \
+        install-clang.sh \
         install-docker.sh \
         install-packer.sh \
         install-make-dist-deps.sh \
