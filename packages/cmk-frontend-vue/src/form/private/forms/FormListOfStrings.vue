@@ -5,7 +5,7 @@ conditions defined in the file COPYING, which is part of this source code packag
 -->
 <script setup lang="ts">
 import type { ListOfStrings } from 'cmk-shared-typing/typescript/vue_formspec_components'
-import { onBeforeMount, ref, watch } from 'vue'
+import { computed, onBeforeMount, ref, watch } from 'vue'
 
 import FormValidation from '@/components/user-input/CmkInlineValidation.vue'
 
@@ -97,6 +97,16 @@ function onPaste(e: ClipboardEvent, index: number) {
   }
   checkAutoextend()
 }
+
+const specWithoutLabel = computed(() => {
+  const clone = JSON.parse(JSON.stringify(props.spec.string_spec))
+  if (!('label' in clone) || clone.label === null) {
+    return clone
+  }
+  clone.label = null
+  return clone
+})
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const { FormEditDispatcher } = useFormEditDispatcher()
 </script>
@@ -112,7 +122,7 @@ const { FormEditDispatcher } = useFormEditDispatcher()
     >
       <FormEditDispatcher
         v-model:data="backendData[index]"
-        :spec="spec.string_spec"
+        :spec="index === 0 ? spec.string_spec : specWithoutLabel"
         :backend-validation="elementValidation[index]!"
       />
     </div>

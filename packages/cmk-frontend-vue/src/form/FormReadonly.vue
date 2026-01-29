@@ -407,14 +407,14 @@ function renderIntegerUnit(formSpec: Integer, value: number): VNode {
   if (formSpec.unit) {
     shownValue += ` ${formSpec.unit}`
   }
-  return h('div', shownValue)
+  return h('span', shownValue)
 }
 function renderFloatUnit(formSpec: Float, value: number): VNode {
   let shownValue = `${value}`
   if (formSpec.unit) {
     shownValue += ` ${formSpec.unit}`
   }
-  return h('div', shownValue)
+  return h('span', shownValue)
 }
 
 function renderDict(
@@ -629,23 +629,32 @@ function renderListOfStrings(
   if (!value) {
     return h([])
   }
-  const listResults = [h('label', [formSpec.string_spec.title])]
-  listValidations.forEach((validation: string) => {
-    listResults.push(h('label', [validation]))
-  })
+  const listResults = []
 
-  for (let i = 0; i < value.length; i++) {
+  if (listValidations.length > 0) {
     listResults.push(
-      h('li', [
-        renderForm(
-          formSpec.string_spec,
-          value[i],
-          elementValidations[i] ? elementValidations[i] : []
-        )
-      ])
+      h(
+        'li',
+        listValidations.map((validation: string) => h('label', [validation]))
+      )
     )
   }
-  // return h('ul', { style: 'display: contents' }, listResults)
+
+  const formContent = []
+  for (let i = 0; i < value.length; i++) {
+    const rendered = renderForm(
+      formSpec.string_spec,
+      value[i],
+      elementValidations[i] ? elementValidations[i] : []
+    )
+    formContent.push(rendered)
+    if (i < value.length - 1 && value[i + 1]) {
+      formContent.push(', ')
+    }
+  }
+
+  listResults.push(h('li', h('span', formContent)))
+
   return h('ul', { class: 'form-readonly__list' }, listResults)
 }
 
@@ -916,6 +925,7 @@ table.form-readonly__table {
 
 .form-readonly__list {
   padding-left: 0 !important;
+  margin: 0;
   list-style-position: inside;
   list-style-type: circle;
 
