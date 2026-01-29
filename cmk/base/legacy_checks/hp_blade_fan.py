@@ -3,8 +3,6 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
-
 # Author: Lars Michelsen <lm@mathias-kettner.de>
 
 # FAN:
@@ -15,7 +13,10 @@
 # '.1.3.6.1.4.1.232.22.2.3.1.3.1.11' => 'cpqRackCommonEnclosureFanCondition',
 
 
-from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
+from cmk.agent_based.legacy.v0_unstable import (
+    LegacyCheckDefinition,
+    LegacyDiscoveryResult,
+)
 from cmk.agent_based.v2 import SNMPTree, StringTable
 from cmk.plugins.hp_blade.lib import DETECT_HP_BLADE
 
@@ -34,11 +35,11 @@ hp_blade_status2nagios_map = {
 }
 
 
-def discover_hp_blade_fan(info):
-    return [(line[0], None) for line in info if hp_blade_present_map[int(line[1])] == "present"]
+def discover_hp_blade_fan(info: StringTable) -> LegacyDiscoveryResult:
+    return [(line[0], {}) for line in info if hp_blade_present_map[int(line[1])] == "present"]
 
 
-def check_hp_blade_fan(item, params, info):
+def check_hp_blade_fan(item: str, params: object, info: StringTable) -> tuple[int, str]:
     for line in info:
         if line[0] == item:
             present_state = hp_blade_present_map[int(line[1])]
