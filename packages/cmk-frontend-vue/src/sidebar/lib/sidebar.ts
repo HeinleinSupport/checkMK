@@ -9,6 +9,7 @@ import { type Ref, ref } from 'vue'
 import type { KeyShortcutService } from '@/lib/keyShortcuts'
 import { ServiceBase } from '@/lib/service/base'
 
+import { SIDEBAR_UPDATE_SNAPIN_CONTENT_EVENT } from './constants'
 import { SidebarApiClient } from './sidebar-api-client'
 import type { OnUpdateSnapinContent, SidebarSnapinContents } from './type-defs'
 
@@ -244,7 +245,7 @@ export class SidebarService extends ServiceBase {
     )
 
     window.addEventListener(
-      'sidebar-update-snapin-content',
+      SIDEBAR_UPDATE_SNAPIN_CONTENT_EVENT,
       this.handleUpdateSnapinContent.bind(this) as unknown as EventListener
     )
   }
