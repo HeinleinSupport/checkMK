@@ -66,43 +66,18 @@ The `packages/` directory contains independent subprojects, each with its own `r
 - **mk-oracle/**: Oracle database monitoring (Rust)
 - **mk-sql/**: SQL Server monitoring (Rust)
 
-### Build System
+## Important Development Notes
 
-Uses Bazel as the primary build system with Make for legacy compatibility. Each package has individual run scripts with standardized interfaces.
+We use Bazel as the primary build system with Make for legacy compatibility.
 
-## Common Development Commands
+- Use the bazel skill for all testing and linting tasks, except integration and end-to-end tests, which use make
+- Always format, lint and test your code when you are done with a task
 
-### Python Testing
-
-```bash
-# Unit tests
-make -C tests test-unit
-make -C tests test-unit-all  # Include slow tests
-
-# Code quality and formatting
-make -C tests test-bandit
-make -C tests test-format
-make -C tests test-mypy
-
-# Integration and system tests
+<example-legacy-make-tests>
 make -C tests test-integration
 make -C tests test-composition
 make -C tests test-gui-e2e
-make -C tests test-plugins
-```
-
-### Package-Specific Development
-
-Each package in `packages/` has its own `run` script with standardized options:
-
-```bash
-./run -t                # Run (unit) tests
-./run -F                # Check formatting
-./run -f                # Format code
-./run --lint=all        # Run all linters (mypy,ruff,bandit,semgrep)
-./run --all             # Run everything
-./run -h                # Get all available commands (might be different per package)
-```
+</example-legacy-make-tests>
 
 ## Testing Strategy
 
@@ -114,13 +89,6 @@ Each package in `packages/` has its own `run` script with standardized options:
 4. **GUI E2E tests**: End-to-end web interface testing (`tests/gui_e2e/`)
 5. **Plugin tests**: Monitoring plugin validation (`tests/plugins_*/`)
 6. **Agent plugin tests**: Cross-platform agent functionality (`tests/agent-plugin-unit/`)
-
-### Running Tests
-
-- All test commands are prefixed with `make -C tests`
-- Docker variants available by adding `-docker` suffix
-- Use `PYTEST_ADDOPTS` for additional pytest arguments
-- Test results stored in `results/` directory
 
 ## Code Structure and Conventions
 
@@ -159,7 +127,3 @@ The codebase supports multiple Checkmk editions:
 - Checkmk Ultimate: Cloud-native monitoring
 - Checkmk Ultimate with multi-tenancy: Multi-tenant MSP edition
 - Checkmk Cloud: Hosted solution
-
-## Important Development Notes
-
-- Always format, lint and test your code when you are done with a task
