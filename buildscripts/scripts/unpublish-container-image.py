@@ -7,13 +7,21 @@
 # mypy: disable-error-code="no-untyped-def"
 
 import argparse
+import sys
 from collections.abc import Iterator, Sequence
+from pathlib import Path
 from typing import Literal
 
 from cmk.ccc.version import Version
 
-from .lib.common import load_editions_file
-from .lib.registry import DockerImage, edition_to_registry, get_default_registries, Registry
+sys.path.insert(0, Path(__file__).parent.parent.parent.as_posix())
+from buildscripts.scripts.lib.common import load_editions_file
+from buildscripts.scripts.lib.registry import (
+    DockerImage,
+    edition_to_registry,
+    get_default_registries,
+    Registry,
+)
 
 Edition = Literal["community", "ultimate", "pro", "ultimatemt"]
 

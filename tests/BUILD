@@ -7,7 +7,6 @@ exports_files(["dev-requirements.in"])
 
 py_library(
     name = "testlib",
-    testonly = True,
     srcs = ["__init__.py"] + glob(
         include = ["testlib/**/*.py"],
     ),
@@ -17,6 +16,7 @@ py_library(
         exclude = ["testlib/**/*.py"],
     ),
     imports = [".."],
+    visibility = ["//:__subpackages__"],
     deps = [
         "//cmk:cmk_cmk",
         requirement("beautifulsoup4"),

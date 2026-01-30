@@ -410,6 +410,7 @@ KNOWN_UNDECLARED_DEPENDENCIES = {
         Path("buildscripts/scripts/assert_build_artifacts.py"),
         Path("buildscripts/scripts/get_distros.py"),
         Path("buildscripts/scripts/build-cmk-container.py"),
+        Path("buildscripts/scripts/unpublish-container-image.py"),
     },
     ImportName("tests"): {
         Path("buildscripts/scripts/assert_build_artifacts.py"),
