@@ -4,30 +4,31 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 # mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
 
 
-from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
+from collections.abc import Iterable
+
+from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition, LegacyResult
 from cmk.agent_based.v2 import SNMPTree, StringTable
-from cmk.base.check_legacy_includes.temperature import check_temperature
+from cmk.base.check_legacy_includes.temperature import check_temperature, TempParamType
 from cmk.plugins.hitachi_hnas.lib import DETECT
 
 check_info = {}
 
 
-def format_hitachi_hnas_name(nodeid, sensorid, new_format):
+def format_hitachi_hnas_name(nodeid: str, sensorid: str, new_format: bool) -> str:
     # net item format is used in 1.2.7i? and newer
     if new_format:
         return f"Node {nodeid} Sensor {sensorid}"
     return f"{nodeid}.{sensorid}"
 
 
-def discover_hitachi_hnas_temp(info):
+def discover_hitachi_hnas_temp(info: StringTable) -> Iterable[tuple[str, None]]:
     for clusternode, id_, _status, _temp in info:
         yield format_hitachi_hnas_name(clusternode, id_, True), None
 
 
-def check_hitachi_hnas_temp(item, params, info):
+def check_hitachi_hnas_temp(item: str, params: TempParamType, info: StringTable) -> LegacyResult:
     temp_status_map = (
         ("", 3),  # 0
         ("ok", 0),  # 1
@@ -38,11 +39,11 @@ def check_hitachi_hnas_temp(item, params, info):
         ("unknown", 3),  # 6
     )
 
-    for clusternode, id_, status, temp in info:
+    for clusternode, id_, status_str, temp_str in info:
         new_format = item.startswith("Node")
         if format_hitachi_hnas_name(clusternode, id_, new_format) == item:
-            status = int(status)
-            temp = int(temp)
+            status = int(status_str)
+            temp = int(temp_str)
 
             if status == 0 or status >= len(temp_status_map):
                 return 3, "unidentified status %s" % status, []
