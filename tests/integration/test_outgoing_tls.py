@@ -26,6 +26,10 @@ def site_tmp(site: Site) -> Iterator[str]:
     yield from site.system_temp_dir()
 
 
+@pytest.mark.skipif(
+    os.getenv("DISTRO") == "almalinux-8",
+    reason="Calling 'su' with '--whitelist-environment' is not supported",
+)
 @pytest.mark.parametrize("tls_version", TLS_VERSIONS, ids=lambda v: v.name)
 def test_openssl_overwrite_ssl(site: Site, tmp_path: Path, tls_version: ssl.TLSVersion) -> None:
     """Check that we can connect with an old TLS version if we want to. Requests does not yet
