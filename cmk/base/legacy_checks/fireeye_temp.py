@@ -9,7 +9,7 @@
 
 from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
 from cmk.agent_based.v2 import SNMPTree, StringTable
-from cmk.base.check_legacy_includes.fireeye import check_fireeye_states
+from cmk.base.check_legacy_includes.fireeye import HEALTH_MAP, STATUS_MAP
 from cmk.base.check_legacy_includes.temperature import check_temperature
 from cmk.plugins.fireeye.lib import DETECT
 
@@ -30,11 +30,14 @@ def check_fireeye_temp(item, params, info):
     reading_str, status, health = info[0]
     dev_status = 0
     dev_status_name = ""
-    for text, (state, state_readable) in check_fireeye_states(
-        [(status, "Status"), (health, "Health")]
-    ).items():
-        dev_status = max(dev_status, state)
-        dev_status_name += f"{text}: {state_readable}"
+
+    state, state_readable = STATUS_MAP.get(status.lower(), (2, f"unknown: {status}"))
+    dev_status = max(dev_status, state)
+    dev_status_name += f"Status: {state_readable}"
+
+    state, state_readable = HEALTH_MAP.get(health, (2, f"unknown: {health}"))
+    dev_status = max(dev_status, state)
+    dev_status_name += f"Health: {state_readable}"
 
     yield check_temperature(
         float(reading_str),

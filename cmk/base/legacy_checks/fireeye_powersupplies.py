@@ -10,7 +10,7 @@ from typing import Any
 
 from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
 from cmk.agent_based.v2 import SNMPTree, StringTable
-from cmk.base.check_legacy_includes.fireeye import check_fireeye_states
+from cmk.base.check_legacy_includes.fireeye import HEALTH_MAP, STATUS_MAP
 from cmk.plugins.fireeye.lib import DETECT
 
 check_info = {}
@@ -23,10 +23,10 @@ def check_fireeye_powersupplies(
     _no_item: None, _no_params: Mapping[str, Any], info: StringTable
 ) -> Iterator[tuple[int, str]]:
     status, health = info[0]
-    for text, (state, state_readable) in check_fireeye_states(
-        [(status, "Status"), (health, "Health")]
-    ).items():
-        yield state, f"{text}: {state_readable}"
+    state, state_readable = STATUS_MAP.get(status.lower(), (2, f"unknown: {status}"))
+    yield state, f"Status: {state_readable}"
+    state, state_readable = HEALTH_MAP.get(health, (2, f"unknown: {health}"))
+    yield state, f"Health: {state_readable}"
 
 
 def parse_fireeye_powersupplies(string_table: StringTable) -> StringTable:

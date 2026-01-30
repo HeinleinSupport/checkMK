@@ -3,29 +3,18 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="type-arg"
+from typing import Final
 
+STATUS_MAP: Final = {
+    "good": (0, "good"),
+    "ok": (0, "OK"),
+}
 
-def check_fireeye_states(states: list[tuple[str, str]]) -> dict[str, tuple[int, str]]:
-    # Now we only known the OK states and health states
-    # but we can expand if we know more
-    map_states = {
-        "status": {
-            "good": (0, "good"),
-            "ok": (0, "OK"),
-        },
-        "disk status": {
-            "online": (0, "online"),
-        },
-        "health": {
-            "1": (0, "healthy"),
-            "2": (2, "unhealthy"),
-        },
-    }
-    states_evaluated: dict = {}
-    for what, text in states:
-        states_evaluated.setdefault(
-            text, map_states[text.lower()].get(what.lower(), (2, "not %s" % what.lower()))
-        )
+DISK_STATUS_MAP: Final = {
+    "online": (0, "online"),
+}
 
-    return states_evaluated
+HEALTH_MAP: Final = {
+    "1": (0, "healthy"),
+    "2": (2, "unhealthy"),
+}

@@ -11,7 +11,7 @@
 
 from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
 from cmk.agent_based.v2 import SNMPTree
-from cmk.base.check_legacy_includes.fireeye import check_fireeye_states
+from cmk.base.check_legacy_includes.fireeye import DISK_STATUS_MAP, HEALTH_MAP, STATUS_MAP
 from cmk.plugins.fireeye.lib import DETECT
 
 check_info = {}
@@ -51,10 +51,10 @@ def parse_fireeye_raid(string_table):
 
 def check_fireeye_raid(_no_item, _no_params, parsed):
     status, health = parsed["raid"]
-    for text, (state, state_readable) in check_fireeye_states(
-        [(status, "Status"), (health, "Health")]
-    ).items():
-        yield state, f"{text}: {state_readable}"
+    state, state_readable = STATUS_MAP.get(status.lower(), (2, f"unknown: {status}"))
+    yield state, f"Status: {state_readable}"
+    state, state_readable = HEALTH_MAP.get(health, (2, f"unknown: {health}"))
+    yield state, f"Health: {state_readable}"
 
 
 def discover_fireeye_raid(parsed):
@@ -94,10 +94,12 @@ check_info["fireeye_raid"] = LegacyCheckDefinition(
 def check_fireeye_raid_disks(item, _no_params, parsed):
     for diskname, diskstatus, diskhealth in parsed["disks"]:
         if diskname == item:
-            for text, (state, state_readable) in check_fireeye_states(
-                [(diskstatus, "Disk status"), (diskhealth, "Health")]
-            ).items():
-                yield state, f"{text}: {state_readable}"
+            state, state_readable = DISK_STATUS_MAP.get(
+                diskstatus.lower(), (2, f"unknown: {diskstatus}")
+            )
+            yield state, f"Disk status: {state_readable}"
+            state, state_readable = HEALTH_MAP.get(diskhealth, (2, f"unknown: {diskhealth}"))
+            yield state, f"Health: {state_readable}"
 
 
 def discover_fireeye_raid_disks(parsed):
