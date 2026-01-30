@@ -103,14 +103,7 @@ py_library(
 py_test(
     name = "fetchers-tests",
     size = "small",
-    srcs = [
-        "__test__.py",
-        "tests/cmk/fetchers/snmp_backend/test_classic_snmp.py",
-        "tests/cmk/fetchers/snmp_backend/test_stored_walk.py",
-        "tests/cmk/fetchers/test_agentprtcl.py",
-        "tests/cmk/fetchers/test_snmp.py",
-        "tests/cmk/fetchers/test_snmpscan.py",
-    ],
+    srcs = glob(["tests/cmk/fetchers/**/*.py"]) + [":__test__.py"],
     main = "__test__.py",
     deps = [
         "__test__",
@@ -130,12 +123,7 @@ py_pytest_main(
 py_test(
     name = "snmplib-tests",
     size = "small",
-    srcs = [
-        "__test__.py",
-        "tests/cmk/snmplib/__init__.py",
-        "tests/cmk/snmplib/test_ab_type_defs.py",
-        "tests/cmk/snmplib/test_type_defs.py",
-    ],
+    srcs = glob(["tests/cmk/snmplib/**/*.py"]) + [":__test__.py"],
     main = "__test__.py",
     deps = [
         "__test__",
