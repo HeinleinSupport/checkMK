@@ -47,6 +47,7 @@ import { type PropType, type Ref, type VNode, defineComponent, h } from 'vue'
 import usei18n from '@/lib/i18n'
 
 import type { DualListElement } from '@/components/CmkDualList'
+import CmkInlineValidation from '@/components/user-input/CmkInlineValidation.vue'
 import {
   ALL_MAGNITUDES,
   getSelectedMagnitudes,
@@ -70,7 +71,7 @@ import {
 
 const { _t } = usei18n()
 
-function renderForm(
+function _renderForm(
   formSpec: FormSpec,
   value: unknown,
   backendValidation: ValidationMessages = []
@@ -165,6 +166,21 @@ function renderForm(
       return renderOAuth2ConnectionSetup(formSpec as Oauth2ConnectionSetup, value)
     // Do not add a default case here. This is intentional to make sure that all form types are covered.
   }
+}
+
+function renderForm(
+  formSpec: FormSpec,
+  value: unknown,
+  backendValidation: ValidationMessages = []
+): VNode {
+  const readOnlyValue = _renderForm(formSpec, value, backendValidation)
+  const currentValidation = backendValidation
+    .filter(({ location }) => location.length === 0)
+    .map(({ message }) => message)
+  if (currentValidation.length > 0) {
+    return h('div', [h(CmkInlineValidation, { validation: currentValidation }), readOnlyValue])
+  }
+  return readOnlyValue
 }
 
 function renderSimplePassword(): VNode {
@@ -811,7 +827,14 @@ export default defineComponent({
     backendValidation: { type: Object as PropType<ValidationMessages>, required: true }
   },
   render() {
-    return renderForm(this.spec, this.data, this.backendValidation)
+    const form = renderForm(this.spec, this.data, this.backendValidation)
+    if (this.backendValidation.length > 0) {
+      return h('div', [
+        h(CmkInlineValidation, { validation: [_t('The value of this rule is not valid.')] }),
+        form
+      ])
+    }
+    return form
   }
 })
 </script>
