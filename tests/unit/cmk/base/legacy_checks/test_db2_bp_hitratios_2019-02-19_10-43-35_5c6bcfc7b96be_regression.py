@@ -12,7 +12,7 @@
 # If you encounter something weird in here, do not hesitate to replace this
 # test by something more appropriate.
 
-from typing import Any
+from collections.abc import Mapping
 
 import pytest
 
@@ -43,12 +43,12 @@ def string_table_fixture() -> list[list[str]]:
 
 
 @pytest.fixture(name="parsed")
-def parsed_fixture(string_table: list[list[str]]) -> dict[str, Any]:
+def parsed_fixture(string_table: list[list[str]]) -> Mapping[str, list[list[str]]]:
     """Parsed DB2 buffer pool data"""
     return parse_db2_bp_hitratios(string_table)
 
 
-def test_discover_db2_bp_hitratios(parsed: dict[str, Any]) -> None:
+def test_discover_db2_bp_hitratios(parsed: Mapping[str, list[list[str]]]) -> None:
     """Test DB2 buffer pool discovery finds IBMDEFAULTBP buffer pool"""
     discovered = list(discover_db2_bp_hitratios(parsed))
     assert len(discovered) == 1
@@ -56,7 +56,7 @@ def test_discover_db2_bp_hitratios(parsed: dict[str, Any]) -> None:
     assert discovered[0][1] == {}  # Empty parameters
 
 
-def test_check_db2_bp_hitratios_normal_ratios(parsed: dict[str, Any]) -> None:
+def test_check_db2_bp_hitratios_normal_ratios(parsed: Mapping[str, list[list[str]]]) -> None:
     """Test DB2 buffer pool check with normal hit ratios"""
     item = "serv0:ABC DPF 0 foo1.bar2.baz3 0:IBMDEFAULTBP"
     result = list(check_db2_bp_hitratios(item, {}, parsed))
@@ -88,7 +88,7 @@ def test_check_db2_bp_hitratios_normal_ratios(parsed: dict[str, Any]) -> None:
     assert xda_result[2] == [("xda_hitratio", 50.0, None, None, 0, 100)]
 
 
-def test_check_db2_bp_hitratios_missing_db(parsed: dict[str, Any]) -> None:
+def test_check_db2_bp_hitratios_missing_db(parsed: Mapping[str, list[list[str]]]) -> None:
     """Test DB2 buffer pool check for non-existent database"""
     item = "nonexistent:IBMDEFAULTBP"
 
@@ -97,7 +97,7 @@ def test_check_db2_bp_hitratios_missing_db(parsed: dict[str, Any]) -> None:
         list(check_db2_bp_hitratios(item, {}, parsed))
 
 
-def test_check_db2_bp_hitratios_missing_bufferpool(parsed: dict[str, Any]) -> None:
+def test_check_db2_bp_hitratios_missing_bufferpool(parsed: Mapping[str, list[list[str]]]) -> None:
     """Test DB2 buffer pool check for non-existent buffer pool"""
     item = "serv0:ABC DPF 0 foo1.bar2.baz3 0:NONEXISTENT"
     result = list(check_db2_bp_hitratios(item, {}, parsed))

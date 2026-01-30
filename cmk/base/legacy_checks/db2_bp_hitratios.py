@@ -3,14 +3,15 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
 # mypy: disable-error-code="possibly-undefined"
-
-
 # mypy: disable-error-code="var-annotated"
 
-from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
-from cmk.agent_based.v2 import IgnoreResultsError
+from __future__ import annotations
+
+from collections.abc import Generator, Iterable, Mapping
+
+from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition, LegacyResult
+from cmk.agent_based.v2 import IgnoreResultsError, StringTable
 from cmk.plugins.db2.agent_based.lib import parse_db2_dbs
 
 check_info = {}
@@ -24,7 +25,7 @@ check_info = {}
 # BP8                             100.00                 100.00                       -                     -
 
 
-def parse_db2_bp_hitratios(string_table):
+def parse_db2_bp_hitratios(string_table: StringTable) -> Mapping[str, list[list[str]]]:
     pre_parsed = parse_db2_dbs(string_table)
 
     # Some databases run in DPF mode. This means they are split over several instances
@@ -59,14 +60,18 @@ def parse_db2_bp_hitratios(string_table):
     return databases
 
 
-def discover_db2_bp_hitratios(parsed):
+def discover_db2_bp_hitratios(
+    parsed: Mapping[str, list[list[str]]],
+) -> Iterable[tuple[str, Mapping[str, object]]]:
     for key, values in parsed.items():
         for field in values[1:]:
             if not field[0].startswith("IBMSYSTEMBP"):
                 yield f"{key}:{field[0]}", {}
 
 
-def check_db2_bp_hitratios(item, _no_params, parsed):
+def check_db2_bp_hitratios(
+    item: str, _no_params: object, parsed: Mapping[str, list[list[str]]]
+) -> Generator[LegacyResult]:
     db_instance, field = item.rsplit(":", 1)
     db = parsed.get(db_instance)
     if not db:
@@ -86,10 +91,16 @@ def check_db2_bp_hitratios(item, _no_params, parsed):
                     "INDEX_HIT": "Index",
                     "XDA_HIT": "XDA",
                 }
+                metric_name = "%sratio" % key.lower()
+                float_value = float(value)
+                warn: int | float | None = None
+                crit: int | float | None = None
+                min_value: int | float | None = 0.0
+                max_value: int | float | None = 100.0
                 yield (
                     0,
                     f"{map_key_to_text[key]}: {value}%",
-                    [("%sratio" % key.lower(), float(value), None, None, 0, 100)],
+                    [(metric_name, float_value, warn, crit, min_value, max_value)],
                 )
             break
 
