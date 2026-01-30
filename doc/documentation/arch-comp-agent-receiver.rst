@@ -47,6 +47,15 @@ The agent-receiver can be accessed via HTTPS on the AGENT_RECEIVER_PORT
 agent) and it writes files to the disk which then are read by other Checkmk
 components.
 
+The agent-receiver also provides REST API endpoints for relay communication:
+
+* Relay registration and certificate management
+* Task queues for scheduled monitoring and ad-hoc requests
+* Monitoring data ingestion from relays
+* Configuration distribution to relays
+
+For details on the relay system, see :doc:`arch-comp-relay`.
+
 .. uml:: arch-comp-agent-receiver.puml
 
 Risks and technical debts

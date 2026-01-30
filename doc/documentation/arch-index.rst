@@ -57,6 +57,7 @@ Components
    arch-comp-agent-updater.rst
    arch-comp-agent-bakery.rst
    arch-comp-relay.rst
+   arch-comp-relay-engine.rst
    arch-comp-grafana-connector.rst
 
    arch-comp-template.rst

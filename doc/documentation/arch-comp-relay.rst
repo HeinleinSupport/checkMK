@@ -1,18 +1,24 @@
 ============
-Relay Engine
+Relay System
 ============
 
 Introduction and goals
 ======================
 
-The relay is a separate installable component to collect monitoring data in segregated networks, i.e. the relay can talk to the site but not vice versa.
-For simplicity the relay acts like a very lite remote site, it will collect monitoring data for hosts and forwards them to a site. However, it only runs the fetchers and not the checkers.
-Once installed the relay is very hands off for the user, Checkmk will take care to sync configuration and version updates to it.
+The relay system enables Checkmk to monitor hosts in segregated or isolated networks where bidirectional communication between the central site and monitored hosts is not possible.
+The relay acts as a lightweight remote monitoring proxy that can reach both the isolated hosts and the central site, forwarding monitoring data in one direction only.
 
-* Monitor hosts in a segregated network.
-* Regularly push monitoring data to a site.
-* Fetch monitoring data on demand (e.g. for service discovery in UI).
-* Report about it's own health
+Key capabilities:
+
+* Monitor hosts in segregated networks
+* Regularly push monitoring data from isolated networks to the central site
+* Support on-demand data fetching for service discovery and diagnostics
+* Automatically sync configuration and version updates from the central site
+* Support SNMP, agent-based, and program-based data sources
+* Provide certificate-based authentication and encryption
+
+The relay operates on a pull-from-site, push-to-site model.
+The relay periodically polls the central site for tasks and configuration updates, executes data collection tasks locally in the isolated network, and pushes results back to the site.
 
 Architecture
 ============
@@ -20,54 +26,165 @@ Architecture
 White-box overall system
 ------------------------
 
-The relay component consists of multiple packages in Checkmk
+The relay system consists of four main components distributed across packages:
 
-**Relay Engine**:
-The relay engine is installed on a remote host, together with the fetchers.
-The engine is responsible to check for tasks from the site and schedule the fetchers for each host.
-To ask for tasks or send monitoring data it contacts the agent receiver.
+**Relay Engine** (``non-free/packages/cmk-relay-engine``):
+The relay engine is a containerized service installed on a host in the segregated network.
+It runs fetchers to collect monitoring data and manages all local task execution.
+The engine polls the central site for work, executes tasks, and pushes results back.
+It handles scheduled monitoring checks, ad-hoc fetch requests, configuration updates, and certificate rotation.
 
-**Agent Receiver**:
-The agent receiver is responsible for the communication with relay engines.
-The communication is strictly one way, so the relay-engine can contact the agent-receiver but not the other way around.
+**Agent Receiver** (``packages/cmk-agent-receiver``):
+The agent receiver provides REST API endpoints for relay communication as interface for the relay.
+It receives monitoring data from relays, manages task queues for each relay, handles relay registration and certificate management, and forwards data to the Checkmk core.
+Communication is strictly initiated by the relay.
 
-**Fetcher**
-Fetchers are involved on two places with the relay.
-The first is the relay-engine runs the fetchers itself.
-The second is that fetchers can send a fetch task to the relay (via agent receiver) for irregular tasks like a service discovery.
+**Relay Protocols** (``packages/cmk-relay-protocols``):
+This package defines shared data structures and communication protocols used between the relay engine and agent receiver.
+It includes task specifications, monitoring data formats, configuration structures, and API request/response models.
+These protocols ensure type-safe communication between components.
 
-Relay Engine
+**Fetcher Integration** (``non-free/packages/cmk-core-helpers``):
+The site-side fetchers can trigger ad-hoc data collection on relays.
+When a user initiates service discovery or diagnostics in the UI, the fetcher uses a ``RelayFetcherTrigger`` to create a task in the agent receiver, which the relay picks up, executes, and returns results for.
+
+Component interaction
+^^^^^^^^^^^^^^^^^^^^^
+
+.. uml:: arch-comp-relay-system.puml
+
+Implementation Constraints
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The relay system operates under three fundamental constraints.
+First, the relay and CMC must maintain version synchronization, a fundamental limitation of the fetcher/checker split architecture.
+The fetcher and checker components are not independently versioned and assume code consistency across the site, as they are usually updated together.
+Second, the relay must initiate all communication with the central site, as the architecture cannot assume the site can directly reach the relay in segregated networks.
+Third, all communication with the relay must be treated as asynchronous with no guarantee of relay availability. 
+
+Relay Engine architecture
+--------------------------
+
+The relay engine uses an event-driven architecture with a main loop, asynchronous processors, and schedulers.
+Processors handle specific tasks (fetching, sending data, configuration updates) and communicate only through a central queue, ensuring decoupling and testability.
+
+For detailed architecture information, see :doc:`arch-comp-relay-engine`.
+
+
+Data flows
+----------
+
+The relay system implements three main data flows:
+
+**Scheduled monitoring**:
+The relay engine periodically executes monitoring checks for configured hosts/services.
+This is a simplified re-implementation of the fetching logic in the monitoring core.
+Results are sent to the Agent Receiver, which forwards them to CMC.
+
+**Ad-hoc fetch** :
+Any UI interaction that requires fetcher output triggers an Ad-hoc fetch on the relay. 
+I.e. when a user triggers service discovery in the UI, the site creates a task in the Agent Receiver.
+The relay polls for tasks, executes the fetch, and returns results. Typical latency is 2-5 seconds.
+
+**Configuration updates**:
+When a user activates changes, the site pushes a configuration archive to the Agent Receiver.
+The relay polls for the config, validates it, and applies it atomically with zero downtime.
+
+For detailed flow diagrams and internal processing, see :doc:`arch-comp-relay-engine`.
+
+
+Deployment
+==========
+
+Container package
+-----------------
+
+The relay engine is deployed as a container image built with Bazel (OCI format).
+The container is identical for all editions that support the relay, there are no edition specific relay builds.
+The container definition is in ``omd/non-free/relay/`` and includes:
+
+- Relay engine application (``non-free/packages/cmk-relay-engine``)
+- Communication protocols (``packages/cmk-relay-protocols``)
+- Fetcher helpers (``non-free/packages/cmk-core-helpers``)
+- Check engine and plugin APIs
+- Required Python dependencies
+
+The container can be loaded with Docker or Podman using the provided loader scripts.
+
+Installation
 ------------
-The relay-engine consists of a single main loop that reads from a queue and distributes the message on the queue to a bunch of processors.
-In addition there are scheduler objects that can schedule recurring tasks.
-Processors are simple classes that run asynchronously and act on tasks from the main loop.
-Processors do not directly communicate back to the main loop, instead they submit to a main queue.
-The main loop wakes up periodically and empties the main queue.
-Here is an abstract picture of the architecture.
 
-.. uml:: arch-comp-relay-abstract.puml
+The relay is installed in segregated networks using the ``install_relay.sh`` script, which:
+
+1. Loads the container image from a tar archive
+2. Sets up the relay configuration directory
+3. Registers the relay with the Checkmk site
+4. Configures systemd units for automatic updates
+5. Starts the relay engine container
+
+For details, see ``omd/non-free/relay/README.md``.
+
+Automatic updates
+-----------------
+
+The relay automatically updates itself when the site version changes:
+
+1. When the relay polls the Agent Receiver, it receives the site version in the response header
+2. If the version differs from the relay's current version, the relay writes the new version to ``site-version.txt``
+3. A systemd path unit monitors this file and triggers the update manager when it changes
+4. The update manager pulls the new container image from the registry and tags it locally
+5. Podman auto-update restarts the container with the new image
+
+This ensures relays stay in sync with the site version without manual intervention.
+The entire update process typically completes within minutes.
 
 
-Examples for a Processor is the FetcherPool.
-It can fetch data from a host and provides the result back to the main loop via the Main Queue.
-Another example is the Site which is responsible for sending monitoring data from a fetcher to the site.
-Here is a more concrete example with the fetcher pool and site as processors.
+Security
+========
 
-.. uml:: arch-comp-relay-example.puml
+Authentication
+--------------
 
-*Important* The FetcherPool and SiteProxy never directly share data.
-Instead they let the main loop decide that to do and who acts next some data.
+The relay system uses mutual TLS (mTLS) for all communication:
 
-With this architecture we want to achieve some key benefits:
+1. During registration, the relay generates a CSR with a unique relay ID
+2. The site's CA signs the certificate, binding it to the relay ID
+3. The relay uses the certificate for all subsequent HTTPS requests
+4. The agent receiver validates the certificate on each request
+5. The relay ID in the certificate must match the URL path
 
-- Processors are simple objects with an input and output (no state)
-- Processors are maximally decoupled, they know nothing of each other
-- Each Processor class has one task
-- The MainQueue is an event log of what the system did 
+Certificate rotation happens automatically before expiration (typically triggered 7 days before expiry).
 
-With this we can easily test each processor, and the main loop and queue act more as a router to which processors a task needs to be send.
+Authorization
+-------------
 
-Interfaces
-^^^^^^^^^^
-The relay engine does not expose any interfaces.
-It only talks to the REST API of the agent receiver
+Each relay is identified by its certificate's Common Name (CN).
+The agent receiver:
+
+- Validates that the CN matches the ``relay_id`` in the URL path
+- Ensures the relay can only access its own tasks and data
+- Requires site authentication for privileged operations like configuration updates
+
+Network security
+----------------
+
+- All communication uses HTTPS with TLS 1.2+
+- The relay initiates all connections (outbound only from the segregated network)
+- No inbound ports need to be opened in the segregated network's firewall
+- The relay trusts only the site's CA certificate
+
+Secrets handling
+----------------
+
+- Passwords and secrets in configuration are encrypted before transmission
+- The relay stores a secrets key to decrypt configuration data
+- Ad-hoc tasks include temporary CA certificates for HTTPS checks
+- Secrets are provided to fetcher processes via environment variables, never written to disk
+
+
+See Also
+========
+
+- :doc:`arch-comp-relay-engine`: Detailed relay engine internals
+- :doc:`arch-comp-agent-receiver`: Agent receiver (includes relay support)
+- :doc:`arch-comp-checkengine`: Check engine architecture

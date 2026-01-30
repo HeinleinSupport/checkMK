@@ -1,0 +1,52 @@
+@startuml
+skinparam componentStyle rectangle
+
+package "Central Site" {
+    component "Checkmk UI" as ui
+    component "Check Engine" as engine
+    component "Agent Receiver" as receiver
+    component "CMC (Core)" as cmc
+    component "REST API" as api
+    database "Configuration" as config
+}
+
+package "Relay (Segregated Network)" {
+    component "Relay Engine\n(schedulers, processors,\nfetcher subprocesses)" as relay
+}
+
+package "Monitored Hosts" {
+    component "SNMP Devices" as snmp
+    component "Special Agents" as special
+}
+
+' User interactions
+ui --> engine : Trigger discovery
+
+' Site internal
+engine --> receiver : Create ad-hoc task
+receiver --> cmc : Forward monitoring data
+receiver --> api : Manage relays
+api --> config : Store configuration
+
+' Relay to site communication (outbound only)
+relay --> receiver : Poll tasks (HTTPS+mTLS)
+relay --> receiver : Send monitoring data
+relay --> receiver : Update task results
+
+' Relay to monitored hosts
+relay --> snmp : SNMP queries
+relay --> special : Execute programs
+
+note right of relay
+  All connections from relay
+  are outbound only.
+  No inbound ports required.
+end note
+
+note left of receiver
+  Agent Receiver provides
+  REST API for relay
+  communication
+end note
+
+@enduml
