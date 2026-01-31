@@ -3,8 +3,6 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="redundant-expr"
-
 from collections.abc import Sequence
 from dataclasses import dataclass
 
@@ -90,16 +88,19 @@ class Graph:
         if not self.name:
             raise ValueError(self.name)
         assert self.compound_lines or self.simple_lines
-        for c in self.compound_lines:
-            if isinstance(c, str) and not c:
-                raise ValueError(c)
+        for cl in self.compound_lines:
+            if isinstance(cl, str) and not cl:
+                raise ValueError(cl)
         for s in self.simple_lines:
             if isinstance(s, str) and not s:
                 raise ValueError(s)
-        for o in self.optional:
+        # We want runtime validation for 3rd party plugins:
+        os: Sequence[object] = self.optional
+        cs: Sequence[object] = self.conflicting
+        for o in os:
             if isinstance(o, str) and not o:
                 raise ValueError(o)
-        for c in self.conflicting:
+        for c in cs:
             if isinstance(c, str) and not c:
                 raise ValueError(c)
 

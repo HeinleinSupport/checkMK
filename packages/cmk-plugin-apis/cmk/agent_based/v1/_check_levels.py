@@ -3,9 +3,6 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="comparison-overlap"
-# mypy: disable-error-code="redundant-expr"
-
 from collections.abc import Callable, Generator, Mapping
 from typing import Literal, overload
 
@@ -20,12 +17,12 @@ from ._checking_classes import Metric, Result, State
 
 def _do_check_levels(
     value: float,
-    levels_upper: tuple[float, float] | None,
-    levels_lower: tuple[float, float] | None,
-    render_func: Callable[[float], str],
-) -> tuple[State, str]:
     # Typing says that levels are either None, or a Tuple of float.
     # However we also deal with (None, None) to avoid crashes of custom plug-ins.
+    levels_upper: tuple[float | None, float | None] | None,
+    levels_lower: tuple[float | None, float | None] | None,
+    render_func: Callable[[float], str],
+) -> tuple[State, str]:
     # CRIT ?
     if levels_upper and levels_upper[1] is not None and value >= levels_upper[1]:
         return State.CRIT, _levelsinfo_ty("at", levels_upper, render_func)
@@ -42,7 +39,7 @@ def _do_check_levels(
 
 
 def _levelsinfo_ty(
-    preposition: str, levels: tuple[float, float], render_func: Callable[[float], str]
+    preposition: str, levels: tuple[float | None, float | None], render_func: Callable[[float], str]
 ) -> str:
     # Again we are forgiving if we get passed 'None' in the levels.
     warn_str = "never" if levels[0] is None else render_func(levels[0])

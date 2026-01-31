@@ -4,8 +4,6 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 """Classes used by the API for check plug-ins"""
 
-# mypy: disable-error-code="redundant-expr"
-
 from __future__ import annotations
 
 import enum
@@ -314,7 +312,8 @@ class Metric(_MetricTuple):
     def _sanitize_optionals(
         cls,
         field: str,
-        values: _OptionalPair,
+        # We're expecting _OptionalPair here, but we also deal with 3rd party bugs
+        values: _OptionalPair | object,
     ) -> tuple[_EvalableFloat | None, _EvalableFloat | None]:
         if values is None:
             return None, None
@@ -513,7 +512,9 @@ class IgnoreResults:
 
     @override
     def __str__(self) -> str:
-        return self._value if isinstance(self._value, str) else repr(self._value)
+        # We're expecting self._value to be a str here, but we also deal with 3rd party bugs
+        v: object = self._value
+        return v if isinstance(v, str) else repr(v)
 
     @override
     def __eq__(self, other: object) -> bool:

@@ -4,8 +4,6 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 """Classes used by the API for check plug-ins"""
 
-# mypy: disable-error-code="redundant-expr"
-
 import string
 from collections.abc import Mapping
 from typing import NamedTuple, NoReturn, Self
@@ -17,7 +15,10 @@ _ATTR_DICT_VAL_TYPES = (int, float, str, bool, type(None))
 _VALID_CHARACTERS = set(string.ascii_letters + string.digits + "_-")
 
 
-def _parse_valid_path(path: list[str]) -> list[str]:
+def _parse_valid_path(
+    # We're expecting `list[path]` here, but we also deal with 3rd party bugs
+    path: list[str] | object,
+) -> list[str]:
     if not (path and isinstance(path, list) and all(isinstance(s, str) for s in path)):
         raise TypeError(f"'path' arg expected a non empty list[str], got {path!r}")
     invalid_chars = set("".join(path)) - _VALID_CHARACTERS

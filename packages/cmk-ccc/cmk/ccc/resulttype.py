@@ -18,8 +18,6 @@ See Also:
 
 """
 
-# mypy: disable-error-code="no-any-return"
-
 from __future__ import annotations
 
 import abc
@@ -169,7 +167,7 @@ class OK(Result[T_co, E_co]):
         if isinstance(other, Error):
             return True
         assert isinstance(other, OK)
-        return self.ok < other.ok
+        return bool(self.ok < other.ok)
 
     @override
     def __gt__(self, other: Result[T_co, E_co]) -> bool:
@@ -178,7 +176,7 @@ class OK(Result[T_co, E_co]):
         if isinstance(other, Error):
             return False
         assert isinstance(other, OK)
-        return self.ok > other.ok
+        return bool(self.ok > other.ok)
 
     @override
     def __iter__(self) -> Iterable[T_co]:
@@ -269,7 +267,7 @@ class Error(Result[T_co, E_co]):
         if isinstance(other, OK):
             return False
         assert isinstance(other, Error)
-        return self._error < other._error
+        return bool(self._error < other._error)
 
     @override
     def __gt__(self, other: Result[T_co, E_co]) -> bool:
@@ -278,7 +276,7 @@ class Error(Result[T_co, E_co]):
         if isinstance(other, OK):
             return True
         assert isinstance(other, Error)
-        return self._error > other._error
+        return bool(self._error > other._error)
 
     @override
     def __iter__(self) -> Iterable[T_co]:

@@ -3,8 +3,6 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="redundant-expr"
-
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 
@@ -194,5 +192,7 @@ class Translation:
             raise ValueError(self.name)
         assert self.check_commands and self.translations
         for name in self.translations:
-            if isinstance(name, str) and not name:
-                raise ValueError(self.name)
+            # We want runtime validation for 3rd party plugins:
+            n: object = name
+            if isinstance(n, str) and not n:
+                raise ValueError(n)
