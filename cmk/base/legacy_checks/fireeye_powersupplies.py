@@ -4,8 +4,9 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 # mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
 
+from collections.abc import Iterator, Mapping
+from typing import Any
 
 from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
 from cmk.agent_based.v2 import SNMPTree, StringTable
@@ -18,7 +19,9 @@ check_info = {}
 # .1.3.6.1.4.1.25597.11.3.1.2.0 1 --> FE-FIREEYE-MIB::fePowerSupplyOverallIsHealthy.0
 
 
-def check_fireeye_powersupplies(_no_item, _no_params, info):
+def check_fireeye_powersupplies(
+    _no_item: None, _no_params: Mapping[str, Any], info: StringTable
+) -> Iterator[tuple[int, str]]:
     status, health = info[0]
     for text, (state, state_readable) in check_fireeye_states(
         [(status, "Status"), (health, "Health")]
@@ -30,8 +33,10 @@ def parse_fireeye_powersupplies(string_table: StringTable) -> StringTable:
     return string_table
 
 
-def discover_fireeye_powersupplies(info):
-    yield from [(None, None)] if info else []
+def discover_fireeye_powersupplies(
+    info: StringTable,
+) -> list[tuple[None, None]]:
+    return [(None, None)] if info else []
 
 
 check_info["fireeye_powersupplies"] = LegacyCheckDefinition(
