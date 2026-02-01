@@ -11,8 +11,7 @@
 
 from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
 from cmk.agent_based.v2 import SNMPTree
-from cmk.base.check_legacy_includes.fireeye import DISK_STATUS_MAP, HEALTH_MAP, STATUS_MAP
-from cmk.plugins.fireeye.lib import DETECT
+from cmk.plugins.fireeye.lib import DETECT, DISK_STATUS_MAP, HEALTH_MAP, STATUS_MAP
 
 check_info = {}
 

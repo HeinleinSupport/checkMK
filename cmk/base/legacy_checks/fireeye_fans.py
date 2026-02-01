@@ -12,8 +12,7 @@ from cmk.agent_based.legacy.v0_unstable import (
     LegacyDiscoveryResult,
 )
 from cmk.agent_based.v2 import SNMPTree, StringTable
-from cmk.base.check_legacy_includes.fireeye import HEALTH_MAP, STATUS_MAP
-from cmk.plugins.fireeye.lib import DETECT
+from cmk.plugins.fireeye.lib import DETECT, HEALTH_MAP, STATUS_MAP
 
 check_info = {}
 
