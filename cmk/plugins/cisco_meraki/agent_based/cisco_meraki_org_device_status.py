@@ -118,14 +118,20 @@ def discover_device_status_ps(section: Section) -> DiscoveryResult:
         yield Service(item=slot)
 
 
-def check_device_status_ps(item: str, params: Mapping[str, int], section: Section) -> CheckResult:
+class CheckParamsPowerSupply(TypedDict):
+    state_not_powering: int
+
+
+def check_device_status_ps(
+    item: str, params: CheckParamsPowerSupply, section: Section
+) -> CheckResult:
     if (power_supply := section.power_supplies.get(item)) is None:
         return
 
     if power_supply.status.lower() == "powering":
         state = State.OK
     else:
-        state = State(params.get("state_not_powering", State.WARN.value))
+        state = State(params["state_not_powering"])
 
     yield Result(state=state, summary=f"Status: {power_supply.status}")
     yield Result(state=State.OK, notice=f"Model: {power_supply.model}")
@@ -138,7 +144,9 @@ check_plugin_cisco_meraki_org_device_status_ps = CheckPlugin(
     sections=["cisco_meraki_org_device_status"],
     discovery_function=discover_device_status_ps,
     check_function=check_device_status_ps,
-    check_default_parameters={},
+    check_default_parameters=CheckParamsPowerSupply(
+        state_not_powering=State.WARN.value,
+    ),
     check_ruleset_name="cisco_meraki_org_device_status_ps",
 )
 
