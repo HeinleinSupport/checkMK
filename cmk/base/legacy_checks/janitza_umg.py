@@ -4,15 +4,21 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 # mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
 # mypy: disable-error-code="possibly-undefined"
 # mypy: disable-error-code="type-arg"
 
+from collections.abc import Mapping
+from typing import Any
 
-from cmk.agent_based.legacy.v0_unstable import check_levels, LegacyCheckDefinition
-from cmk.agent_based.v2 import any_of, equals, render, SNMPTree
+from cmk.agent_based.legacy.v0_unstable import (
+    check_levels,
+    LegacyCheckDefinition,
+    LegacyDiscoveryResult,
+    LegacyResult,
+)
+from cmk.agent_based.v2 import any_of, equals, render, SNMPTree, StringTable
 from cmk.base.check_legacy_includes.elphase import check_elphase
-from cmk.base.check_legacy_includes.temperature import check_temperature
+from cmk.base.check_legacy_includes.temperature import check_temperature, TempParamType
 
 check_info = {}
 
@@ -24,11 +30,11 @@ janitza_umg_device_map = {
 }
 
 
-def parse_janitza_umg_inphase(string_table):
+def parse_janitza_umg_inphase(string_table: list[StringTable]) -> dict[str, Any] | None:
     if not string_table[0] or not string_table[0][0]:
         return None
 
-    def flatten(line):
+    def flatten(line: StringTable) -> list[str]:
         return [x[0] for x in line]
 
     dev_type = janitza_umg_device_map[string_table[0][0][0]]
@@ -75,7 +81,7 @@ def parse_janitza_umg_inphase(string_table):
         num_phases,  # Cos(Phi)
     ]
 
-    def offset(block_id, phase):
+    def offset(block_id: int, phase: int) -> int:
         return sum(counts[:block_id], phase)
 
     # voltages are in 100mv, currents in 1mA, power in Watts / VA
@@ -102,7 +108,7 @@ def parse_janitza_umg_inphase(string_table):
     return result
 
 
-def discover_janitza_umg_inphase(parsed):
+def discover_janitza_umg_inphase(parsed: dict[str, Any]) -> LegacyDiscoveryResult:
     for item in parsed:
         if item.startswith("Phase"):
             yield item, {}
@@ -162,13 +168,15 @@ check_info["janitza_umg"] = LegacyCheckDefinition(
 )
 
 
-def discover_janitza_umg_freq(parsed):
+def discover_janitza_umg_freq(parsed: dict[str, Any]) -> LegacyDiscoveryResult:
     # info[0] is frequency, info[1] is first temperature reading, info[2] is second.
     if "Frequency" in parsed:
         yield "1", {}  # why?? :-(
 
 
-def check_janitza_umg_freq(item, params, parsed):
+def check_janitza_umg_freq(
+    item: str, params: Mapping[str, Any], parsed: dict[str, Any]
+) -> LegacyResult | None:
     if "Frequency" not in parsed:
         return None
 
@@ -192,7 +200,7 @@ check_info["janitza_umg.freq"] = LegacyCheckDefinition(
 )
 
 
-def discover_janitza_umg_temp(parsed):
+def discover_janitza_umg_temp(parsed: dict[str, Any]) -> LegacyDiscoveryResult:
     ctr = 1
     for temp in parsed["Temperature"]:
         if temp != -1000:
@@ -200,7 +208,9 @@ def discover_janitza_umg_temp(parsed):
         ctr += 1
 
 
-def check_janitza_umg_temp(item, params, parsed):
+def check_janitza_umg_temp(
+    item: str, params: TempParamType, parsed: dict[str, Any]
+) -> LegacyResult | None:
     idx = int(item) - 1
     if len(parsed["Temperature"]) > idx:
         return check_temperature(
