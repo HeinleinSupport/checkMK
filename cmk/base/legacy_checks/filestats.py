@@ -5,14 +5,22 @@
 
 # mypy: disable-error-code="arg-type"
 # mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
 # mypy: disable-error-code="var-annotated"
 
 import ast
 import re
+from collections.abc import Generator, Mapping
+from typing import Any
 
-from cmk.agent_based.legacy.v0_unstable import check_levels, LegacyCheckDefinition, STATE_MARKERS
-from cmk.agent_based.v2 import render
+from cmk.agent_based.legacy.v0_unstable import (
+    check_levels,
+    LegacyCheckDefinition,
+    LegacyCheckResult,
+    LegacyDiscoveryResult,
+    LegacyResult,
+    STATE_MARKERS,
+)
+from cmk.agent_based.v2 import render, StringTable
 
 check_info = {}
 
@@ -44,8 +52,8 @@ check_info = {}
 #   '----------------------------------------------------------------------'
 
 
-def parse_filestats(string_table):
-    sections_info = {}
+def parse_filestats(string_table: StringTable) -> dict[str, tuple[str, list[dict[str, Any]]]]:
+    sections_info: dict[tuple[str, str], list[str]] = {}
     current = []  # should never be used, but better safe than sorry
     for line in string_table:
         if not line:
@@ -63,8 +71,8 @@ def parse_filestats(string_table):
     }
 
 
-def _parse_filestats_load_lines(info):
-    list_of_dicts = []
+def _parse_filestats_load_lines(info: list[str]) -> list[dict[str, Any]]:
+    list_of_dicts: list[dict[str, Any]] = []
     for line in info:
         try:
             list_of_dicts.append(ast.literal_eval(line))
@@ -86,7 +94,9 @@ def _parse_filestats_load_lines(info):
 #   '----------------------------------------------------------------------'
 
 
-def check_filestats_count(count, params, show_files, reported_lines):
+def check_filestats_count(
+    count: int, params: Mapping[str, Any], show_files: bool, reported_lines: list[dict[str, Any]]
+) -> LegacyResult:
     """common check result - used by main and count_only check"""
     levels = params.get("maxcount", (None, None)) + params.get("mincount", (None, None))
     result = check_levels(
@@ -104,7 +114,9 @@ def check_filestats_count(count, params, show_files, reported_lines):
     return (state, details, perf)
 
 
-def check_filestats_extremes(files, params, show_files=False):
+def check_filestats_extremes(
+    files: list[dict[str, Any]], params: Mapping[str, Any], show_files: bool = False
+) -> Generator[LegacyResult, None, list[str]]:
     """common check result - used by main and extremes_only check"""
     if not files:
         return []
@@ -117,7 +129,7 @@ def check_filestats_extremes(files, params, show_files=False):
         if not files_with_metric:
             continue
 
-        files_with_metric.sort(key=lambda f: f.get(key))
+        files_with_metric.sort(key=lambda f: f.get(key, 0))
         for efile, label in ((files_with_metric[0], minlabel), (files_with_metric[-1], maxlabel)):
             levels = params.get(f"max{key}_{label}", (None, None)) + params.get(
                 f"min{key}_{label}", (None, None)
@@ -187,7 +199,9 @@ def check_filestats_extremes(files, params, show_files=False):
 #   '----------------------------------------------------------------------'
 
 
-def check_filestats(item, params, parsed):
+def check_filestats(
+    item: str, params: Mapping[str, Any], parsed: dict[str, tuple[str, list[dict[str, Any]]]]
+) -> LegacyCheckResult:
     if not (data := parsed.get(item)):
         return
     _output_variety, reported_lines = data
@@ -257,7 +271,9 @@ def check_filestats(item, params, parsed):
     yield 0, "\n" + "\n".join(remaining_files_output)
 
 
-def check_filestats_single(item, params, parsed):
+def check_filestats_single(
+    item: str, params: Mapping[str, Any], parsed: dict[str, tuple[str, list[dict[str, Any]]]]
+) -> LegacyCheckResult:
     if not (data := parsed.get(item)):
         return
     _output_variety, reported_lines = data
@@ -290,11 +306,15 @@ def check_filestats_single(item, params, parsed):
         )
 
 
-def discover_filestats(section):
+def discover_filestats(
+    section: dict[str, tuple[str, list[dict[str, Any]]]],
+) -> LegacyDiscoveryResult:
     yield from ((item, {}) for item, data in section.items() if data[0] != "single_file")
 
 
-def discover_filestats_single(section):
+def discover_filestats_single(
+    section: dict[str, tuple[str, list[dict[str, Any]]]],
+) -> LegacyDiscoveryResult:
     yield from ((item, {}) for item, data in section.items() if data[0] == "single_file")
 
 

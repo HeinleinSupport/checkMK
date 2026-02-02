@@ -12,7 +12,6 @@
 # If you encounter something weird in here, do not hesitate to replace this
 # test by something more appropriate.
 
-from collections.abc import Mapping
 from typing import Any
 
 import pytest
@@ -42,11 +41,13 @@ def _string_table() -> list[list[str]]:
 
 
 @pytest.fixture(name="parsed")
-def _parsed(string_table: list[list[str]]) -> Mapping[str, Any]:
+def _parsed(string_table: list[list[str]]) -> dict[str, tuple[str, list[dict[str, Any]]]]:
     return parse_filestats(string_table)
 
 
-def test_parse_filestats_additional_rules_3_regression(parsed: Mapping[str, Any]) -> None:
+def test_parse_filestats_additional_rules_3_regression(
+    parsed: dict[str, tuple[str, list[dict[str, Any]]]],
+) -> None:
     assert "Filetransfer cofi-premium-world" in parsed
 
     variety, reported_lines = parsed["Filetransfer cofi-premium-world"]
@@ -79,12 +80,16 @@ def test_parse_filestats_additional_rules_3_regression(parsed: Mapping[str, Any]
     assert "premium-world-check-week.xml" in week_file["path"]
 
 
-def test_discover_filestats_additional_rules_3_regression(parsed: Mapping[str, Any]) -> None:
+def test_discover_filestats_additional_rules_3_regression(
+    parsed: dict[str, tuple[str, list[dict[str, Any]]]],
+) -> None:
     result = list(discover_filestats(parsed))
     assert result == [("Filetransfer cofi-premium-world", {})]
 
 
-def test_check_filestats_additional_rules_3_regression_basic(parsed: Mapping[str, Any]) -> None:
+def test_check_filestats_additional_rules_3_regression_basic(
+    parsed: dict[str, tuple[str, list[dict[str, Any]]]],
+) -> None:
     params = {
         "show_all_files": True,
         "additional_rules": [
@@ -105,12 +110,14 @@ def test_check_filestats_additional_rules_3_regression_basic(parsed: Mapping[str
     assert result[0][2] == [("file_count", 3, None, None)]
 
     # Check additional rules enabled message
-    additional_rules_msg = [r for r in result if len(r) >= 2 and "Additional rules enabled" in r[1]]
+    additional_rules_msg = [r for r in result if "Additional rules enabled" in r[1]]
     assert len(additional_rules_msg) == 1
     assert additional_rules_msg[0][0] == 0  # OK state
 
 
-def test_check_filestats_additional_rules_3_regression_day_rule(parsed: Mapping[str, Any]) -> None:
+def test_check_filestats_additional_rules_3_regression_day_rule(
+    parsed: dict[str, tuple[str, list[dict[str, Any]]]],
+) -> None:
     params = {
         "show_all_files": True,
         "additional_rules": [
@@ -125,7 +132,7 @@ def test_check_filestats_additional_rules_3_regression_day_rule(parsed: Mapping[
     # Find DAY section results
     day_section_start = None
     for i, result_tuple in enumerate(result):
-        if len(result_tuple) >= 2 and result_tuple[1] == "\nDAY":
+        if result_tuple[1] == "\nDAY":
             day_section_start = i
             break
 
@@ -135,24 +142,22 @@ def test_check_filestats_additional_rules_3_regression_day_rule(parsed: Mapping[
     day_results = result[day_section_start : day_section_start + 10]  # Take some results after DAY
 
     # Find pattern message
-    pattern_msg = [
-        r for r in day_results if len(r) >= 2 and "Pattern:" in r[1] and "check-day" in r[1]
-    ]
+    pattern_msg = [r for r in day_results if "Pattern:" in r[1] and "check-day" in r[1]]
     assert len(pattern_msg) == 1
     assert "'.*?/premium-world-check-day'" in pattern_msg[0][1]
 
     # Find files count for DAY rule
-    files_total_msg = [r for r in day_results if len(r) >= 2 and "Files in total: 1" in r[1]]
+    files_total_msg = [r for r in day_results if "Files in total: 1" in r[1]]
     assert len(files_total_msg) == 1
 
     # Find critical age message (age 76216 seconds is way beyond 1-2 second thresholds)
-    age_critical_msg = [r for r in day_results if len(r) >= 2 and r[0] == 2 and "Oldest:" in r[1]]
+    age_critical_msg = [r for r in day_results if r[0] == 2 and "Oldest:" in r[1]]
     assert len(age_critical_msg) == 1
     assert "warn/crit at 1 second/2 seconds" in age_critical_msg[0][1]
 
 
 def test_check_filestats_additional_rules_3_regression_month_rule(
-    parsed: Mapping[str, Any],
+    parsed: dict[str, tuple[str, list[dict[str, Any]]]],
 ) -> None:
     params = {
         "show_all_files": True,
@@ -168,7 +173,7 @@ def test_check_filestats_additional_rules_3_regression_month_rule(
     # Find MONTH section results
     month_section_start = None
     for i, result_tuple in enumerate(result):
-        if len(result_tuple) >= 2 and result_tuple[1] == "\nMONTH":
+        if result_tuple[1] == "\nMONTH":
             month_section_start = i
             break
 
@@ -178,19 +183,19 @@ def test_check_filestats_additional_rules_3_regression_month_rule(
     month_results = result[month_section_start : month_section_start + 10]
 
     # Find pattern message
-    pattern_msg = [
-        r for r in month_results if len(r) >= 2 and "Pattern:" in r[1] and "check-month" in r[1]
-    ]
+    pattern_msg = [r for r in month_results if "Pattern:" in r[1] and "check-month" in r[1]]
     assert len(pattern_msg) == 1
     assert "'.*?/premium-world-check-month'" in pattern_msg[0][1]
 
     # Find critical age message (age 2025616 seconds is way beyond 5-6 second thresholds)
-    age_critical_msg = [r for r in month_results if len(r) >= 2 and r[0] == 2 and "Oldest:" in r[1]]
+    age_critical_msg = [r for r in month_results if r[0] == 2 and "Oldest:" in r[1]]
     assert len(age_critical_msg) == 1
     assert "warn/crit at 5 seconds/6 seconds" in age_critical_msg[0][1]
 
 
-def test_check_filestats_additional_rules_3_regression_week_rule(parsed: Mapping[str, Any]) -> None:
+def test_check_filestats_additional_rules_3_regression_week_rule(
+    parsed: dict[str, tuple[str, list[dict[str, Any]]]],
+) -> None:
     params = {
         "show_all_files": True,
         "additional_rules": [
@@ -205,7 +210,7 @@ def test_check_filestats_additional_rules_3_regression_week_rule(parsed: Mapping
     # Find WEEK section results
     week_section_start = None
     for i, result_tuple in enumerate(result):
-        if len(result_tuple) >= 2 and result_tuple[1] == "\nWEEK":
+        if result_tuple[1] == "\nWEEK":
             week_section_start = i
             break
 
@@ -215,20 +220,18 @@ def test_check_filestats_additional_rules_3_regression_week_rule(parsed: Mapping
     week_results = result[week_section_start : week_section_start + 10]
 
     # Find pattern message
-    pattern_msg = [
-        r for r in week_results if len(r) >= 2 and "Pattern:" in r[1] and "check-week" in r[1]
-    ]
+    pattern_msg = [r for r in week_results if "Pattern:" in r[1] and "check-week" in r[1]]
     assert len(pattern_msg) == 1
     assert "'.*?/premium-world-check-week'" in pattern_msg[0][1]
 
     # Find critical age message (age 517260 seconds is way beyond 3-4 second thresholds)
-    age_critical_msg = [r for r in week_results if len(r) >= 2 and r[0] == 2 and "Oldest:" in r[1]]
+    age_critical_msg = [r for r in week_results if r[0] == 2 and "Oldest:" in r[1]]
     assert len(age_critical_msg) == 1
     assert "warn/crit at 3 seconds/4 seconds" in age_critical_msg[0][1]
 
 
 def test_check_filestats_additional_rules_3_regression_remaining_files(
-    parsed: Mapping[str, Any],
+    parsed: dict[str, tuple[str, list[dict[str, Any]]]],
 ) -> None:
     params = {
         "show_all_files": True,
@@ -242,13 +245,13 @@ def test_check_filestats_additional_rules_3_regression_remaining_files(
     result = list(check_filestats("Filetransfer cofi-premium-world", params, parsed))
 
     # Find remaining files message
-    remaining_msg = [r for r in result if len(r) >= 2 and "Remaining files: 0" in r[1]]
+    remaining_msg = [r for r in result if "Remaining files: 0" in r[1]]
     assert len(remaining_msg) == 1
     assert remaining_msg[0][0] == 0  # OK state
 
 
 def test_check_filestats_additional_rules_3_regression_missing_item(
-    parsed: Mapping[str, Any],
+    parsed: dict[str, tuple[str, list[dict[str, Any]]]],
 ) -> None:
     result = list(check_filestats("NonExistent", {}, parsed))
     assert result == []
