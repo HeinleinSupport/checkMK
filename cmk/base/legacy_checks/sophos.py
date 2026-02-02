@@ -3,12 +3,9 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
+from collections.abc import Mapping, Sequence
 
-
-from collections.abc import Mapping
-
-from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
+from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition, LegacyService
 from cmk.agent_based.v2 import equals, OIDEnd, SNMPTree, StringTable
 
 check_info = {}
@@ -126,11 +123,11 @@ sophos_map_oid: Mapping[str, tuple[str, Mapping[str, str]]] = {
 }
 
 
-def discover_sophos(info):
-    inventory = []
+def discover_sophos(info: StringTable) -> Sequence[LegacyService]:
+    inventory: list[LegacyService] = []
     for item_oid, item_state in info:
         if item_oid in sophos_map_oid and item_state in ["2", "3", "4"]:
-            inventory.append((sophos_map_oid[item_oid][0], None))
+            inventory.append((sophos_map_oid[item_oid][0], {}))
     return inventory
 
 
