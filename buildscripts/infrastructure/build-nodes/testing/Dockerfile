@@ -54,6 +54,7 @@ ENV \
 # libaio1 is required by mk-oracle component testing, requires +1MB
 # lsb-release is required to use installation scripts, requires +0MB
 # make is required for installations, requires +0MB
+# mbuffer is required for faster decompression with lz4, requires +1MB
 # sudo is required to install packer, requires +0MB
 # unzip is required to install aws-cli, requires +0MB
 # wget is required to download artifacts, requires +0MB
@@ -67,6 +68,7 @@ RUN apt-get update && \
         libaio1 \
         lsb-release \
         make \
+        mbuffer \
         sudo \
         unzip \
         wget && \
