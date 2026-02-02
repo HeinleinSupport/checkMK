@@ -3,15 +3,19 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
 # mypy: disable-error-code="type-arg"
-
-
 # mypy: disable-error-code="arg-type"
 
-from collections.abc import Iterable
+from collections.abc import Mapping, Sequence
+from typing import Any
 
-from cmk.agent_based.legacy.v0_unstable import check_levels, LegacyCheckDefinition
+from cmk.agent_based.legacy.v0_unstable import (
+    check_levels,
+    LegacyCheckDefinition,
+    LegacyCheckResult,
+    LegacyDiscoveryResult,
+    LegacyService,
+)
 from cmk.agent_based.v2 import render
 from cmk.plugins.graylog.lib import deserialize_and_merge_json, GraylogSection
 
@@ -57,12 +61,14 @@ check_info = {}
 # "alarmcallback_count_by_type": {}}}']]
 
 
-def discover_graylog_cluster_stats(section: GraylogSection) -> Iterable[tuple[None, dict]]:
+def discover_graylog_cluster_stats(section: GraylogSection) -> LegacyDiscoveryResult:
     if section:
         yield None, {}
 
 
-def check_graylog_cluster_stats(_no_item, params, parsed):
+def check_graylog_cluster_stats(
+    _no_item: None, params: Mapping[str, Any], parsed: GraylogSection
+) -> LegacyCheckResult:
     if not parsed:
         return
 
@@ -93,7 +99,7 @@ check_info["graylog_cluster_stats"] = LegacyCheckDefinition(
 )
 
 
-def discover_graylog_cluster_stats_elastic(parsed):
+def discover_graylog_cluster_stats_elastic(parsed: GraylogSection) -> Sequence[LegacyService]:
     elastic_data = parsed.get("elasticsearch")
     if elastic_data is not None:
         return [(None, {})]
@@ -101,10 +107,10 @@ def discover_graylog_cluster_stats_elastic(parsed):
 
 
 def check_graylog_cluster_stats_elastic(
-    _no_item,
-    params,
-    parsed,
-):
+    _no_item: None,
+    params: Mapping[str, Any],
+    parsed: GraylogSection,
+) -> LegacyCheckResult:
     elastic_data = parsed.get("elasticsearch")
     if elastic_data is None:
         return
@@ -121,7 +127,7 @@ def check_graylog_cluster_stats_elastic(
 
     status_data = elastic_data.get("status")
     if status_data:
-        yield params.get(status_data.lower()), "Status: %s" % status_data.title()
+        yield params.get(status_data.lower(), 3), "Status: %s" % status_data.title()
 
     health_data = elastic_data.get("cluster_health")
     if health_data:
@@ -202,14 +208,16 @@ check_info["graylog_cluster_stats.elastic"] = LegacyCheckDefinition(
 )
 
 
-def discover_graylog_cluster_stats_mongodb(parsed):
+def discover_graylog_cluster_stats_mongodb(parsed: GraylogSection) -> Sequence[LegacyService]:
     mongo_data = parsed.get("mongo")
     if mongo_data is not None:
         return [(None, {})]
     return []
 
 
-def check_graylog_cluster_stats_mongodb(_no_item, params, parsed):
+def check_graylog_cluster_stats_mongodb(
+    _no_item: None, params: Mapping[str, Any], parsed: GraylogSection
+) -> LegacyCheckResult:
     mongo_data = parsed.get("mongo")
     if mongo_data is None:
         return

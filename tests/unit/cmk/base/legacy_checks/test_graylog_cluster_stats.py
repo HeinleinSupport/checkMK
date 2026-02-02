@@ -64,7 +64,7 @@ def test_discover_graylog_cluster_stats(
     ],
 )
 def test_check_graylog_cluster_stats(
-    item: str, params: Mapping[str, Any], info: StringTable, expected_results: Sequence[Any]
+    item: None, params: Mapping[str, Any], info: StringTable, expected_results: Sequence[Any]
 ) -> None:
     """Test check function for graylog_cluster_stats check."""
     parsed = deserialize_and_merge_json(info)
