@@ -9,6 +9,9 @@ load("//bazel/rules:replace_string_in_file.bzl", "replace_string_in_file")
 exports_files([
     "use_system_openssl",
     "skel.permissions",
+    "skel/.profile",
+    "skel/.bashrc",
+    "init_profile",
 ])
 
 # Make it possible to replace OMD_VERSION by labels

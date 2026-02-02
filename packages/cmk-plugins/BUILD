@@ -668,3 +668,27 @@ pkg_tar(
     visibility = ["//visibility:public"],
     deps = [":pkg_tar-%s" % family for family in FAMILIES],
 )
+
+sh_library(
+    name = "packages_cmk-plugins_sh",
+    srcs = [
+        ".f12",
+        "cmk/plugins/cisco_prime/libexec/agent_cisco_prime",
+        "cmk/plugins/elasticsearch/libexec/agent_elasticsearch",
+        "cmk/plugins/elasticsearch/libexec/check_elasticsearch_query",
+        "cmk/plugins/ipmi/libexec/agent_ipmi_sensors",
+        "cmk/plugins/kube/libexec/agent_kube",
+        "cmk/plugins/netapp/libexec/agent_netapp_ontap",
+        "cmk/plugins/prism/libexec/agent_prism",
+        "cmk/plugins/proxmox_ve/libexec/agent_proxmox_ve",
+        "cmk/plugins/pure_storage_fa/libexec/agent_pure_storage_fa",
+        "cmk/plugins/rabbitmq/libexec/agent_rabbitmq",
+        "cmk/plugins/randomds/libexec/agent_random",
+        "cmk/plugins/redfish/libexec/agent_redfish",
+        "cmk/plugins/redfish/libexec/agent_redfish_power",
+        "cmk/plugins/splunk/libexec/agent_splunk",
+        "cmk/plugins/ucs_bladecenter/libexec/agent_ucs_bladecenter",
+        "cmk/plugins/vsphere/libexec/agent_vsphere",
+        "run",
+    ],
+)

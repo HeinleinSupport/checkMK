@@ -23,7 +23,6 @@ void main() {
         "test-python3-typing",
         "test-python3-unit-all",
         "test-shell-unit",
-        "test-shellcheck_agents",
     ];
 
     print(

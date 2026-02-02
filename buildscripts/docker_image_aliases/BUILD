@@ -16,3 +16,10 @@ py_binary(
         requirement("pyyaml"),
     ],
 )
+
+sh_library(
+    name = "docker_image_alias_sh",
+    srcs = [
+        "update.sh",
+    ],
+)

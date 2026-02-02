@@ -6,6 +6,7 @@
 oneTimeSetUp() {
     # Source the script under test
     set +euo pipefail
+    # shellcheck disable=SC1091
     MK_SOURCE_ONLY="true" source "${UNIT_SH_REPO_PATH}/omd/non-free/relay/install_relay.sh"
     set -euo pipefail
 }

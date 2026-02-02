@@ -13,6 +13,7 @@
 ### END INIT INFO
 
 # Start only if PNP is enabled
+# shellcheck disable=SC1090
 . ###ROOT###/etc/omd/site.conf
 if [ "$CONFIG_PNP4NAGIOS" = off ] || [ "$CONFIG_CORE" = none ]; then
     exit 5

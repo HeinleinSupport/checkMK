@@ -5,6 +5,7 @@ load("@aspect_rules_lint//lint:clang_tidy.bzl", "lint_clang_tidy_aspect")
 load("@aspect_rules_lint//lint:clippy.bzl", "lint_clippy_aspect")
 load("@aspect_rules_lint//lint:groovy.bzl", "lint_groovy_aspect")
 load("@aspect_rules_lint//lint:ruff.bzl", "lint_ruff_aspect")
+load("@aspect_rules_lint//lint:shellcheck.bzl", "lint_shellcheck_aspect")
 load("@cmk_requirements//:requirements.bzl", "requirement")
 load("@cmk_types//:types.bzl", "types")
 load("@rules_mypy//mypy:mypy.bzl", "mypy")
@@ -64,4 +65,9 @@ astrein = lint_astrein_aspect(
 groovy = lint_groovy_aspect(
     binary = Label("//bazel/tools:groovy-lint"),
     config = Label("//bazel/tools:.groovylintrc.json"),
+)
+
+shellcheck = lint_shellcheck_aspect(
+    binary = Label("@aspect_rules_lint//lint:shellcheck_bin"),
+    config = Label("@//:.shellcheckrc"),
 )

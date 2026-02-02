@@ -59,3 +59,10 @@ TO_SIGN_SCRIPTS = [
     )
     for n in TO_SIGN_SCRIPTS
 ]
+
+sh_library(
+    name = "agents_windows_plugins_sh",
+    srcs = [
+        ".f12",
+    ],
+)

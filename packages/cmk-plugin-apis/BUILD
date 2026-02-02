@@ -373,3 +373,11 @@ package_wheel(
     visibility = ["//visibility:public"],
     whl = "wheel",
 )
+
+sh_library(
+    name = "packages_cmk-plugin-apis_sh",
+    srcs = [
+        ".f12",
+        "run",
+    ],
+)

@@ -1,6 +1,5 @@
 load("@aspect_rules_js//js:defs.bzl", "js_library")
 load("@bazel_env.bzl", "bazel_env")
-load("@bazel_skylib//rules:copy_file.bzl", "copy_file")
 load("@bazel_skylib//rules:native_binary.bzl", "native_binary")
 load("@cmk_requirements//:requirements.bzl", "requirement")
 load("@npm//:defs.bzl", "npm_link_all_packages")
@@ -89,19 +88,6 @@ filegroup(
     name = "clang_tidy_config",
     srcs = ["//:.clang-tidy"],
     visibility = ["//visibility:public"],
-)
-
-copy_file(
-    name = "shellcheck_binary",
-    src = "@shellcheck",
-    out = "shellcheck",
-)
-
-# Shell wrapper to execute shellcheck in the callers working directory
-sh_binary(
-    name = "shellcheck_bin",
-    srcs = ["run-shellcheck"],
-    data = [":shellcheck_binary"],
 )
 
 alias(

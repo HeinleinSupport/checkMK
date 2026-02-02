@@ -12,6 +12,7 @@
 # Description:    Start stunnel
 ### END INIT INFO
 
+# shellcheck disable=SC1090
 . ###ROOT###/etc/omd/site.conf
 
 livestatus_tcp_tls() {

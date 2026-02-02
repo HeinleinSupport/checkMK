@@ -511,3 +511,11 @@ package_wheel(
     visibility = ["//visibility:public"],
     whl = "wheel",
 )
+
+sh_library(
+    name = "packages_cmk-ccc_sh",
+    srcs = [
+        ".f12",
+        "run",
+    ],
+)

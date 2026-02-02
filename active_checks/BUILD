@@ -35,3 +35,10 @@ pkg_tar(
     stamp = 1,
     visibility = ["//visibility:public"],
 )
+
+sh_library(
+    name = "active_checks_sh",
+    srcs = [
+        ".f12",
+    ],
+)

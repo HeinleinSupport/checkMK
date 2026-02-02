@@ -168,3 +168,19 @@ rust_doc(
     name = "doc",
     crate = ":mk-oracle-lib",
 )
+
+sh_library(
+    name = "packages_mk-oracle_sh",
+    srcs = [
+        ".f12",
+        "cargo_run",
+        "references/mk_oracle",
+        "run",
+        "ssh-run",
+        "ssh-run.conf",
+        "ssh-run-ci",
+        "tests/files/docker/run-db.sh",
+        "tests/test_cmd_line.sh",
+        "tools/call-ora",
+    ],
+)

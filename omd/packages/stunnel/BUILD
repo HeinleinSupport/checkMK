@@ -95,3 +95,10 @@ pkg_tar(
     tags = ["manual"],
     visibility = ["//omd:__pkg__"],
 )
+
+sh_library(
+    name = "omd_packages_stunnel_sh",
+    srcs = [
+        "skel/etc/init.d/stunnel",
+    ],
+)

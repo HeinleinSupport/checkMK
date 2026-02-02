@@ -133,3 +133,11 @@ package_wheel(
     visibility = ["//visibility:public"],
     whl = "wheel",
 )
+
+sh_library(
+    name = "packages_cmk-werks_sh",
+    srcs = [
+        ".f12",
+        "run",
+    ],
+)

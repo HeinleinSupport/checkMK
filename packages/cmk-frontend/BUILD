@@ -138,3 +138,12 @@ eslint_bin.eslint_test(
     chdir = package_name(),
     data = SRCS + BUILD_DEPS + ["eslint.config.js"],
 )
+
+sh_library(
+    name = "packages_cmk-frontend_sh",
+    srcs = [
+        ".f12",
+        "run",
+        "src/openapi/.f12",
+    ],
+)

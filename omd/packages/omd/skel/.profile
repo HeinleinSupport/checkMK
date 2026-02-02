@@ -1,3 +1,5 @@
+# shellcheck disable=SC2148
+
 export OMD_SITE=###SITE###
 export OMD_ROOT=###ROOT###
 
@@ -24,7 +26,8 @@ export MAILRC="$OMD_ROOT/etc/mail.rc"
 export RABBITMQ_HOME="${OMD_ROOT}"
 if [ -f "${RABBITMQ_HOME}/.erlang.cookie" ]; then
     # Early in the site initialization the file does not exist yet
-    export RABBITMQ_ERLANG_COOKIE="$(cat "${RABBITMQ_HOME}/.erlang.cookie")"
+    RABBITMQ_ERLANG_COOKIE="$(cat "${RABBITMQ_HOME}/.erlang.cookie")"
+    export RABBITMQ_ERLANG_COOKIE
 fi
 export RABBITMQ_NODENAME="rabbit-${OMD_SITE}@localhost"
 export PATH="$OMD_ROOT/lib/rabbitmq/sbin:$PATH"
@@ -48,7 +51,7 @@ export SQLITE_TMPDIR="${OMD_ROOT}/tmp"
 unset LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT LC_IDENTIFICATION
 INSTALLED_LOCALES=$(locale -a)
 for i in "C.UTF-8" "C.utf8" "en_US.utf8" "C"; do
-    if echo $INSTALLED_LOCALES | grep -q -w -F "$i"; then
+    if echo "$INSTALLED_LOCALES" | grep -q -w -F "$i"; then
         export LANG="$i" LC_ALL="$i"
         break
     fi
@@ -58,12 +61,12 @@ done
 export NAGIOS_PLUGIN_STATE_DIRECTORY="$OMD_ROOT/var/monitoring-plugins"
 export MP_STATE_DIRECTORY=$NAGIOS_PLUGIN_STATE_DIRECTORY
 
-if [ -f $OMD_ROOT/etc/environment ]; then
-    eval $(grep -E -v '^[[:space:]]*(#|$)' <$OMD_ROOT/etc/environment | sed 's/^/export /')
+if [ -f "$OMD_ROOT/etc/environment" ]; then
+    eval "$(grep -E -v '^[[:space:]]*(#|$)' <"$OMD_ROOT/etc/environment" | sed 's/^/export /')"
 fi
 
 # Only load bashrc when in a bash shell and not loaded yet.
 # The load once is ensured by the variable $BASHRC.
-if [ "$BASH" -a -s $OMD_ROOT/.bashrc -a -z "$BASHRC" ]; then
-    . $OMD_ROOT/.bashrc
+if [ -n "$BASH" ] && [ -s "$OMD_ROOT/.bashrc" ] && [ -z "${BASHRC:-}" ]; then
+    . "$OMD_ROOT/.bashrc"
 fi

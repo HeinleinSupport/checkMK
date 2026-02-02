@@ -84,3 +84,13 @@ filegroup(
     srcs = glob(["**/*.groovy"]),
     tags = ["groovy"],
 )
+
+sh_library(
+    name = "buildscripts_sh",
+    srcs = [
+        "bazel_execution_log_parser.sh",
+        "bazel_test_post_archive_xunit.sh",
+        "create_unsign_msi_patch.sh",
+        "sign-packages.sh",
+    ],
+)

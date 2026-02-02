@@ -7,3 +7,4 @@ lint:
     - //bazel/tools:aspects.bzl%groovy
     - //bazel/tools:aspects.bzl%clippy
     - //bazel/tools:aspects.bzl%ruff
+    - //bazel/tools:aspects.bzl%shellcheck

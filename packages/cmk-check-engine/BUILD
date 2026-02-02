@@ -164,3 +164,11 @@ pkg_tar(
         ":wheel_pkg",
     ],
 )
+
+sh_library(
+    name = "packages_cmk-check-engine_sh",
+    srcs = [
+        ".f12",
+        "run",
+    ],
+)
