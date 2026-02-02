@@ -3,8 +3,6 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
-
 # Example output from agent
 # Columns:
 # 1. Direct IOs / sec   (on hardware)
@@ -15,7 +13,16 @@
 # 0.00 0.00 15.00
 
 
-from cmk.agent_based.legacy.v0_unstable import check_levels, LegacyCheckDefinition
+from collections.abc import Mapping, Sequence
+from typing import Any
+
+from cmk.agent_based.legacy.v0_unstable import (
+    check_levels,
+    LegacyCheckDefinition,
+    LegacyCheckResult,
+    LegacyResult,
+    LegacyService,
+)
 from cmk.agent_based.v2 import StringTable
 
 check_info = {}
@@ -31,13 +38,13 @@ check_info["vms_system"] = LegacyCheckDefinition(
 )
 
 
-def discover_vms_system(info):
+def discover_vms_system(info: StringTable) -> Sequence[LegacyService]:
     if len(info) > 0:
-        return [(None, None)]
+        return [(None, {})]
     return []
 
 
-def check_vms_system_ios(_no_item, _no_params, info):
+def check_vms_system_ios(_no_item: None, _no_params: None, info: StringTable) -> LegacyResult:
     direct_ios, buffered_ios = map(float, info[0][:2])
     return (
         0,
@@ -55,7 +62,9 @@ check_info["vms_system.ios"] = LegacyCheckDefinition(
 )
 
 
-def check_vms_system_procs(_no_item, params, info):
+def check_vms_system_procs(
+    _no_item: None, params: Mapping[str, Any], info: StringTable
+) -> LegacyCheckResult:
     procs = int(float(info[0][2]))
 
     yield check_levels(
