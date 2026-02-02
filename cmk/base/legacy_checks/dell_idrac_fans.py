@@ -4,10 +4,15 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 # mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
 
+from collections.abc import Mapping
+from typing import Any
 
-from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
+from cmk.agent_based.legacy.v0_unstable import (
+    LegacyCheckDefinition,
+    LegacyCheckResult,
+    LegacyDiscoveryResult,
+)
 from cmk.agent_based.v2 import SNMPTree, startswith, StringTable
 from cmk.base.check_legacy_includes.fan import check_fan
 
@@ -27,14 +32,16 @@ DELL_IDRAC_FANS_STATE_MAP = {
 }
 
 
-def discover_dell_idrac_fans(info):
+def discover_dell_idrac_fans(info: StringTable) -> LegacyDiscoveryResult:
     for index, state, _value, _name, _warn_upper, _crit_upper, _warn_lower, _crit_lower in info:
         # don't discover fans with a state of other or unknown
         if DELL_IDRAC_FANS_STATE_MAP[state][1] not in ("OTHER", "UNKNOWN"):
             yield index, {}
 
 
-def check_dell_idrac_fans(item, params, info):
+def check_dell_idrac_fans(
+    item: str, params: Mapping[str, Any], info: StringTable
+) -> LegacyCheckResult:
     for index, status, value, name, warn_upper, crit_upper, warn_lower, crit_lower in info:
         if index == item:
             state, state_readable = DELL_IDRAC_FANS_STATE_MAP[status]
@@ -42,13 +49,15 @@ def check_dell_idrac_fans(item, params, info):
             if state_readable in ("OTHER", "UNKNOWN", "FAILED"):
                 return
 
-            value = int(value)
+            rpm = int(value)
             if not params:
-                params = {"lower": (int(warn_lower), int(crit_lower))}
+                fan_params: Mapping[str, Any] = {"lower": (int(warn_lower), int(crit_lower))}
                 if not warn_upper == "" and crit_upper == "":
-                    params["upper"] = (int(warn_upper), int(crit_upper))
+                    fan_params = {**fan_params, "upper": (int(warn_upper), int(crit_upper))}
+            else:
+                fan_params = params
 
-            yield check_fan(value, params)
+            yield check_fan(rpm, fan_params)
 
 
 def parse_dell_idrac_fans(string_table: StringTable) -> StringTable:
