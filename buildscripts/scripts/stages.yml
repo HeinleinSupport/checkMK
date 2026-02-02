@@ -636,7 +636,7 @@ STAGES:
       RESULT_CHECK_TYPE: "JUNIT"
       RESULT_CHECK_FILE_PATTERN: "results/semgrep.xml"
 
-    - NAME: "Type repository (mypy)"
+    - NAME: "Type repository with mypy"
       DIR: ""
       COMMAND: |
           set +e
