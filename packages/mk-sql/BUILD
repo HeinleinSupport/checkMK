@@ -139,10 +139,3 @@ rust_doc(
     crate = ":mk-sql-lib",
     rustdoc_flags = ["--document-private-items"],
 )
-
-sh_library(
-    name = "packages_mk-sql_sh",
-    srcs = [
-        "run",
-    ],
-)

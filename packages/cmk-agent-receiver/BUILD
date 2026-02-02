@@ -244,11 +244,3 @@ package_wheel(
     visibility = ["//visibility:public"],
     whl = "wheel",
 )
-
-sh_library(
-    name = "packages_cmk-agent-receiver_sh",
-    srcs = [
-        ".f12",
-        "run",
-    ],
-)

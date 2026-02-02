@@ -131,16 +131,17 @@ function cleanup {
 }
 trap cleanup EXIT
 
+# shellcheck disable=SC2086
 docker run -a stdout -a stderr \
     --rm \
-    --name "$CONTAINER_NAME" \
-    "${CPU_LIMITATION}" \
-    "${MEMORY_LIMITATION}" \
+    --name $CONTAINER_NAME \
+    ${CPU_LIMITATION} \
+    ${MEMORY_LIMITATION} \
     --ulimit nofile=8192:8192 \
-    "${TERMINAL_FLAG}" \
+    ${TERMINAL_FLAG} \
     --init \
     -u "$(id -u):$(id -g)" \
-    "${DOCKER_MOUNT_ARGS}" \
+    ${DOCKER_MOUNT_ARGS} \
     -v "/var/run/docker.sock:/var/run/docker.sock" \
     -v "/etc/passwd:/etc/passwd:ro" \
     -v "/etc/group:/etc/group:ro" \
@@ -164,6 +165,6 @@ docker run -a stdout -a stderr \
     -e GERRIT_BRANCH \
     -e DOCKER_REGISTRY_NO_HTTPS \
     -w "${PWD}" \
-    "${DOCKER_RUN_ADDOPTS}" \
+    ${DOCKER_RUN_ADDOPTS} \
     "${IMAGE_ID}" \
     sh -c "${CMD}"

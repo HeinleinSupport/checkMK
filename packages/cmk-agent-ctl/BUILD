@@ -159,10 +159,3 @@ rust_doc(
     rustdoc_flags = ["--document-private-items"],
     tags = ["manual"],
 )
-
-sh_library(
-    name = "packages_cmk-agent-ctl_sh",
-    srcs = [
-        "run",
-    ],
-)

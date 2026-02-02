@@ -132,22 +132,3 @@ pkg_files(
     ),
     renames = {"//cmk:product_telemetry/cmk_telemetry_cli.py": "bin/cmk-telemetry"},
 )
-
-sh_library(
-    name = "bin_sh",
-    srcs = [
-        ".f12",
-        "apply_unsign_msi_patch.sh",
-        "cmk-general-version-infos",
-        "cmk-monitor-apache",
-        "cmk-monitor-broker",
-        "cmk-monitor-core",
-        "cmk-monitor-diskusage",
-        "cmk-monitor-metric-backend",
-        "cmk-monitor-mkbackup",
-        "cmk-monitor-mknotifyd",
-        "cmk-monitor-otel-collector",
-        "cmk-ui-job-scheduler-health",
-        "message-broker-certs",
-    ],
-)

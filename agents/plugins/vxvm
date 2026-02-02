@@ -29,7 +29,7 @@ if type vxdg >/dev/null 2>&1; then
     # Get a list of the in-use disk groups.
     DGS=$(vxdg list | grep "enabled" | awk '{print $1}')
     # Deported or otherwise inactive needs no performance monitoring
-    if [ "${DGS}" != "" ]; then
+    if [ "X${DGS}" != "X" ]; then
         for DG in $DGS; do
             vxprint -g "${DG}" -v -q -Q -F "%type %dgname %name %admin_state %kstate"
         done

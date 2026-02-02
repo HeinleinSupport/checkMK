@@ -174,10 +174,3 @@ pkg_tar(
     stamp = 1,
     tags = ["manual"],
 )
-
-sh_library(
-    name = "omd_packages_rrdtool_sh",
-    srcs = [
-        "skel/etc/init.d/rrdcached",
-    ],
-)

@@ -5,11 +5,13 @@
 SHELL := /bin/bash -e
 SCRIPTS := $(realpath ../scripts)
 FIND_PYTHON_FILES := $(SCRIPTS)/find-python-files
+FIND_SHELL_FILES := $(SCRIPTS)/find-shell-files
 UVENV := $(SCRIPTS)/run-uvenv
 PYTEST := $(UVENV) pytest $(PYTEST_ARGS)
 CYCLES := $(UVENV) py_import_cycles
 PYTEST_OPTS_UNIT_SKIP_SLOW = -m "not slow"
 PYTEST_OPTS_UNIT_SLOW_ONLY = -m "slow"
+SHELLCHECK := bazel run --ui_event_filters=-info,-stderr //bazel/tools:shellcheck_bin --
 SHFMT := bazel run --ui_event_filters=-info,-stderr //bazel/tools:shfmt --
 TAPLO := bazel run --ui_event_filters=-info,-stderr //bazel/tools:taplo_bin --
 ADDITIONAL_MYPY_ARGS := $(JUNIT_XML)
@@ -67,6 +69,7 @@ DOCKERABLE_TESTS := \
 	test-mypy \
 	test-requirements \
 	test-plugins-siteless \
+	test-shellcheck \
 	test-unit-all \
 	test-unit-shell \
 	test-unit-testlib \
@@ -91,7 +94,7 @@ AGENT_PLUGIN_UNIT_TEST_FILES := $(wildcard agent-plugin-unit/test_*.py)
 	$(foreach TEST,$(SYSTEM_TESTS),$(TEST)-docker-debug) \
 	test-mypy test-mypy-gpl test-mypy-docker test-packaging \
 	test-unit test-unit-all test-unit-docker \
-	test-unit-shell test-unit-shell-docker test-cycles test-cycles-docker \
+	test-unit-shell test-unit-shell-docker test-shellcheck test-shellcheck-docker test-cycles test-cycles-docker \
 	test-unit-omdlib \
 	test-tidy-core test-tidy-docker \
 	test-unit-neb test-unit-core \
@@ -168,6 +171,7 @@ test-docker-docker:
 
 test-docker:
 	docker run --rm -i $$(../buildscripts/docker_image_aliases/resolve.py IMAGE_HADOLINT) < ../docker_image/Dockerfile
+	$(SHELLCHECK) -x $(SHELLCHECK_OUTPUT_ARGS) ../docker_image/docker-entrypoint.sh
 	$(PYTEST) -x $(realpath docker) $(PYTEST_SYSTEM_TEST_ARGS)
 
 test-integration-agent-plugin-docker:
@@ -341,6 +345,9 @@ test-mypy-gpl:
 test-packaging:
 	export PATH=$$PATH:$$(bazel run //bazel/tools:bazel_env print-path); \
 	$(PYTEST) --log-cli-level=INFO packaging
+
+test-shellcheck:
+	cd .. && $(SHELLCHECK) -x $(SHELLCHECK_OUTPUT_ARGS) $$($(FIND_SHELL_FILES))
 
 test-cycles:
 	$(CYCLES) \

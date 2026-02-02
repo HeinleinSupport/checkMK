@@ -147,11 +147,3 @@ package_wheel(
     visibility = ["//visibility:public"],
     whl = "livestatus_whl",
 )
-
-sh_library(
-    name = "packages_cmk-livestatus-client_sh",
-    srcs = [
-        ".f12",
-        "run",
-    ],
-)

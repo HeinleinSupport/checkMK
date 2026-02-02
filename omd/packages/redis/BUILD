@@ -89,10 +89,3 @@ pkg_tar(
     tags = ["manual"],
     visibility = ["//omd:__pkg__"],
 )
-
-sh_library(
-    name = "omd_packages_redis_sh",
-    srcs = [
-        "skel/etc/init.d/redis",
-    ],
-)

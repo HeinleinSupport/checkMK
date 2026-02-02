@@ -155,12 +155,3 @@ build_test(
     tags = ["cpp"],
     targets = [":neb_shared"],
 )
-
-sh_library(
-    name = "packages_neb_sh",
-    srcs = [
-        ".f12",
-        "run",
-        "test/.f12",
-    ],
-)

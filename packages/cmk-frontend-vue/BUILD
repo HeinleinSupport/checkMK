@@ -296,11 +296,3 @@ build_test(
     name = "build_test",
     targets = [":dist"],
 )
-
-sh_library(
-    name = "packages_cmk-frontend-vue_sh",
-    srcs = [
-        ".f12",
-        "run",
-    ],
-)

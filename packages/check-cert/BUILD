@@ -123,11 +123,3 @@ rust_doc(
         "--document-private-items",
     ],
 )
-
-sh_library(
-    name = "packages_check-cert_sh",
-    srcs = [
-        ".f12",
-        "run",
-    ],
-)

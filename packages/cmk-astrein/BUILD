@@ -85,10 +85,3 @@ py_test(
         requirement("pytest"),
     ],
 )
-
-sh_library(
-    name = "packages_cmk-astrein_sh",
-    srcs = [
-        "run",
-    ],
-)
