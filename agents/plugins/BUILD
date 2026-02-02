@@ -17,7 +17,6 @@ filegroup(
 )
 
 py_binary(
-    # Shares code with `agent_jolokia` in the site.
     name = "apache_status",
     srcs = ["apache_status.py"],
     imports = ["."],
@@ -37,7 +36,6 @@ py_binary(
 )
 
 py_binary(
-    # Shares code with `agent_jolokia` in the site.
     name = "nginx_status",
     srcs = ["nginx_status.py"],
     imports = ["."],
