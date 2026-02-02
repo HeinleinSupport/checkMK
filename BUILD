@@ -51,6 +51,18 @@ config_setting(
     visibility = ["//visibility:public"],
 )
 
+bool_flag(
+    name = "skip_package_compression",
+    build_setting_default = False,
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "skip_package_compression_enabled",
+    flag_values = {":skip_package_compression": "True"},
+    visibility = ["//visibility:public"],
+)
+
 config_setting(
     name = "gpl_repo",
     flag_values = {":repo_license": "gpl"},

@@ -701,6 +701,14 @@ pkg_tar(
     ],
 )
 
+pkg_tar(
+    name = "complete_install_uncompressed",
+    tags = ["manual"],
+    deps = [
+        ":complete_install",
+    ],
+)
+
 genrule(
     name = "skel_permissions",
     srcs = edition_skel_permissions,
@@ -835,7 +843,10 @@ pkg_deb(
     name = "deb",
     architecture = "amd64",
     config = "//omd/debian:config",
-    data = "complete_install_compressed",
+    data = select({
+        "@//:skip_package_compression_enabled": ":complete_install_uncompressed",
+        "//conditions:default": "complete_install_compressed",
+    }),
     depends_file = "//omd/distros:dependencies",
     description = "Checkmk - Best-in-class infrastructure & application monitoring",
     homepage = "https://checkmk.com",
