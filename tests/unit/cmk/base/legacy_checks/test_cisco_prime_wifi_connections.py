@@ -87,7 +87,10 @@ def test_discover_cisco_prime_wifi_connections(
     ],
 )
 def test_check_cisco_prime_wifi_connections(
-    item: str, params: Mapping[str, Any], string_table: StringTable, expected_results: Sequence[Any]
+    item: None,
+    params: Mapping[str, Any],
+    string_table: StringTable,
+    expected_results: Sequence[Any],
 ) -> None:
     """Test check function for cisco_prime_wifi_connections check."""
     parsed = parse_cisco_prime_wifi_connections(string_table)

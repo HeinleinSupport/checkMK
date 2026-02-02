@@ -70,7 +70,7 @@ def test_discover_cisco_prime_wifi_connections_test(
     ],
 )
 def test_check_cisco_prime_wifi_connections_test(
-    item: str | None,
+    item: None,
     params: Mapping[str, Any],
     string_table: StringTable,
     expected_results: Sequence[Any],

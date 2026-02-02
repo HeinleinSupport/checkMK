@@ -3,7 +3,6 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
 # mypy: disable-error-code="type-arg"
 
 """Cisco prime connection count check
@@ -13,9 +12,15 @@ output the sums of all individual connection types
 see: https://d1nmyq4gcgsfi5.cloudfront.net/media/pi_3_3_devnet/api/v2/data/ClientCounts@_docs.html
 """
 
-from collections.abc import Iterable, Mapping
+from collections.abc import Mapping
+from typing import Any
 
-from cmk.agent_based.legacy.v0_unstable import check_levels, LegacyCheckDefinition
+from cmk.agent_based.legacy.v0_unstable import (
+    check_levels,
+    LegacyCheckDefinition,
+    LegacyCheckResult,
+    LegacyDiscoveryResult,
+)
 from cmk.agent_based.v2 import StringTable
 from cmk.base.check_legacy_includes.cisco_prime import parse_cisco_prime
 
@@ -28,12 +33,14 @@ def parse_cisco_prime_wifi_connections(string_table: StringTable) -> Section:
     return parse_cisco_prime("clientCountsDTO", string_table)
 
 
-def discover_cisco_prime_wifi_connections(section: Section) -> Iterable[tuple[None, dict]]:
+def discover_cisco_prime_wifi_connections(section: Section) -> LegacyDiscoveryResult:
     if section:
         yield None, {}
 
 
-def check_cisco_prime_wifi_connections(item, params, parsed):
+def check_cisco_prime_wifi_connections(
+    item: None, params: Mapping[str, Any], parsed: Section
+) -> LegacyCheckResult:
     """Sum up all individual counts for each connection type (as well as their sums
     indicated by 'count')"""
     keys = {
