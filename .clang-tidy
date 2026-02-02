@@ -1,4 +1,20 @@
 ---
+# The output of clang-tidy's --enable-check-profile is a bit weird, so we
+# measured for ourselves. Enabling only cppcoreguidelines-avoid-goto as a
+# trivial check, we got a baseline of 165s for checking all of the 88 CMC's
+# src files sequentially with clang-tidy-21. Adding other checks took:
+#
+#     concurrency-*: 4s
+#     portability-*: 7s
+#     performance-*: 56s
+#     cppcoreguidelines-*: 150s
+#     modernize-*: 181s
+#     misc-*: 203s
+#     readability-*: 236s
+#     cert-*: 274s
+#     clang-analyzer-*: 316s
+#     bugprone-*: 458s
+
 Checks: >
   -*,
   bugprone-*,
