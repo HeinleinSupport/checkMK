@@ -40,6 +40,12 @@ void main() {
             cmd: "EDITION=community make -C tests test-unit",
             container_name: "ubuntu-2404-${container_safe_branch_name}-latest",
         ]);
+
+        test_jenkins_helper.execute_test([
+            name: "test-mypy",
+            cmd: "bazel build --config=mypy ...",
+            container_name: "ubuntu-2404-${container_safe_branch_name}-latest",
+        ]);
     }
 }
 
