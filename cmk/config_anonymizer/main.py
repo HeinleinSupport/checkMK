@@ -2,6 +2,11 @@
 # Copyright (C) 2025 Checkmk GmbH - License: GNU General Public License v2
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
+"""cmk-config-anonymizer
+
+EXPERIMENTAL tool to create anonymized configuration dumps.
+"""
+
 import argparse
 import importlib
 import logging
@@ -21,7 +26,8 @@ from cmk.utils.redis import disable_redis
 
 
 def parse_arguments(argv: Sequence[str]) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description=__doc__)
+    prog, desc = __doc__.split("\n\n")
+    parser = argparse.ArgumentParser(prog=prog, description=desc)
     parser.add_argument(
         "-t",
         "--target_dirname",
@@ -83,5 +89,6 @@ def main(argv: Sequence[str]) -> None:
         raise e from e
 
 
+# called from bin/cmk-config-anonymizer
 if __name__ == "__main__":
     main(sys.argv[1:])

@@ -56,7 +56,7 @@ pkg_files(
         ":cmk-automation-helper",
         ":cmk-broker-test",
         ":cmk-cert",
-        ":cmk-config-anonymizer.py",
+        ":cmk-config-anonymizer",
         ":cmk-convert-rrds",
         ":cmk-create-rrd",
         ":cmk-general-version-infos",
@@ -97,9 +97,6 @@ pkg_files(
         mode = "0755",
     ),
     prefix = "bin",
-    renames = {
-        ":cmk-config-anonymizer.py": "cmk-config-anonymizer",
-    },
 )
 
 pkg_tar(
