@@ -32,6 +32,7 @@ COPY \
     install-clang.sh \
     install-packer.sh \
     install-make-dist-deps.sh \
+    install-lz4-parallel.sh \
     install-aws-cli.sh \
     strip_binaries \
     /opt/
@@ -52,7 +53,6 @@ ENV \
 # gpg is required to use installation scripts, requires +0MB
 # libaio1 is required by mk-oracle component testing, requires +1MB
 # lsb-release is required to use installation scripts, requires +0MB
-# lz4 is required to tar home cache folder, requires +1MB
 # make is required for installations, requires +0MB
 # sudo is required to install packer, requires +0MB
 # unzip is required to install aws-cli, requires +0MB
@@ -66,7 +66,6 @@ RUN apt-get update && \
         gpg \
         libaio1 \
         lsb-release \
-        lz4 \
         make \
         sudo \
         unzip \
@@ -84,6 +83,9 @@ RUN /opt/install-packer.sh
 
 # +195MB
 RUN /opt/install-aws-cli.sh
+
+# lz4 is required to tar home cache folder, requires +1MB
+RUN /opt/install-lz4-parallel.sh
 
 RUN rm /opt/install*.sh /opt/defines.make /opt/.bazelversion /opt/package_versions.bzl /opt/build_lib.sh /opt/strip_binaries
 
