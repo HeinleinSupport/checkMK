@@ -15,12 +15,12 @@ from cmk.agent_based.v2 import Metric, Result, Service, State, StringTable, Tabl
 from cmk.plugins.cisco_meraki.agent_based.cisco_meraki_org_device_status import (
     check_device_status,
     check_device_status_ps,
+    CheckParamsDeviceStatus,
     CheckParamsPowerSupply,
     DeviceStatus,
     discover_device_status,
     discover_device_status_ps,
     inventorize_power_supplies,
-    Parameters,
     parse_device_status,
 )
 from cmk.plugins.cisco_meraki.lib.schema._devices_statuses import RawDevicesStatus
@@ -61,7 +61,7 @@ def test_check_device_status() -> None:
     device_status = _RawDevicesStatusFactory.build(status="online", lastReportedAt="2000-01-14")
     string_table = _get_string_table_from_device_status(device_status)
     section = _parse_and_assert_not_none(string_table)
-    params = Parameters(
+    params = CheckParamsDeviceStatus(
         status_map={
             "online": State.OK.value,
             "alerting": State.CRIT.value,

@@ -75,12 +75,12 @@ def discover_device_status(section: Section) -> DiscoveryResult:
     yield Service()
 
 
-class Parameters(TypedDict):
+class CheckParamsDeviceStatus(TypedDict):
     status_map: Mapping[str, int]
     last_reported_upper_levels: SimpleLevelsConfigModel[int]
 
 
-def check_device_status(params: Parameters, section: Section) -> CheckResult:
+def check_device_status(params: CheckParamsDeviceStatus, section: Section) -> CheckResult:
     yield Result(
         state=State(params["status_map"][section.status]),
         summary=f"Status: {section.status}",
@@ -100,7 +100,7 @@ check_plugin_cisco_meraki_org_device_status = CheckPlugin(
     service_name="Device Status",
     discovery_function=discover_device_status,
     check_function=check_device_status,
-    check_default_parameters=Parameters(
+    check_default_parameters=CheckParamsDeviceStatus(
         status_map={
             "online": State.OK.value,
             "alerting": State.CRIT.value,
