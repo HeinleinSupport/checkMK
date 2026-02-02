@@ -3,8 +3,6 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
-
 # <<<elasticsearch_cluster_health>>>
 # status green
 # number_of_nodes 5
@@ -25,8 +23,16 @@
 
 # mypy: disable-error-code="var-annotated"
 
-from cmk.agent_based.legacy.v0_unstable import check_levels, LegacyCheckDefinition
-from cmk.agent_based.v2 import render
+from collections.abc import Mapping
+from typing import Any
+
+from cmk.agent_based.legacy.v0_unstable import (
+    check_levels,
+    LegacyCheckDefinition,
+    LegacyCheckResult,
+    LegacyDiscoveryResult,
+)
+from cmk.agent_based.v2 import render, StringTable
 
 check_info = {}
 
@@ -59,8 +65,8 @@ default_cluster_state = {
 }
 
 
-def parse_elasticsearch_cluster_health(string_table):
-    parsed = {}
+def parse_elasticsearch_cluster_health(string_table: StringTable) -> dict[str, Any]:
+    parsed: dict[str, Any] = {}
 
     for line in string_table:
         try:
@@ -88,11 +94,13 @@ def parse_elasticsearch_cluster_health(string_table):
     return parsed
 
 
-def discover_elasticsearch_cluster_health(parsed):
+def discover_elasticsearch_cluster_health(parsed: dict[str, Any]) -> LegacyDiscoveryResult:
     yield None, {}
 
 
-def check_elasticsearch_cluster_health(_no_item, params, parsed):
+def check_elasticsearch_cluster_health(
+    _no_item: None, params: Mapping[str, Any], parsed: dict[str, Any]
+) -> LegacyCheckResult:
     for info, values in sorted(parsed["Info"].items()):
         value = values[0]
         infotext = values[1]
@@ -127,7 +135,9 @@ check_info["elasticsearch_cluster_health"] = LegacyCheckDefinition(
 )
 
 
-def check_elasticsearch_cluster_health_shards(_no_item, params, parsed):
+def check_elasticsearch_cluster_health_shards(
+    _no_item: None, params: Mapping[str, Any], parsed: dict[str, Any]
+) -> LegacyCheckResult:
     if (shards := parsed.get("Shards")) is None:
         return
 
@@ -173,7 +183,9 @@ check_info["elasticsearch_cluster_health.shards"] = LegacyCheckDefinition(
 )
 
 
-def check_elasticsearch_cluster_health_tasks(_no_item, params, parsed):
+def check_elasticsearch_cluster_health_tasks(
+    _no_item: None, params: Mapping[str, Any], parsed: dict[str, Any]
+) -> LegacyCheckResult:
     if (tasks := parsed.get("Tasks")) is None:
         return
 
