@@ -3,13 +3,10 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
-
-
 # mypy: disable-error-code="var-annotated"
 
-from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
-from cmk.agent_based.v2 import OIDEnd, SNMPTree
+from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition, LegacyDiscoveryResult
+from cmk.agent_based.v2 import OIDEnd, SNMPTree, StringTable
 from cmk.base.check_legacy_includes.elphase import check_elphase
 from cmk.plugins.cisco.lib import DETECT_CISCO
 
@@ -35,8 +32,8 @@ check_info = {}
 # .1.3.6.1.4.1.9.9.117.1.1.4.1.4.13 0       <= exclude
 
 
-def parse_cisco_fru_powerusage(string_table):
-    parsed = {}
+def parse_cisco_fru_powerusage(string_table: list[StringTable]) -> dict[str, dict[str, float]]:
+    parsed: dict[str, dict[str, float]] = {}
     powerunit, powervals = string_table
     if powerunit and powervals:
         oidend, powerunit_str = powerunit[0]
@@ -73,7 +70,7 @@ def parse_cisco_fru_powerusage(string_table):
     return parsed
 
 
-def discover_cisco_fru_powerusage(parsed):
+def discover_cisco_fru_powerusage(parsed: dict[str, dict[str, float]]) -> LegacyDiscoveryResult:
     for what, data in parsed.items():
         if data["current"] > 0:
             yield what, {}
