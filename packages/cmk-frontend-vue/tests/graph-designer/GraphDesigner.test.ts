@@ -37,7 +37,6 @@ test('Render GraphDesignerApp', () => {
         explicit_vertical_range: 'auto',
         omit_zero_metrics: true
       },
-      metric_backend_available: false,
       create_services_available: false,
       graph_renderer: fakeGraphRenderer
     }
@@ -54,7 +53,6 @@ test('Graph lines table is empty when no graph lines are provided', () => {
         explicit_vertical_range: 'auto',
         omit_zero_metrics: true
       },
-      metric_backend_available: false,
       create_services_available: false,
       graph_renderer: fakeGraphRenderer
     }
@@ -91,7 +89,6 @@ test('Graph lines table is not empty when graph lines are provided', () => {
         explicit_vertical_range: 'auto',
         omit_zero_metrics: true
       },
-      metric_backend_available: false,
       create_services_available: false,
       graph_renderer: fakeGraphRenderer
     }
@@ -133,7 +130,6 @@ test.each(graphLineTypesExceptQuery)('Graph line of type %s can be edited', (lin
         explicit_vertical_range: 'auto',
         omit_zero_metrics: true
       },
-      metric_backend_available: false,
       create_services_available: false,
       graph_renderer: fakeGraphRenderer
     }
@@ -154,7 +150,6 @@ test.each(graphLineTypesExceptQuery)('Graph line of type %s can be edited', (lin
         explicit_vertical_range: 'auto',
         omit_zero_metrics: true
       },
-      metric_backend_available: false,
       create_services_available: false,
       graph_renderer: fakeGraphRenderer
     }
@@ -188,7 +183,6 @@ test.each(graphLineTypesExceptQuery)('Graph line of type %s has dissolve button'
         explicit_vertical_range: 'auto',
         omit_zero_metrics: true
       },
-      metric_backend_available: false,
       create_services_available: false,
       graph_renderer: fakeGraphRenderer
     }
@@ -232,7 +226,6 @@ test("Graph line of type 'query' has 'Add rule: Metric backend (Custom query)' b
         explicit_vertical_range: 'auto',
         omit_zero_metrics: true
       },
-      metric_backend_available: false,
       create_services_available: true,
       graph_renderer: fakeGraphRenderer
     }
@@ -268,7 +261,6 @@ test.each(graphLineTypesExceptQuery)(
           explicit_vertical_range: 'auto',
           omit_zero_metrics: true
         },
-        metric_backend_available: false,
         create_services_available: true,
         graph_renderer: fakeGraphRenderer
       }
@@ -310,7 +302,6 @@ test("Graph line of type 'query' does not have Color picker button", () => {
         explicit_vertical_range: 'auto',
         omit_zero_metrics: true
       },
-      metric_backend_available: false,
       create_services_available: true,
       graph_renderer: fakeGraphRenderer
     }
@@ -346,7 +337,6 @@ test.each(graphLineTypesExceptQuery)(
           explicit_vertical_range: 'auto',
           omit_zero_metrics: true
         },
-        metric_backend_available: false,
         create_services_available: true,
         graph_renderer: fakeGraphRenderer
       }
@@ -386,7 +376,6 @@ test("Graph line of type 'query' has help text", () => {
         explicit_vertical_range: 'auto',
         omit_zero_metrics: true
       },
-      metric_backend_available: false,
       create_services_available: true,
       graph_renderer: fakeGraphRenderer
     }
@@ -422,7 +411,6 @@ test.each(graphLineTypesExceptQuery)(
           explicit_vertical_range: 'auto',
           omit_zero_metrics: true
         },
-        metric_backend_available: false,
         create_services_available: true,
         graph_renderer: fakeGraphRenderer
       }
@@ -462,7 +450,6 @@ test("Graph line of type 'query' has inline help text", () => {
         explicit_vertical_range: 'auto',
         omit_zero_metrics: true
       },
-      metric_backend_available: false,
       create_services_available: true,
       graph_renderer: fakeGraphRenderer
     }
@@ -498,7 +485,6 @@ test.each(graphLineTypesExceptQuery)(
           explicit_vertical_range: 'auto',
           omit_zero_metrics: true
         },
-        metric_backend_available: false,
         create_services_available: true,
         graph_renderer: fakeGraphRenderer
       }
