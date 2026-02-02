@@ -3,15 +3,18 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
-
 import re
+from collections.abc import Mapping
+from typing import Any
 
-from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
+from cmk.agent_based.legacy.v0_unstable import (
+    LegacyCheckDefinition,
+    LegacyDiscoveryResult,
+    LegacyResult,
+)
 from cmk.agent_based.v2 import SNMPTree, StringTable
 from cmk.base.check_legacy_includes.fan import check_fan
-from cmk.base.check_legacy_includes.temperature import check_temperature
+from cmk.base.check_legacy_includes.temperature import check_temperature, TempParamType
 from cmk.plugins.netscaler.agent_based.lib import SNMP_DETECT
 
 check_info = {}
@@ -63,13 +66,15 @@ check_info["netscaler_health"] = LegacyCheckDefinition(
 #   +----------------------------------------------------------------------+
 
 
-def discover_netscaler_health_fan(info):
+def discover_netscaler_health_fan(info: StringTable) -> LegacyDiscoveryResult:
     for name, value in info:
         if name.endswith("Speed") and value != "0":
             yield name[:-5], {}
 
 
-def check_netscaler_health_fan(item, params, info):
+def check_netscaler_health_fan(
+    item: str, params: Mapping[str, Any], info: StringTable
+) -> LegacyResult | None:
     for name, value in info:
         if name[:-5] == item:
             return check_fan(int(value), params)
@@ -98,13 +103,15 @@ check_info["netscaler_health.fan"] = LegacyCheckDefinition(
 #   +----------------------------------------------------------------------+
 
 
-def discover_netscaler_health_temp(info):
+def discover_netscaler_health_temp(info: StringTable) -> LegacyDiscoveryResult:
     for name, value in info:
         if name.endswith("Temperature") and value != "0":
             yield name[:-11], {}
 
 
-def check_netscaler_health_temp(item, params, info):
+def check_netscaler_health_temp(
+    item: str, params: TempParamType, info: StringTable
+) -> LegacyResult | None:
     for name, value in info:
         if name[:-11] == item and name.endswith("Temperature"):
             temp = int(value)
@@ -137,15 +144,17 @@ check_info["netscaler_health.temp"] = LegacyCheckDefinition(
 PSU_STATE_PATTERN = re.compile(r"PowerSupply([\d])(Failure|)Status")
 
 
-def discover_netscaler_health_psu(info):
+def discover_netscaler_health_psu(info: StringTable) -> LegacyDiscoveryResult:
     for name, state in info:
         m = PSU_STATE_PATTERN.match(name)
         if m:
             if int(state) > 0:
-                yield m.group(1), None
+                yield m.group(1), {}
 
 
-def check_netscaler_health_psu(item, _no_params, info):
+def check_netscaler_health_psu(
+    item: str, _no_params: Mapping[str, Any], info: StringTable
+) -> LegacyResult | None:
     psu_status_map = (
         (3, "not supported"),  # 0
         (2, "not present"),  # 1
