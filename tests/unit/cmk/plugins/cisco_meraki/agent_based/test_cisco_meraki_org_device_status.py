@@ -60,7 +60,15 @@ def test_check_device_status() -> None:
     device_status = _RawDevicesStatusFactory.build(status="online", lastReportedAt="2000-01-14")
     string_table = _get_string_table_from_device_status(device_status)
     section = _parse_and_assert_not_none(string_table)
-    params = Parameters()
+    params = Parameters(
+        status_map={
+            "online": State.OK.value,
+            "alerting": State.CRIT.value,
+            "offline": State.WARN.value,
+            "dormant": State.WARN.value,
+        },
+        last_reported_upper_levels=("no_levels", None),
+    )
 
     value = list(check_device_status(params, section=section))
     expected = [

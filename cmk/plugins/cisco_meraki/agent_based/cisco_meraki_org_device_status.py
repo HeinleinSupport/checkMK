@@ -75,27 +75,18 @@ def discover_device_status(section: Section) -> DiscoveryResult:
     yield Service()
 
 
-_STATUS_MAP = {
-    "online": State.OK.value,
-    "alerting": State.CRIT.value,
-    "offline": State.WARN.value,
-    "dormant": State.WARN.value,
-}
-
-
-class Parameters(TypedDict, total=False):
+class Parameters(TypedDict):
     status_map: Mapping[str, int]
     last_reported_upper_levels: SimpleLevelsConfigModel[int]
 
 
 def check_device_status(params: Parameters, section: Section) -> CheckResult:
-    if (raw_state := params.get("status_map", {}).get(section.status)) is None:
-        state = State(_STATUS_MAP[section.status])
-    else:
-        state = State(raw_state)
-    yield Result(state=state, summary=f"Status: {section.status}")
+    yield Result(
+        state=State(params["status_map"][section.status]),
+        summary=f"Status: {section.status}",
+    )
 
-    _, levels_upper = params.get("last_reported_upper_levels", ("no_levels", None))
+    _, levels_upper = params["last_reported_upper_levels"]
 
     yield from check_last_reported_ts(
         last_reported_ts=section.last_reported.timestamp(),
@@ -109,7 +100,15 @@ check_plugin_cisco_meraki_org_device_status = CheckPlugin(
     service_name="Device Status",
     discovery_function=discover_device_status,
     check_function=check_device_status,
-    check_default_parameters=Parameters(),
+    check_default_parameters=Parameters(
+        status_map={
+            "online": State.OK.value,
+            "alerting": State.CRIT.value,
+            "offline": State.WARN.value,
+            "dormant": State.WARN.value,
+        },
+        last_reported_upper_levels=("no_levels", None),
+    ),
     check_ruleset_name="cisco_meraki_org_device_status",
 )
 
