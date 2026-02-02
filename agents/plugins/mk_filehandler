@@ -14,6 +14,6 @@ CMK_VERSION="2.6.0b1"
 FILE=/proc/sys/fs/file-nr
 
 echo '<<<filehandler>>>'
-if [ -a $FILE ]; then
+if [ -e $FILE ]; then
     cat $FILE
 fi

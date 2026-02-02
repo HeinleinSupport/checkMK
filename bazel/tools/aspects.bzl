@@ -1,6 +1,7 @@
 load("@aspect_rules_lint//lint:bandit.bzl", "lint_bandit_aspect")
 load("@aspect_rules_lint//lint:clang_tidy.bzl", "lint_clang_tidy_aspect")
 load("@aspect_rules_lint//lint:ruff.bzl", "lint_ruff_aspect")
+load("@aspect_rules_lint//lint:shellcheck.bzl", "lint_shellcheck_aspect")
 load("@cmk_requirements//:requirements.bzl", "requirement")
 load("@cmk_types//:types.bzl", "types")
 load("@rules_mypy//mypy:mypy.bzl", "mypy")
@@ -51,4 +52,9 @@ clang_tidy = lint_clang_tidy_aspect(
 
 astrein = lint_astrein_aspect(
     binary = Label("//packages/cmk-astrein:astrein"),
+)
+
+shellcheck = lint_shellcheck_aspect(
+    binary = Label("@aspect_rules_lint//lint:shellcheck_bin"),
+    config = Label("@//:.shellcheckrc"),
 )

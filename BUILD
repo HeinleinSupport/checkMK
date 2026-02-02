@@ -21,6 +21,7 @@ exports_files(
         ".prettierignore",
         "AUTHORS",
         "COPYING",
+        ".shellcheckrc",
     ],
 )
 
@@ -304,6 +305,62 @@ gazelle(
 
 gazelle(
     name = "gazelle",
+)
+
+sh_library(
+    name = "root_sh",
+    srcs = [
+        "buildscripts/docker_image_aliases/update.sh",
+        "buildscripts/infrastructure/build-nodes/agent-builder/build-image-32.sh",
+        "buildscripts/infrastructure/build-nodes/agent-builder/build-image-64.sh",
+        "buildscripts/infrastructure/build-nodes/agent-builder/build-image-windows.sh",
+        "buildscripts/infrastructure/build-nodes/scripts/checksums",
+        "buildscripts/infrastructure/build-nodes/scripts/install-aws-cli.sh",
+        "buildscripts/infrastructure/build-nodes/scripts/install-bazel.sh",
+        "buildscripts/infrastructure/build-nodes/scripts/install-clang.sh",
+        "buildscripts/infrastructure/build-nodes/scripts/install-cmake.sh",
+        "buildscripts/infrastructure/build-nodes/scripts/install-cmk-dependencies.sh",
+        "buildscripts/infrastructure/build-nodes/scripts/install-development.sh",
+        "buildscripts/infrastructure/build-nodes/scripts/install-docker.sh",
+        "buildscripts/infrastructure/build-nodes/scripts/install-gdb.sh",
+        "buildscripts/infrastructure/build-nodes/scripts/install-gnu-toolchain.sh",
+        "buildscripts/infrastructure/build-nodes/scripts/install-iwyu.sh",
+        "buildscripts/infrastructure/build-nodes/scripts/install-make-dist-deps.sh",
+        "buildscripts/infrastructure/build-nodes/scripts/install-openssl.sh",
+        "buildscripts/infrastructure/build-nodes/scripts/install-packer.sh",
+        "buildscripts/infrastructure/build-nodes/scripts/install-patchelf.sh",
+        "buildscripts/infrastructure/build-nodes/scripts/install-protobuf-cpp.sh",
+        "buildscripts/infrastructure/build-nodes/scripts/install-pyenv.sh",
+        "buildscripts/infrastructure/build-nodes/scripts/install-python.sh",
+        "buildscripts/infrastructure/build-nodes/scripts/install-valgrind.sh",
+        "buildscripts/scripts/bazel_execution_log_parser.sh",
+        "buildscripts/scripts/bazel_test_post_archive_xunit.sh",
+        "buildscripts/scripts/create_unsign_msi_patch.sh",
+        "buildscripts/scripts/sign-packages.sh",
+        "defines/dev-images/entrypoint.sh",
+        "defines/dev-images/populate-build-context.sh",
+        "defines/dev-images/reference-image-id",
+        "docker_image/docker-entrypoint.sh",
+        "packer/example_build.sh",
+        "third_party/asio/create-archive",
+        "third_party/fmt/create-archive",
+        "third_party/googletest/create-archive",
+        "third_party/openhardwaremonitor/create-archive",
+        "third_party/re2/create-archive",
+        "third_party/rrdtool/create-archive",
+        "third_party/simpleini/create-archive",
+        "third_party/yaml-cpp/create-archive",
+        ":build_lib_sh",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+sh_library(
+    name = "build_lib_sh",
+    srcs = [
+        "buildscripts/infrastructure/build-nodes/scripts/build_lib.sh",
+    ],
+    visibility = ["//visibility:public"],
 )
 
 alias(

@@ -129,3 +129,15 @@ pkg_tar(
     tags = ["manual"],
     visibility = ["//omd:__pkg__"],
 )
+
+sh_library(
+    name = "omd_packages_jaeger_sh",
+    srcs = [
+        "TRACE_JAEGER_ADMIN_PORT",
+        "TRACE_JAEGER_UI_PORT",
+        "TRACE_RECEIVE",
+        "TRACE_RECEIVE_ADDRESS",
+        "TRACE_RECEIVE_PORT",
+        "skel/etc/init.d/jaeger",
+    ],
+)

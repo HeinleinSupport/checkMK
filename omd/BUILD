@@ -893,3 +893,10 @@ pkg_cma_from_tar(
     }),
     version = "@cmk//version",
 )
+
+sh_library(
+    name = "omd_sh",
+    srcs = [
+        "run-binreplace",
+    ],
+)

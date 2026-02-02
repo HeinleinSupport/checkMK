@@ -129,3 +129,12 @@ build_test(
     tags = ["cpp"],
     targets = [":livestatus_shared"],
 )
+
+sh_library(
+    name = "packages_livestatus_sh",
+    srcs = [
+        ".f12",
+        "run",
+        "test/.f12",
+    ],
+)

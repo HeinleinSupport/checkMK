@@ -98,3 +98,11 @@ package_wheel(
     visibility = ["//visibility:public"],
     whl = "wheel",
 )
+
+sh_library(
+    name = "packages_cmk-crypto_sh",
+    srcs = [
+        ".f12",
+        "run",
+    ],
+)

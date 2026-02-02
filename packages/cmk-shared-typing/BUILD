@@ -250,3 +250,11 @@ alias(
     name = "format.check",
     actual = "//bazel/tools/format:check",
 )
+
+sh_library(
+    name = "packages_cmk-shared-typing_sh",
+    srcs = [
+        ".f12",
+        "run",
+    ],
+)

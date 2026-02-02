@@ -40,3 +40,12 @@ pkg_tar(
     stamp = 1,
     visibility = ["//omd:__pkg__"],
 )
+
+sh_library(
+    name = "notifications_sh",
+    srcs = [
+        ".f12",
+        "mkeventd",
+        "templates/.f12",
+    ],
+)

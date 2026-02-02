@@ -101,3 +101,11 @@ py_wheel(
     visibility = ["//visibility:public"],
     deps = [],
 )
+
+sh_library(
+    name = "packages_cmk-mkp-tool_sh",
+    srcs = [
+        ".f12",
+        "run",
+    ],
+)

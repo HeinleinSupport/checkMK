@@ -76,3 +76,14 @@ pkg_tar(
         "rabbitmq_lib",
     ],
 )
+
+sh_library(
+    name = "omd_packages_rabbitmq_sh",
+    srcs = [
+        "RABBITMQ_DIST_PORT",
+        "RABBITMQ_MANAGEMENT_PORT",
+        "RABBITMQ_ONLY_FROM",
+        "RABBITMQ_PORT",
+        "skel/etc/init.d/rabbitmq",
+    ],
+)

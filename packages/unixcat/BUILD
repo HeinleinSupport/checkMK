@@ -52,3 +52,12 @@ build_test(
     tags = ["cpp"],
     targets = [":unixcat"],
 )
+
+sh_library(
+    name = "packages_unixcat_sh",
+    srcs = [
+        ".f12",
+        "run",
+        "test/.f12",
+    ],
+)

@@ -1,3 +1,5 @@
+# shellcheck disable=2148
+
 hex_decode() {
     # take a parameter to mimick agent's hex_decode function
     local in="$1"

@@ -223,3 +223,28 @@ pkg_tar(
     stamp = 1,
     visibility = ["//omd:__pkg__"],
 )
+
+sh_library(
+    name = "omd_packages_check_mk_sh",
+    srcs = [
+        "AUTOMATION_HELPER",
+        "PIGGYBACK_HUB",
+        "TRACE_SEND",
+        "TRACE_SEND_TARGET",
+        "TRACE_SERVICE_NAMESPACE",
+        "post-create/02_message-broker-certs",
+        "scripts/post-cp/01_cmk-post-rename-site",
+        "scripts/post-mv/01_cmk-post-rename-site",
+        "scripts/post-restore/01_cmk-post-rename-site",
+        "scripts/post-update/01_mkp-disable-outdated",
+        "scripts/post-update/02_cmk-update-config",
+        "skel/etc/init.d/agent-receiver",
+        "skel/etc/init.d/automation-helper",
+        "skel/etc/init.d/mkeventd",
+        "skel/etc/init.d/piggyback-hub",
+        "skel/etc/init.d/ui-job-scheduler",
+        "//omd/packages/omd:init_profile",
+        "//omd/packages/omd:skel/.bashrc",
+        "//omd/packages/omd:skel/.profile",
+    ],
+)

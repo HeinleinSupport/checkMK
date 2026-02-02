@@ -41,3 +41,12 @@ pkg_tar(
     stamp = 1,
     visibility = ["//omd:__pkg__"],
 )
+
+sh_library(
+    name = "locale_sh",
+    srcs = [
+        ".f12",
+        "compile_mo_files",
+        "output_pot_file",
+    ],
+)
