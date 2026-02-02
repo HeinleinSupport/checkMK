@@ -159,6 +159,7 @@ def test_paths() -> None:
             ("software", "applications", "cisco_meraki"),
             ("software", "applications", "cisco_meraki", "licenses"),
             ("software", "applications", "cisco_meraki", "networks"),
+            ("software", "applications", "cisco_meraki", "organisations"),
             ("software", "applications", "citrix"),
             ("software", "applications", "citrix", "controller"),
             ("software", "applications", "citrix", "vm"),
@@ -1096,6 +1097,14 @@ _KNOWN_COLUMNS_KEY_ORDERS = {
         "notes",
         "enrollment_string",
         "is_bound_to_template",
+        "url",
+    ],
+    ("software", "applications", "cisco_meraki", "organisations"): [
+        "org_id",
+        "org_name",
+        "api_status",
+        "licensing_model",
+        "cloud_region",
         "url",
     ],
 }

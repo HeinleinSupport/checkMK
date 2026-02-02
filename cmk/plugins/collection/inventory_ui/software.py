@@ -504,6 +504,22 @@ node_software_applications_cisco_meraki_networks = Node(
     ),
 )
 
+node_software_applications_cisco_meraki_organisations = Node(
+    name="software_applications_cisco_meraki_organisations",
+    path=["software", "applications", "cisco_meraki", "organisations"],
+    title=Title("Organisations"),
+    table=Table(
+        columns={
+            "org_id": TextField(Title("Organisation ID")),
+            "org_name": TextField(Title("Organisation name")),
+            "api_status": TextField(Title("API status")),
+            "licensing_model": TextField(Title("Licensing model")),
+            "cloud_region": TextField(Title("Cloud region")),
+            "url": TextField(Title("URL")),
+        }
+    ),
+)
+
 
 node_software_applications_citrix = Node(
     name="software_applications_citrix",
