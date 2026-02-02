@@ -47,7 +47,7 @@ from cmk.crypto.password import Password
 from cmk.crypto.secrets import Secret
 from tests.testlib.common.repo import current_branch_name, repo_path
 from tests.testlib.common.utils import wait_until
-from tests.testlib.nonfree.cloud.utils import (  # type: ignore[import-untyped, unused-ignore]
+from tests.testlib.nonfree.cloud.utils import (  # type: ignore[import-untyped, unused-ignore, import-not-found]
     create_cse_initial_config,
     cse_openid_oauth_provider,
 )
