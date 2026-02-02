@@ -70,9 +70,9 @@ async function closeSlideIn() {
     {{ _t('Close') }}
   </CmkButton>
   <WelcomeSnapinSlideout
-    v-model="slideoutOpen"
+    v-model:slide-in-open="slideoutOpen"
+    v-model:stage-information="currentStageInformation"
     :cards="cards"
-    :stage_information="stage_information"
   ></WelcomeSnapinSlideout>
 </template>
 
