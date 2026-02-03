@@ -450,6 +450,10 @@ msgstr "%d voorwaarden"
 msgid "%d custom service attributes"
 msgstr "%d aangepaste service attributen"
 
+#, fuzzy, python-format
+msgid "%d day"
+msgstr "%d dagen"
+
 #, python-format
 msgid "%d days"
 msgstr "%d dagen"
@@ -521,6 +525,14 @@ msgid "%d locked sites"
 msgstr "%d vergrendelde sites"
 
 #, fuzzy, python-format
+msgid "%d minute"
+msgstr "minuut"
+
+#, fuzzy, python-format
+msgid "%d minutes"
+msgstr "5 minuten"
+
+#, fuzzy, python-format
 msgid "%d new label"
 msgid_plural "%d new labels"
 msgstr[0] "Nieuw etiket toevoegen"
@@ -555,6 +567,10 @@ msgstr[1] "Verwijder dit etiket"
 #, python-format
 msgid "%d rows"
 msgstr "%d rijen"
+
+#, fuzzy, python-format
+msgid "%d seconds"
+msgstr "seconden"
 
 #, fuzzy, python-format
 msgid "%d service(s) moved to disabled services table. Monitoring is disabled."
@@ -1475,6 +1491,16 @@ msgstr ""
 "back-ups die gecodeerd zijn, kunnen niet worden gedecodeerd zonder toegang "
 "tot deze sleutel. Wees er dus zeker van dat u ofwel een back-up hebt ofwel "
 "deze sleutel niet meer nodig hebt."
+
+#, fuzzy
+msgid ""
+"<b>Beware:</b> The OAuth2 connection may be used in checks. If you delete "
+"the connection, the checks won't be able to authenticate with this "
+"connection anymore."
+msgstr ""
+"<b>Waarschuwing:</b> Het wachtwoord kan gebruikt worden in controles. Als u "
+"het wachtwoord verwijdert, zullen de controles niet meer met dit wachtwoord "
+"kunnen authenticeren."
 
 #, python-format
 msgid ""
@@ -2920,6 +2946,10 @@ msgstr "Hop responstijden"
 
 msgid "API server connection"
 msgstr "API-serververbinding"
+
+#, fuzzy
+msgid "API status"
+msgstr "Gastheer status"
 
 #, fuzzy
 msgid "API token"
@@ -14817,6 +14847,10 @@ msgstr "Cloud-gebaseerde omgevingen"
 msgid "Cloud hosts"
 msgstr "Cloud hosts"
 
+#, fuzzy
+msgid "Cloud region"
+msgstr "CloudFront"
+
 msgid "Cloud services"
 msgstr "Cloud diensten"
 
@@ -24808,6 +24842,10 @@ msgstr "Engels"
 msgid "Enrich with usage data"
 msgstr ""
 
+#, fuzzy
+msgid "Enrollment string"
+msgstr "Omgevingsvariabelen"
+
 msgid "Ensure always-increasing .rpm and .deb versions."
 msgstr ""
 
@@ -33831,8 +33869,7 @@ msgid ""
 "overview and the dashboard). This affects only users with this permission. "
 "Users with this permission will see failed notifications between now and the "
 "configured <a href=\"wato.py?"
-"mode=edit_configvar&varname=failed_notification_horizon\">Failed "
-"notification horizon</a>."
+"mode=edit_configvar&varname=notification_horizon\">Notification horizon</a>."
 msgstr ""
 "Als Checkmk niet in staat is gebruikers op de hoogte te stellen van "
 "problemen, zal de site heel zichtbaar in de UI (zowel in het Tactisch "
@@ -37906,6 +37943,10 @@ msgid "Is CA"
 msgstr "Is CA"
 
 #, fuzzy
+msgid "Is bound to template"
+msgstr "Sjabloon hostnaam"
+
+#, fuzzy
 msgid "Is cluster host"
 msgstr "Is Cluster Host"
 
@@ -38838,7 +38879,7 @@ msgstr "LUISTEREN"
 msgid "LLDP cache"
 msgstr "Cached"
 
-msgid "LLDP neighbours"
+msgid "LLDP neighbors"
 msgstr ""
 
 #, fuzzy
@@ -38987,10 +39028,6 @@ msgstr "Laatste 35 dagen"
 
 msgid "Last 6 months"
 msgstr "Laatste 6 maanden"
-
-#, fuzzy
-msgid "Last 7 days"
-msgstr "Laatste 35 dagen"
 
 msgid "Last Contact"
 msgstr "Laatste contact"
@@ -40167,6 +40204,10 @@ msgid ""
 msgstr ""
 "Licentiebestanden van var/check_mk/licensing, etc/check_mk, var/check_mk/"
 "core en var/log/licensing.log.%s"
+
+#, fuzzy
+msgid "Licensing model"
+msgstr "Licentie"
 
 msgid "Licensing online verification"
 msgstr "Online verificatie van vergunningen"
@@ -47885,6 +47926,10 @@ msgstr "Meldingsgebeurtenissen van hosts."
 msgid "Notification frequency and timing"
 msgstr "kennisgevingsregel"
 
+#, fuzzy
+msgid "Notification horizon"
+msgstr "Kennisgeving Auteur"
+
 msgid "Notification log level"
 msgstr "Niveau meldingslogboek"
 
@@ -51262,6 +51307,10 @@ msgstr "Organisaties"
 #, fuzzy
 msgid "Organisation name"
 msgstr "Organisatie Naam"
+
+#, fuzzy
+msgid "Organisations"
+msgstr "Organisaties"
 
 msgid "Organization"
 msgstr "Organisatie"
@@ -55173,6 +55222,10 @@ msgstr "Product"
 #, fuzzy
 msgid "Product telemetry"
 msgstr "rapportelement"
+
+#, fuzzy
+msgid "Product types"
+msgstr "Product"
 
 msgid "Profile"
 msgstr "Profiel"
@@ -79276,6 +79329,10 @@ msgid "Time when downtime was created"
 msgstr "Tijdstip waarop stilstand werd gecreëerd"
 
 #, fuzzy
+msgid "Time zone"
+msgstr "Tijdshorizon"
+
+#, fuzzy
 msgid "Timed out Active Directory requests"
 msgstr "Uitgestelde Active Directory verzoeken"
 
@@ -87229,6 +87286,10 @@ msgstr "Bekijk uitbreiding pakketbeheer"
 msgid "View failed notifications"
 msgstr "Toon mislukte meldingen"
 
+#, fuzzy, python-format
+msgid "View last %s"
+msgstr "Vhosts"
+
 msgid "View layout"
 msgstr "Bekijk lay-out"
 
@@ -94738,6 +94799,10 @@ msgid "Toggle accordion item %{item}"
 msgstr ""
 
 #, fuzzy
+msgid "Close"
+msgstr "Gesloten"
+
+#, fuzzy
 msgid "Toggle %{ title }"
 msgstr "Logboekvermeldingen wijzigen"
 
@@ -94775,10 +94840,6 @@ msgstr ""
 #, fuzzy
 msgid "Remove element"
 msgstr "Verwijder dit element"
-
-#, fuzzy
-msgid "Close"
-msgstr "Gesloten"
 
 #, fuzzy
 msgid "filter"
@@ -96281,6 +96342,10 @@ msgid "Saving"
 msgstr "Ruimtebesparing"
 
 #, fuzzy
+msgid "The value of this rule is not valid."
+msgstr "De waarde van deze regel is niet geldig. "
+
+#, fuzzy
 msgid "Select operator"
 msgstr "Afgewezen verbindingen"
 
@@ -96355,6 +96420,9 @@ msgstr "Gebied"
 msgid "Stack"
 msgstr "Stapels"
 
+msgid "Graph lines (OpenTelemetry)"
+msgstr ""
+
 #, fuzzy
 msgid "Graph lines (Standard)"
 msgstr "Grafiek Opties"
@@ -96373,9 +96441,6 @@ msgstr "Thermische informatie"
 #, fuzzy
 msgid "Graph options"
 msgstr "Grafiek Opties"
-
-msgid "Graph lines (OpenTelemetry)"
-msgstr ""
 
 msgid "Cannot change rule value for rules managed by custom graph editor."
 msgstr ""
@@ -97958,6 +98023,10 @@ msgstr ""
 msgid ""
 "You can still access it later via Help > Learning Checkmk > Welcome page"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Last 7 days"
+#~ msgstr "Laatste 35 dagen"
 
 #, fuzzy
 #~ msgid "Cisco Meraki licensed devices"

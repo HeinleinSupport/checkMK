@@ -448,6 +448,10 @@ msgstr "%d condiții"
 msgid "%d custom service attributes"
 msgstr "%d atribute de servicii personalizate"
 
+#, fuzzy, python-format
+msgid "%d day"
+msgstr "%d zile"
+
 #, python-format
 msgid "%d days"
 msgstr "%d zile"
@@ -522,6 +526,14 @@ msgid "%d locked sites"
 msgstr "%d site-uri blocate"
 
 #, fuzzy, python-format
+msgid "%d minute"
+msgstr "minutminute"
+
+#, fuzzy, python-format
+msgid "%d minutes"
+msgstr "5 minute"
+
+#, fuzzy, python-format
 msgid "%d new label"
 msgid_plural "%d new labels"
 msgstr[0] "Adăugați o nouă etichetă"
@@ -558,6 +570,10 @@ msgstr[2] "Îndepărtați această etichetă"
 #, python-format
 msgid "%d rows"
 msgstr "%d rânduri"
+
+#, fuzzy, python-format
+msgid "%d seconds"
+msgstr "secunde"
 
 #, fuzzy, python-format
 msgid "%d service(s) moved to disabled services table. Monitoring is disabled."
@@ -1490,6 +1506,15 @@ msgstr ""
 "rezervă deja create, care au fost criptate, nu pot fi decriptate fără a avea "
 "acces la această cheie. Așadar, vă rugăm să vă asigurați că fie aveți o "
 "copie de rezervă, fie că nu mai aveți nevoie de această cheie."
+
+#, fuzzy
+msgid ""
+"<b>Beware:</b> The OAuth2 connection may be used in checks. If you delete "
+"the connection, the checks won't be able to authenticate with this "
+"connection anymore."
+msgstr ""
+"<b>Atenție:</b> Parola poate fi folosită în verificări. Dacă ștergeți "
+"parola, verificările nu se vor mai putea autentifica cu această parolă."
 
 #, python-format
 msgid ""
@@ -2954,6 +2979,10 @@ msgstr "Timpii de răspuns la hopuri"
 
 msgid "API server connection"
 msgstr "Conexiune la serverul API"
+
+#, fuzzy
+msgid "API status"
+msgstr "Starea gazdei"
 
 msgid "API token"
 msgstr "Token API"
@@ -14875,6 +14904,10 @@ msgstr "Mediile bazate pe cloud"
 msgid "Cloud hosts"
 msgstr "Gazde cloud"
 
+#, fuzzy
+msgid "Cloud region"
+msgstr "CloudFront"
+
 # georgem ##############
 msgid "Cloud services"
 msgstr "Servicii cloud"
@@ -24898,6 +24931,10 @@ msgstr "Engleză"
 msgid "Enrich with usage data"
 msgstr ""
 
+#, fuzzy
+msgid "Enrollment string"
+msgstr "Variabile de mediu"
+
 msgid "Ensure always-increasing .rpm and .deb versions."
 msgstr "Asigurați versiuni .rpm și .deb în continuă creștere."
 
@@ -33925,8 +33962,7 @@ msgid ""
 "overview and the dashboard). This affects only users with this permission. "
 "Users with this permission will see failed notifications between now and the "
 "configured <a href=\"wato.py?"
-"mode=edit_configvar&varname=failed_notification_horizon\">Failed "
-"notification horizon</a>."
+"mode=edit_configvar&varname=notification_horizon\">Notification horizon</a>."
 msgstr ""
 "În cazul în care Checkmk nu este în măsură să notifice utilizatorii despre "
 "probleme, site-ul va avertiza în mod foarte vizibil despre această situație "
@@ -38054,6 +38090,10 @@ msgid "Is CA"
 msgstr "Este CA"
 
 #, fuzzy
+msgid "Is bound to template"
+msgstr "Șablon de nume de gazdă"
+
+#, fuzzy
 msgid "Is cluster host"
 msgstr "Este gazda clusterului"
 
@@ -38983,7 +39023,7 @@ msgstr "ASCULTĂ"
 msgid "LLDP cache"
 msgstr "În cache"
 
-msgid "LLDP neighbours"
+msgid "LLDP neighbors"
 msgstr ""
 
 #, fuzzy
@@ -39133,10 +39173,6 @@ msgstr "Ultimele 35 de zile"
 
 msgid "Last 6 months"
 msgstr "Ultimele 6 luni"
-
-#, fuzzy
-msgid "Last 7 days"
-msgstr "Ultimele 35 de zile"
 
 msgid "Last Contact"
 msgstr "Ultimul contact"
@@ -40292,6 +40328,10 @@ msgid ""
 msgstr ""
 "Fișiere de licențiere din var/check_mk/licensing, etc/check_mk, var/check_mk/"
 "core și var/log/licensing.log.%s"
+
+#, fuzzy
+msgid "Licensing model"
+msgstr "Licențiere"
 
 msgid "Licensing online verification"
 msgstr "Verificarea online a licențelor"
@@ -48022,6 +48062,10 @@ msgstr "Evenimente de notificare a gazdelor."
 msgid "Notification frequency and timing"
 msgstr "%s regulile de notificare se potrivesc"
 
+#, fuzzy
+msgid "Notification horizon"
+msgstr "Autorul notificării"
+
 msgid "Notification log level"
 msgstr "Nivelul jurnalului de notificare"
 
@@ -51398,6 +51442,10 @@ msgstr "ID-ul organizației"
 #, fuzzy
 msgid "Organisation name"
 msgstr "Numele organizației"
+
+#, fuzzy
+msgid "Organisations"
+msgstr "Organizație"
 
 msgid "Organization"
 msgstr "Organizația"
@@ -55310,6 +55358,10 @@ msgstr "Produs"
 #, fuzzy
 msgid "Product telemetry"
 msgstr "element de raport"
+
+#, fuzzy
+msgid "Product types"
+msgstr "Produs"
 
 msgid "Profile"
 msgstr "Profil"
@@ -79606,6 +79658,10 @@ msgid "Time when downtime was created"
 msgstr "Ora la care a fost creat timpul de nefuncționare"
 
 #, fuzzy
+msgid "Time zone"
+msgstr "Orizont de timp"
+
+#, fuzzy
 msgid "Timed out Active Directory requests"
 msgstr "Cereri Active Directory expirate"
 
@@ -87503,6 +87559,10 @@ msgstr "Vizualizați managerul de pachete de extensii"
 msgid "View failed notifications"
 msgstr "Afișați notificările eșuate"
 
+#, fuzzy, python-format
+msgid "View last %s"
+msgstr "Vhosts"
+
 msgid "View layout"
 msgstr "Vizualizați aspectul"
 
@@ -95031,6 +95091,10 @@ msgid "Toggle accordion item %{item}"
 msgstr ""
 
 #, fuzzy
+msgid "Close"
+msgstr "Închis"
+
+#, fuzzy
 msgid "Toggle %{ title }"
 msgstr "Comutarea intrărilor din jurnal"
 
@@ -95067,10 +95131,6 @@ msgstr ""
 #, fuzzy
 msgid "Remove element"
 msgstr "Eliminați acest element"
-
-#, fuzzy
-msgid "Close"
-msgstr "Închis"
 
 #, fuzzy
 msgid "filter"
@@ -96577,6 +96637,10 @@ msgid "Saving"
 msgstr "Economii de spațiu"
 
 #, fuzzy
+msgid "The value of this rule is not valid."
+msgstr "Valoarea acestei reguli nu este valabilă. "
+
+#, fuzzy
 msgid "Select operator"
 msgstr "Conexiuni respinse"
 
@@ -96651,6 +96715,9 @@ msgstr "Zona"
 msgid "Stack"
 msgstr "Stive"
 
+msgid "Graph lines (OpenTelemetry)"
+msgstr ""
+
 #, fuzzy
 msgid "Graph lines (Standard)"
 msgstr "Opțiuni grafice"
@@ -96669,9 +96736,6 @@ msgstr "Informații termice"
 #, fuzzy
 msgid "Graph options"
 msgstr "Opțiuni grafice"
-
-msgid "Graph lines (OpenTelemetry)"
-msgstr ""
 
 msgid "Cannot change rule value for rules managed by custom graph editor."
 msgstr ""
@@ -98267,6 +98331,10 @@ msgstr ""
 msgid ""
 "You can still access it later via Help > Learning Checkmk > Welcome page"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Last 7 days"
+#~ msgstr "Ultimele 35 de zile"
 
 #, fuzzy
 #~ msgid "Cisco Meraki licensed devices"

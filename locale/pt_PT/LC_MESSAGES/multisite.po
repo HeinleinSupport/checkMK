@@ -451,6 +451,10 @@ msgstr "%d condições"
 msgid "%d custom service attributes"
 msgstr "%d atributos de serviço customizados"
 
+#, fuzzy, python-format
+msgid "%d day"
+msgstr "%d dias"
+
 #, python-format
 msgid "%d days"
 msgstr "%d dias"
@@ -522,6 +526,14 @@ msgid "%d locked sites"
 msgstr "%d sítios bloqueados"
 
 #, fuzzy, python-format
+msgid "%d minute"
+msgstr "minuto"
+
+#, fuzzy, python-format
+msgid "%d minutes"
+msgstr "5 minutos"
+
+#, fuzzy, python-format
 msgid "%d new label"
 msgid_plural "%d new labels"
 msgstr[0] "Adicionar nova etiqueta"
@@ -556,6 +568,10 @@ msgstr[1] "Remover esta etiqueta"
 #, python-format
 msgid "%d rows"
 msgstr "%d linhas"
+
+#, fuzzy, python-format
+msgid "%d seconds"
+msgstr "segundos"
 
 #, fuzzy, python-format
 msgid "%d service(s) moved to disabled services table. Monitoring is disabled."
@@ -1477,6 +1493,16 @@ msgstr ""
 "sido encriptados não podem ser desencriptados sem acesso a esta chave. Por "
 "isso, certifique-se de que tem uma cópia de segurança ou de que já não "
 "precisa desta chave."
+
+#, fuzzy
+msgid ""
+"<b>Beware:</b> The OAuth2 connection may be used in checks. If you delete "
+"the connection, the checks won't be able to authenticate with this "
+"connection anymore."
+msgstr ""
+"<b>Cuidado:</b> A palavra-passe pode ser utilizada em verificações. Se "
+"eliminar a palavra-passe, as verificações deixarão de poder ser autenticadas "
+"com esta palavra-passe."
 
 #, python-format
 msgid ""
@@ -2931,6 +2957,10 @@ msgstr "Tempos de resposta do lúpulo"
 
 msgid "API server connection"
 msgstr "Ligação ao servidor API"
+
+#, fuzzy
+msgid "API status"
+msgstr "Estado de acolhimento"
 
 msgid "API token"
 msgstr "Token da API"
@@ -14836,6 +14866,10 @@ msgstr "Ambientes baseados em nuvens"
 msgid "Cloud hosts"
 msgstr "Anfitriões na nuvem"
 
+#, fuzzy
+msgid "Cloud region"
+msgstr "CloudFront"
+
 msgid "Cloud services"
 msgstr "Serviços em nuvem"
 
@@ -24808,6 +24842,10 @@ msgstr "Inglês"
 msgid "Enrich with usage data"
 msgstr ""
 
+#, fuzzy
+msgid "Enrollment string"
+msgstr "Variáveis de ambiente"
+
 msgid "Ensure always-increasing .rpm and .deb versions."
 msgstr "Assegurar versões .rpm e .deb sempre crescentes."
 
@@ -33845,8 +33883,7 @@ msgid ""
 "overview and the dashboard). This affects only users with this permission. "
 "Users with this permission will see failed notifications between now and the "
 "configured <a href=\"wato.py?"
-"mode=edit_configvar&varname=failed_notification_horizon\">Failed "
-"notification horizon</a>."
+"mode=edit_configvar&varname=notification_horizon\">Notification horizon</a>."
 msgstr ""
 "Se o Checkmk não conseguir notificar os utilizadores sobre problemas, o site "
 "avisará sobre esta situação de forma muito visível na interface do "
@@ -37914,6 +37951,10 @@ msgid "Is CA"
 msgstr "É CA"
 
 #, fuzzy
+msgid "Is bound to template"
+msgstr "Modelo de nome de anfitrião"
+
+#, fuzzy
 msgid "Is cluster host"
 msgstr "É Anfitrião do Cluster"
 
@@ -38839,7 +38880,7 @@ msgstr "OUÇA"
 msgid "LLDP cache"
 msgstr "Cached"
 
-msgid "LLDP neighbours"
+msgid "LLDP neighbors"
 msgstr ""
 
 #, fuzzy
@@ -38988,10 +39029,6 @@ msgstr "Últimos 35 dias"
 
 msgid "Last 6 months"
 msgstr "Últimos 6 meses"
-
-#, fuzzy
-msgid "Last 7 days"
-msgstr "Últimos 35 dias"
 
 msgid "Last Contact"
 msgstr "Último contato"
@@ -40157,6 +40194,10 @@ msgid ""
 msgstr ""
 "Ficheiros de licenciamento de var/check_mk/licensing, etc/check_mk, var/"
 "check_mk/core e var/log/licensing.log.%s"
+
+#, fuzzy
+msgid "Licensing model"
+msgstr "Licenciamento"
 
 msgid "Licensing online verification"
 msgstr "Verificação em linha do licenciamento"
@@ -47885,6 +47926,10 @@ msgstr "Notificação de eventos dos anfitriões."
 msgid "Notification frequency and timing"
 msgstr "%s regras de notificação são correspondentes"
 
+#, fuzzy
+msgid "Notification horizon"
+msgstr "Autor da notificação"
+
 msgid "Notification log level"
 msgstr "Nível de log de notificação"
 
@@ -51245,6 +51290,10 @@ msgstr "ID da organização"
 #, fuzzy
 msgid "Organisation name"
 msgstr "Nome da organização"
+
+#, fuzzy
+msgid "Organisations"
+msgstr "Organização"
 
 msgid "Organization"
 msgstr "Organização"
@@ -55159,6 +55208,10 @@ msgstr "Produto"
 #, fuzzy
 msgid "Product telemetry"
 msgstr "elemento do relatório"
+
+#, fuzzy
+msgid "Product types"
+msgstr "Produto"
 
 msgid "Profile"
 msgstr "Perfil"
@@ -79230,6 +79283,10 @@ msgid "Time when downtime was created"
 msgstr "Hora em que o tempo de inactividade foi criado"
 
 #, fuzzy
+msgid "Time zone"
+msgstr "Horizonte de tempo"
+
+#, fuzzy
 msgid "Timed out Active Directory requests"
 msgstr "Pedidos de Diretório Ativo Temporizado"
 
@@ -87174,6 +87231,10 @@ msgstr "Ver Gestor de Pacotes de Extensão"
 msgid "View failed notifications"
 msgstr "Mostrar notificações de falhas"
 
+#, fuzzy, python-format
+msgid "View last %s"
+msgstr "Vhosts"
+
 msgid "View layout"
 msgstr "Ver layout"
 
@@ -94646,6 +94707,10 @@ msgid "Toggle accordion item %{item}"
 msgstr ""
 
 #, fuzzy
+msgid "Close"
+msgstr "Fechado"
+
+#, fuzzy
 msgid "Toggle %{ title }"
 msgstr "Alternar entradas de log"
 
@@ -94682,10 +94747,6 @@ msgstr ""
 #, fuzzy
 msgid "Remove element"
 msgstr "Remover este elemento"
-
-#, fuzzy
-msgid "Close"
-msgstr "Fechado"
 
 #, fuzzy
 msgid "filter"
@@ -96186,6 +96247,10 @@ msgid "Saving"
 msgstr "Poupança de espaço"
 
 #, fuzzy
+msgid "The value of this rule is not valid."
+msgstr "O valor desta regra não é válido. "
+
+#, fuzzy
 msgid "Select operator"
 msgstr "Ligações rejeitadas"
 
@@ -96260,6 +96325,9 @@ msgstr "Área"
 msgid "Stack"
 msgstr "Pilhas"
 
+msgid "Graph lines (OpenTelemetry)"
+msgstr ""
+
 #, fuzzy
 msgid "Graph lines (Standard)"
 msgstr "Opções Gráficas"
@@ -96278,9 +96346,6 @@ msgstr "Informação térmica"
 #, fuzzy
 msgid "Graph options"
 msgstr "Opções Gráficas"
-
-msgid "Graph lines (OpenTelemetry)"
-msgstr ""
 
 msgid "Cannot change rule value for rules managed by custom graph editor."
 msgstr ""
@@ -97866,6 +97931,10 @@ msgstr ""
 msgid ""
 "You can still access it later via Help > Learning Checkmk > Welcome page"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Last 7 days"
+#~ msgstr "Últimos 35 dias"
 
 #, fuzzy
 #~ msgid "Cisco Meraki licensed devices"

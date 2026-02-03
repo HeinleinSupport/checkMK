@@ -440,6 +440,10 @@ msgstr "%d条件"
 msgid "%d custom service attributes"
 msgstr "%d カスタムサービス属性"
 
+#, fuzzy, python-format
+msgid "%d day"
+msgstr "%d日間"
+
 #, python-format
 msgid "%d days"
 msgstr "%d日間"
@@ -507,6 +511,14 @@ msgstr "%d ロックされたサイト"
 msgid "%d locked sites"
 msgstr "%d ロック済サイト"
 
+#, fuzzy, python-format
+msgid "%d minute"
+msgstr "分"
+
+#, fuzzy, python-format
+msgid "%d minutes"
+msgstr "5分"
+
 #, python-format
 msgid "%d new label"
 msgid_plural "%d new labels"
@@ -540,6 +552,10 @@ msgstr[0] "%d 削除されたラベル"
 #, python-format
 msgid "%d rows"
 msgstr "%d行"
+
+#, fuzzy, python-format
+msgid "%d seconds"
+msgstr "秒"
 
 #, fuzzy, python-format
 msgid "%d service(s) moved to disabled services table. Monitoring is disabled."
@@ -1435,6 +1451,15 @@ msgstr ""
 "は署名できなくなります。暗号化された作成済みのバックアップは、このキーにアク"
 "セスしないと復号化できません。したがって、バックアップがあるか、このキーが不"
 "要になっていることを確認してください。"
+
+#, fuzzy
+msgid ""
+"<b>Beware:</b> The OAuth2 connection may be used in checks. If you delete "
+"the connection, the checks won't be able to authenticate with this "
+"connection anymore."
+msgstr ""
+"<b>注意:</b> パスワードはチェックで使用される場合があります。パスワードを削除"
+"すると、チェックはこのパスワードで認証できなくなります。"
 
 #, python-format
 msgid ""
@@ -2827,6 +2852,10 @@ msgstr "ホップの応答時間"
 
 msgid "API server connection"
 msgstr "APIサーバー接続"
+
+#, fuzzy
+msgid "API status"
+msgstr "HA ステータス"
 
 msgid "API token"
 msgstr "APIトークン"
@@ -14027,6 +14056,10 @@ msgstr "クラウドベースの環境"
 msgid "Cloud hosts"
 msgstr "クラウドホスト"
 
+#, fuzzy
+msgid "Cloud region"
+msgstr "CloudFront"
+
 msgid "Cloud services"
 msgstr "クラウドサービス"
 
@@ -23505,6 +23538,10 @@ msgstr "English"
 msgid "Enrich with usage data"
 msgstr "利用データで充実させる"
 
+#, fuzzy
+msgid "Enrollment string"
+msgstr "環境変数"
+
 msgid "Ensure always-increasing .rpm and .deb versions."
 msgstr ".rpmと.debのバージョンを常に増やすようにする。"
 
@@ -31859,14 +31896,14 @@ msgstr ""
 "を持つユーザーのみに影響します。この権限を持つユーザーには、過去24時間以内に"
 "発生した通知の失敗のみが表示されます。"
 
+#, fuzzy
 msgid ""
 "If Checkmk is unable to notify users about problems, the site will warn "
 "about this situation very visibly inside the UI (both in the tactical "
 "overview and the dashboard). This affects only users with this permission. "
 "Users with this permission will see failed notifications between now and the "
 "configured <a href=\"wato.py?"
-"mode=edit_configvar&varname=failed_notification_horizon\">Failed "
-"notification horizon</a>."
+"mode=edit_configvar&varname=notification_horizon\">Notification horizon</a>."
 msgstr ""
 "Checkmkが問題に関してユーザーに通知できない場合、サイトはUI内でこの状況につい"
 "て目に見える形で警告します（戦術概要とダッシュボードの両方で）。これは、この"
@@ -35788,6 +35825,10 @@ msgstr "Iptablesフィルター構成"
 msgid "Is CA"
 msgstr "CAですか"
 
+#, fuzzy
+msgid "Is bound to template"
+msgstr "ホスト名のテンプレート"
+
 msgid "Is cluster host"
 msgstr "クラスタホスト"
 
@@ -36648,7 +36689,7 @@ msgstr "聴く"
 msgid "LLDP cache"
 msgstr "キャッシュされた"
 
-msgid "LLDP neighbours"
+msgid "LLDP neighbors"
 msgstr ""
 
 msgid "LPAR statistics for AIX"
@@ -36793,9 +36834,6 @@ msgstr "過去35日間"
 
 msgid "Last 6 months"
 msgstr "過去6か月"
-
-msgid "Last 7 days"
-msgstr "過去7日間"
 
 msgid "Last Contact"
 msgstr "最後の連絡先"
@@ -37909,6 +37947,10 @@ msgid ""
 msgstr ""
 "var/check_mk/licensing、etc/check_mk/multisite.d、var/log/licensing.log のラ"
 "イセンスファイル:%s"
+
+#, fuzzy
+msgid "Licensing model"
+msgstr "ライセンス"
 
 msgid "Licensing online verification"
 msgstr "ライセンスオンライン検証"
@@ -45226,6 +45268,10 @@ msgstr "ホストの通知イベント。"
 msgid "Notification frequency and timing"
 msgstr "通知の頻度とタイミング"
 
+#, fuzzy
+msgid "Notification horizon"
+msgstr "通知作成者"
+
 msgid "Notification log level"
 msgstr "通知ログレベル"
 
@@ -48279,6 +48325,10 @@ msgstr "組織ID"
 
 msgid "Organisation name"
 msgstr "組織名"
+
+#, fuzzy
+msgid "Organisations"
+msgstr "組織"
 
 msgid "Organization"
 msgstr "組織"
@@ -51929,6 +51979,10 @@ msgstr "製品"
 #, fuzzy
 msgid "Product telemetry"
 msgstr "レポート要素"
+
+#, fuzzy
+msgid "Product types"
+msgstr "製品"
 
 msgid "Profile"
 msgstr "プロフィール"
@@ -74995,6 +75049,10 @@ msgstr "タイムワープ - この期間中のBI集計を表示します"
 msgid "Time when downtime was created"
 msgstr "ダウンタイム発生時刻"
 
+#, fuzzy
+msgid "Time zone"
+msgstr "期間"
+
 msgid "Timed out Active Directory requests"
 msgstr "Active Directoryリクエストのタイムアウト"
 
@@ -82049,6 +82107,10 @@ msgstr "拡張パッケージマネージャを見る"
 
 msgid "View failed notifications"
 msgstr "失敗した通知を表示する"
+
+#, fuzzy, python-format
+msgid "View last %s"
+msgstr "Vhosts"
 
 msgid "View layout"
 msgstr "レイアウトを表示"
@@ -89231,6 +89293,10 @@ msgid "Toggle accordion item %{item}"
 msgstr ""
 
 #, fuzzy
+msgid "Close"
+msgstr "クローズド"
+
+#, fuzzy
 msgid "Toggle %{ title }"
 msgstr "ログエントリを切り替えます"
 
@@ -89265,10 +89331,6 @@ msgstr ""
 #, fuzzy
 msgid "Remove element"
 msgstr "この要素を削除します"
-
-#, fuzzy
-msgid "Close"
-msgstr "クローズド"
 
 #, fuzzy
 msgid "filter"
@@ -90741,6 +90803,10 @@ msgid "Saving"
 msgstr "スペースの節約"
 
 #, fuzzy
+msgid "The value of this rule is not valid."
+msgstr "このルールの値は無効です。 "
+
+#, fuzzy
 msgid "Select operator"
 msgstr "オプション選択"
 
@@ -90812,6 +90878,9 @@ msgstr "範囲"
 msgid "Stack"
 msgstr "スタック"
 
+msgid "Graph lines (OpenTelemetry)"
+msgstr ""
+
 #, fuzzy
 msgid "Graph lines (Standard)"
 msgstr "グラフライン"
@@ -90827,9 +90896,6 @@ msgstr "トランスフォーメーション"
 
 msgid "Graph options"
 msgstr "グラフオプション"
-
-msgid "Graph lines (OpenTelemetry)"
-msgstr ""
 
 #, fuzzy
 msgid "Cannot change rule value for rules managed by custom graph editor."
@@ -92389,6 +92455,9 @@ msgstr ""
 msgid ""
 "You can still access it later via Help > Learning Checkmk > Welcome page"
 msgstr ""
+
+#~ msgid "Last 7 days"
+#~ msgstr "過去7日間"
 
 #, fuzzy
 #~ msgid "Cisco Meraki licensed devices"
