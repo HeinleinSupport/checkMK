@@ -117,5 +117,15 @@ ConfigVariableProductUsageAnalytics = ConfigVariable(
         ],
         optional_keys=[],
         default_keys=["enabled", "proxy_setting"],
+        help=_(
+            "<p><b>Network Configuration: </b>"
+            "To transmit analytics data, ensure your firewall permits outbound traffic to "
+            "<tt>https://analytics.checkmk.com/upload</tt> on port <tt>443</tt>. "
+            "If you are using a proxy, please verify that it allows connections to this destination.</p>"
+            "<p><b>Per-Site Configuration: </b>"
+            "You have to ensure connectivity for <b>each site individually</b>. "
+            "As every site collects and transmits data independently, "
+            "please verify that your firewall rules permit traffic from every site to prevent local transmission errors.</p>"
+        ),
     ),
 )
