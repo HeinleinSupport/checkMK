@@ -170,6 +170,7 @@ IGNORE_SUFFIXES = [
     ".dat",
     ".dict",
     ".html",
+    ".imp",
     ".in",
     ".json",
     ".lock",
