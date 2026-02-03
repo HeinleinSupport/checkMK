@@ -79,12 +79,12 @@ config_setting(
 # Generate `compile_commands.json` with `bazel run //:refresh_compile_commands`.
 refresh_compile_commands(
     name = "refresh_compile_commands",
+    exclude_external_sources = True,
+    exclude_headers = "all",
     tags = [
         "manual",
         "no-mypy",
     ],
-    # TODO: Do we want that or not? We get quite a few duplicate entries which often differ without that option.
-    # exclude_headers = "all",
     targets = {
         # target: build-flags
         "//non-free/packages/cmc:all": "",
