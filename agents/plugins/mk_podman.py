@@ -140,7 +140,7 @@ def write_serialized_section(name: str, json_content: str) -> None:
 
 
 try:
-    import requests_unixsocket  # type: ignore[import-untyped]
+    import requests_unixsocket  # type: ignore[import-not-found]
 
     write_serialized_section("errors", json.dumps({}))
 except ImportError:

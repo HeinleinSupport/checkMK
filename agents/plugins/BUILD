@@ -1,6 +1,10 @@
 load("@aspect_rules_py//py:defs.bzl", "py_binary")
 load("@cmk_requirements//:requirements.bzl", "requirement")
 
+exports_files([
+    "dev-requirements.in",
+])
+
 filegroup(
     name = "srcs",
     srcs = glob(
@@ -40,4 +44,41 @@ py_binary(
     srcs = ["nginx_status.py"],
     imports = ["."],
     visibility = ["//visibility:public"],
+)
+
+py_library(
+    name = "agent-plugins-python",
+    srcs = [
+        "apache_status.py",
+        "isc_dhcpd.py",
+        "mk_docker.py",
+        "mk_filestats.py",
+        "mk_inotify.py",
+        "mk_logwatch.py",
+        "mk_mongodb.py",
+        "mk_podman.py",
+        "mk_postgres.py",
+        "mk_sap.py",
+        "mk_tinkerforge.py",
+        "mtr.py",
+        "nginx_status.py",
+        "plesk_backups.py",
+        "plesk_domains.py",
+        "unitrends_replication.py",
+    ],
+    imports = ["."],
+    # These dependencies are likely not complete.
+    # Agent plugins sometimes depend on third party modules that
+    # are currently not even a dev dependency.
+    # As this is the deprecated location for agent plugins,
+    # I am not cleanung this up now. This should be dealt with
+    # on a case by case basis when migrating the bakery plugins to
+    # the cmk.bakery.v2 API.
+    # When you do so, please consider making the used libraries a
+    # dev dependency and write some actual tests :-|
+    deps = [
+        requirement("docker"),
+        requirement("pymongo"),
+        requirement("urllib3"),
+    ],
 )

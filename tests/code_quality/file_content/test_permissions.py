@@ -24,6 +24,7 @@ def is_not_executable(path: Path) -> bool:
 
 _GLOBAL_EXCLUDES = (
     "BUILD",
+    "dev-requirements.in",
     ".f12",
     ".gitignore",
     "OWNERS",

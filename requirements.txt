@@ -1015,7 +1015,9 @@ dnspython==2.8.0 \
 docker==7.1.0 \
     --hash=sha256:ad8c70e6e3f8926cb8a92619b832b4ea5299e2831c14284663184e200546fa6c \
     --hash=sha256:c96b93b7f0a746f9e77d325bcfb87422a3d8bd4f03136ae8a85b37f1898d5fc0
-    # via -r tests/dev-requirements.in
+    # via
+    #   -r agents/plugins/dev-requirements.in
+    #   -r tests/dev-requirements.in
 dockerpty==0.4.1 \
     --hash=sha256:69a9d69d573a0daa31bcd1c0774eeed5c15c295fe719c61aca550ed1393156ce
     # via -r tests/dev-requirements.in
@@ -3873,6 +3875,7 @@ pymongo==4.16.0 \
     --hash=sha256:f513b2c6c0d5c491f478422f6b5b5c27ac1af06a54c93ef8631806f7231bd92e \
     --hash=sha256:f6e42c1bc985d9beee884780ae6048790eb4cd565c46251932906bdb1630034a
     # via
+    #   -r agents/plugins/dev-requirements.in
     #   -r packages/cmk-ec/requirements.in
     #   -r tests/dev-requirements.in
 pymssql==2.3.11 \
@@ -5662,6 +5665,7 @@ urllib3==2.6.3 \
     --hash=sha256:1b62b6884944a57dbe321509ab94fd4d3b307075e0c2eae991ac71ee15ad38ed \
     --hash=sha256:bf272323e553dfb2e87d9bfd225ca7b0f467b919d7bbd355436d3fd37cb0acd4
     # via
+    #   -r agents/plugins/dev-requirements.in
     #   -r cmk/requirements.in
     #   -r non-free/packages/cmk-core-helpers/requirements.in
     #   -r packages/cmk-plugin-apis/requirements.in
