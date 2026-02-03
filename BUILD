@@ -17,11 +17,13 @@ exports_files(
         "pyproject.toml",
         "requirements.txt",
         ".clang-tidy",
+        ".clippy.toml",
         ".npmrc",
         ".prettierignore",
         "AUTHORS",
         "COPYING",
     ],
+    visibility = ["//:__subpackages__"],
 )
 
 npm_link_all_packages(name = "node_modules")

@@ -114,6 +114,10 @@ single_version_override(
         "//bazel/patches:rules_lint-fix-ruff-sarif-output.patch",
         # https://github.com/aspect-build/rules_lint/pull/734
         "//bazel/patches:rules_lint-clang_tidy_per_file.patch",
+        # https://github.com/aspect-build/rules_lint/pull/747
+        "//bazel/patches:rules_lint-clippy_crashes.patch",
+        # HACK: couldn't find a better solution
+        "//bazel/patches:rules_lint-clippy_fail_on_violation.patch",
     ],
     version = "2.0.0",
 )

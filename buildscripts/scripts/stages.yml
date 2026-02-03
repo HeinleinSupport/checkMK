@@ -129,20 +129,8 @@ VARIABLES:
 
     ########## packages ########################################################
 
-    - NAME: CHANGED_CHECK_CERT_FILES
-      SH: "echo '${CHANGED_FILES_REL}' | grep '^packages/check-cert/\\|^requirements/rust/site' || true"
-
-    - NAME: CHANGED_CHECK_HTTP_FILES
-      SH: "echo '${CHANGED_FILES_REL}' | grep '^packages/check-http/\\|^requirements/rust/site' || true"
-
-    - NAME: CHANGED_MK_SQL_FILES
-      SH: "echo '${CHANGED_FILES_REL}' | grep '^packages/mk-sql/\\|^requirements/rust/host' || true"
-
     - NAME: CHANGED_MK_ORACLE_FILES
       SH: "echo '${CHANGED_FILES_REL}' | grep '^packages/mk-oracle/\\|^requirements/rust/host' || true"
-
-    - NAME: CHANGED_CMK_AGENT_CTL_FILES
-      SH: "echo '${CHANGED_FILES_REL}' | grep '^packages/cmk-agent-ctl/\\|^requirements/rust/host' || true"
 
     - NAME: CHANGED_CMK_AGENT_RECEIVER_FILES
       SH: "echo '${CHANGED_FILES_REL}' | grep '^packages/cmk-agent-receiver/' || true"
@@ -417,30 +405,6 @@ STAGES:
 
     ########## packages ########################################################
 
-    - NAME: "Package check-cert"
-      ONLY_WHEN_NOT_EMPTY: CHANGED_REFERENCE_IMAGE,CHANGED_CHECK_CERT_FILES
-      DIR: "packages/check-cert"
-      COMMAND: "./run --lint=clippy &> ${RESULTS}/check-cert.txt"
-      BAZEL_LOCKS_AMOUNT: 1
-      TEXT_ON_SKIP: "No check-cert files changed"
-      RESULT_CHECK_FILE_PATTERN: "results/check-cert.txt"
-
-    - NAME: "Package check-http"
-      ONLY_WHEN_NOT_EMPTY: CHANGED_REFERENCE_IMAGE,CHANGED_CHECK_HTTP_FILES
-      DIR: "packages/check-http"
-      COMMAND: "./run --lint=clippy &> ${RESULTS}/check-http.txt"
-      BAZEL_LOCKS_AMOUNT: 1
-      TEXT_ON_SKIP: "No check-http files changed"
-      RESULT_CHECK_FILE_PATTERN: "results/check-http.txt"
-
-    - NAME: "Package cmk-agent-ctl"
-      ONLY_WHEN_NOT_EMPTY: CHANGED_REFERENCE_IMAGE,CHANGED_CMK_AGENT_CTL_FILES
-      DIR: "packages/cmk-agent-ctl"
-      COMMAND: "./run --lint=clippy &> ${RESULTS}/cmk-agent-ctl.txt"
-      BAZEL_LOCKS_AMOUNT: 1
-      TEXT_ON_SKIP: "No cmk-agent-ctl files changed"
-      RESULT_CHECK_FILE_PATTERN: "results/cmk-agent-ctl.txt"
-
     - NAME: "Package cmk-agent-receiver"
       ONLY_WHEN_NOT_EMPTY: CHANGED_REFERENCE_IMAGE,CHANGED_PYPROJECT_TOML_FILE,CHANGED_CMK_AGENT_RECEIVER_FILES,CHANGED_PYTHON_REQUIREMENTS,CHANGED_CMK_RELAY_PROTOCOLS_FILES
       DIR: "packages/cmk-agent-receiver"
@@ -482,21 +446,13 @@ STAGES:
       TEXT_ON_SKIP: "No cmk-frontend-vue files changed"
       RESULT_CHECK_FILE_PATTERN: "results/cmk-frontend-vue.txt"
 
-    - NAME: "Package mk-sql"
-      ONLY_WHEN_NOT_EMPTY: CHANGED_REFERENCE_IMAGE,CHANGED_MK_SQL_FILES
-      DIR: "packages/mk-sql"
-      COMMAND: "./run --lint=clippy &> ${RESULTS}/mk-sql.txt"
-      BAZEL_LOCKS_AMOUNT: 1
-      TEXT_ON_SKIP: "No mk-sql files changed"
-      RESULT_CHECK_FILE_PATTERN: "results/mk-sql.txt"
-
     - NAME: "Package mk-oracle"
       ONLY_WHEN_NOT_EMPTY: CHANGED_REFERENCE_IMAGE,CHANGED_MK_ORACLE_FILES
       SEC_VAR_LIST:
           - "CI_TEST_SQL_DB_ENDPOINT"
           - "CI_ORA2_DB_TEST_PASSWORD"
       DIR: "packages/mk-oracle"
-      COMMAND: "./run --unit-tests --component-tests --lint=clippy"
+      COMMAND: "./run --unit-tests --component-tests"
       BAZEL_LOCKS_AMOUNT: 1
       TEXT_ON_SKIP: "No mk-oracle files changed"
       RESULT_CHECK_FILE_PATTERN: "mk-oracle.txt"
