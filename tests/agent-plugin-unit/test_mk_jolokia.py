@@ -9,7 +9,7 @@
 
 from typing import Mapping
 
-import mk_jolokia  # type: ignore[import-not-found]
+import mk_jolokia
 import pytest
 
 

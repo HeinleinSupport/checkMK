@@ -67,6 +67,7 @@ py_library(
         "unitrends_replication.py",
     ],
     imports = ["."],
+    visibility = ["//tests:__subpackages__"],
     # These dependencies are likely not complete.
     # Agent plugins sometimes depend on third party modules that
     # are currently not even a dev dependency.

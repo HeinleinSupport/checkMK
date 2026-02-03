@@ -124,6 +124,7 @@ py_test(
         "@//:gpl_repo": [],
     }),
     main = ":__test__.py",
+    visibility = ["//tests:__subpackages__"],
     deps = [
         ":__test__",
         requirement("aiohttp"),

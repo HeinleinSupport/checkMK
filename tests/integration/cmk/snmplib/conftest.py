@@ -22,7 +22,7 @@ from typing import Any, NamedTuple
 
 import psutil
 import pytest
-from pysnmp.hlapi.asyncio import (  # type: ignore[import-untyped]
+from pysnmp.hlapi.asyncio import (
     CommunityData,
     ContextData,
     getCmd,
@@ -33,8 +33,8 @@ from pysnmp.hlapi.asyncio import (  # type: ignore[import-untyped]
     UdpTransportTarget,
     UsmUserData,
 )
-from pysnmp.hlapi.transport import AbstractTransportTarget  # type: ignore[import-untyped]
-from pysnmp.proto.errind import ErrorIndication  # type: ignore[import-untyped]
+from pysnmp.hlapi.transport import AbstractTransportTarget
+from pysnmp.proto.errind import ErrorIndication
 
 from cmk.ccc import debug
 from cmk.snmplib import SNMPBackendEnum
