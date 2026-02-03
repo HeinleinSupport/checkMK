@@ -214,7 +214,11 @@ class MainMenu(LocatorHelper):
 
         _loc = self.locator().get_by_role(role="link", name=menu)
         if sub_menu:
-            _loc.click()
+            if self._active_side_menu_popup_locator.count():
+                _loc.hover()
+            else:
+                _loc.click()
+
             if show_more:
                 self.locator().get_by_role(role="link", name="show more", exact=True)
             _loc = self.locator().get_by_role(role="link", name=sub_menu, exact=exact)
@@ -269,9 +273,14 @@ class MainMenu(LocatorHelper):
         _loc = self.help_menu(rest_api_text)
 
         if sub_menu:
+            _loc.click()
             return self._sub_menu(sub_menu, None, show_more=False, exact=exact)
         else:
             return _loc
+
+    @property
+    def _active_side_menu_popup_locator(self) -> Locator:
+        return self.page.locator("div.mm-item-popup--active")
 
     @property
     def active_side_menu_popup(self) -> Locator:
@@ -280,9 +289,11 @@ class MainMenu(LocatorHelper):
         As only one side menu can be interacted with at a time.
         """
 
-        loc = self.page.locator("div.mm-item-popup--active")
-        expect(loc, message="None of the side menu popups are open!").to_have_count(1)
-        return loc
+        expect(
+            self._active_side_menu_popup_locator,
+            message="None of the side menu popups are open!",
+        ).to_have_count(1)
+        return self._active_side_menu_popup_locator
 
     @property
     def global_searchbar(self) -> Locator:

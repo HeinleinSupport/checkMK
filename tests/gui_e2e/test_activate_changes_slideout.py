@@ -19,6 +19,7 @@ from tests.gui_e2e.testlib.host_details import AddressFamily, AgentAndApiIntegra
 from tests.gui_e2e.testlib.playwright.pom.changes.activate_changes import ActivateChangesSlideout
 from tests.gui_e2e.testlib.playwright.pom.monitor.dashboard import MainDashboard
 from tests.gui_e2e.testlib.playwright.pom.setup.hosts import AddHost, HostProperties
+from tests.testlib.common.utils import wait_until
 from tests.testlib.site import Site
 
 logger = logging.getLogger(__name__)
@@ -96,8 +97,10 @@ def test_activate_changes_slideout_bulk_changes(
         slideout.site_online_status(central_site_entry),
         f"Status of '{test_site.id}' site is not online!",
     ).to_be_visible()
-    assert slideout.site_changes_count(central_site_entry) == 100, (
-        f"The number of changes for {test_site.id} is not correct!"
+    wait_until(
+        lambda: slideout.site_changes_count(central_site_entry) == 100,
+        timeout=10,
+        condition_name="changes count to be 100",
     )
     slideout.activate_changes_strict(expected_changes=100)
 

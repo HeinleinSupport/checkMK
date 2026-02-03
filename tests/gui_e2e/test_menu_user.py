@@ -33,7 +33,6 @@ def test_user_color_theme(dashboard_page: MainDashboard, credentials: CmkCredent
     dashboard_page.main_menu.logout()
     login_page = LoginPage(dashboard_page.page, navigate_to_page=False)
     login_page.login(credentials)
-    _loc = dashboard_page.main_menu.user_color_theme_button
     saved_label = str(_loc.text_content())
     saved_value = str(dashboard_page.page.locator("body").get_attribute("data-theme"))
     assert saved_label == changed_label, "Saved color theme is not properly displayed!"
