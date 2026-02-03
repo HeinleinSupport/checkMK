@@ -911,7 +911,7 @@ table.form-readonly__table {
   > tr > th {
     vertical-align: top;
     padding-top: 0;
-    padding-bottom: 2px;
+    padding-bottom: var(--spacing-half);
     padding-right: 4px;
   }
 
