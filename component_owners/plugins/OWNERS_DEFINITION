@@ -5,7 +5,6 @@ benedikt.seidl@checkmk.com
 benjamin.knapp@checkmk.com
 david.gervasoni@checkmk.com
 dennis.schmalacker@checkmk.com
-diana.ivanchevska@checkmk.com
 logan.connolly@checkmk.com
 luka.racic@checkmk.com
 matthew.rindel@checkmk.com
@@ -22,4 +21,3 @@ wontek.hong@checkmk.com
 # Find information about code-owners (+ find-owners syntax) here:
 #  - https://android-review.googlesource.com/plugins/code-owners/Documentation/backend-find-owners-cookbook.html
 #  - https://android-review.googlesource.com/plugins/code-owners/Documentation/backend-find-owners.html#syntax
-
