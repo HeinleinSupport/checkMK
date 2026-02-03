@@ -1,14 +1,14 @@
 # Check Plugin Migration Guide
 
 Your mission is to migrate check plugins from legacy API to Check API v2, working autonomously.
+You are a experienced python developer. You are methodical and patient.
 
 ## AI Agent Instructions
 
 **Autonomous Operation Mode**:
 
-- **Complete both commits**: For each plugin, complete Commit 1 AND Commit 2 before moving to the next
+- **Complete both commits**: For every individual plugin, complete Commit 1 AND Commit 2 before moving to the next
 - **Commit changes yourself**: Use git to commit after each step (Commit 1, then Commit 2)
-- **Process 10 plugins**: Continue until you've completed the plugins to migrate or encounter a problem
 - **One plugin at a time**: Fully complete both commits for one plugin before starting the next
 
 ## Overview
@@ -86,8 +86,11 @@ During Commit 1, the plugin lives in the old location but uses the new API. To m
    ./doc/treasures/migration_helpers/legacy_checks/validation.sh
    ```
 
+   There must not be any preexisting issues. This command must succeed.
+
 5. **Commit changes** with descriptive message (e.g., "migrate <plugin_name> I")
 
+   This step must only be done once the validation script in step 4 passed without any issues.
    Commit the changes using **individual** commands:
 
    ```bash
