@@ -80,6 +80,7 @@ dist: $(SOURCE_BUILT_AGENTS) $(SOURCE_BUILT_AGENT_UPDATER)
 	bazel build //omd:license_info && tar xf "$$(bazel cquery --output=files //omd:license_info)" --strip 2 --touch -C check-mk-$(EDITION)-$(VERSION)/omd/
 	tar -cz -f check-mk-$(EDITION)-$(VERSION).tar.gz \
 	    $(TAROPTS) \
+	    --exclude=bazel-* \
 	    check-mk-$(EDITION)-$(VERSION)
 	rm -rf check-mk-$(EDITION)-$(VERSION)
 
