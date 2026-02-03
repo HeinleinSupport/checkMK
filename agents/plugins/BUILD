@@ -1,9 +1,11 @@
 load("@aspect_rules_py//py:defs.bzl", "py_binary")
 load("@cmk_requirements//:requirements.bzl", "requirement")
 
-exports_files([
-    "dev-requirements.in",
-])
+exports_files(
+    [
+        "dev-requirements.in",
+    ],
+)
 
 filegroup(
     name = "srcs",
@@ -80,6 +82,7 @@ py_library(
     deps = [
         requirement("docker"),
         requirement("pymongo"),
+        requirement("requests"),
         requirement("urllib3"),
     ],
 )
