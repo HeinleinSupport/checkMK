@@ -66,21 +66,11 @@ VARIABLES:
     - NAME: CHANGED_FIND_PYTHON_FILES_SCRIPT
       SH: "echo '${CHANGED_FILES_REL}' | grep '^scripts/find-python-files' || true"
 
-    - NAME: CHANGED_RUN_MYPY_SCRIPT
-      SH: "echo '${CHANGED_FILES_REL}' | grep '^scripts/run-mypy' || true"
-
     - NAME: CHANGED_RUN_UVENV_SCRIPT
       SH: "echo '${CHANGED_FILES_REL}' | grep '^scripts/run-uvenv' || true"
 
     - NAME: CHANGED_BAZEL_FILES
       SH: "echo '${CHANGED_FILES_REL}' | grep '\\.bzl$\\|BUILD\\|WORKSPACE' || true"
-
-    - NAME: CHANGED_CMK_BUILD_FILE
-      SH: "echo '${CHANGED_FILES_REL}' | grep '^cmk/BUILD' || true"
-
-    - NAME: CHANGED_AGENT_FILES
-      SH: "echo '${CHANGED_FILES_REL}' | grep '^agents/' || true"
-      REPLACE_NEWLINES: true
 
     - NAME: CHANGED_AGENT_PLUGINS
       SH: "echo '${CHANGED_FILES_REL}' | grep '^agents/plugins/' || true"
@@ -88,10 +78,6 @@ VARIABLES:
 
     - NAME: CHANGED_AGENT_PLUGINS_TESTS
       SH: "echo '${CHANGED_FILES_REL}' | grep '^tests/agent-plugin-unit/' || true"
-      REPLACE_NEWLINES: true
-
-    - NAME: CHANGED_CMC_PROTO_FILES
-      SH: "echo '${CHANGED_FILES_REL}' | grep '^non-free/packages/cmc-protocols' || true"
       REPLACE_NEWLINES: true
 
     - NAME: CHANGED_SW_DOC_FILES
@@ -108,10 +94,6 @@ VARIABLES:
 
     - NAME: CHANGED_WERK_CODE_FILES
       SH: "echo '${CHANGED_FILES_REL}' | grep '^packages/cmk-werks\\|^cmk/utils/werks' || true"
-      REPLACE_NEWLINES: true
-
-    - NAME: CHANGED_CHECKMAN_FILES
-      SH: "echo '${CHANGED_FILES_REL}' | grep 'checkman/' || true"
       REPLACE_NEWLINES: true
 
     - NAME: CHANGED_JS_DEPENDENCIES
@@ -159,62 +141,23 @@ VARIABLES:
     - NAME: CHANGED_MK_ORACLE_FILES
       SH: "echo '${CHANGED_FILES_REL}' | grep '^packages/mk-oracle/\\|^requirements/rust/host' || true"
 
-    - NAME: CHANGED_CMC_FILES
-      SH: "echo '${CHANGED_FILES_REL}' | grep '^non-free/packages/cmc/' || true"
-
     - NAME: CHANGED_CMK_AGENT_CTL_FILES
       SH: "echo '${CHANGED_FILES_REL}' | grep '^packages/cmk-agent-ctl/\\|^requirements/rust/host' || true"
 
     - NAME: CHANGED_CMK_AGENT_RECEIVER_FILES
       SH: "echo '${CHANGED_FILES_REL}' | grep '^packages/cmk-agent-receiver/' || true"
 
-    - NAME: CHANGED_CMK_ASTREIN_FILES
-      SH: "echo '${CHANGED_FILES_REL}' | grep '^packages/cmk-astrein/' || true"
-
     - NAME: CHANGED_CMK_CCC_FILES
       SH: "echo '${CHANGED_FILES_REL}' | grep '^packages/cmk-ccc/' || true"
 
-    - NAME: CHANGED_CMK_CHECK_ENGINE_FILES
-      SH: "echo '${CHANGED_FILES_REL}' | grep '^packages/cmk-check-engine/' || true"
-
-    - NAME: CHANGED_CMK_CORE_HELPERS_FILES
-      SH: "echo '${CHANGED_FILES_REL}' | grep '^non-free/packages/cmk-core-helpers/' || true"
-
-    - NAME: CHANGED_CMK_CRYPTO_FILES
-      SH: "echo '${CHANGED_FILES_REL}' | grep '^packages/cmk-crypto/' || true"
-
     - NAME: CHANGED_CMK_EC_FILES
       SH: "echo '${CHANGED_FILES_REL}' | grep '^packages/cmk-ec/' || true"
-
-    - NAME: CHANGED_CMK_MESSAGING_FILES
-      SH: "echo '${CHANGED_FILES_REL}' | grep '^packages/cmk-messaging/' || true"
-
-    - NAME: CHANGED_CMK_METRIC_BACKEND_FILES
-      SH: "echo '${CHANGED_FILES_REL}' | grep '^non-free/packages/cmk-metric-backend/' || true"
-
-    - NAME: CHANGED_CMK_MKNOTIFYD_FILES
-      SH: "echo '${CHANGED_FILES_REL}' | grep '^non-free/packages/cmk-mknotifyd/' || true"
-
-    - NAME: CHANGED_CMK_MKP_TOOL_FILES
-      SH: "echo '${CHANGED_FILES_REL}' | grep '^packages/cmk-mkp-tool/' || true"
-
-    - NAME: CHANGED_CMK_EVENTS_FILES
-      SH: "echo '${CHANGED_FILES_REL}' | grep '^packages/cmk-events/' || true"
-
-    - NAME: CHANGED_CMK_LIVESTATUS_CLIENT_FILES
-      SH: "echo '${CHANGED_FILES_REL}' | grep '^packages/cmk-livestatus-client/' || true"
-
-    - NAME: CHANGED_CMK_OTEL_FILES
-      SH: "echo '${CHANGED_FILES_REL}' | grep '^non-free/packages/cmk-otel-collector/' || true"
 
     - NAME: CHANGED_OTEL_FILES
       SH: "echo '${CHANGED_FILES_REL}' | grep '^non-free/packages/otel-collector/' || true"
 
     - NAME: CHANGED_GO_MOD
       SH: "echo '${CHANGED_FILES_REL}' | grep '^go.mod' || true"
-
-    - NAME: CHANGED_CMK_PLUGINS_FILES
-      SH: "echo '${CHANGED_FILES_REL}' | grep '^packages/cmk-plugins/' || true"
 
     - NAME: CHANGED_CMK_RELAY_PROTOCOLS_FILES
       SH: "echo '${CHANGED_FILES_REL}' | grep '^packages/cmk-relay-protocols/' || true"
@@ -228,23 +171,11 @@ VARIABLES:
     - NAME: CHANGED_CMK_UPDATE_AGENT_FILES
       SH: "echo '${CHANGED_FILES_REL}' | grep '^non-free/packages/cmk-update-agent/' || true"
 
-    - NAME: CHANGED_LIVESTATUS_FILES
-      SH: "echo '${CHANGED_FILES_REL}' | grep '^packages/livestatus/' || true"
-
-    - NAME: CHANGED_NEB_FILES
-      SH: "echo '${CHANGED_FILES_REL}' | grep '^packages/neb/' || true"
-
-    - NAME: CHANGED_UNIXCAT_FILES
-      SH: "echo '${CHANGED_FILES_REL}' | grep '^packages/unixcat/' || true"
-
     - NAME: CHANGED_FRONTEND_VUE_FILES
       SH: "echo '${CHANGED_FILES_REL}' | grep '^packages/cmk-frontend-vue/' || true"
 
     - NAME: CHANGED_SHARED_TYPING_FILES
       SH: "echo '${CHANGED_FILES_REL}' | grep '^packages/cmk-shared-typing/' || true"
-
-    - NAME: CHANGED_CMK_FRONTEND_FILES
-      SH: "echo '${CHANGED_FILES_REL}' | grep '^packages/cmk-frontend/' || true"
 
     - NAME: CHANGED_RELAY_ENGINE_FILES
       SH: "echo '${CHANGED_FILES_REL}' | grep '^non-free/packages/cmk-relay-engine/' || true"
