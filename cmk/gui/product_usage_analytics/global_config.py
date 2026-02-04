@@ -82,10 +82,11 @@ ConfigVariableProductUsageAnalytics = ConfigVariable(
     ident="product_usage_analytics",
     hint=lambda: HTML.without_escaping(
         _(
-            "Preview product usage data: Run <tt>cmk-product-usage --dry-run</tt> on the command line as site user, or download your data by %s."
+            "Inspect product usage data: Run <tt>cmk-product-usage --dry-run</tt> as site user, or %s. "
+            "This allows you to review the data locally; it does not enable the feature or transmit any information."
         )
         % HTMLWriter.render_a(
-            content=_("clicking here"),
+            content=_("download the full JSON report"),
             href="download_product_usage.py",
         )
     ),
@@ -103,7 +104,7 @@ ConfigVariableProductUsageAnalytics = ConfigVariable(
                     ),
                     choices=[
                         ("enabled", _("Allow collection and transmission of product usage data")),
-                        ("disabled", _("Do not collect and transmit product usage data")),
+                        ("disabled", _("Do not collect product usage data")),
                         ("not_decided", _("Disabled. Reminder scheduled")),
                     ],
                     html_attrs={"width": "fit-content"},
