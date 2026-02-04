@@ -7,6 +7,7 @@ import type {
   ChipModeEnum,
   HeaderTriggerModeEnum,
   NavItem,
+  NavItemBadge,
   NavItemIdEnum,
   NavItemShortcut,
   NavItemTopic,
@@ -22,6 +23,7 @@ import { ServiceBase } from '@/lib/service/base'
 import { MainMenuApiClient } from './main-menu-api-client'
 import type {
   MenuItemBadge,
+  NumberOfPendingChangesResponse,
   OnCloseCallback,
   OnNavigateCallback,
   OnShowAllTopic,
@@ -275,8 +277,50 @@ export class MainMenuService extends ServiceBase {
     this.initPeriodicAjax()
   }
 
+  private async updateBadgeValue(id: NavItemIdEnum, badge: NavItemBadge) {
+    try {
+      switch (badge.mode) {
+        case 'num-pending-changes': {
+          const res = (await this.api.get(badge.url)) as NumberOfPendingChangesResponse
+          if (!res.number_of_pending_changes) {
+            this.resetNavItemBadge(id)
+          } else {
+            this.setNavItemBadge(id, {
+              content:
+                res.number_of_pending_changes > 10
+                  ? '9+'
+                  : res.number_of_pending_changes.toString(),
+              color: badge.color || 'default'
+            })
+          }
+          break
+        }
+      }
+    } catch {
+      this.setNavItemBadge(id, {
+        content: '!',
+        color: 'danger'
+      })
+    }
+
+    if (badge.interval_in_seconds) {
+      setTimeout(() => {
+        void this.updateBadgeValue(id, badge)
+      }, badge.interval_in_seconds * 1000)
+    }
+  }
+
+  private initBadgeUpdate() {
+    for (const item of this.mainItems.concat(this.userItems)) {
+      if (item.badge) {
+        void this.updateBadgeValue(item.id, item.badge)
+      }
+    }
+  }
+
   private initPeriodicAjax() {
     void this.updateUserMessages()
     void this.updateUnacknowledgedIncompatibleWerks()
+    void this.initBadgeUpdate()
   }
 }

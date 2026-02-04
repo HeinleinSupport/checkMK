@@ -34,7 +34,10 @@
         "sort_index": { "type": "number" },
         "shortcut": { "$ref": "#/$defs/nav_item_shortcut" },
         "is_user_nav": { "type": "boolean", "default": false },
-        "hint": { "type": "string" }
+        "hint": { "type": "string" },
+        "badge": {
+          "$ref": "#/$defs/nav_item_badge"
+        }
       },
       "required": ["id", "title", "sort_index", "shortcut", "type"]
     },
@@ -61,8 +64,7 @@
         "type": { "type": "string", "const": "link" },
         "url": { "type": "string" },
         "target": { "type": "string" }
-      },
-      "required": ["url"]
+      }
     },
     "nav_item_topic": {
       "type": "object",
@@ -133,6 +135,16 @@
       },
       "required": ["mode", "url"]
     },
+    "nav_item_badge": {
+      "type": "object",
+      "properties": {
+        "mode": { "$ref": "#/$defs/nav_item_badge_enum" },
+        "color": { "$ref": "#/$defs/color_enum" },
+        "url": { "type": "string" },
+        "interval_in_seconds": { "type": "number" }
+      },
+      "required": ["mode", "url"]
+    },
     "nav_item_shortcut": {
       "type": "object",
       "properties": {
@@ -180,6 +192,9 @@
     "chip_mode_enum": {
       "enum": ["user-messages-hint"]
     },
+    "nav_item_badge_enum": {
+      "enum": ["num-pending-changes"]
+    },
     "header_trigger_mode_enum": {
       "enum": ["unack-incomp-werks"]
     },
@@ -187,7 +202,7 @@
       "enum": ["item", "multilevel", "indented"]
     },
     "nav_item_type": {
-      "enum": ["item", "link"]
+      "enum": ["item", "link", "configurable"]
     }
   }
 }

@@ -37,6 +37,10 @@ export interface UserMessagesResult {
   hint_messages: UserHintMessages
 }
 
+export interface NumberOfPendingChangesResponse {
+  number_of_pending_changes: number
+}
+
 /**
  * Misc
  */

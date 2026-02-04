@@ -21,7 +21,7 @@ from cmk.gui.i18n import _, ungettext
 from cmk.gui.icon_helpers import migrate_to_dynamic_icon
 from cmk.gui.logged_in import user
 from cmk.gui.main_menu import any_show_more_items, main_menu_registry
-from cmk.gui.main_menu_types import MainMenuItem, MainMenuLinkItem
+from cmk.gui.main_menu_types import ConfigurableMainMenuItem, MainMenuItem, MainMenuLinkItem
 from cmk.gui.pages import AjaxPage, PageContext, PageResult
 from cmk.gui.search_menu import get_unified_search_props
 from cmk.gui.utils.roles import UserPermissions
@@ -87,6 +87,10 @@ class MainMenuConfigCreator:
         for menu in sorted(main_menu_registry.values(), key=lambda g: g.sort_index):
             if menu.is_user_nav != is_user_nav:
                 continue
+
+            if isinstance(menu, ConfigurableMainMenuItem):
+                menu = menu.get_item_instance(menu, user)
+
             if isinstance(menu, MainMenuItem):
                 if not menu.topics and menu.get_topics:
                     menu = dataclasses.replace(
@@ -141,16 +145,18 @@ class MainMenuConfigCreator:
                 show_more=NavItemShowMore(active=show_more) if has_show_more else None,
                 popup_small=menu.popup_small,
                 hint=menu.hint,
+                badge=menu.badge,
             )
 
         return NavLinkItem(
             id=NavItemIdEnum(menu.id),
             title=str(menu.title),
             sort_index=menu.sort_index,
-            url=menu.url,
+            url=menu.url or menu.get_url(self.request) if callable(menu.get_url) else None,
             target=menu.target,
             shortcut=menu.shortcut,
             hint=menu.hint,
+            badge=menu.badge,
         )
 
     def _get_topics_of_menu(self, menu: MainMenuItem) -> list[NavItemTopic]:

@@ -9,8 +9,15 @@ from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 
 from cmk.gui.http import Request
+from cmk.gui.logged_in import LoggedInUser
 from cmk.gui.utils.roles import UserPermissions
-from cmk.shared_typing.main_menu import NavItem, NavItemTopic, NavItemVueApp, NavLinkItem
+from cmk.shared_typing.main_menu import (
+    NavBaseItem,
+    NavItem,
+    NavItemTopic,
+    NavItemVueApp,
+    NavLinkItem,
+)
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -24,3 +31,12 @@ class MainMenuItem(NavItem):
 @dataclass(frozen=True, kw_only=True)
 class MainMenuLinkItem(NavLinkItem):
     hide: Callable[[], bool] | None = None
+    get_url: Callable[[Request], str] | None = None
+
+
+@dataclass(frozen=True, kw_only=True)
+class ConfigurableMainMenuItem(NavBaseItem):
+    hide: Callable[[], bool] | None = None
+    get_item_instance: Callable[
+        [ConfigurableMainMenuItem, LoggedInUser], MainMenuLinkItem | MainMenuItem
+    ]
