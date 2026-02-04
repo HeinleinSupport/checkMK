@@ -3,6 +3,11 @@ load("@cmk_requirements//:requirements.bzl", "requirement")
 
 exports_files(["requirements.in"])
 
+sh_binary(
+    name = "in_bazel",
+    srcs = ["in_bazel.sh"],
+)
+
 py_binary(
     name = "sarif_preparse",
     srcs = ["sarif_preparse.py"],

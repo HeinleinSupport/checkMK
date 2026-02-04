@@ -189,6 +189,12 @@ STAGES:
       TEXT_ON_SKIP: "No Python files changed"
       RESULT_CHECK_FILE_PATTERN: "results/py-import-cycles.txt"
 
+    - NAME: "Bazel sanity check"
+      COMMAND: >-
+          ./scripts/in_bazel.sh "py" "py_binary|py_library|py_test" 78 > ${RESULTS}/results.txt
+      RESULT_CHECK_FILE_PATTERN: "results/results.txt"
+      BAZEL_LOCKS_AMOUNT: 1
+
     - NAME: "All unit tests"
       SEC_VAR_LIST:
         - "CI_TEST_SQL_DB_ENDPOINT"
