@@ -5,87 +5,115 @@
  */
 import DemoEmpty from '@demo/_demo/DemoEmpty.vue'
 import { Folder, Page } from '@demo/_demo/page'
-import DemoCmkWizard from '@demo/components/CmkWizard/DemoCmkWizard.vue'
 
-import { pages as CmkAccordionPages } from './CmkAccordion'
-import { pages as CmkAccordionStepPanelPages } from './CmkAccordionStepPanel'
-import { pages as CmkIconPages } from './CmkIcon'
-import { pages as CmkTabPages } from './CmkTabs'
-import DemoCmkAlertBox from './DemoCmkAlertBox.vue'
-import DemoCmkBadge from './DemoCmkBadge.vue'
-import DemoCmkButton from './DemoCmkButton.vue'
-import DemoCmkCatalogPanel from './DemoCmkCatalogPanel.vue'
-import DemoCmkChip from './DemoCmkChip.vue'
-import DemoCmkCode from './DemoCmkCode.vue'
-import DemoCmkCollapsible from './DemoCmkCollapsible.vue'
-import DemoCmkColorPicker from './DemoCmkColorPicker.vue'
-import DemoCmkDialog from './DemoCmkDialog.vue'
-import DemoCmkDropdown from './DemoCmkDropdown.vue'
-import DemoCmkDualList from './DemoCmkDualList.vue'
-import DemoCmkHtml from './DemoCmkHtml.vue'
-import DemoCmkIndent from './DemoCmkIndent.vue'
-import DemoCmkKeyboardKey from './DemoCmkKeyboardKey.vue'
-import DemoCmkLinkCard from './DemoCmkLinkCard.vue'
-import DemoCmkList from './DemoCmkList.vue'
-import DemoCmkLoading from './DemoCmkLoading.vue'
-import DemoCmkPerfometer from './DemoCmkPerfometer.vue'
-import DemoCmkPopupDialog from './DemoCmkPopupDialog.vue'
-import DemoCmkProgressbar from './DemoCmkProgressbar.vue'
-import DemoCmkScrollContainer from './DemoCmkScrollContainer.vue'
-import DemoCmkSkeleton from './DemoCmkSkeleton.vue'
-import DemoCmkSlideIn from './DemoCmkSlideIn.vue'
-import DemoCmkSlideInDialog from './DemoCmkSlideInDialog.vue'
-import DemoCmkSpace from './DemoCmkSpace.vue'
-import DemoCmkSwitch from './DemoCmkSwitch.vue'
-import DemoCmkTag from './DemoCmkTag.vue'
-import DemoCmkToggleButtonGroup from './DemoCmkToggleButtonGroup.vue'
-import DemoCmkTooltip from './DemoCmkTooltip.vue'
-import DemoCmkZebra from './DemoCmkZebra.vue'
-import DemoErrorBoundary from './DemoErrorBoundary.vue'
-import DemoHelp from './DemoHelp.vue'
-import DemoTwoFactorAuth from './DemoTwoFactorAuthentication.vue'
-import { pages as typographyPages } from './typography'
-import { pages as userInputPages } from './user-input'
+import DemoCmkBadge from './basic-elements/DemoCmkBadge.vue'
+import DemoCmkButton from './basic-elements/DemoCmkButton.vue'
+import DemoCmkChip from './basic-elements/DemoCmkChip.vue'
+import DemoCmkCode from './basic-elements/DemoCmkCode.vue'
+import DemoCmkColorPicker from './basic-elements/DemoCmkColorPicker.vue'
+import DemoCmkSwitch from './basic-elements/DemoCmkSwitch.vue'
+import { pages as CmkAccordionPages } from './content-organization/CmkAccordion'
+import DemoCmkSlideInDialog from './content-organization/CmkAccordion/DemoCmkSlideInDialog.vue'
+import { pages as CmkAccordionStepPanelPages } from './content-organization/CmkAccordionStepPanel'
+import { pages as CmkTabPages } from './content-organization/CmkTabs'
+import DemoCmkWizard from './content-organization/CmkWizard/DemoCmkWizard.vue'
+import DemoCmkCatalogPanel from './content-organization/DemoCmkCatalogPanel.vue'
+import DemoCmkCollapsible from './content-organization/DemoCmkCollapsible.vue'
+import DemoCmkScrollContainer from './content-organization/DemoCmkScrollContainer.vue'
+import DemoCmkSlideIn from './content-organization/DemoCmkSlideIn.vue'
+import DemoTwoFactorAuth from './content-organization/DemoTwoFactorAuthentication.vue'
+import { pages as formElementPages } from './form-elements'
+import DemoCmkCheckbox from './form-elements/DemoCmkCheckbox.vue'
+import DemoCmkDropdown from './form-elements/DemoCmkDropdown.vue'
+import DemoCmkDualList from './form-elements/DemoCmkDualList.vue'
+import DemoCmkInput from './form-elements/DemoCmkInput.vue'
+import DemoCmkList from './form-elements/DemoCmkList.vue'
+import DemoCmkToggleButtonGroup from './form-elements/DemoCmkToggleButtonGroup.vue'
+import { pages as CmkIconPages } from './foundation-elements/CmkIcon'
+import DemoCmkHtml from './foundation-elements/DemoCmkHtml.vue'
+import DemoCmkIndent from './foundation-elements/DemoCmkIndent.vue'
+import DemoCmkKeyboardKey from './foundation-elements/DemoCmkKeyboardKey.vue'
+import DemoCmkLabelRequired from './foundation-elements/DemoCmkLabelRequired.vue'
+import DemoCmkSpace from './foundation-elements/DemoCmkSpace.vue'
+import DemoCmkZebra from './foundation-elements/DemoCmkZebra.vue'
+import { pages as typographyPages } from './foundation-elements/typography'
+import DemoCmkLinkCard from './navigation/DemoCmkLinkCard.vue'
+import DemoCmkAlertBox from './system-feedback/DemoCmkAlertBox.vue'
+import DemoCmkDialog from './system-feedback/DemoCmkDialog.vue'
+import DemoCmkInlineValidation from './system-feedback/DemoCmkInlineValidation.vue'
+import DemoCmkLoading from './system-feedback/DemoCmkLoading.vue'
+import DemoCmkPerfometer from './system-feedback/DemoCmkPerfometer.vue'
+import DemoCmkPopupDialog from './system-feedback/DemoCmkPopupDialog.vue'
+import DemoCmkProgressbar from './system-feedback/DemoCmkProgressbar.vue'
+import DemoCmkSkeleton from './system-feedback/DemoCmkSkeleton.vue'
+import DemoCmkTooltip from './system-feedback/DemoCmkTooltip.vue'
+import DemoErrorBoundary from './system-feedback/DemoErrorBoundary.vue'
+import DemoHelp from './system-feedback/DemoHelp.vue'
 
-export const pages = [
-  new Folder('CmkAccordion', DemoEmpty, CmkAccordionPages),
-  new Folder('CmkAccordionStepPanel', DemoEmpty, CmkAccordionStepPanelPages),
-  new Folder('CmkIcons', DemoEmpty, CmkIconPages),
-  new Folder('CmkTabs', DemoEmpty, CmkTabPages),
-  new Folder('typography', DemoEmpty, typographyPages),
-  new Folder('user-input', DemoEmpty, userInputPages),
-  new Page('CmkAlertBox', DemoCmkAlertBox),
+const basicElementsPages = [
   new Page('CmkBadge', DemoCmkBadge),
-  new Page('CmkTag', DemoCmkTag),
   new Page('CmkButton', DemoCmkButton),
-  new Page('CmkCatalogPanel', DemoCmkCatalogPanel),
   new Page('CmkChip', DemoCmkChip),
   new Page('CmkCode', DemoCmkCode),
-  new Page('CmkCollapsible', DemoCmkCollapsible),
   new Page('CmkColorPicker', DemoCmkColorPicker),
-  new Page('CmkDialog', DemoCmkDialog),
+  new Page('CmkSwitch', DemoCmkSwitch)
+]
+
+const contentOrganizationPages = [
+  new Folder('CmkAccordion', DemoEmpty, CmkAccordionPages),
+  new Folder('CmkAccordionStepPanel', DemoEmpty, CmkAccordionStepPanelPages),
+  new Folder('CmkTabs', DemoEmpty, CmkTabPages),
+  new Page('CmkCatalogPanel', DemoCmkCatalogPanel),
+  new Page('CmkCollapsible', DemoCmkCollapsible),
+  new Page('CmkScrollContainer', DemoCmkScrollContainer),
+  new Page('CmkSlideIn', DemoCmkSlideIn),
+  new Page('CmkSlideInDialog', DemoCmkSlideInDialog),
+  new Page('CmkWizard', DemoCmkWizard),
+  new Page('TwoFactorAuth', DemoTwoFactorAuth)
+]
+
+const formElementsPages = [
+  new Folder('FormSpec', DemoEmpty, formElementPages),
+  new Page('CmkCheckbox', DemoCmkCheckbox),
   new Page('CmkDropdown', DemoCmkDropdown),
   new Page('CmkDualList', DemoCmkDualList),
+  new Page('CmkInput', DemoCmkInput),
+  new Page('CmkList', DemoCmkList),
+  new Page('CmkToggleButtonGroup', DemoCmkToggleButtonGroup)
+]
+
+const foundationElementsPages = [
+  new Folder('CmkIcons', DemoEmpty, CmkIconPages),
+  new Folder('typography', DemoEmpty, typographyPages),
+  new Page('CmkHtml', DemoCmkHtml),
+  new Page('CmkIndent', DemoCmkIndent),
+  new Page('CmkKeyboardKey', DemoCmkKeyboardKey),
+  new Page('CmkLabelRequired', DemoCmkLabelRequired),
+  new Page('CmkSpace', DemoCmkSpace),
+  new Page('CmkZebra', DemoCmkZebra)
+]
+
+const navigationPages = [new Page('CmkLinkCard', DemoCmkLinkCard)]
+
+const systemFeedbackPages = [
+  new Page('CmkAlertBox', DemoCmkAlertBox),
+  new Page('CmkDialog', DemoCmkDialog),
   new Page('CmkErrorBoundary', DemoErrorBoundary),
   new Page('CmkHelpText', DemoHelp),
-  new Page('CmkHtml', DemoCmkHtml),
-  new Page('CmkKeyboardKey', DemoCmkKeyboardKey),
-  new Page('CmkLinkCard', DemoCmkLinkCard),
-  new Page('CmkList', DemoCmkList),
+  new Page('CmkInlineValidation', DemoCmkInlineValidation),
+  new Page('CmkLoading', DemoCmkLoading),
   new Page('CmkPerfometer', DemoCmkPerfometer),
   new Page('CmkPopupDialog', DemoCmkPopupDialog),
   new Page('CmkProgressbar', DemoCmkProgressbar),
   new Page('CmkSkeleton', DemoCmkSkeleton),
-  new Page('CmkSlideInDialog', DemoCmkSlideInDialog),
-  new Page('CmkSpace', DemoCmkSpace),
-  new Page('CmkSwitch', DemoCmkSwitch),
-  new Page('CmkWizard', DemoCmkWizard),
-  new Page('CmkToggleButtonGroup', DemoCmkToggleButtonGroup),
-  new Page('CmkLoading', DemoCmkLoading),
-  new Page('CmkIndent', DemoCmkIndent),
-  new Page('CmkZebra', DemoCmkZebra),
-  new Page('CmkScrollContainer', DemoCmkScrollContainer),
-  new Page('CmkSlideIn', DemoCmkSlideIn),
-  new Page('CmkTooltip', DemoCmkTooltip),
-  new Page('TwoFactorAuth', DemoTwoFactorAuth)
+  new Page('CmkTooltip', DemoCmkTooltip)
+]
+
+export const pages = [
+  new Folder('basic-elements', DemoEmpty, basicElementsPages),
+  new Folder('content-organization', DemoEmpty, contentOrganizationPages),
+  new Folder('form-elements', DemoEmpty, formElementsPages),
+  new Folder('foundation-elements', DemoEmpty, foundationElementsPages),
+  new Folder('navigation', DemoEmpty, navigationPages),
+  new Folder('system-feedback', DemoEmpty, systemFeedbackPages)
 ]

@@ -5,18 +5,13 @@
  */
 //
 import { pages as componentsPages } from '@demo/components/'
-import { pages as formPages } from '@demo/form/'
 import { type RouteLocation, createRouter, createWebHistory } from 'vue-router'
 
-import DemoEmpty from './DemoEmpty.vue'
 import DemoHome from './DemoHome.vue'
 import { Folder, Page, RootFolder } from './page'
 import type { RRSVMetaFolder, Route } from './types'
 
-const root: RootFolder = new RootFolder(DemoHome, [
-  new Folder('components', DemoEmpty, componentsPages),
-  new Folder('form', DemoEmpty, formPages)
-])
+const root: RootFolder = new RootFolder(DemoHome, componentsPages)
 
 function defaultProps(route: RouteLocation): { screenshotMode: boolean } {
   return { screenshotMode: route.query.screenshot === 'true' }

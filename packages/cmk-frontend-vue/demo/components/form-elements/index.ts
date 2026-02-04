@@ -6,6 +6,7 @@
 import { Page } from '@demo/_demo/page'
 import type { Folder } from '@demo/_demo/page'
 
+import DemoFormAll from './DemoFormAll.vue'
 import DemoFormBinaryConditions from './DemoFormBinaryConditions.vue'
 import DemoFormBooleanChoice from './DemoFormBooleanChoice.vue'
 import DemoFormCascadingSingleChoice from './DemoFormCascadingSingleChoice.vue'
@@ -32,12 +33,14 @@ import DemoFormRegex from './DemoFormRegex.vue'
 import DemoFormSimplePassword from './DemoFormSimplePassword.vue'
 import DemoFormSingleChoice from './DemoFormSingleChoice.vue'
 import DemoFormSingleChoiceEditable from './DemoFormSingleChoiceEditable.vue'
+import DemoFormString from './DemoFormString.vue'
 import DemoFormTimePicker from './DemoFormTimePicker.vue'
 import DemoFormTimeSpan from './DemoFormTimeSpan.vue'
 import DemoFormTimeSpecific from './DemoFormTimeSpecific.vue'
 import DemoFormTuple from './DemoFormTuple.vue'
 
 export const pages: Array<Folder | Page> = [
+  new Page('FormAll', DemoFormAll),
   new Page('FormBinaryConditions', () => DemoFormBinaryConditions),
   new Page('FormSingleChoiceEditable', DemoFormSingleChoiceEditable),
   new Page('FormCascadingSingleChoice', DemoFormCascadingSingleChoice),
@@ -67,5 +70,6 @@ export const pages: Array<Folder | Page> = [
   new Page('FormFixedValue', DemoFormFixedValue),
   new Page('FormTimeSpecific', DemoFormTimeSpecific),
   new Page('FormMultilineText', DemoFormMultilineText),
+  new Page('FormString', DemoFormString),
   new Page('FormCatalog', DemoFormCatalog)
 ]
