@@ -40,12 +40,6 @@ COPY \
     Check_MK-pubkey.gpg \
     /opt/
 
-# timing: real 1m57.766s user 4m42.879s sys 0m14.978s
-COPY \
-    install-clang.sh \
-    /opt/
-RUN /opt/install-clang.sh
-
 # timing: real 0m27.583s user 0m15.425s sys 0m2.999s
 COPY \
     install-docker.sh \

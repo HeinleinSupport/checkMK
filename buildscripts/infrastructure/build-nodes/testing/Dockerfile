@@ -29,7 +29,6 @@ COPY \
     package_versions.bzl \
     build_lib.sh \
     Check_MK-pubkey.gpg \
-    install-clang.sh \
     install-packer.sh \
     install-make-dist-deps.sh \
     install-lz4-parallel.sh \
@@ -76,9 +75,6 @@ RUN apt-get update && \
 
 # +5MB
 RUN /opt/install-make-dist-deps.sh
-
-# +1242MB
-RUN /opt/install-clang.sh
 
 # +48MB
 RUN /opt/install-packer.sh
