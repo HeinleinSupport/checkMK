@@ -1,3 +1,5 @@
+"""Rule to extract OS package dependencies from distro configuration files."""
+
 def _write_os_dependencies_impl(ctx):
     out = ctx.actions.declare_file(ctx.attr.out_name if ctx.attr.out_name else ctx.label.name + ".txt")
 
@@ -19,9 +21,9 @@ def _write_os_dependencies_impl(ctx):
 write_os_dependencies = rule(
     implementation = _write_os_dependencies_impl,
     attrs = {
-        "src": attr.label(mandatory = True, allow_single_file = True),
-        "separator": attr.string(mandatory = True),
         "out_name": attr.string(),
+        "separator": attr.string(mandatory = True),
+        "src": attr.label(mandatory = True, allow_single_file = True),
         "_tool": attr.label(
             default = Label("//bazel/tools:extract_os_packages"),
             executable = True,

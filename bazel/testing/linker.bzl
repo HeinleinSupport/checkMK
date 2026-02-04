@@ -1,3 +1,5 @@
+"""Test rules to verify dynamic library linking in binaries."""
+
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
 
 def test_has_dynamic_library(name, src, pattern):

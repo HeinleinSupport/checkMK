@@ -1,3 +1,5 @@
+"""Rule to extract a subdirectory with optional file exclusions."""
+
 def _filtered_subdir_impl(ctx):
     output_dir = ctx.actions.declare_directory(ctx.attr.subdir)
     ctx.actions.run_shell(
@@ -15,8 +17,8 @@ def _filtered_subdir_impl(ctx):
 filtered_subdir = rule(
     implementation = _filtered_subdir_impl,
     attrs = {
+        "excludes": attr.string_list(),
         "src": attr.label(allow_single_file = True, providers = ["files"], mandatory = True),
         "subdir": attr.string(mandatory = True),
-        "excludes": attr.string_list(),
     },
 )

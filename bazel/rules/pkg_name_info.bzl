@@ -1,3 +1,5 @@
+"""Rule to inject build variables into package names."""
+
 load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
 load("@rules_pkg//pkg:providers.bzl", "PackageVariablesInfo")
 
@@ -15,9 +17,9 @@ pkg_name_info = rule(
     implementation = _pkg_name_info_impl,
     doc = "A rule to inject variables from the build file into package names.",
     attrs = {
+        "architecture": attr.string(mandatory = True),
         "cmk_version": attr.label(mandatory = True),
         "package": attr.string(mandatory = True),
         "version": attr.string(mandatory = True),
-        "architecture": attr.string(mandatory = True),
     },
 )

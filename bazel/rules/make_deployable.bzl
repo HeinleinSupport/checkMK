@@ -1,3 +1,5 @@
+"""Rules to prepare binaries for deployment by setting RPATH and replacing strings."""
+
 # Rules to fix binaries for deployment.
 # For example setting the RPATH
 load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
@@ -27,9 +29,9 @@ def _make_deployable_dir_impl(ctx):
 make_deployable_dir = rule(
     implementation = _make_deployable_dir_impl,
     attrs = {
-        "src": attr.label(allow_single_file = True, providers = ["files"], mandatory = True),  # gendir input
         "input_dir": attr.string(mandatory = True),
         "rpath": attr.string(mandatory = True),
+        "src": attr.label(allow_single_file = True, providers = ["files"], mandatory = True),  # gendir input
     },
 )
 
@@ -60,9 +62,9 @@ def _make_deployable_file_impl(ctx):
 make_deployable_file = rule(
     implementation = _make_deployable_file_impl,
     attrs = {
-        "src": attr.label(allow_single_file = True, providers = ["files"], mandatory = True),  # gendir input
         "out": attr.string(mandatory = True),
         "rpath": attr.string(mandatory = True),
+        "src": attr.label(allow_single_file = True, providers = ["files"], mandatory = True),  # gendir input
     },
 )
 
@@ -92,11 +94,11 @@ def _string_replace_impl(ctx):
 string_replace = rule(
     implementation = _string_replace_impl,
     attrs = {
-        "src": attr.label(allow_single_file = True, providers = ["files"], mandatory = True),
         "filepattern": attr.string_list(),
-        "replace_pattern": attr.string(),
-        "value": attr.string(),
         "replace_labels": attr.string_keyed_label_dict(mandatory = True),
+        "replace_pattern": attr.string(),
+        "src": attr.label(allow_single_file = True, providers = ["files"], mandatory = True),
         "strip_prefix": attr.string(default = "", mandatory = False),
+        "value": attr.string(),
     },
 )

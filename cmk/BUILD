@@ -130,7 +130,6 @@ filegroup(
 filegroup(
     name = "checkman_edition_specific",
     srcs = select({
-        "@cmk//edition:community": [],
         "@cmk//edition:cloud": glob(
             [
                 "**/checkman/nonfree/cloud/**",
@@ -140,6 +139,7 @@ filegroup(
             allow_empty = True,
             exclude = ["**/OWNERS"],
         ),
+        "@cmk//edition:community": [],
         "@cmk//edition:pro": glob(
             [
                 "**/checkman/nonfree/pro/**",
@@ -407,14 +407,23 @@ py_wheel(
     requires = REQUIRED_EXTERNAL_DEPS,
     # TODO(ml): cmk_version vs. PEP 440?
     version = "1+" + select({
-        "@cmk//edition:community": "community",
-        "@cmk//edition:ultimate": "ultimate",
-        "@cmk//edition:pro": "pro",
-        "@cmk//edition:ultimatemt": "ultimatemt",
         "@cmk//edition:cloud": "cloud",
+        "@cmk//edition:community": "community",
+        "@cmk//edition:pro": "pro",
+        "@cmk//edition:ultimate": "ultimate",
+        "@cmk//edition:ultimatemt": "ultimatemt",
     }),
     visibility = ["//visibility:public"],
     deps = select({
+        "@cmk//edition:cloud": [
+            ":cmk_cloud",
+            ":cmk_community",
+            ":cmk_pro",
+            ":cmk_ultimate",
+            "//non-free/packages/cmc-protocols:py_config_proto",
+            "//non-free/packages/cmc-protocols:py_cycletime_proto",
+            "//non-free/packages/cmc-protocols:py_state_proto",
+        ],
         "@cmk//edition:community": [
             ":cmk_community",
         ],
@@ -438,15 +447,6 @@ py_wheel(
             ":cmk_pro",
             ":cmk_ultimate",
             ":cmk_ultimatemt",
-            "//non-free/packages/cmc-protocols:py_config_proto",
-            "//non-free/packages/cmc-protocols:py_cycletime_proto",
-            "//non-free/packages/cmc-protocols:py_state_proto",
-        ],
-        "@cmk//edition:cloud": [
-            ":cmk_cloud",
-            ":cmk_community",
-            ":cmk_pro",
-            ":cmk_ultimate",
             "//non-free/packages/cmc-protocols:py_config_proto",
             "//non-free/packages/cmc-protocols:py_cycletime_proto",
             "//non-free/packages/cmc-protocols:py_state_proto",

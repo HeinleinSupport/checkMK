@@ -1,3 +1,5 @@
+"""Repository rule to extract local archive files as external repositories."""
+
 # https://www.stevenengelhardt.com/2023/03/01/practical-bazel-local_archive-workspace-rule/
 
 def _impl(repository_ctx):
@@ -13,9 +15,9 @@ def _impl(repository_ctx):
 local_archive = repository_rule(
     implementation = _impl,
     attrs = {
-        "src": attr.label(mandatory = True, allow_single_file = True),
         "build_file": attr.label(mandatory = True, allow_single_file = True),
         "sha256": attr.string(),
+        "src": attr.label(mandatory = True, allow_single_file = True),
         "strip_prefix": attr.string(),
     },
 )

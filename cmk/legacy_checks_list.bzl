@@ -1,3 +1,5 @@
+"""List of legacy check plugin names for backwards compatibility."""
+
 LEGACY_CHECKS = [
     "aironet_errors",
     "aix_hacmp_resources",

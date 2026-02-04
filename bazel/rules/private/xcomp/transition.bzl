@@ -1,3 +1,5 @@
+"""Platform transition for cross-compilation support."""
+
 def _transition_platform_impl(_, attr):
     return {"//command_line_option:platforms": str(attr.platform)}
 

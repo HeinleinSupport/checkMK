@@ -1,3 +1,5 @@
+"""Rules to expose Rust toolchain binaries (rustc, cargo) as targets."""
+
 def _rustc_impl(ctx):
     tc = ctx.toolchains["@rules_rust//rust:toolchain_type"]
 

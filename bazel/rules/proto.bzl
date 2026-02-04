@@ -1,3 +1,5 @@
+"""Wrapper rules and macros for protobuf code generation."""
+
 load("@bazel_skylib//rules:copy_file.bzl", _copy_file = "copy_file")
 load("@protobuf//bazel:cc_proto_library.bzl", _cc_proto_library = "cc_proto_library")
 load("@protobuf//bazel:py_proto_library.bzl", _py_proto_library = "py_proto_library")

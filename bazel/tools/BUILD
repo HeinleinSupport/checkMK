@@ -113,12 +113,12 @@ bazel_env(
     toolchains = {},
     tools = {
         "bandit": ":bandit",
+        "genhtml": "@lcov//:genhtml",
         "mypy": ":mypy_cli_original",
         "osslsigncode": "@osslsigncode",
         "pnpm": "@pnpm",
         "semgrep": ":semgrep",
         "uv": "@multitool//tools/uv",
-        "genhtml": "@lcov//:genhtml",
     },
 )
 

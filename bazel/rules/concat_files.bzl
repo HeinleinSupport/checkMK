@@ -1,3 +1,5 @@
+"""Rule to concatenate multiple files into a single output file."""
+
 def _concat_files_impl(ctx):
     out = ctx.actions.declare_file(ctx.attr.name)
     ctx.actions.run_shell(

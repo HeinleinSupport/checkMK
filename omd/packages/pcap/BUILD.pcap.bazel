@@ -12,6 +12,9 @@ cmake(
         # Minimal set of features to avoid extra dependencies.
         "BUILD_SHARED_LIBS": "OFF",
         "BUILD_WITH_LIBNL": "OFF",
+        # `CMAKE_INSTALL_LIBDIR` is required on distro
+        # following the FHS layout and prefer `lib64`.
+        "CMAKE_INSTALL_LIBDIR:PATH": "lib",
         "DISABLE_BLUETOOTH": "ON",
         "DISABLE_DAG": "ON",
         "DISABLE_DBUS": "ON",
@@ -21,9 +24,6 @@ cmake(
         "DISABLE_SNF": "ON",
         "ENABLE_PROFILING": "OFF",
         "ENABLE_REMOTE": "OFF",
-        # `CMAKE_INSTALL_LIBDIR` is required on distro
-        # following the FHS layout and prefer `lib64`.
-        "CMAKE_INSTALL_LIBDIR:PATH": "lib",
     },
     generate_args = ["-GNinja"],
     lib_source = ":all_srcs",

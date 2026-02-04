@@ -1,3 +1,5 @@
+"""Rule to write the current git commit hash to a file."""
+
 def _git_hash_file_impl(ctx):
     ctx.actions.run_shell(
         inputs = [ctx.version_file, ctx.info_file],

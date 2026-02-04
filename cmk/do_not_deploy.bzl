@@ -1,3 +1,5 @@
+"""List of Python __init__.py files to exclude from deployment packages."""
+
 DO_NOT_DEPLOY = [
     "gui/painter/__init__.py",
     "gui/painter/v1/__init__.py",

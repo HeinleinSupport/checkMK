@@ -1,3 +1,5 @@
+"""Module extension for creating Python requirements repositories."""
+
 load(
     "//omd/packages/python3-modules:create_python_requirements.bzl",
     _create_python_requirements = "create_python_requirements",
@@ -20,9 +22,9 @@ create_python_requirements = module_extension(
     tag_classes = {
         "requirements": tag_class(
             attrs = {
+                "ignored_modules": attr.string_list(),
                 "name": attr.string(mandatory = True),
                 "requirements_lock": attr.string(mandatory = True),
-                "ignored_modules": attr.string_list(),
             },
         ),
     },

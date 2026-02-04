@@ -1,3 +1,5 @@
+"""Python version constants derived from the central version definition."""
+
 load("//:package_versions.bzl", "PYTHON_VERSION")
 
 __PYTHON_VERSION_ARRAY = PYTHON_VERSION.split(".")

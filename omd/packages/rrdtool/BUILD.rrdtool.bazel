@@ -57,10 +57,10 @@ configure_make(
         "-Wno-stringop-overflow",
     ],
     env = {
-        "ORIGIN_VAR": "\\\\$$\\$$ORIGIN",
-        "RANLIB": "ranlib",
-        "PERL_DIR": "$$EXT_BUILD_DEPS/omd/packages/perl-modules",
         "CFLAGS": "'-Dredacted=\"redacted\"'",
+        "ORIGIN_VAR": "\\\\$$\\$$ORIGIN",
+        "PERL_DIR": "$$EXT_BUILD_DEPS/omd/packages/perl-modules",
+        "RANLIB": "ranlib",
         "top_builddir": ".",
     },
     install_prefix = "$INSTALLDIR",

@@ -331,7 +331,7 @@
   "moduleExtensions": {
     "//bazel/extensions:create_python_requirements.bzl%create_python_requirements": {
       "general": {
-        "bzlTransitiveDigest": "sxGlPSPCVPUUdB2c+0Jx1Omab1lViUTE+2IkWh2UDmU=",
+        "bzlTransitiveDigest": "74M3HO0c7y2oj6B2yaRpC/buBJag+UN2gtAXT0jE1ys=",
         "usagesDigest": "kOmXevexXa83wwvgOZ/eWXevXEqv5i3+Fwc/bxbE2C4=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},

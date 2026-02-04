@@ -12,12 +12,12 @@ configure_make(
     name = "lcab",
     args = ["-j4"],
     env = {
+        "DESTDIR": "/",
         "PKG_CONFIG_PATH": ":".join([
             "/usr/lib/pkgconfig",
             "/usr/lib64/pkgconfig",
             "/usr/lib/x86_64-linux-gnu/pkgconfig",
         ]),
-        "DESTDIR": "/",
     },
     install_prefix = "lcab_dir",
     lib_source = ":all_srcs",

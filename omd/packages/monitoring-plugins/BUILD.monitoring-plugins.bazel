@@ -42,11 +42,6 @@ COPTS = [
 # No other macros are supported.Variables containing PATH (e.g. PATH, LD_LIBRARY_PATH, CPATH)
 # entries will be prepended to the existing variable.
 ENV = {
-    "PKG_CONFIG_PATH": ":".join([
-        "/usr/lib/pkgconfig",
-        "/usr/lib64/pkgconfig",
-        "/usr/lib/x86_64-linux-gnu/pkgconfig",
-    ]),
     #
     # This is a nasty workaround for Bazel's inability to escape `$ORIGIN`
     # combined with foreign_cc/configure_make's RPATH agnosticness
@@ -58,6 +53,11 @@ ENV = {
     # This can be worked around by setting RPATH again after `bazel build` still
     # leaving us with RPATH placeholders of different size
     "ORIGIN_VAR": "\\\\$$\\$$ORIGIN",  # expands to "$ORIGIN", lol
+    "PKG_CONFIG_PATH": ":".join([
+        "/usr/lib/pkgconfig",
+        "/usr/lib64/pkgconfig",
+        "/usr/lib/x86_64-linux-gnu/pkgconfig",
+    ]),
 }
 
 LIB_SOURCE = ":all_srcs"

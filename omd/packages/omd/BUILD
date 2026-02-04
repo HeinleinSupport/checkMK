@@ -26,8 +26,8 @@ file_from_flag(
     src = "omd_main_in",
     out = "bin/omd",
     replace_labels = {
-        "CMK_VERSION": "@cmk//version",
         "CMK_EDITION": "@cmk//edition",
+        "CMK_VERSION": "@cmk//version",
     },
 )
 
@@ -139,8 +139,8 @@ file_from_flag(
     src = ":restart_site_apache_in",
     out = "lib/omd/restart_site_apache",
     replace_labels = {
-        "CMK_VERSION": "@cmk//version",
         "CMK_EDITION": "@cmk//edition",
+        "CMK_VERSION": "@cmk//version",
     },
 )
 
@@ -172,8 +172,8 @@ file_from_flag(
     src = "omdlib/__template_init__.py",
     out = "omdlib/__init__.py",
     replace_labels = {
-        "CMK_VERSION": "@cmk//version",
         "CMK_EDITION": "@cmk//edition",
+        "CMK_VERSION": "@cmk//version",
     },
 )
 

@@ -1,3 +1,5 @@
+"""Cross-compilable cc_test rule with platform transition support."""
+
 load(":private/xcomp/transition.bzl", _transition_platform = "transition_platform")
 
 cc_test = rule(

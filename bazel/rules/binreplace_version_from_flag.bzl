@@ -1,3 +1,5 @@
+"""Rule to replace version strings in binaries using build flags."""
+
 load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
 
 def _binreplace_version_from_flag_impl(ctx):
@@ -20,14 +22,14 @@ def _binreplace_version_from_flag_impl(ctx):
 binreplace_version_from_flag = rule(
     implementation = _binreplace_version_from_flag_impl,
     attrs = {
-        "src": attr.label(mandatory = True, allow_single_file = True),
         "out": attr.output(mandatory = True),
+        "reg_ex": attr.string(mandatory = True),
         "replace_labels": attr.string_keyed_label_dict(
             mandatory = True,
             allow_empty = False,
             doc = "Maps the key from the template to the desired value",
         ),
-        "reg_ex": attr.string(mandatory = True),
+        "src": attr.label(mandatory = True, allow_single_file = True),
         "template": attr.string(mandatory = True),
         "tool": attr.label(
             mandatory = True,

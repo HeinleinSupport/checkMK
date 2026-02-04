@@ -1,3 +1,5 @@
+"""C and C++ language standard version constants for toolchain configuration."""
+
 # Adapted from https://github.com/CACI-International/cpp-toolchain
 CPP_STD = [
     "98",

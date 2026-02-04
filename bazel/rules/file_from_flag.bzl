@@ -1,3 +1,5 @@
+"""Rule to generate files with build flag value substitutions."""
+
 load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
 
 def _file_from_flag_impl(ctx):
@@ -34,9 +36,9 @@ file_from_flag = rule(
         """,
     implementation = _file_from_flag_impl,
     attrs = {
-        "out": attr.output(mandatory = True),
         "content": attr.string_list(mandatory = False, allow_empty = True),
-        "src": attr.label(mandatory = False, allow_single_file = True, providers = ["files"]),
+        "out": attr.output(mandatory = True),
         "replace_labels": attr.string_keyed_label_dict(mandatory = True),
+        "src": attr.label(mandatory = False, allow_single_file = True, providers = ["files"]),
     },
 )

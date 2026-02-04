@@ -34,10 +34,10 @@ pkg_mklink(
     link_name = "bin/htpasswd",
     tags = ["manual"],
     target = select({
-        "@cmk//distro:debian": "/usr/bin/htpasswd",
-        "@cmk//distro:ubuntu": "/usr/bin/htpasswd",
         "@cmk//distro:almalinux": "/usr/bin/htpasswd",
+        "@cmk//distro:debian": "/usr/bin/htpasswd",
         "@cmk//distro:sles": "/usr/bin/htpasswd2",
+        "@cmk//distro:ubuntu": "/usr/bin/htpasswd",
     }),
 )
 
@@ -46,10 +46,10 @@ pkg_mklink(
     link_name = "lib/apache/modules/mod_" + name + ".so",
     tags = ["manual"],
     target = select({
-        "@cmk//distro:debian": "/usr/lib/apache2/modules/mod_" + name + ".so",
-        "@cmk//distro:ubuntu": "/usr/lib/apache2/modules/mod_" + name + ".so",
         "@cmk//distro:almalinux": "/usr/lib64/httpd/modules/mod_" + name + ".so",
+        "@cmk//distro:debian": "/usr/lib/apache2/modules/mod_" + name + ".so",
         "@cmk//distro:sles": "/usr/lib64/apache2-prefork/mod_" + name + ".so",
+        "@cmk//distro:ubuntu": "/usr/lib/apache2/modules/mod_" + name + ".so",
     }),
 ) for name in [
     "access_compat",
@@ -134,20 +134,20 @@ pkg_tar(
         ":omd_hooks",
         ":share_omd",
     ] + select({
-        # TODO: Do we really want differences between distros?
-        "@cmk//distro:debian": [
-            "apache_module_mpm_prefork",
-        ],
-        "@cmk//distro:ubuntu": [
-            "apache_module_mpm_prefork",
-        ],
         "@cmk//distro:almalinux": [
             "apache_module_log_config",
             "apache_module_mpm_prefork",
             "apache_module_unixd",
         ],
+        # TODO: Do we really want differences between distros?
+        "@cmk//distro:debian": [
+            "apache_module_mpm_prefork",
+        ],
         "@cmk//distro:sles": [
             "apache_module_log_config",
+        ],
+        "@cmk//distro:ubuntu": [
+            "apache_module_mpm_prefork",
         ],
     }),
     stamp = 1,

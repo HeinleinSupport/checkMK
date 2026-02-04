@@ -196,8 +196,8 @@ string_replace(
     src = ":python_rest",
     filepattern = ["_sysconfigdata__linux_x86_64-linux-gnu.py"],
     replace_labels = {
-        "cmk_version": "@cmk//version",
         "cmk_edition": "@cmk//edition",
+        "cmk_version": "@cmk//version",
     },
     replace_pattern = "/replace-me",
     tags = ["manual"],

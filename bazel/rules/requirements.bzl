@@ -1,3 +1,5 @@
+"""Rule to compile multiple requirements files into a single requirements.txt."""
+
 load("@rules_uv//uv:pip.bzl", "RequirementsInInfo")
 
 def _impl(ctx):

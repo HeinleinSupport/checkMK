@@ -1,3 +1,5 @@
+"""Utility functions to extract components from Bazel labels."""
+
 # Accessors to some fields of Label
 # https://bazel.build/rules/lib/builtins/Label#Label
 

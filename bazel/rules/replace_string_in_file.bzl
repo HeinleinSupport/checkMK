@@ -1,3 +1,5 @@
+"""Rule to perform string replacements in files."""
+
 def _replace_string_in_file_impl(ctx):
     if (ctx.attr.content) and not (ctx.file.src):
         template = ctx.actions.declare_file("template")
@@ -30,9 +32,9 @@ replace_string_in_file = rule(
         """,
     implementation = _replace_string_in_file_impl,
     attrs = {
-        "out": attr.output(mandatory = True),
         "content": attr.string_list(mandatory = False, allow_empty = True),
-        "src": attr.label(mandatory = False, allow_single_file = True, providers = ["files"]),
+        "out": attr.output(mandatory = True),
         "replace_dict": attr.string_dict(mandatory = True),
+        "src": attr.label(mandatory = False, allow_single_file = True, providers = ["files"]),
     },
 )

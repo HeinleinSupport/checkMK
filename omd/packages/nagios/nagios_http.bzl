@@ -1,3 +1,5 @@
+"""HTTP archive definition for Nagios Core monitoring engine."""
+
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("//:bazel_variables.bzl", "UPSTREAM_MIRROR_URL")
 

@@ -1,3 +1,5 @@
+"""Rule to create C/C++ preprocessor defines from build flag values."""
+
 load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
 
 def _define_from_flag_impl(ctx):

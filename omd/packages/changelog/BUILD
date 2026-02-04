@@ -86,11 +86,11 @@ pkg_files(
     srcs = [":werks_precompiled"],
     prefix = "share/check_mk/werks",
     renames = select({
+        "@cmk//edition:cloud": {":werks_precompiled": "werks_cloud"},
         "@cmk//edition:community": {},
         "@cmk//edition:pro": {":werks_precompiled": "werks_pro"},
         "@cmk//edition:ultimate": {":werks_precompiled": "werks_ultimate"},
         "@cmk//edition:ultimatemt": {":werks_precompiled": "werks_ultimatemt"},
-        "@cmk//edition:cloud": {":werks_precompiled": "werks_cloud"},
     }),
     tags = ["manual"],
 )

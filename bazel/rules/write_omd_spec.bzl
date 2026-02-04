@@ -1,5 +1,5 @@
-# Rules to fix binaries for deployment.
-# For example setting the RPATH
+"""Rule to generate OMD RPM spec files from templates."""
+
 load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
 
 # Set RPATH for a whole directory with unknown file names
@@ -42,13 +42,13 @@ def _write_omd_spec_impl(ctx):
 write_omd_spec = rule(
     implementation = _write_omd_spec_impl,
     attrs = {
-        "omd_spec_in": attr.label(allow_single_file = True, providers = ["files"], mandatory = True),
-        "omd_spec": attr.output(mandatory = True),
-        "version": attr.label(mandatory = True),
-        "edition": attr.label(mandatory = True),
-        "apache_init_name": attr.string(mandatory = True),
         "apache_conf_dir": attr.string(mandatory = True),
+        "apache_init_name": attr.string(mandatory = True),
         "dependencies": attr.label(allow_single_file = True, providers = ["files"], mandatory = True),
         "distro_code": attr.string(mandatory = True),
+        "edition": attr.label(mandatory = True),
+        "omd_spec": attr.output(mandatory = True),
+        "omd_spec_in": attr.label(allow_single_file = True, providers = ["files"], mandatory = True),
+        "version": attr.label(mandatory = True),
     },
 )

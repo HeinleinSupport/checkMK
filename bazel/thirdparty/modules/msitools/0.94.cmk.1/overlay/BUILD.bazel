@@ -27,8 +27,8 @@ configure_make(
     } | select(
         {
             "@cmk//distro:sles": {
-                "GSF_LIBS": "-L$${EXT_BUILD_DEPS}/libgsf/lib -lgsf-1",
                 "GSF_CFLAGS": "-I$${EXT_BUILD_DEPS}/libgsf/include/libgsf-1",
+                "GSF_LIBS": "-L$${EXT_BUILD_DEPS}/libgsf/lib -lgsf-1",
             },
             "//conditions:default": {},
         },

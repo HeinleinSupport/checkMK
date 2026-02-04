@@ -60,13 +60,13 @@ platform_transition_binary = rule(
             cfg = _transition_platform,
             executable = True,
         ),
-        "platform": attr.label(
-            doc = "The platform to transition to.",
-            mandatory = True,
-        ),
         "compilation_mode": attr.string(
             doc = "Optional compilation mode (e.g., 'opt', 'dbg', 'fastbuild'). If not set, uses the default from command line.",
             default = "",
+        ),
+        "platform": attr.label(
+            doc = "The platform to transition to.",
+            mandatory = True,
         ),
         "_allowlist_function_transition": attr.label(
             default = "@bazel_tools//tools/allowlists/function_transition_allowlist",

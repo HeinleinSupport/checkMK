@@ -81,8 +81,8 @@ pkg_files(
         "@nagvis//:etc/geomap/demo-locations.csv",
     ],
     renames = {
-        "@nagvis//:etc/geomap/demo-locations.csv": "skel/etc/nagvis/geomap/demo-locations.csv",
         "@nagvis//:etc/conf.d/demo.ini.php": "skel/etc/nagvis/conf.d/demo.ini.php",
+        "@nagvis//:etc/geomap/demo-locations.csv": "skel/etc/nagvis/geomap/demo-locations.csv",
     },
     strip_prefix = strip_prefix.from_pkg(""),
     tags = ["manual"],

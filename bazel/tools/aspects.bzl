@@ -1,3 +1,5 @@
+"""Lint aspect definitions for mypy, bandit, ruff, clang-tidy, and astrein."""
+
 load("@aspect_rules_lint//lint:bandit.bzl", "lint_bandit_aspect")
 load("@aspect_rules_lint//lint:clang_tidy.bzl", "lint_clang_tidy_aspect")
 load("@aspect_rules_lint//lint:ruff.bzl", "lint_ruff_aspect")

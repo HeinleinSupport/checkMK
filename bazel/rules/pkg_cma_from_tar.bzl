@@ -1,3 +1,5 @@
+"""Rule to create Checkmk Appliance (CMA) packages from tarballs."""
+
 # Rules to create CMA archive with custom extension .cma
 load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
 
@@ -27,10 +29,10 @@ def _pkg_cma_from_tar_impl(ctx):
 pkg_cma_from_tar = rule(
     implementation = _pkg_cma_from_tar_impl,
     attrs = {
-        "input_tarball": attr.label(allow_single_file = True, providers = ["files"], mandatory = True),
         "cma": attr.output(mandatory = True),
-        "version": attr.label(mandatory = True, providers = [BuildSettingInfo]),
-        "edition": attr.label(mandatory = True, providers = [BuildSettingInfo]),
         "distro_code": attr.string(mandatory = True),
+        "edition": attr.label(mandatory = True, providers = [BuildSettingInfo]),
+        "input_tarball": attr.label(allow_single_file = True, providers = ["files"], mandatory = True),
+        "version": attr.label(mandatory = True, providers = [BuildSettingInfo]),
     },
 )

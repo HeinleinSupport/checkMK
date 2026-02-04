@@ -1,3 +1,5 @@
+"""Repository rule to detect whether the repo includes enterprise or GPL-only code."""
+
 def _is_non_free_repo(repository_ctx):
     return repository_ctx.path(Label("//:non-free")).exists
 

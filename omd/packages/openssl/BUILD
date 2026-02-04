@@ -102,8 +102,8 @@ binreplace_version_from_flag(
     out = "lib/libcrypto.so.3.replaced",
     reg_ex = r"/(?:home|root)/.*?/openssl\.build_tmpdir/openssl/",
     replace_labels = {
-        "version": "@cmk//version",
         "edition": "@cmk//edition",
+        "version": "@cmk//version",
     },
     tags = ["manual"],
     template = "/omd/versions/{version}.{edition}/",

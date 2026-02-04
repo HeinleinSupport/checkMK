@@ -1,3 +1,5 @@
+"""Macro to package Python wheels into OMD site-packages tarballs."""
+
 load("@omd_packages//omd/packages/Python:version.bzl", "PYTHON_MAJOR_DOT_MINOR")
 load("@rules_pkg//pkg:mappings.bzl", "filter_directory", "pkg_files")
 load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
@@ -51,12 +53,12 @@ def _package_wheel_impl(
 package_wheel = macro(
     implementation = _package_wheel_impl,
     attrs = {
-        "whl": attr.label(mandatory = True, doc = "Wheel to be packaged."),
-        "excludes": attr.label_list(default = [], doc = "Optional, exclude files from packaging."),
         "additional_files": attr.label_list(default = [], doc = "List of additional files to put in the tar."),
+        "excludes": attr.label_list(default = [], doc = "Optional, exclude files from packaging."),
         "prefix": attr.string(
             default = "lib/python%s/site-packages" % PYTHON_MAJOR_DOT_MINOR,
             doc = "Where will the python packages be deployed.",
         ),
+        "whl": attr.label(mandatory = True, doc = "Wheel to be packaged."),
     },
 )

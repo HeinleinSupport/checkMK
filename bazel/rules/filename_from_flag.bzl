@@ -1,3 +1,5 @@
+"""Rule to create output files with names derived from build flags."""
+
 load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
 
 def _filename_from_flag_impl(ctx):
@@ -40,8 +42,8 @@ filename_from_flag = rule(
         """,
     implementation = _filename_from_flag_impl,
     attrs = {
-        "src": attr.label(allow_single_file = True, mandatory = True),
         "file_name": attr.string(mandatory = True),
         "replacements": attr.string_keyed_label_dict(mandatory = True),
+        "src": attr.label(allow_single_file = True, mandatory = True),
     },
 )

@@ -19,8 +19,8 @@ debian_files = [
     src = file + ".in",
     out = file,
     replace_labels = {
-        "CMK_VERSION": "@cmk//version",
         "CMK_EDITION": "@cmk//edition",
+        "CMK_VERSION": "@cmk//version",
     },
     visibility = ["//omd:__pkg__"],
 ) for file in debian_files]

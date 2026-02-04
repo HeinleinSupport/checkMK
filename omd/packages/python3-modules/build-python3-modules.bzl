@@ -1,3 +1,5 @@
+"""Macros to build Python modules from source with pip."""
+
 load("@omd_packages//omd/packages/Python:version.bzl", "PYTHON_MAJOR_DOT_MINOR")
 load("@python_modules//:requirements.bzl", "packages")
 
@@ -37,16 +39,16 @@ def build_python_module(name, srcs, outs, requirements = "", **kwargs):
             "@//bazel/toolchains/rust:cargo",
         ],
         cmd = select({
-            "//conditions:default": build_cmd.format(
-                git_ssl_no_verify = "",
+            ":git_ssl_no_verify": build_cmd.format(
+                git_ssl_no_verify = "GIT_SSL_NO_VERIFY=true",
                 pyMajMin = PYTHON_MAJOR_DOT_MINOR,
                 requirements = requirements,
                 openssl_dir = openssl_dir,
                 freetds_dir = freetds_dir,
                 python_dir = python_dir,
             ),
-            ":git_ssl_no_verify": build_cmd.format(
-                git_ssl_no_verify = "GIT_SSL_NO_VERIFY=true",
+            "//conditions:default": build_cmd.format(
+                git_ssl_no_verify = "",
                 pyMajMin = PYTHON_MAJOR_DOT_MINOR,
                 requirements = requirements,
                 openssl_dir = openssl_dir,

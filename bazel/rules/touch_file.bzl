@@ -1,3 +1,5 @@
+"""Rule to create an empty file."""
+
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
 
 def touch_file(name, out, **kwargs):

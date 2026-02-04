@@ -17,9 +17,9 @@ write_os_dependencies(
     name = "dependencies",
     src = select(
         {
+            "@cmk//distro:almalinux-10": "ALMALINUX_10.mk",
             "@cmk//distro:almalinux-8": "ALMALINUX_8.mk",
             "@cmk//distro:almalinux-9": "ALMALINUX_9.mk",
-            "@cmk//distro:almalinux-10": "ALMALINUX_10.mk",
             "@cmk//distro:debian-12": "DEBIAN_12.mk",
             "@cmk//distro:debian-13": "DEBIAN_13.mk",
             "@cmk//distro:sles-15sp5": "SLES_15SP5.mk",
@@ -42,9 +42,9 @@ genrule(
     name = "distro_version_file",
     srcs = select(
         {
+            "@cmk//distro:almalinux-10": ["ALMALINUX_10.mk"],
             "@cmk//distro:almalinux-8": ["ALMALINUX_8.mk"],
             "@cmk//distro:almalinux-9": ["ALMALINUX_9.mk"],
-            "@cmk//distro:almalinux-10": ["ALMALINUX_10.mk"],
             "@cmk//distro:debian-12": ["DEBIAN_12.mk"],
             "@cmk//distro:debian-13": ["DEBIAN_13.mk"],
             "@cmk//distro:sles-15sp5": ["SLES_15SP5.mk"],

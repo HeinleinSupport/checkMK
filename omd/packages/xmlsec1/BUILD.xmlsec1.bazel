@@ -39,12 +39,12 @@ configure_make(
     # prepended, resulting in wrong RPATH components in front of `$ORIGIN/../lib`
     # For that reason we need to manually set RPATH outside Bazel (during `make`)
     env = {
+        "ORIGIN_VAR": "\\\\$$\\$$ORIGIN",
         "PKG_CONFIG_PATH": ":".join([
             "/usr/lib/pkgconfig",
             "/usr/lib64/pkgconfig",
             "/usr/lib/x86_64-linux-gnu/pkgconfig",
         ]),
-        "ORIGIN_VAR": "\\\\$$\\$$ORIGIN",
     },
     lib_name = "xmlsec1",
     lib_source = ":all_srcs",

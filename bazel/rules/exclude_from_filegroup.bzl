@@ -1,3 +1,5 @@
+"""Rule to exclude files matching patterns from a filegroup."""
+
 # Filegroups have by default no way to access only certain files.
 # The `filter_directory` rule from `rules_pkg` only alows for excluding
 # files where the whole path and name is known. See also
@@ -24,7 +26,7 @@ def _exclude_from_filegroup_impl(ctx):
 exclude_from_filegroup = rule(
     implementation = _exclude_from_filegroup_impl,
     attrs = {
-        "src": attr.label(allow_single_file = True, providers = ["files"], mandatory = True),
         "excludes": attr.string_list(mandatory = True, allow_empty = False),
+        "src": attr.label(allow_single_file = True, providers = ["files"], mandatory = True),
     },
 )

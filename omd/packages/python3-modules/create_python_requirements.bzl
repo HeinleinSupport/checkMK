@@ -1,3 +1,5 @@
+"""Repository rule to parse Pipfile and create Python requirements for Bazel."""
+
 load("//omd/packages/python3-modules:parse-requirements.bzl", parse_requirements = "parse")
 
 BUILD_FILE_CONTENTS = """\
@@ -35,7 +37,7 @@ def _create_python_requirements_impl(rctx):
     )
 
 create_python_requirements = repository_rule(
-    attrs = {"requirements_lock": attr.string(mandatory = True), "ignored_modules": attr.string_list()},
+    attrs = {"ignored_modules": attr.string_list(), "requirements_lock": attr.string(mandatory = True)},
     doc = """A rule for importing `Pipfile` dependencies into Bazel.""",
     implementation = _create_python_requirements_impl,
 )

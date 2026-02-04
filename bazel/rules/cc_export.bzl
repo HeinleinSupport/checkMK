@@ -30,8 +30,8 @@ cc_export_shared_library = macro(
     """,
     implementation = _cc_export_shared_library_impl,
     attrs = {
-        "srcs": attr.label_list(mandatory = True),
         "shared_library": attr.string(mandatory = True),
+        "srcs": attr.label_list(mandatory = True),
     },
 )
 

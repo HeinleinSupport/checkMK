@@ -1,6 +1,9 @@
+"""HTTP file definitions for Perl module dependencies."""
+
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
 load("//:bazel_variables.bzl", "UPSTREAM_MIRROR_URL")
 
+# @unsorted-dict-items
 PERL_MODULES_LIST_1 = {
     "ExtUtils-MakeMaker-7.04.tar.gz": {
         "sha256": "98126b012d70c2af0f8e33a07ebe0d6f2340281b2460981b959a9fb31d5ad97f",
@@ -40,6 +43,7 @@ PERL_MODULES_LIST_1 = {
     },
 }
 
+# @unsorted-dict-items
 PERL_MODULES_LIST_2 = {
     "Capture-Tiny-0.27.tar.gz": {
         "sha256": "ba54bc0305eb91ee2b0d769470d6bc62edb5b18d9c75b7ea709ea6b31e9bab21",

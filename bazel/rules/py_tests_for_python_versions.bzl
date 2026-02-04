@@ -1,3 +1,5 @@
+"""Macro to run Python tests across multiple Python versions."""
+
 load("@aspect_rules_py//py:defs.bzl", "py_pytest_main", "py_test")
 
 def py_tests_for_python_versions(

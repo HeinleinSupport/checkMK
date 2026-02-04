@@ -390,8 +390,8 @@ pkg_files(
     ],
     prefix = "share/check_mk/agents",
     renames = {
-        "//packages/cmk-agent-ctl:cmk-agent-ctl-musl-aarch64": "cmk-agent-ctl-aarch64",
         "//packages/cmk-agent-ctl:cmk-agent-ctl-musl": "cmk-agent-ctl",
+        "//packages/cmk-agent-ctl:cmk-agent-ctl-musl-aarch64": "cmk-agent-ctl-aarch64",
     },
 )
 
@@ -440,9 +440,9 @@ pkg_files(
     attributes = pkg_attributes(mode = "0755"),
     prefix = "share/check_mk/agents/linux",
     renames = {
-        "//packages/mk-sql:mk-sql-musl": "mk-sql",
-        "//packages/cmk-agent-ctl:cmk-agent-ctl-musl-aarch64": "cmk-agent-ctl-aarch64",
         "//packages/cmk-agent-ctl:cmk-agent-ctl-musl": "cmk-agent-ctl",
+        "//packages/cmk-agent-ctl:cmk-agent-ctl-musl-aarch64": "cmk-agent-ctl-aarch64",
+        "//packages/mk-sql:mk-sql-musl": "mk-sql",
     },
 )
 
