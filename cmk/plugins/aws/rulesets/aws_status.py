@@ -12,8 +12,6 @@ from cmk.rulesets.v1.form_specs import (
 )
 from cmk.rulesets.v1.rule_specs import SpecialAgent, Topic
 
-# mypy: disable-error-code="no-untyped-def"
-
 
 def _convert_regions(values: object) -> list[str]:
     assert isinstance(values, list)
@@ -33,7 +31,7 @@ def _pre_24_to_formspec_migration(values: object) -> dict[str, object]:
     return values
 
 
-def _formspec_aws():
+def _formspec_aws() -> Dictionary:
     return Dictionary(
         title=Title("Amazon Web Services (AWS) Status"),
         migrate=_pre_24_to_formspec_migration,
