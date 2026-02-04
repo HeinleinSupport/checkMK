@@ -8,6 +8,7 @@ Backend
 backends
 Bazel
 Checkmk
+ClickHouse
 cmk
 CN
 codebase

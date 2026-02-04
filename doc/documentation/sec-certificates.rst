@@ -63,6 +63,7 @@ Site Local CA
 
 * Must be a CA
 * Signs the site certificates
+* Can be rotated using `cmk-cert rotate site-ca`, but requires manual work and is not fully supported yet
 
 .. _sitecertificate:
 
@@ -71,7 +72,10 @@ Site Certificate
 
 * Created by OMD
 * `etc/ssl/sites/<site>.pem`
-* Used by `omd/packages/stunnel/skel/etc/stunnel/server.conf`
+* Can be rotated using `cmk-cert rotate site` without issue, since Site Local CA is usually the trust anchor
+* Used by stunnel (livestatus, mknotifyd) (`etc/stunnel/server.conf`)
+* Used by OTEL collector (`etc/otel-collector/setup.yaml`)
+* Used by ClickHouse (`etc/clickhouse-server/config.xml`)
 
 Agent Certificate
 ^^^^^^^^^^^^^^^^^
