@@ -1701,12 +1701,7 @@ class ActivateChangesManager:
                     logger,
                     load_configuration_settings(),
                     all_site_configs,
-                    {
-                        site_id
-                        for site_id, _site_config in self.changes.dirty_sites(
-                            activation_sites(all_site_configs)
-                        )
-                    },
+                    sites,
                     {
                         host_name: host.site_id()
                         for host_name, host in tree.root_folder().all_hosts_recursively().items()
@@ -3902,7 +3897,7 @@ def activate_changes_start(
         comment=comment,
         activate_foreign=force_foreign_changes,
         source=source,
-        all_site_configs=sites_that_can_be_activated,
+        all_site_configs=all_site_configs,
         user_permission_config=user_permission_config,
         max_snapshots=max_snapshots,
         use_git=use_git,
