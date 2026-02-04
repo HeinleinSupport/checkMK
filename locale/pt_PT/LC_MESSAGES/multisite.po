@@ -3500,6 +3500,20 @@ msgid "Access to the Event Console"
 msgstr "Acesso ao Console de Eventos"
 
 msgid ""
+"Access to the Welcome page is controlled by multiple permissions. Users "
+"without the required permissions will be redirected to the main dashboard. "
+"Needed permissions are:<br><br>- Activate configuration<br>- Add & remove "
+"hosts<br>- Customize dashboards and use them<br>- Host & service groups<br>- "
+"Host management<br>- Make changes, perform actions<br>- Modify built-in "
+"dashboards<br>- Notification configuration<br>- Register host & download "
+"monitoring agents of your hosts<br>- See packaged dashboards<br>- See user "
+"dashboards<br>- Service discovery: Disabled services<br>- Service discovery: "
+"Move to monitored services<br>- Service discovery: Move to undecided "
+"services<br>- Service discovery: Remove services<br>- Time periods<br>- Use "
+"WATO"
+msgstr ""
+
+msgid ""
 "Access to the historic audit log. The currently pending changes can be seen "
 "by all users with access to Setup."
 msgstr ""
@@ -39073,8 +39087,40 @@ msgstr "Última duração concluída"
 msgid "Last contact of agent updater"
 msgstr "Último contacto do actualizador de agentes"
 
+#, fuzzy
+msgid "Last day error rate"
+msgstr "Taxa de erro total"
+
+msgid "Last day latency (avg)"
+msgstr ""
+
+msgid "Last day latency (p90)"
+msgstr ""
+
+msgid "Last day latency (p95)"
+msgstr ""
+
+msgid "Last day latency (p99)"
+msgstr ""
+
 msgid "Last day of last month"
 msgstr "Último dia do mês passado"
+
+#, fuzzy
+msgid "Last day request rate"
+msgstr "Avg. taxa de solicitação"
+
+#, fuzzy
+msgid "Last day requests"
+msgstr "Pedidos de Livestatus"
+
+#, fuzzy
+msgid "Last day total errors"
+msgstr "Erro interno"
+
+#, fuzzy
+msgid "Last day total requests"
+msgstr "Pedidos de Web ACL"
 
 msgid "Last download of agent updater"
 msgstr "Última transferência do actualizador de agentes"
@@ -39101,7 +39147,43 @@ msgid "Last host state change"
 msgstr "Última alteração de estado do anfitrião"
 
 #, fuzzy
+msgid "Last hour error rate"
+msgstr "Níveis para taxas de erro"
+
+#, fuzzy
+msgid "Last hour latency (avg)"
+msgstr "Última alteração de estado do anfitrião"
+
+#, fuzzy
+msgid "Last hour latency (p90)"
+msgstr "Outra latência"
+
+#, fuzzy
+msgid "Last hour latency (p95)"
+msgstr "Outra latência"
+
+#, fuzzy
+msgid "Last hour latency (p99)"
+msgstr "Outra latência"
+
+#, fuzzy
+msgid "Last hour request rate"
+msgstr "Últimas 25 horas"
+
+#, fuzzy
+msgid "Last hour requests"
+msgstr "Últimas 25 horas"
+
+#, fuzzy
 msgid "Last hour restarts"
+msgstr "Últimas 25 horas"
+
+#, fuzzy
+msgid "Last hour total errors"
+msgstr "Últimas 25 horas"
+
+#, fuzzy
+msgid "Last hour total requests"
 msgstr "Últimas 25 horas"
 
 msgid "Last known details"
@@ -39113,6 +39195,42 @@ msgstr "Última Saída de Plugin Conhecida"
 
 msgid "Last log"
 msgstr "Último registo"
+
+#, fuzzy
+msgid "Last minute error rate"
+msgstr "Estado do erro de instância"
+
+#, fuzzy
+msgid "Last minute latency (avg)"
+msgstr "Latência do correio"
+
+#, fuzzy
+msgid "Last minute latency (p90)"
+msgstr "Latência do correio"
+
+#, fuzzy
+msgid "Last minute latency (p95)"
+msgstr "Latência do correio"
+
+#, fuzzy
+msgid "Last minute latency (p99)"
+msgstr "Latência do correio"
+
+#, fuzzy
+msgid "Last minute request rate"
+msgstr "Avg. taxa de solicitação"
+
+#, fuzzy
+msgid "Last minute requests"
+msgstr "Solicitações de Spot Instance"
+
+#, fuzzy
+msgid "Last minute total errors"
+msgstr "Perda de erros de sinal"
+
+#, fuzzy
+msgid "Last minute total requests"
+msgstr "Pedidos de Web ACL"
 
 msgid "Last month"
 msgstr "Último mês"
@@ -39206,7 +39324,23 @@ msgid "Latency"
 msgstr "Latência"
 
 #, fuzzy
+msgid "Latency (avg)"
+msgstr "Latência"
+
+#, fuzzy
 msgid "Latency (ms)"
+msgstr "Latência"
+
+#, fuzzy
+msgid "Latency (p90)"
+msgstr "Latência"
+
+#, fuzzy
+msgid "Latency (p95)"
+msgstr "Latência"
+
+#, fuzzy
+msgid "Latency (p99)"
 msgstr "Latência"
 
 msgid "Latency of GetItem requests"
@@ -49205,125 +49339,6 @@ msgstr "Atenuação a laser OSN"
 #, fuzzy
 msgid "OTLP endpoint"
 msgstr "Ponto final"
-
-#, fuzzy
-msgid "OTel RED Error: Error rate"
-msgstr "Níveis para taxas de erro"
-
-msgid "OTel RED Error: Error rate over the last day"
-msgstr ""
-
-msgid "OTel RED Error: Error rate over the last hour"
-msgstr ""
-
-msgid "OTel RED Error: Error rate over the last minute"
-msgstr ""
-
-msgid "OTel RED Error: Errors over the last day"
-msgstr ""
-
-msgid "OTel RED Error: Errors over the last hour"
-msgstr ""
-
-msgid "OTel RED Error: Errors over the last minute"
-msgstr ""
-
-msgid "OTel RED Error: Requests over the last day"
-msgstr ""
-
-msgid "OTel RED Error: Requests over the last hour"
-msgstr ""
-
-msgid "OTel RED Error: Requests over the last minute"
-msgstr ""
-
-msgid "OTel RED Error: Total errors over the last day"
-msgstr ""
-
-msgid "OTel RED Error: Total errors over the last hour"
-msgstr ""
-
-msgid "OTel RED Error: Total errors over the last minute"
-msgstr ""
-
-#, fuzzy
-msgid "OTel RED Latency: 90th percentile latency"
-msgstr "Latência do pedido (percentil 50)"
-
-msgid "OTel RED Latency: 90th percentile latency over the last day"
-msgstr ""
-
-msgid "OTel RED Latency: 90th percentile latency over the last hour"
-msgstr ""
-
-msgid "OTel RED Latency: 90th percentile latency over the last minute"
-msgstr ""
-
-#, fuzzy
-msgid "OTel RED Latency: 95th percentile latency"
-msgstr "Latência do pedido (percentil 95)"
-
-msgid "OTel RED Latency: 95th percentile latency over the last day"
-msgstr ""
-
-msgid "OTel RED Latency: 95th percentile latency over the last hour"
-msgstr ""
-
-msgid "OTel RED Latency: 95th percentile latency over the last minute"
-msgstr ""
-
-#, fuzzy
-msgid "OTel RED Latency: 99th percentile latency"
-msgstr "Latência do pedido (percentil 99)"
-
-msgid "OTel RED Latency: 99th percentile latency over last hour"
-msgstr ""
-
-msgid "OTel RED Latency: 99th percentile latency over the last day"
-msgstr ""
-
-msgid "OTel RED Latency: 99th percentile latency over the last minute"
-msgstr ""
-
-#, fuzzy
-msgid "OTel RED Latency: Average latency"
-msgstr "Log de E/S escreve a média de latência"
-
-#, fuzzy
-msgid "OTel RED Latency: Average latency over the last day"
-msgstr "Ocorreu um erro durante a última actualização"
-
-#, fuzzy
-msgid "OTel RED Latency: Average latency over the last hour"
-msgstr "Acontecimentos das últimas 4 horas."
-
-#, fuzzy
-msgid "OTel RED Latency: Average latency over the last minute"
-msgstr "Interruptores de registo nos últimos 60 minutos"
-
-msgid "OTel RED Requests: Request over last day"
-msgstr ""
-
-msgid "OTel RED Requests: Request rate"
-msgstr ""
-
-msgid "OTel RED Requests: Request rate over the last day"
-msgstr ""
-
-msgid "OTel RED Requests: Request rate over the last hour"
-msgstr ""
-
-msgid "OTel RED Requests: Request rate over the last minute"
-msgstr ""
-
-msgid "OTel RED Requests: Requests over the last day"
-msgstr ""
-
-msgid "OTel RED Requests: Requests over the last hour"
-msgstr ""
-
-msgid "OTel RED Requests: Requests over the last minute"
-msgstr ""
 
 #, fuzzy
 msgid "OTel collector memory usage"
@@ -64917,12 +64932,6 @@ msgid "Specify roles of a control plane node"
 msgstr "Especificar as funções de um nó do plano de controlo"
 
 #, fuzzy
-msgid "Specify sites this OpenTelemetry Collector should run on."
-msgstr ""
-"Especifique um, vários ou todos os sítios em que esta ligação deve ser "
-"executada."
-
-#, fuzzy
 msgid "Specify sites this OpenTelemetry collector should run on. "
 msgstr ""
 "Especifique um, vários ou todos os sítios em que esta ligação deve ser "
@@ -78527,17 +78536,18 @@ msgstr ""
 
 #, fuzzy
 msgid ""
-"This will deploy the agent plug-in <tt>mk_oracle</tt> on your target system."
-msgstr "Implante o plugin de agente <tt>zorp</tt> no seu sistema alvo."
-
-#, fuzzy
-msgid ""
 "This will deploy the agent plug-in <tt>mk_oracle</tt> on your target system. "
 "Currently not all options are available in all operating systems."
 msgstr ""
 "Isso implantará o plug-in de agente <tt>mk_oracle</tt> no sistema de "
 "destino. Actualmente, nem todas as opções estão disponíveis em todos os "
 "sistemas operativos."
+
+#, fuzzy
+msgid ""
+"This will deploy the agent plug-in <tt>mk_oracle</tt> on your target system."
+"<br>ARM architecture is not supported."
+msgstr "Implante o plugin de agente <tt>zorp</tt> no seu sistema alvo."
 
 #, fuzzy
 msgid "This will deploy the agent plug-in <tt>mk_podman</tt>."
@@ -79969,6 +79979,18 @@ msgid "Total error rate"
 msgstr "Taxa de erro total"
 
 #, fuzzy
+msgid "Total errors (Last day)"
+msgstr "Taxa de erro total"
+
+#, fuzzy
+msgid "Total errors (Last hour)"
+msgstr "Taxa de erro total"
+
+#, fuzzy
+msgid "Total errors (Last minute)"
+msgstr "Taxa de erro total"
+
+#, fuzzy
 msgid "Total errors over the last day"
 msgstr "Taxa de erro total"
 
@@ -80257,6 +80279,18 @@ msgstr "Nome do anfitrião utilizado para os contentores"
 #, fuzzy
 msgid "Total reclaimable size upper levels"
 msgstr "Tamanho total do ficheiro de registo: Níveis superiores absolutos"
+
+#, fuzzy
+msgid "Total requests (Last day)"
+msgstr "apenas pedidos"
+
+#, fuzzy
+msgid "Total requests (Last hour)"
+msgstr "apenas pedidos"
+
+#, fuzzy
+msgid "Total requests (Last minute)"
+msgstr "apenas pedidos"
 
 #, fuzzy
 msgid "Total reservation utilization"
@@ -96311,6 +96345,10 @@ msgid "Percentile (histograms)"
 msgstr "Grupos de agregação"
 
 #, fuzzy
+msgid "Percentile for histogram aggregation"
+msgstr "Grupos de agregação"
+
+#, fuzzy
 msgid "Auto"
 msgstr "Automático"
 
@@ -96391,6 +96429,10 @@ msgstr "instâncias Oracle"
 #, fuzzy
 msgid "Inline Help: Metric backend (Custom query)"
 msgstr "instâncias Oracle"
+
+#, fuzzy
+msgid "Add query"
+msgstr "Adicionar à consulta"
 
 #, fuzzy
 msgid "Select at least two graph lines to edit"
@@ -97933,6 +97975,44 @@ msgid ""
 msgstr ""
 
 #, fuzzy
+#~ msgid "OTel RED Error: Error rate"
+#~ msgstr "Níveis para taxas de erro"
+
+#, fuzzy
+#~ msgid "OTel RED Latency: 90th percentile latency"
+#~ msgstr "Latência do pedido (percentil 50)"
+
+#, fuzzy
+#~ msgid "OTel RED Latency: 95th percentile latency"
+#~ msgstr "Latência do pedido (percentil 95)"
+
+#, fuzzy
+#~ msgid "OTel RED Latency: 99th percentile latency"
+#~ msgstr "Latência do pedido (percentil 99)"
+
+#, fuzzy
+#~ msgid "OTel RED Latency: Average latency"
+#~ msgstr "Log de E/S escreve a média de latência"
+
+#, fuzzy
+#~ msgid "OTel RED Latency: Average latency over the last day"
+#~ msgstr "Ocorreu um erro durante a última actualização"
+
+#, fuzzy
+#~ msgid "OTel RED Latency: Average latency over the last hour"
+#~ msgstr "Acontecimentos das últimas 4 horas."
+
+#, fuzzy
+#~ msgid "OTel RED Latency: Average latency over the last minute"
+#~ msgstr "Interruptores de registo nos últimos 60 minutos"
+
+#, fuzzy
+#~ msgid "Specify sites this OpenTelemetry Collector should run on."
+#~ msgstr ""
+#~ "Especifique um, vários ou todos os sítios em que esta ligação deve ser "
+#~ "executada."
+
+#, fuzzy
 #~ msgid "Last 7 days"
 #~ msgstr "Últimos 35 dias"
 
@@ -99023,10 +99103,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Total packets"
 #~ msgstr "Total de Pacotes Máximo"
-
-#, fuzzy
-#~ msgid "Total requests"
-#~ msgstr "apenas pedidos"
 
 #, fuzzy
 #~ msgid "Aggregation for sums"

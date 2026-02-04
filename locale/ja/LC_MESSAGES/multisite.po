@@ -3369,6 +3369,20 @@ msgid "Access to the Event Console"
 msgstr "イベントコンソールへのアクセス"
 
 msgid ""
+"Access to the Welcome page is controlled by multiple permissions. Users "
+"without the required permissions will be redirected to the main dashboard. "
+"Needed permissions are:<br><br>- Activate configuration<br>- Add & remove "
+"hosts<br>- Customize dashboards and use them<br>- Host & service groups<br>- "
+"Host management<br>- Make changes, perform actions<br>- Modify built-in "
+"dashboards<br>- Notification configuration<br>- Register host & download "
+"monitoring agents of your hosts<br>- See packaged dashboards<br>- See user "
+"dashboards<br>- Service discovery: Disabled services<br>- Service discovery: "
+"Move to monitored services<br>- Service discovery: Move to undecided "
+"services<br>- Service discovery: Remove services<br>- Time periods<br>- Use "
+"WATO"
+msgstr ""
+
+msgid ""
 "Access to the historic audit log. The currently pending changes can be seen "
 "by all users with access to Setup."
 msgstr ""
@@ -36877,8 +36891,40 @@ msgstr "最後に完了した期間"
 msgid "Last contact of agent updater"
 msgstr "エージェントアップデータの最終コンタクト"
 
+#, fuzzy
+msgid "Last day error rate"
+msgstr "総エラー率"
+
+msgid "Last day latency (avg)"
+msgstr ""
+
+msgid "Last day latency (p90)"
+msgstr ""
+
+msgid "Last day latency (p95)"
+msgstr ""
+
+msgid "Last day latency (p99)"
+msgstr ""
+
 msgid "Last day of last month"
 msgstr "先月の最終日"
+
+#, fuzzy
+msgid "Last day request rate"
+msgstr "平均。リクエストレート"
+
+#, fuzzy
+msgid "Last day requests"
+msgstr "Livestatusリクエスト"
+
+#, fuzzy
+msgid "Last day total errors"
+msgstr "内部エラー"
+
+#, fuzzy
+msgid "Last day total requests"
+msgstr "Web ACLリクエスト"
 
 msgid "Last download of agent updater"
 msgstr "エージェントアップデータの最終ダウンロード"
@@ -36905,7 +36951,43 @@ msgid "Last host state change"
 msgstr "最後のホスト状態変化"
 
 #, fuzzy
+msgid "Last hour error rate"
+msgstr "エラー率のレベル"
+
+#, fuzzy
+msgid "Last hour latency (avg)"
+msgstr "最後のホスト状態変化"
+
+#, fuzzy
+msgid "Last hour latency (p90)"
+msgstr "その他の待ち時間"
+
+#, fuzzy
+msgid "Last hour latency (p95)"
+msgstr "その他の待ち時間"
+
+#, fuzzy
+msgid "Last hour latency (p99)"
+msgstr "その他の待ち時間"
+
+#, fuzzy
+msgid "Last hour request rate"
+msgstr "過去25時間"
+
+#, fuzzy
+msgid "Last hour requests"
+msgstr "過去25時間"
+
+#, fuzzy
 msgid "Last hour restarts"
+msgstr "過去25時間"
+
+#, fuzzy
+msgid "Last hour total errors"
+msgstr "過去25時間"
+
+#, fuzzy
+msgid "Last hour total requests"
 msgstr "過去25時間"
 
 msgid "Last known details"
@@ -36916,6 +36998,42 @@ msgstr "最後に確認されたプラグイン出力"
 
 msgid "Last log"
 msgstr "最終ログ"
+
+#, fuzzy
+msgid "Last minute error rate"
+msgstr "インスタンスエラー状態"
+
+#, fuzzy
+msgid "Last minute latency (avg)"
+msgstr "メールの待ち時間"
+
+#, fuzzy
+msgid "Last minute latency (p90)"
+msgstr "メールの待ち時間"
+
+#, fuzzy
+msgid "Last minute latency (p95)"
+msgstr "メールの待ち時間"
+
+#, fuzzy
+msgid "Last minute latency (p99)"
+msgstr "メールの待ち時間"
+
+#, fuzzy
+msgid "Last minute request rate"
+msgstr "平均。リクエストレート"
+
+#, fuzzy
+msgid "Last minute requests"
+msgstr "スポットインスタンスリクエスト"
+
+#, fuzzy
+msgid "Last minute total errors"
+msgstr "シグナル損失エラー"
+
+#, fuzzy
+msgid "Last minute total requests"
+msgstr "Web ACLリクエスト"
 
 msgid "Last month"
 msgstr "先月"
@@ -37005,7 +37123,23 @@ msgid "Latency"
 msgstr "レイテンシー"
 
 #, fuzzy
+msgid "Latency (avg)"
+msgstr "レイテンシー"
+
+#, fuzzy
 msgid "Latency (ms)"
+msgstr "レイテンシー"
+
+#, fuzzy
+msgid "Latency (p90)"
+msgstr "レイテンシー"
+
+#, fuzzy
+msgid "Latency (p95)"
+msgstr "レイテンシー"
+
+#, fuzzy
+msgid "Latency (p99)"
 msgstr "レイテンシー"
 
 msgid "Latency of GetItem requests"
@@ -46473,125 +46607,6 @@ msgstr "OSNレーザー減衰"
 
 msgid "OTLP endpoint"
 msgstr "OTLPエンドポイント"
-
-#, fuzzy
-msgid "OTel RED Error: Error rate"
-msgstr "エラー率のレベル"
-
-msgid "OTel RED Error: Error rate over the last day"
-msgstr ""
-
-msgid "OTel RED Error: Error rate over the last hour"
-msgstr ""
-
-msgid "OTel RED Error: Error rate over the last minute"
-msgstr ""
-
-msgid "OTel RED Error: Errors over the last day"
-msgstr ""
-
-msgid "OTel RED Error: Errors over the last hour"
-msgstr ""
-
-msgid "OTel RED Error: Errors over the last minute"
-msgstr ""
-
-msgid "OTel RED Error: Requests over the last day"
-msgstr ""
-
-msgid "OTel RED Error: Requests over the last hour"
-msgstr ""
-
-msgid "OTel RED Error: Requests over the last minute"
-msgstr ""
-
-msgid "OTel RED Error: Total errors over the last day"
-msgstr ""
-
-msgid "OTel RED Error: Total errors over the last hour"
-msgstr ""
-
-msgid "OTel RED Error: Total errors over the last minute"
-msgstr ""
-
-#, fuzzy
-msgid "OTel RED Latency: 90th percentile latency"
-msgstr "リクエストレイテンシー(50パーセンタイル)"
-
-msgid "OTel RED Latency: 90th percentile latency over the last day"
-msgstr ""
-
-msgid "OTel RED Latency: 90th percentile latency over the last hour"
-msgstr ""
-
-msgid "OTel RED Latency: 90th percentile latency over the last minute"
-msgstr ""
-
-#, fuzzy
-msgid "OTel RED Latency: 95th percentile latency"
-msgstr "リクエストレイテンシー(95パーセンタイル)"
-
-msgid "OTel RED Latency: 95th percentile latency over the last day"
-msgstr ""
-
-msgid "OTel RED Latency: 95th percentile latency over the last hour"
-msgstr ""
-
-msgid "OTel RED Latency: 95th percentile latency over the last minute"
-msgstr ""
-
-#, fuzzy
-msgid "OTel RED Latency: 99th percentile latency"
-msgstr "リクエストレイテンシー(99パーセンタイル)"
-
-msgid "OTel RED Latency: 99th percentile latency over last hour"
-msgstr ""
-
-msgid "OTel RED Latency: 99th percentile latency over the last day"
-msgstr ""
-
-msgid "OTel RED Latency: 99th percentile latency over the last minute"
-msgstr ""
-
-#, fuzzy
-msgid "OTel RED Latency: Average latency"
-msgstr "I/Oログ書き込み平均レイテンシ"
-
-#, fuzzy
-msgid "OTel RED Latency: Average latency over the last day"
-msgstr "前回の更新中にエラーが発生しました"
-
-#, fuzzy
-msgid "OTel RED Latency: Average latency over the last hour"
-msgstr "直近4時間のイベント。"
-
-#, fuzzy
-msgid "OTel RED Latency: Average latency over the last minute"
-msgstr "過去60分間のログスイッチ"
-
-msgid "OTel RED Requests: Request over last day"
-msgstr ""
-
-msgid "OTel RED Requests: Request rate"
-msgstr ""
-
-msgid "OTel RED Requests: Request rate over the last day"
-msgstr ""
-
-msgid "OTel RED Requests: Request rate over the last hour"
-msgstr ""
-
-msgid "OTel RED Requests: Request rate over the last minute"
-msgstr ""
-
-msgid "OTel RED Requests: Requests over the last day"
-msgstr ""
-
-msgid "OTel RED Requests: Requests over the last hour"
-msgstr ""
-
-msgid "OTel RED Requests: Requests over the last minute"
-msgstr ""
 
 #, fuzzy
 msgid "OTel collector memory usage"
@@ -61234,10 +61249,6 @@ msgstr "ルールを適用するキュー名を指定します"
 msgid "Specify roles of a control plane node"
 msgstr "コントロールプレーンノードの役割の指定"
 
-#, fuzzy
-msgid "Specify sites this OpenTelemetry Collector should run on."
-msgstr "OpenTelemetry コレクターを実行するサイトを指定します。"
-
 msgid "Specify sites this OpenTelemetry collector should run on. "
 msgstr "OpenTelemetry コレクターを実行するサイトを指定してください "
 
@@ -74341,12 +74352,6 @@ msgstr ""
 "これにより、エージェントプラグイン<tt> mk_nfsiostat </tt>がデプロイされ、さま"
 "ざまなクライアント側のNFSIO統計がチェックされます。"
 
-#, fuzzy
-msgid ""
-"This will deploy the agent plug-in <tt>mk_oracle</tt> on your target system."
-msgstr ""
-"エージェントプラグイン <tt>zorp</tt>をターゲットシステムにデプロイします。"
-
 msgid ""
 "This will deploy the agent plug-in <tt>mk_oracle</tt> on your target system. "
 "Currently not all options are available in all operating systems."
@@ -74354,6 +74359,13 @@ msgstr ""
 "これにより、エージェントプラグイン<tt>mk_oracle</tt>がターゲットシステムにデ"
 "プロイされます。現在のところ、全てのOSで全てのオプションが利用できるわけでは"
 "ありません。"
+
+#, fuzzy
+msgid ""
+"This will deploy the agent plug-in <tt>mk_oracle</tt> on your target system."
+"<br>ARM architecture is not supported."
+msgstr ""
+"エージェントプラグイン <tt>zorp</tt>をターゲットシステムにデプロイします。"
 
 msgid "This will deploy the agent plug-in <tt>mk_podman</tt>."
 msgstr "エージェントプラグイン<tt>mk_podman</tt>をデプロイします。"
@@ -75714,6 +75726,18 @@ msgid "Total error rate"
 msgstr "総エラー率"
 
 #, fuzzy
+msgid "Total errors (Last day)"
+msgstr "総エラー率"
+
+#, fuzzy
+msgid "Total errors (Last hour)"
+msgstr "総エラー率"
+
+#, fuzzy
+msgid "Total errors (Last minute)"
+msgstr "総エラー率"
+
+#, fuzzy
 msgid "Total errors over the last day"
 msgstr "総エラー率"
 
@@ -75992,6 +76016,18 @@ msgstr "Podman ボリュームの総再利用可能なサイズ"
 
 msgid "Total reclaimable size upper levels"
 msgstr "総再利用可能な容量 上位ベル"
+
+#, fuzzy
+msgid "Total requests (Last day)"
+msgstr "リクエストのみ"
+
+#, fuzzy
+msgid "Total requests (Last hour)"
+msgstr "リクエストのみ"
+
+#, fuzzy
+msgid "Total requests (Last minute)"
+msgstr "リクエストのみ"
 
 msgid "Total reservation utilization"
 msgstr "合計メモリ使用率"
@@ -90866,6 +90902,10 @@ msgstr "集約チェック"
 msgid "Percentile (histograms)"
 msgstr "集約グループ"
 
+#, fuzzy
+msgid "Percentile for histogram aggregation"
+msgstr "集約グループ"
+
 msgid "Auto"
 msgstr "自動"
 
@@ -90940,6 +90980,10 @@ msgstr "Oracleインスタンス"
 #, fuzzy
 msgid "Inline Help: Metric backend (Custom query)"
 msgstr "Oracleインスタンス"
+
+#, fuzzy
+msgid "Add query"
+msgstr "クエリに追加"
 
 #, fuzzy
 msgid "Select at least two graph lines to edit"
@@ -92456,6 +92500,42 @@ msgid ""
 "You can still access it later via Help > Learning Checkmk > Welcome page"
 msgstr ""
 
+#, fuzzy
+#~ msgid "OTel RED Error: Error rate"
+#~ msgstr "エラー率のレベル"
+
+#, fuzzy
+#~ msgid "OTel RED Latency: 90th percentile latency"
+#~ msgstr "リクエストレイテンシー(50パーセンタイル)"
+
+#, fuzzy
+#~ msgid "OTel RED Latency: 95th percentile latency"
+#~ msgstr "リクエストレイテンシー(95パーセンタイル)"
+
+#, fuzzy
+#~ msgid "OTel RED Latency: 99th percentile latency"
+#~ msgstr "リクエストレイテンシー(99パーセンタイル)"
+
+#, fuzzy
+#~ msgid "OTel RED Latency: Average latency"
+#~ msgstr "I/Oログ書き込み平均レイテンシ"
+
+#, fuzzy
+#~ msgid "OTel RED Latency: Average latency over the last day"
+#~ msgstr "前回の更新中にエラーが発生しました"
+
+#, fuzzy
+#~ msgid "OTel RED Latency: Average latency over the last hour"
+#~ msgstr "直近4時間のイベント。"
+
+#, fuzzy
+#~ msgid "OTel RED Latency: Average latency over the last minute"
+#~ msgstr "過去60分間のログスイッチ"
+
+#, fuzzy
+#~ msgid "Specify sites this OpenTelemetry Collector should run on."
+#~ msgstr "OpenTelemetry コレクターを実行するサイトを指定します。"
+
 #~ msgid "Last 7 days"
 #~ msgstr "過去7日間"
 
@@ -93541,10 +93621,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Total packets"
 #~ msgstr "最大総パケット数"
-
-#, fuzzy
-#~ msgid "Total requests"
-#~ msgstr "リクエストのみ"
 
 #, fuzzy
 #~ msgid "Aggregation for sums"
