@@ -13,15 +13,13 @@ import CmkIcon from '@/components/CmkIcon/CmkIcon.vue'
 import { getInjectedMainMenu } from '@/main-menu/provider/main-menu'
 
 import { getSearchUtils } from '../providers/search-utils'
-import type { SearchProviderKeys } from '../providers/search-utils.types'
 import { availableProviderOptions } from './header/QueryOptions'
-import UnifiedSearchProviderSelect from './header/UnifiedSearchProviderSelect.vue'
 
 const { _t } = usei18n()
 const searchUtils = getSearchUtils()
 
 const props = defineProps<{
-  providers: SearchProviderKeys[]
+  providers: ProviderName[]
 }>()
 const mainMenu = getInjectedMainMenu()
 
@@ -49,11 +47,11 @@ function goToSearch(e: Event, provider: ProviderName) {
     defer
   >
     <div class="unified-search-input-injector__root">
-      <UnifiedSearchProviderSelect
-        :provider="provider"
-        :open-search-on-change="true"
-      ></UnifiedSearchProviderSelect>
-      <CmkIcon class="unified-search-input-injector__icon" name="search" size="medium"></CmkIcon>
+      <CmkIcon
+        class="unified-search-input-injector__icon"
+        name="main-search"
+        size="medium"
+      ></CmkIcon>
       <input
         :id="`unified-search-input-${provider}`"
         role="search"
