@@ -6,6 +6,7 @@
 # mypy: disable-error-code="no-untyped-call"
 
 import pytest
+
 from agents.plugins import mtr
 
 

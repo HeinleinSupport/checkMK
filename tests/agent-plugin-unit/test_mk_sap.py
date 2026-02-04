@@ -9,6 +9,7 @@
 from collections import namedtuple
 
 import pytest
+
 from agents.plugins import mk_sap
 
 Value = namedtuple("Value", ["value"])  # nosemgrep: typing-namedtuple-call

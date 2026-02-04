@@ -31,7 +31,6 @@ from buildscripts.scripts.lib.registry import (
     get_default_registries,
     Registry,
 )
-
 from cmk.ccc.version import Version
 from tests.testlib.package_manager import ABCPackageManager, code_name
 from tests.testlib.version import CMKEdition
