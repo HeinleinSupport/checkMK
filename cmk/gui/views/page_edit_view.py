@@ -926,6 +926,7 @@ def _update_view_with_valuespec_values(
         if options:
             for option, _title in view_editor_options():
                 view[option] = option in options
+        view.update(attrs)  # type: ignore[typeddict-item]
 
     if ident == "sorting":
         view["sorters"] = [SorterSpec(*s) for s in attrs["sorters"]]
