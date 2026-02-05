@@ -3,8 +3,6 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
-
 import re
 from collections import defaultdict
 from collections.abc import Iterable, Iterator, Mapping, Sequence
@@ -162,7 +160,7 @@ class Memory:
             int(float(value) * {"B": 1, "K": 1024, "M": 1024**2, "G": 1024**3, "T": 1024**4}[unit])
         )
 
-    def render(self):
+    def render(self) -> str:
         return render.bytes(self.bytes)
 
 
@@ -175,7 +173,7 @@ CPU_PATTERN = re.compile(
 class CpuTimeSeconds:
     value: float
 
-    def render(self):
+    def render(self) -> str:
         return render.time_offset(self.value)
 
     @classmethod
@@ -244,15 +242,15 @@ class UnitTypes(Enum):
     socket = "socket"
 
     @property
-    def suffix(self):
+    def suffix(self) -> str:
         return f".{self.value}"
 
     @property
-    def singular(self):
+    def singular(self) -> str:
         return f"{self.value.capitalize()}"
 
     @property
-    def plural(self):
+    def plural(self) -> str:
         return f"{self.value.capitalize()}s"
 
 
