@@ -1,0 +1,25 @@
+/**
+ * Copyright (C) 2026 Checkmk GmbH - License: GNU General Public License v2
+ * This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
+ * conditions defined in the file COPYING, which is part of this source code package.
+ */
+
+@layer theme {
+  body[data-theme='facelift'] {
+    --demo-nav-tree-parent-item-font-color: var(--color-conference-grey-100);
+    --demo-nav-tree-link-color: var(--color-mid-grey-100);
+    --demo-nav-tree-link-active-color: var(--color-corporate-green-70);
+    --demo-nav-tree-link-active-color-bg: var(--color-daylight-grey-30);
+    --demo-nav-tree-background-color: var(--color-daylight-grey-20);
+    --demo-nav-tree-scroll-bar-color: var(--color-mid-grey-20);
+  }
+
+  body[data-theme='modern-dark'] {
+    --demo-nav-tree-parent-item-font-color: var(--color-white-100);
+    --demo-nav-tree-link-color: var(--color-mid-grey-0);
+    --demo-nav-tree-link-active-color: var(--color-corporate-green-50);
+    --demo-nav-tree-link-active-color-bg: var(--color-midnight-grey-80);
+    --demo-nav-tree-background-color: var(--color-midnight-grey-90);
+    --demo-nav-tree-scroll-bar-color: var(--color-mid-grey-90);
+  }
+}

@@ -3,69 +3,51 @@
  * This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
  * conditions defined in the file COPYING, which is part of this source code package.
  */
-//
-import { pages as componentsPages } from '@demo/components/'
-import { type RouteLocation, createRouter, createWebHistory } from 'vue-router'
+import { roots } from '@demo/components/'
+import { type RouteLocation, type RouteRecordRaw, createRouter, createWebHistory } from 'vue-router'
 
+import DemoEmpty from './DemoEmpty.vue'
 import DemoHome from './DemoHome.vue'
-import { Folder, Page, RootFolder } from './page'
-import type { RRSVMetaFolder, Route } from './types'
+import { type Folder, Page } from './page'
+import { useNavigation } from './useNavigation'
 
-const root: RootFolder = new RootFolder(DemoHome, componentsPages)
+const { openPathToRoute } = useNavigation()
 
 function defaultProps(route: RouteLocation): { screenshotMode: boolean } {
   return { screenshotMode: route.query.screenshot === 'true' }
 }
 
-function toRoute(element: Page | Folder | RootFolder, prefixPath: string): Array<Route> {
-  if (element instanceof Page) {
-    return [
-      {
-        path: `${prefixPath}${element.name}`,
-        meta: { type: 'page', name: element.name, inFolder: prefixPath },
-        props: defaultProps,
-        component: element.component
-      }
-    ]
-  } else {
-    let folderPath
-    let name
-    let inFolder
-    if (element instanceof Folder) {
-      folderPath = `${prefixPath}${element.name}/`
-      name = element.name
-      inFolder = prefixPath
-    } else if (element instanceof RootFolder) {
-      folderPath = '/'
-      name = '◉'
-      inFolder = '////' // does not exist so it's now shown in the nav
+function buildRoutes(items: Array<Page | Folder>, parentPath: string): Array<RouteRecordRaw> {
+  const routes: Array<RouteRecordRaw> = []
+
+  for (const item of items) {
+    const itemPath = `${parentPath}/${encodeURIComponent(item.name)}`
+    if (item instanceof Page) {
+      routes.push({
+        path: itemPath,
+        component: item.component,
+        props: defaultProps
+      })
     } else {
-      throw new Error('not implemented')
+      routes.push({
+        path: itemPath,
+        component: DemoEmpty,
+        props: defaultProps
+      })
+      routes.push(...buildRoutes(item.pages, itemPath))
     }
-    let pages: Array<Route> = []
-    const folder: Route<RRSVMetaFolder> = {
-      path: folderPath,
-      meta: {
-        type: 'folder',
-        name: name,
-        content: pages,
-        inFolder: inFolder
-      },
-      props: defaultProps,
-      component: element.component
-    }
-    for (const subPage of element.pages) {
-      pages = [...pages, ...toRoute(subPage, folderPath)]
-    }
-    pages.sort((a, b) => a.meta.name.localeCompare(b.meta.name))
-    folder.meta.content = pages
-    return [folder, ...pages]
   }
+  return routes
 }
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: toRoute(root, '/')
+  routes: [{ path: '/', component: DemoHome, props: defaultProps }, ...buildRoutes(roots, '')]
+})
+
+router.beforeEach((to) => {
+  openPathToRoute(to.path)
+  return true
 })
 
 export default router

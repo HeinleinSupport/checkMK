@@ -11,6 +11,7 @@ import '@/assets/variables.css'
 import DemoApp from './_demo/DemoApp.vue'
 import './_demo/assets/main.css'
 import router from './_demo/router'
+import './_demo/variables.css'
 
 const app = createApp(DemoApp)
 app.use(router)

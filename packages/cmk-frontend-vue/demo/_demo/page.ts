@@ -17,26 +17,12 @@ export class Page {
 
 export class Folder {
   name: string
-  component: Component<{ screenshotMode: boolean }>
   pages: Array<Page | Folder>
+  defaultOpen: boolean
 
-  constructor(
-    name: string,
-    component: Component<{ screenshotMode: boolean }>,
-    pages: Array<Page | Folder>
-  ) {
+  constructor(name: string, pages: Array<Page | Folder>, defaultOpen: boolean = false) {
     this.name = name
-    this.component = component
     this.pages = pages
-  }
-}
-
-export class RootFolder {
-  component: Component<{ screenshotMode: boolean }>
-  pages: Array<Page | Folder>
-
-  constructor(component: Component<{ screenshotMode: boolean }>, pages: Array<Page | Folder>) {
-    this.component = component
-    this.pages = pages
+    this.defaultOpen = defaultOpen
   }
 }
