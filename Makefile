@@ -171,9 +171,6 @@ format:
 what-gerrit-makes:
 	$(MAKE)	-C tests what-gerrit-makes
 
-lint-bazel:
-	scripts/run-buildifier --lint=fix
-
 documentation:
 	echo Nothing to do here remove this target
 

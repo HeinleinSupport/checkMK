@@ -1,7 +1,5 @@
 {
   "type": "auto",
-  "mode": "fix",
-  "lint": "warn",
   "IGNORE_REASONS": ["native-py: we *need* to use py_* rules from aspect and not the native ones"],
   "warningsList": [
     "attr-applicable_licenses",

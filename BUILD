@@ -14,16 +14,22 @@ load("//bazel/rules:requirements.bzl", "compile_requirements_in")
 
 exports_files(
     [
-        "pyproject.toml",
-        "requirements.txt",
         ".clang-tidy",
         ".clippy.toml",
         ".npmrc",
         ".prettierignore",
         "AUTHORS",
         "COPYING",
+        "pyproject.toml",
+        "requirements.txt",
     ],
     visibility = ["//:__subpackages__"],
+)
+
+filegroup(
+    name = "buildifier_config",
+    srcs = [".buildifier.json"],
+    visibility = ["//visibility:public"],
 )
 
 npm_link_all_packages(name = "node_modules")
@@ -330,4 +336,14 @@ alias(
 alias(
     name = "format.check",
     actual = "//bazel/tools/format:check",
+)
+
+alias(
+    name = "buildifier",
+    actual = "//bazel/tools:buildifier",
+)
+
+alias(
+    name = "buildifier.check",
+    actual = "//bazel/tools:buildifier.check",
 )

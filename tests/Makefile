@@ -63,7 +63,6 @@ DOCKERABLE_TESTS := \
 	test-file-content \
 	test-format \
 	test-license-headers \
-	test-lint-bazel \
 	test-lint-groovy \
 	test-mypy \
 	test-requirements \
@@ -164,9 +163,6 @@ test-integration-agent-plugin-docker:
 test-integration-agent-plugin:
 	$(PYTEST) -x $(realpath agent_plugin_integration) \
 	$(PYTEST_SYSTEM_TEST_ARGS) --session-timeout 3600
-
-test-lint-bazel:
-	../scripts/run-buildifier --lint=warn --mode=check
 
 test-lint-groovy:
 	bazel run //bazel/tools:groovy-lint -- --failon=error --noserver $(GROOVYLINT_OUTPUT_ARGS) $(REPO_PATH)/buildscripts/

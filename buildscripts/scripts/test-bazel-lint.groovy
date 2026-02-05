@@ -8,7 +8,7 @@ void main() {
     dir("${checkout_dir}") {
         test_jenkins_helper.execute_test([
             name: "test-bazel-lint",
-            cmd: "make -C tests test-lint-bazel",
+            cmd: "bazel run //:buildifier.check 2>bazel-lint.txt",
             output_file: "bazel-lint.txt",
         ]);
 

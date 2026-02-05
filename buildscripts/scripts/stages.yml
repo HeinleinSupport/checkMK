@@ -365,8 +365,7 @@ STAGES:
 
     - NAME: "Bazel Lint"
       ONLY_WHEN_NOT_EMPTY: CHANGED_REFERENCE_IMAGE,CHANGED_BAZEL_FILES
-      DIR: "tests"
-      COMMAND: "make --quiet test-lint-bazel &> ${RESULTS}/bazel-lint.txt"
+      COMMAND: "bazel run //:buildifier.check 2>${RESULTS}/bazel-lint.txt"
       BAZEL_LOCKS_AMOUNT: 1
       TEXT_ON_SKIP: "No Bazel files changed"
       RESULT_CHECK_TYPE: "BAZELLINT"

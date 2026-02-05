@@ -10,6 +10,7 @@ load("@rules_python//python:defs.bzl", "py_binary")
 load("@rules_python//python/entry_points:py_console_script_binary.bzl", "py_console_script_binary")
 load("@rules_uv//uv:pip.bzl", "pip_compile")
 load("@tools_requirements//:requirements.bzl", tooling_pip = "requirement")
+load("//bazel/rules:sh_expand_template.bzl", "sh_expand_template")
 
 pip_compile(
     name = "requirements",
@@ -128,3 +129,41 @@ py_binary(
     main = "extract_os_packages.py",
     visibility = ["//visibility:public"],
 )
+
+[
+    sh_expand_template(
+        name = name,
+        src = "@buildifier_prebuilt//:buildifier",
+        data = ["//:buildifier_config"],
+        substitutions = {
+            "{buildifier_args}": args,
+            "{buildifier_bin}": "$(execpath @buildifier_prebuilt//:buildifier)",
+            "{config}": "$(execpath //:buildifier_config)",
+        },
+        template = [
+            "#!/bin/bash",
+            "set -e",
+            'REPO_PATH="${BUILD_WORKSPACE_DIRECTORY:-.}"',
+            'find "$REPO_PATH" -type f \\',
+            '    \\! -path "${REPO_PATH}/*/build/*" \\',
+            '    \\! -path "${REPO_PATH}/container_shadow_workspace_local/*" \\',
+            '    \\! -path "${REPO_PATH}/.docker_workspace/*" \\',
+            '    \\! -path "${REPO_PATH}/tests/qa-test-data/*" \\',
+            '    \\! -path "${REPO_PATH}/.cache/*" \\',
+            '    \\! -path "${REPO_PATH}/bazel/registry/*" \\',
+            '    \\! -path "${REPO_PATH}/bazel/thirdparty/*" \\',
+            '    \\( -name "*.bzl" -o -name "*.sky" -o -name BUILD.bazel -o -name BUILD \\',
+            '    -o -name "*.BUILD" -o -name "BUILD.*.bazel" -o -name "BUILD.*.oss" \\',
+            '    -o -name "MODULE.bazel" -o -name WORKSPACE -o -name WORKSPACE.bazel \\',
+            '    -o -name WORKSPACE.oss -o -name "WORKSPACE.*.bazel" -o -name "WORKSPACE.*.oss" \\) \\',
+            '    -print | xargs "$BUILD_WORKSPACE_DIRECTORY/{buildifier_bin}" {buildifier_args} \\',
+            '    -config="$BUILD_WORKSPACE_DIRECTORY/{config}" "$@"',
+            "",
+        ],
+        visibility = ["//visibility:public"],
+    )
+    for name, args in [
+        ("buildifier", "--lint=fix"),
+        ("buildifier.check", "--lint=warn"),
+    ]
+]
