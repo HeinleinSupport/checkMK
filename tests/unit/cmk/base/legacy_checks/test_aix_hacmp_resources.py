@@ -4,14 +4,13 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 # mypy: disable-error-code="misc"
-# mypy: disable-error-code="no-untyped-call"
 
 from collections.abc import Mapping, Sequence
 from typing import Any
 
 import pytest
 
-from cmk.agent_based.v2 import StringTable
+from cmk.agent_based.v2 import Result, Service, State, StringTable
 from cmk.base.legacy_checks.aix_hacmp_resources import (
     check_aix_hacmp_resources,
     discover_aix_hacmp_resources,
@@ -93,17 +92,19 @@ from cmk.base.legacy_checks.aix_hacmp_resources import (
                     "",
                 ],
             ],
-            [("pdb213rg", None), ("pmon01rg", None)],
+            [Service(item="pdb213rg"), Service(item="pmon01rg")],
         ),
     ],
 )
 def test_discover_aix_hacmp_resources(
-    string_table: StringTable, expected_discoveries: Sequence[tuple[str, Mapping[str, Any] | None]]
+    string_table: StringTable, expected_discoveries: Sequence[Service]
 ) -> None:
     """Test discovery function for aix_hacmp_resources check."""
     parsed = parse_aix_hacmp_resources(string_table)
     result = list(discover_aix_hacmp_resources(parsed))
-    assert sorted(result) == sorted(expected_discoveries)
+    assert sorted(result, key=lambda s: s.item or "") == sorted(
+        expected_discoveries, key=lambda s: s.item or ""
+    )
 
 
 @pytest.mark.parametrize(
@@ -182,7 +183,7 @@ def test_discover_aix_hacmp_resources(
                     "",
                 ],
             ],
-            [(0, "online on node pasv0450, offline on node pasv0449")],
+            [Result(state=State.OK, summary="online on node pasv0450, offline on node pasv0449")],
         ),
         (
             "pmon01rg",
@@ -257,12 +258,15 @@ def test_discover_aix_hacmp_resources(
                     "",
                 ],
             ],
-            [(0, "online on node pasv0449, offline on node pasv0450")],
+            [Result(state=State.OK, summary="online on node pasv0449, offline on node pasv0450")],
         ),
     ],
 )
 def test_check_aix_hacmp_resources(
-    item: str, params: Mapping[str, Any], string_table: StringTable, expected_results: Sequence[Any]
+    item: str,
+    params: Mapping[str, Any],
+    string_table: StringTable,
+    expected_results: Sequence[Result],
 ) -> None:
     """Test check function for aix_hacmp_resources check."""
     parsed = parse_aix_hacmp_resources(string_table)

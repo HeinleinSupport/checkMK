@@ -3,8 +3,6 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
-
 # <<<aix_hacmp_resources:sep(58)>>>
 # pdb213rg:ONLINE:pasv0450:non-concurrent:OHN:FNPN:NFB:ignore::: : :::
 # pdb213rg:OFFLINE:pasv0449:non-concurrent:OHN:FNPN:NFB:ignore::: : :::
@@ -16,15 +14,25 @@
 #  u'pmon01rg': [(u'pasv0449', u'online'), (u'pasv0450', u'offline')]}
 
 
-# mypy: disable-error-code="var-annotated"
+from collections.abc import Mapping
+from typing import Any
 
-from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
+from cmk.agent_based.v2 import (
+    AgentSection,
+    CheckPlugin,
+    CheckResult,
+    DiscoveryResult,
+    Result,
+    Service,
+    State,
+    StringTable,
+)
 
-check_info = {}
 
-
-def parse_aix_hacmp_resources(string_table):
-    parsed = {}
+def parse_aix_hacmp_resources(
+    string_table: StringTable,
+) -> dict[str, list[tuple[str, str]]]:
+    parsed: dict[str, list[tuple[str, str]]] = {}
     for line in string_table:
         joined_line = " ".join(line)
         if (
@@ -39,17 +47,17 @@ def parse_aix_hacmp_resources(string_table):
     return parsed
 
 
-def discover_aix_hacmp_resources(parsed):
-    return [(key, None) for key in parsed]
+def discover_aix_hacmp_resources(section: dict[str, list[tuple[str, str]]]) -> DiscoveryResult:
+    for key in section:
+        yield Service(item=key)
 
 
-def check_aix_hacmp_resources(item, params, parsed):
-    if not (data := parsed.get(item)):
+def check_aix_hacmp_resources(
+    item: str, params: Mapping[str, Any], section: dict[str, list[tuple[str, str]]]
+) -> CheckResult:
+    if not (data := section.get(item)):
         return
-    if params is None:
-        expected_behaviour = "first"
-    else:
-        expected_behaviour = params.get("expect_online_on", "first")
+    expected_behaviour = params.get("expect_online_on", "first")
 
     resource_states = []
     infotext = []
@@ -57,20 +65,25 @@ def check_aix_hacmp_resources(item, params, parsed):
         resource_states.append(resource_state)
         infotext.append(f"{resource_state} on node {node_name}")
 
-    state = 0
+    state = State.OK
     if expected_behaviour == "first":
         if resource_states[0] != "online":
-            state = 2
+            state = State.CRIT
     elif expected_behaviour == "any":
         if not any(resource_state == "online" for resource_state in resource_states):
-            state = 2
+            state = State.CRIT
 
-    yield state, ", ".join(infotext)
+    yield Result(state=state, summary=", ".join(infotext))
 
 
-check_info["aix_hacmp_resources"] = LegacyCheckDefinition(
+agent_section_aix_hacmp_resources = AgentSection(
     name="aix_hacmp_resources",
     parse_function=parse_aix_hacmp_resources,
+)
+
+
+check_plugin_aix_hacmp_resources = CheckPlugin(
+    name="aix_hacmp_resources",
     service_name="HACMP RG %s",
     discovery_function=discover_aix_hacmp_resources,
     check_function=check_aix_hacmp_resources,
