@@ -4,7 +4,6 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 # mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
 
 import re
 from collections.abc import Generator, Mapping, Sequence
@@ -177,7 +176,7 @@ def _match_service_against_params(params: Mapping[str, Any], service: WinService
     return State(params.get("else", 2))
 
 
-def _wildcard(value, reference):
+def _wildcard(value: str | None, reference: str) -> bool:
     return value is None or value == reference
 
 
