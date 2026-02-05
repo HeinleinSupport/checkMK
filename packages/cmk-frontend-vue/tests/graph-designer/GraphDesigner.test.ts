@@ -518,47 +518,45 @@ describe('Adding a Query graph line', { timeout: 10_000 }, () => {
   let worker: ReturnType<typeof setupServer>
 
   beforeAll(async () => {
-    async function autocompleteInterceptor({ request }: { request: Request }) {
-      const jsonData = (await request.formData()).get('request')
-      const parsedRequest = JSON.parse(jsonData as string)
-      const ident = parsedRequest.ident
+    async function autocompleteInterceptor({
+      params
+    }: {
+      params: Record<string, string | readonly string[] | undefined>
+    }) {
+      const ident = params['autocompleter'] as string
 
-      type Title = string
-      type Name = string
-      const choicesByIdent: Record<string, Array<[Title, Name]>> = {
-        monitored_metrics_backend: [['Dummy Metric Name', 'dummy_metric_name']],
+      type Id = string
+      type Value = string
+      const choicesByIdent: Record<string, Array<{ id: Id; value: Value }>> = {
+        monitored_metrics_backend: [{ id: 'dummy_metric_name', value: 'Dummy Metric Name' }],
         monitored_resource_attributes_keys_backend: [
-          ['Dummy Resource Attribute key', 'dummy_resource_attribute_key']
+          { id: 'dummy_resource_attribute_key', value: 'Dummy Resource Attribute key' }
         ],
         monitored_resource_attributes_values_backend: [
-          ['Dummy Resource Attribute value', 'dummy_resource_attribute_value']
+          { id: 'dummy_resource_attribute_value', value: 'Dummy Resource Attribute value' }
         ],
         monitored_scope_attributes_keys_backend: [
-          ['Dummy Scope Attribute key', 'dummy_scope_attribute_key']
+          { id: 'dummy_scope_attribute_key', value: 'Dummy Scope Attribute key' }
         ],
         monitored_scope_attributes_values_backend: [
-          ['Dummy Scope Attribute value', 'dummy_scope_attribute_value']
+          { id: 'dummy_scope_attribute_value', value: 'Dummy Scope Attribute value' }
         ],
         monitored_data_point_attributes_keys_backend: [
-          ['Dummy Data Point Attribute key', 'dummy_data_point_attribute_key']
+          { id: 'dummy_data_point_attribute_key', value: 'Dummy Data Point Attribute key' }
         ],
         monitored_data_point_attributes_values_backend: [
-          ['Dummy Data Point Attribute value', 'dummy_data_point_attribute_value']
+          { id: 'dummy_data_point_attribute_value', value: 'Dummy Data Point Attribute value' }
         ]
       }
 
       return HttpResponse.json({
-        result: {
-          choices: choicesByIdent[ident] || []
-        },
-        result_code: 0,
-        severity: 'success'
+        choices: choicesByIdent[ident] || []
       })
     }
 
     worker = setupServer(
       http.post(
-        new RegExp(`${location.protocol}//${location.host}/ajax_vs_autocomplete.py`),
+        `${location.protocol}//${location.host}/api/1.0/objects/autocomplete/:autocompleter`,
         autocompleteInterceptor
       )
     )
