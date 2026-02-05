@@ -9,3 +9,4 @@ datamodel-code-generator==0.42.0 #CMK-29509
 mypy-protobuf==3.7.0  # CMK-28939
 types-lxml==2025.11.25  # CMK-28940
 google-cloud-asset==4.1.0  # CMK-29107
+netapp-ontap~=9.17.1.0  # CMK-29975
