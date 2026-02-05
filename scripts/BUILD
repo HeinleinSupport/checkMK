@@ -8,6 +8,12 @@ sh_binary(
     srcs = ["in_bazel.sh"],
 )
 
+sh_binary(
+    # target only for linters, call the script directly
+    name = "lint",
+    srcs = ["lint.sh"],
+)
+
 py_binary(
     name = "sarif_preparse",
     srcs = ["sarif_preparse.py"],

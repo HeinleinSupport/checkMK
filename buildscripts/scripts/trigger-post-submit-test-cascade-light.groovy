@@ -13,6 +13,7 @@ void main() {
 
     def job_names = [
         "trigger-test-agent-plugin-unit",
+        "lint-repository",
         "test-bazel-lint",
         "test-format",
         "test-github-actions",
