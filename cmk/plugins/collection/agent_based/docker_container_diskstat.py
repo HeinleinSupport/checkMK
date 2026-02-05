@@ -4,11 +4,12 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 # mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
 
 from collections import defaultdict
+from collections.abc import Iterator
 from dataclasses import dataclass, field
 from itertools import chain
+from typing import Any
 
 from cmk.agent_based.v2 import AgentSection, StringTable
 from cmk.plugins.docker import lib as docker
@@ -23,7 +24,9 @@ MAPPING = {
 }
 
 
-def __parse_docker_api(data, docker_key_name):
+def __parse_docker_api(
+    data: dict[str, Any], docker_key_name: str
+) -> Iterator[tuple[str, str, str, int]]:
     for entry in data[docker_key_name] or ():
         yield f"{entry['major']}:{entry['minor']}", docker_key_name, entry["op"], entry["value"]
 
