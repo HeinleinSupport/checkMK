@@ -4,9 +4,7 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 # mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
 # mypy: disable-error-code="type-arg"
-
 
 from collections.abc import Mapping, Sequence
 
@@ -33,7 +31,9 @@ Section = Mapping[str, Mapping]
 
 
 def parse_cmctc_ports(string_table: Sequence[StringTable]) -> Section | None:
-    def parse_single_port(port_info):
+    def parse_single_port(
+        port_info: Sequence[str],
+    ) -> tuple[str, dict[str, str | None]] | None:
         type_map = {
             "1": "not available",
             "2": "IO",
