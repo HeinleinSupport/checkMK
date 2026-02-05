@@ -191,6 +191,7 @@ STAGES:
 
     - NAME: "Bazel sanity check"
       COMMAND: |
+          bazel aquery ... &> ${RESULTS}/results.txt && rm ${RESULTS}/results.txt || exit 1
           bazel cquery ... &> ${RESULTS}/results.txt && rm ${RESULTS}/results.txt || exit 1
           ./scripts/in_bazel.sh "py" "py_binary|py_library|py_test" 78 > ${RESULTS}/results.txt
       RESULT_CHECK_FILE_PATTERN: "results/results.txt"
