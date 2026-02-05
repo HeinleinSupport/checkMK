@@ -3,9 +3,6 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
-
 from collections.abc import Iterator, Mapping
 from typing import Literal, NotRequired, TypedDict
 
@@ -15,13 +12,6 @@ from cmk.server_side_calls.v1 import (
     HostConfig,
     replace_macros,
 )
-
-
-def check_by_ssh_description(params):
-    settings = params[1]
-    if "description" in settings:
-        return settings["description"]
-    return "check_by_ssh %s" % params[0]
 
 
 class _SSHSettings(TypedDict):
@@ -36,6 +26,13 @@ class _SSHSettings(TypedDict):
 
 
 _SSHOptions = tuple[str, _SSHSettings]
+
+
+def check_by_ssh_description(params: _SSHOptions) -> str:
+    settings = params[1]
+    if "description" in settings:
+        return settings["description"]
+    return "check_by_ssh %s" % params[0]
 
 
 # TODO: add proper parsing. un-nest the parameters.
