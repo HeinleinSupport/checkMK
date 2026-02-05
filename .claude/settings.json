@@ -40,5 +40,8 @@
     "deny": ["Bash(git remote:*)", "Bash(git config:*)"],
     "ask": []
   },
-  "includeCoAuthoredBy": false
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  }
 }
