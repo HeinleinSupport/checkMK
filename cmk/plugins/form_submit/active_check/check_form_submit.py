@@ -4,8 +4,7 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 # mypy: disable-error-code="comparison-overlap"
-
-# mypy: disable-error-code="no-untyped-def"
+# mypy: disable-error-code="no-any-return"
 # mypy: disable-error-code="unreachable"
 # mypy: disable-error-code="possibly-undefined"
 # mypy: disable-error-code="redundant-expr"
@@ -31,6 +30,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from collections.abc import Mapping, Sequence
+from typing import Any
 
 
 def parse_arguments(argv: Sequence[str]) -> argparse.Namespace:
@@ -112,7 +112,7 @@ class TLSConfig(enum.Enum):
         return self is not TLSConfig.OFF
 
     @property
-    def validate_server_cert(self):
+    def validate_server_cert(self) -> bool:
         return self is not TLSConfig.NO_CERT_VALID
 
     @property
@@ -182,8 +182,8 @@ def open_url(
     timeout: int | None,
     debug_enabled: bool,
     method: str = "GET",
-    data=None,
-):
+    data: Mapping[str, str] | None = None,
+) -> tuple[str, str]:
     if method == "GET" and data is not None:
         # Add the query string to the url in this case
         start = "&" if "?" in url else "?"
@@ -195,12 +195,12 @@ def open_url(
             debug("POST %s" % url, debug_enabled)
             # Py3:
             # Encode a dict or sequence of two-element tuples into a URL query string.
-            data = urllib.parse.urlencode(data, encoding="utf8")
-            debug("  => %s" % data, debug_enabled)
+            encoded_data = urllib.parse.urlencode(data, encoding="utf8")
+            debug("  => %s" % encoded_data, debug_enabled)
             # Py3:
             # POST data should be bytes, an iterable of bytes, or a file object.
             # It cannot be of type str.
-            fd = client.open(url, data.encode("utf8"), timeout)  # will be a POST
+            fd = client.open(url, encoded_data.encode("utf8"), timeout)  # will be a POST
         else:
             debug("GET %s" % url, debug_enabled)
             fd = client.open(url, timeout=timeout)  # GET
@@ -240,28 +240,28 @@ class FormParser(html.parser.HTMLParser):
 
     # CPython screwed up the removal of the error() method from ParserBase,
     # so we have to keep this until we use Python 3.10.
-    def error(self, message):
+    def error(self, message: str) -> None:
         raise AssertionError(message)
 
-    def handle_starttag(self, tag, attrs):
-        attrs = dict(attrs)
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        attrs_dict = dict(attrs)
 
         if tag == "form":
-            name = attrs.get("name", "unnamed-%d" % (len(self.forms) + 1))
+            name = attrs_dict.get("name", "unnamed-%d" % (len(self.forms) + 1))
             self.forms[name] = {
-                "attrs": dict(attrs),
+                "attrs": attrs_dict,
                 "elements": {},
             }
             self.current_form = self.forms[name]
         elif tag == "input":
             if self.current_form is None:
                 debug("Ignoring form field out of form tag", self.debug_enabled)
-            elif "name" in attrs:
-                self.current_form["elements"][attrs["name"]] = attrs.get("value", "")
+            elif "name" in attrs_dict:
+                self.current_form["elements"][attrs_dict["name"]] = attrs_dict.get("value", "")
             else:
-                debug("Ignoring form field without name %r" % attrs, self.debug_enabled)
+                debug("Ignoring form field without name %r" % attrs_dict, self.debug_enabled)
 
-    def handle_endtag(self, tag):
+    def handle_endtag(self, tag: str) -> None:
         if tag == "form":
             self.current_form = None
 
@@ -270,7 +270,7 @@ class FormParser(html.parser.HTMLParser):
 # One form found and no form_name given, use that one
 # Loop all forms for the given form_name, use the matching one
 # otherwise raise an exception
-def parse_form(content: str, form_name: str):
+def parse_form(content: str, form_name: str | None) -> dict[str, Any]:
     parser = FormParser()
     parser.feed(content)
     forms = parser.forms
@@ -307,7 +307,7 @@ def parse_form(content: str, form_name: str):
     return form
 
 
-def update_form_vars(form_elem, params: Mapping[str, str]):
+def update_form_vars(form_elem: dict[str, Any], params: Mapping[str, str]) -> dict[str, str]:
     v = form_elem["elements"].copy()
     v.update(params)
     return v
@@ -366,7 +366,7 @@ def raise_host_state(
 
 
 def check_host_states(
-    states,
+    states: Mapping[str, tuple[int, str]],
     levels: tuple[int, int] | None,
 ) -> tuple[int, str]:
     failed = []
