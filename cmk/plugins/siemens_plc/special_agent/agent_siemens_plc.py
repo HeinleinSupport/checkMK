@@ -7,14 +7,19 @@
 Checkmk special agent for monitoring Siemens PLC devices.
 """
 
+# mypy: disable-error-code="arg-type"
+# mypy: disable-error-code="assignment"
+# mypy: disable-error-code="dict-item"
 # mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
+# mypy: disable-error-code="operator"
 
 import argparse
 import logging
 import socket
 import sys
+from collections.abc import Iterator, Sequence
 from itertools import groupby
+from typing import Any
 
 import snap7
 from snap7.type import Areas
@@ -62,7 +67,7 @@ VALUES:
                                 needs to be unique within a group of VALUETYPES."""
 
 
-def parse_spec(hostspec):
+def parse_spec(hostspec: str) -> dict[str, Any] | int:
     """
     >>> parse_spec('4fcm;10.2.90.20;0;2;102;merker,5.3,bit,flag,Filterturm_Sammelstoerung_Telefon')
     {\
@@ -139,7 +144,7 @@ def parse_spec(hostspec):
     }
 
 
-def parse_arguments(sys_argv):
+def parse_arguments(sys_argv: Sequence[str]) -> argparse.Namespace:
     prog, description = __doc__.split("\n\n", maxsplit=1)
     parser = argparse.ArgumentParser(
         prog=prog, description=description, formatter_class=argparse.RawTextHelpFormatter
@@ -175,7 +180,7 @@ def parse_arguments(sys_argv):
     return parser.parse_args(sys_argv)
 
 
-def _get_dint(_bytearray, byte_index):
+def _get_dint(_bytearray: bytearray, byte_index: int) -> int:
     """
     Get int value from bytearray.
 
@@ -199,12 +204,14 @@ def _area_name_to_area_id(area_name: str) -> Areas:
     }[area_name]
 
 
-def _addresses_from_area_values(values):
+def _addresses_from_area_values(
+    values: list[dict[str, Any]],
+) -> tuple[int | None, int | None]:
     # We want to have a minimum number of reads. We try to only use
     # a single read and detect the memory area to fetch dynamically
     # based on the configured values
-    start_address = None
-    end_address = None
+    start_address: int | None = None
+    end_address: int | None = None
     for device_value in values:
         byte = device_value["byte"]
         if start_address is None or byte < start_address:
@@ -224,8 +231,10 @@ def _addresses_from_area_values(values):
     return start_address, end_address
 
 
-def _cast_values(values, start_address, area_value):
-    cast_values = []
+def _cast_values(
+    values: list[dict[str, Any]], start_address: int, area_value: bytearray
+) -> list[tuple[str, str, Any]]:
+    cast_values: list[tuple[str, str, Any]] = []
     for device_value in values:
         datatype = device_value["datatype"]
         if isinstance(datatype, tuple):
@@ -246,7 +255,9 @@ def _cast_values(values, start_address, area_value):
     return cast_values
 
 
-def _group_device_values(device):
+def _group_device_values(
+    device: dict[str, Any],
+) -> Iterator[tuple[tuple[str, int | None], Iterator[dict[str, Any]]]]:
     """A device can have multiple sets of values. Group them by area name and db_number,
     so that the start and end address of the memroy area can be determined and only needs
     to be fetched once form the client.
@@ -276,12 +287,12 @@ def _group_device_values(device):
     )
 
 
-def _snap7error(hostname, custom_text, raw_error_message):
+def _snap7error(hostname: str, custom_text: str, raw_error_message: Exception) -> str:
     error_message = str(raw_error_message).replace("b' ", "'")
     return f"Host {hostname}: {custom_text}: {error_message}"
 
 
-def main(sys_argv=None):
+def main(sys_argv: Sequence[str] | None = None) -> None:
     args = parse_arguments(sys_argv or sys.argv[1:])
 
     socket.setdefaulttimeout(args.timeout)

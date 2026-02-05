@@ -4,6 +4,9 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 # mypy: disable-error-code="no-untyped-call"
+# mypy: disable-error-code="misc"
+
+from typing import Any
 
 import pytest
 from snap7.type import Areas
@@ -197,9 +200,9 @@ def test__cast_values(
     values: list[dict[str, str | None | int]],
     start_address: int,
     area_value: bytes,
-    expected_value: list[tuple[str, str]],
+    expected_value: list[tuple[str, str, Any]],
 ) -> None:
-    assert _cast_values(values, start_address, area_value) == expected_value
+    assert _cast_values(values, start_address, bytearray(area_value)) == expected_value
 
 
 @pytest.mark.parametrize(
