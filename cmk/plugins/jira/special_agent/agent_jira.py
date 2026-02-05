@@ -8,12 +8,12 @@ Checkmk special agent for monitoring Jira projects and custom queries.
 """
 
 # mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
 
 import argparse
 import json
 import logging
 import sys
+from collections.abc import Sequence
 from typing import Any
 
 from jira import JIRA
@@ -25,7 +25,7 @@ from cmk.password_store.v1_unstable import parser_add_secret_option, resolve_sec
 PASSWORD_OPTION = "password"
 
 
-def main(argv=None):
+def main(argv: Sequence[str] | None = None) -> int:
     if argv is None:
         argv = sys.argv[1:]
 
@@ -57,7 +57,7 @@ def main(argv=None):
     return 0
 
 
-def _handle_jira_connection(args):
+def _handle_jira_connection(args: argparse.Namespace) -> JIRA:
     jira_url = f"{args.proto}://{args.hostname}/"
 
     jira = JIRA(
@@ -70,7 +70,7 @@ def _handle_jira_connection(args):
     return jira
 
 
-def _handle_request(args, jira):
+def _handle_request(args: argparse.Namespace, jira: JIRA) -> None:
     if args.project_workflows_project:
         logging.info("Retrieving workflow data")
         workflow_output = _handle_project(jira, args)
@@ -84,7 +84,7 @@ def _handle_request(args, jira):
             sys.stdout.write("%s\n" % custom_query_output)
 
 
-def _handle_project(jira, args):
+def _handle_project(jira: JIRA, args: argparse.Namespace) -> str | None:
     projects = [
         {"Name": k, "Workflow": v}
         for k, v in zip(
@@ -122,7 +122,7 @@ def _handle_project(jira, args):
     return None
 
 
-def _handle_custom_query(jira, args):
+def _handle_custom_query(jira: JIRA, args: argparse.Namespace) -> str | None:
     projects = [
         {
             "Description": d,
@@ -205,18 +205,27 @@ def _handle_custom_query(jira, args):
     return None
 
 
-def _handle_search_issues(jira, jql, field, max_results, args, project, svc_desc):
+def _handle_search_issues(
+    jira: JIRA,
+    jql: str,
+    field: str | None,
+    max_results: int | None,
+    args: argparse.Namespace,
+    project: str | None,
+    svc_desc: str | None,
+) -> Any:
     try:
         return jira.search_issues(
-            jql, maxResults=max_results, json_result=False, fields=field, validate_query=True
+            jql,
+            maxResults=max_results if max_results is not None else 50,
+            json_result=False,
+            fields=field,
+            validate_query=True,
         )
     except JIRAError as jira_error:
         # errors of sections are handled and shown by/in the related checks
         msg = f"Jira error {jira_error.status_code}: {jira_error.text}"
-        if project:
-            key = project
-        else:
-            key = svc_desc
+        key = project or svc_desc or "unknown"
         msg_dict = {key: {"error": msg}}
         sys.stdout.write("%s\n" % json.dumps(msg_dict))
         if args.debug:
@@ -237,7 +246,7 @@ def setup_logging(verbosity: int) -> None:
     logging.basicConfig(level=lvl, format="%(asctime)s %(levelname)s %(message)s")
 
 
-def parse_arguments(argv):
+def parse_arguments(argv: Sequence[str]) -> argparse.Namespace:
     prog, description = __doc__.split("\n\n", maxsplit=1)
     parser = argparse.ArgumentParser(prog=prog, description=description)
 
