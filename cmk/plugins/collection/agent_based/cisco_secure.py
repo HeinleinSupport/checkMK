@@ -4,9 +4,7 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 # mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
 # mypy: disable-error-code="type-arg"
-
 
 from collections.abc import Sequence
 
@@ -40,7 +38,7 @@ def saveint(i: str) -> int:
         return 0
 
 
-def _sanitize_mac(string):
+def _sanitize_mac(string: str) -> str:
     hx_gen = ("%02s" % hex(ord(m))[2:] for m in string)
     return ":".join(hx_gen).replace(" ", "0")
 
