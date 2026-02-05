@@ -4,7 +4,6 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 # mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
 
 # Example output from agent:
 # <<<prtconf:sep(58):persist(1404743142)>>>
@@ -68,13 +67,23 @@
 # Note: this is only the header. Much more stuff follows, but is currently
 # not being parsed.
 
+from collections.abc import Iterator
 from typing import TypedDict
 
-from cmk.agent_based.v2 import AgentSection, Attributes, InventoryPlugin, StringTable, TableRow
+from cmk.agent_based.v2 import (
+    AgentSection,
+    Attributes,
+    InventoryPlugin,
+    InventoryResult,
+    StringTable,
+    TableRow,
+)
 
 
-def get_tuples_section(info):
-    parsed = {}
+def get_tuples_section(
+    info: Iterator[list[str]],
+) -> tuple[dict[str, str], Iterator[list[str]]]:
+    parsed: dict[str, str] = {}
     for line_info in info:
         if line_info[0] == "Volume Groups Information":
             break
@@ -89,8 +98,10 @@ def get_tuples_section(info):
     return parsed, info
 
 
-def get_inactive_volume_groups(info):
-    result = []
+def get_inactive_volume_groups(
+    info: Iterator[list[str]],
+) -> tuple[list[str], Iterator[list[str]]]:
+    result: list[str] = []
     begin_parsing = False
     for line_info in info:
         if line_info[0] == "Active VGs":
@@ -112,8 +123,8 @@ def get_inactive_volume_groups(info):
     return result, info
 
 
-def get_active_volume_groups(info):
-    result = []
+def get_active_volume_groups(info: Iterator[list[str]]) -> list[list[str]]:
+    result: list[list[str]] = []
     begin_parsing = False
     volume_group_name = ""
     temp = ""
@@ -140,9 +151,9 @@ def get_active_volume_groups(info):
 
 
 class SectionPRTConf(TypedDict):
-    tuples: object
-    inactive: object
-    active: object
+    tuples: dict[str, str]
+    inactive: list[str]
+    active: list[list[str]]
 
 
 def parse_prtconf(string_table: StringTable) -> SectionPRTConf:
@@ -158,13 +169,13 @@ agent_section_prtconf = AgentSection(
 )
 
 
-def _split_vendor(string):
+def _split_vendor(string: str) -> tuple[str, str]:
     if string.upper().startswith("IBM"):
         return "IBM", string[3:].lstrip("., -/")
     return "", string
 
 
-def inv_prtconf(section):
+def inv_prtconf(section: SectionPRTConf) -> InventoryResult:
     parsed_tuples = section["tuples"]
     if cpu_infos := _get_cpu_infos(parsed_tuples):
         yield Attributes(path=["hardware", "cpu"], inventory_attributes=cpu_infos)
@@ -192,8 +203,8 @@ def inv_prtconf(section):
         )
 
 
-def _get_cpu_infos(parsed_tuples):
-    cpu_dict: dict[str, float | str] = {}
+def _get_cpu_infos(parsed_tuples: dict[str, str]) -> dict[str, float | int | str]:
+    cpu_dict: dict[str, float | int | str] = {}
 
     cpu_type = parsed_tuples.get("CPU Type")
     if cpu_type is not None:
@@ -218,8 +229,8 @@ def _get_cpu_infos(parsed_tuples):
     return cpu_dict
 
 
-def _get_sys_infos(parsed_tuples):
-    sys_dict = {}
+def _get_sys_infos(parsed_tuples: dict[str, str]) -> dict[str, str]:
+    sys_dict: dict[str, str] = {}
 
     serial = parsed_tuples.get("Machine Serial Number")
     if serial is not None:
@@ -234,8 +245,8 @@ def _get_sys_infos(parsed_tuples):
     return sys_dict
 
 
-def _get_mem_infos(parsed_tuples):
-    mem_dict = {}
+def _get_mem_infos(parsed_tuples: dict[str, str]) -> dict[str, int]:
+    mem_dict: dict[str, int] = {}
 
     ram = parsed_tuples.get("Memory Size")
     if ram is not None:
@@ -248,8 +259,8 @@ def _get_mem_infos(parsed_tuples):
     return mem_dict
 
 
-def _get_fmw_infos(parsed_tuples):
-    fmw_dict = {}
+def _get_fmw_infos(parsed_tuples: dict[str, str]) -> dict[str, str]:
+    fmw_dict: dict[str, str] = {}
 
     fw_version = parsed_tuples.get("Firmware Version")
     if fw_version is not None:
@@ -264,8 +275,8 @@ def _get_fmw_infos(parsed_tuples):
     return fmw_dict
 
 
-def _get_net_infos(parsed_tuples):
-    net_dict = {}
+def _get_net_infos(parsed_tuples: dict[str, str]) -> dict[str, str]:
+    net_dict: dict[str, str] = {}
 
     domain_name = parsed_tuples.get("Domain Name")
     if domain_name is not None:
@@ -290,8 +301,8 @@ def _get_net_infos(parsed_tuples):
     return net_dict
 
 
-def _get_os_infos(parsed_tuples):
-    os_dict = {}
+def _get_os_infos(parsed_tuples: dict[str, str]) -> dict[str, str]:
+    os_dict: dict[str, str] = {}
 
     kernel_type = parsed_tuples.get("Kernel Type")
     if kernel_type is not None:
@@ -300,7 +311,9 @@ def _get_os_infos(parsed_tuples):
     return os_dict
 
 
-def get_volume_groups(parsed):
+def get_volume_groups(
+    parsed: SectionPRTConf,
+) -> Iterator[tuple[dict[str, str], dict[str, str]]]:
     for item in parsed["active"]:
         vg_name, pv_name, pv_status, pv_total_partitions, pv_free_partitions, _pv_distr = item
         yield (
@@ -315,10 +328,10 @@ def get_volume_groups(parsed):
             },
         )
 
-    for item in parsed["inactive"]:
+    for vg_name in parsed["inactive"]:
         yield (
             {
-                "volume_group_name": item,
+                "volume_group_name": vg_name,
                 "physical_volume_name": "",
             },
             {
