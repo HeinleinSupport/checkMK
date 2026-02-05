@@ -3,9 +3,6 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
-
-
 from cmk.rulesets.v1 import form_specs, Help, Label, rule_specs, Title
 from cmk.rulesets.v1.form_specs import validators
 
@@ -24,7 +21,7 @@ def _migrate_to_cascading_single_choice(value: object) -> tuple[str, str]:
     raise TypeError(f"Expected a tuple, got {type(value)}")
 
 
-def _formspec_inventory_sap_values():
+def _formspec_inventory_sap_values() -> form_specs.Dictionary:
     return form_specs.Dictionary(
         elements={
             "match": form_specs.DictElement(
