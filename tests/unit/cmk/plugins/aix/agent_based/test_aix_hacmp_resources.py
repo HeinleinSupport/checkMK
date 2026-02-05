@@ -6,12 +6,11 @@
 # mypy: disable-error-code="misc"
 
 from collections.abc import Mapping, Sequence
-from typing import Any
 
 import pytest
 
 from cmk.agent_based.v2 import Result, Service, State, StringTable
-from cmk.base.legacy_checks.aix_hacmp_resources import (
+from cmk.plugins.aix.agent_based.aix_hacmp_resources import (
     check_aix_hacmp_resources,
     discover_aix_hacmp_resources,
     parse_aix_hacmp_resources,
@@ -264,7 +263,7 @@ def test_discover_aix_hacmp_resources(
 )
 def test_check_aix_hacmp_resources(
     item: str,
-    params: Mapping[str, Any],
+    params: Mapping[str, str],
     string_table: StringTable,
     expected_results: Sequence[Result],
 ) -> None:
