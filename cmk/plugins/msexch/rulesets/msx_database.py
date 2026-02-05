@@ -4,11 +4,10 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 from cmk.rulesets.v1 import form_specs, Help, rule_specs, Title
 
-# mypy: disable-error-code="no-untyped-def"
 # mypy: disable-error-code="type-arg"
 
 
-def _ms_to_s(values: object) -> dict:
+def _ms_to_s(values: object) -> dict[str, object]:
     if not isinstance(values, dict):
         raise TypeError(values)
 
@@ -47,7 +46,7 @@ def _item_spec() -> form_specs.String:
     )
 
 
-def _parameter_formspec_msx_database():
+def _parameter_formspec_msx_database() -> form_specs.Dictionary:
     return form_specs.Dictionary(
         title=Title("Set levels"),
         migrate=_ms_to_s,
