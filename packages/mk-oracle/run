@@ -386,7 +386,7 @@ run_clippy() {
             echo "clippy not available on AIX - skipping."
             ;;
         *)
-            bazel build --config=clippy :all
+            bazel lint :all
             ;;
     esac
 }

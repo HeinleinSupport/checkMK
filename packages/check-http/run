@@ -123,7 +123,7 @@ main() {
     test ${RUN_BUILD} = yes && bazel build :all
     test ${RUN_UNIT_TESTS} = yes && bazel test :all
     test ${RUN_CHECK_FORMAT} = yes && run_check_format
-    test ${RUN_CLIPPY} = yes && bazel build --config=clippy :all
+    test ${RUN_CLIPPY} = yes && bazel lint :all
     test ${RUN_FORMAT} = yes && run_format
     test ${RUN_DOCUMENTATION} = yes && bazel build :doc
     true
