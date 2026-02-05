@@ -8,7 +8,6 @@ A datasource program for Data DirectNetworks Silicon Storage Appliances
 """
 
 # mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
 
 import argparse
 import socket
@@ -24,16 +23,16 @@ from cmk.password_store.v1_unstable import parser_add_secret_option, resolve_sec
 SECRET_OPTION = "secret"
 
 
-def commandstring(command_txt, username_txt, password_txt):
+def commandstring(command_txt: str, username_txt: str, password_txt: str) -> str:
     return f"{command_txt}@{username_txt}@{password_txt}@0@0@$"
 
 
-def query(s, command_txt):
-    s.sendall(command_txt)
+def query(s: socket.socket, command_txt: str) -> str:
+    s.sendall(command_txt.encode())
     response = []
     while True:
         next_part = s.recv(2048)
-        response.append(next_part)
+        response.append(next_part.decode())
         if not next_part:
             break
     return "".join(response)
