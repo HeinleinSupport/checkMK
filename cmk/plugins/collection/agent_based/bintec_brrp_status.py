@@ -4,8 +4,6 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 # mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
-
 
 import re
 
@@ -24,7 +22,7 @@ from cmk.agent_based.v2 import (
 )
 
 
-def bintec_brrp_status_compose_item(brrp_id):
+def bintec_brrp_status_compose_item(brrp_id: str) -> str:
     return re.sub(r"\..*", "", brrp_id)
 
 
