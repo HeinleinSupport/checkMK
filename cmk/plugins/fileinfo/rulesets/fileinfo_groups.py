@@ -4,7 +4,6 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 # mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
 
 from collections.abc import Mapping
 from typing import cast
@@ -59,7 +58,7 @@ DISPLAYED_MAGNITUDES_DATA = [
 ]
 
 
-def _get_fileinfo_groups_help():
+def _get_fileinfo_groups_help() -> Help:
     return Help(
         "Checks <tt>fileinfo</tt> and <tt>sap_hana_fileinfo</tt> monitor "
         "the age and size of a single file. Each file information that is sent "
@@ -197,7 +196,7 @@ rule_spec_fileinfo_groups = DiscoveryParameters(
 )
 
 
-def _item_spec_fileinfo_groups():
+def _item_spec_fileinfo_groups() -> String:
     return String(
         title=Title("File Group Name"),
         help_text=Help(
