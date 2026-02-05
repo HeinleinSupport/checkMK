@@ -3,7 +3,6 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
 # mypy: disable-error-code="possibly-undefined"
 
 # Agent output and things to know:
@@ -48,7 +47,6 @@
 
 # mypy: disable-error-code="var-annotated"
 
-from typing import Any
 
 from cmk.agent_based.v2 import (
     AgentSection,
@@ -58,11 +56,14 @@ from cmk.agent_based.v2 import (
     Result,
     Service,
     State,
+    StringTable,
 )
 
+Section = dict[str, dict[str, tuple[str, int, int, int, str, str, str | None]]]
 
-def parse_aix_lvm(info):
-    lvmconf = {}
+
+def parse_aix_lvm(info: StringTable) -> Section:
+    lvmconf: Section = {}
     for line in info:
         if len(line) == 1:
             vgname = line[0][:-1]
@@ -71,11 +72,10 @@ def parse_aix_lvm(info):
         elif line[0] == "LV" and line[1] == "NAME":
             continue
         else:
-            lv, lvtype, num_lp, num_pp, num_pv, act_state, mountpoint = line
+            lv, lvtype, num_lp, num_pp, num_pv, act_state, mountpoint_raw = line
             # split lv state into two relevant values
             activation, mirror = act_state.split("/")
-            if mountpoint == "N/A":
-                mountpoint = None
+            mountpoint: str | None = None if mountpoint_raw == "N/A" else mountpoint_raw
             lvmconf[vgname].update(
                 {
                     lv: (
@@ -92,11 +92,11 @@ def parse_aix_lvm(info):
     return lvmconf
 
 
-def discover_aix_lvm(section: Any) -> DiscoveryResult:
+def discover_aix_lvm(section: Section) -> DiscoveryResult:
     yield from (Service(item=f"{vg}/{lv}") for vg, volumes in section.items() for lv in volumes)
 
 
-def check_aix_lvm(item: str, section: Any) -> CheckResult:
+def check_aix_lvm(item: str, section: Section) -> CheckResult:
     # Get ready to find our item and settings.
     # target_activation = params
     target_vg, target_lv = item.split("/")
