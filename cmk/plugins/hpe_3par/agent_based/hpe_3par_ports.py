@@ -3,8 +3,6 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
-
 from collections.abc import Mapping, MutableMapping
 from dataclasses import dataclass, field
 
@@ -104,7 +102,7 @@ class HPE3ParPort:
     slot: int
     cardPort: int
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         self.name = (
             f"{PROTOCOLS.get(self.protocol)} Node {self.node} Slot {self.slot} Port {self.cardPort}"
         )
