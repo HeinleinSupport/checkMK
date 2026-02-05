@@ -4,9 +4,9 @@
 // This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 // conditions defined in the file COPYING, which is part of this source code package.
 
-/* Styles used to show the banner in CSE */
+/* Styles used to show the banner in Cloud */
 
-.cse-banner {
+.cloud-banner {
   display: flex;
   align-items: center;
   padding-left: 20px;
@@ -41,11 +41,11 @@
   }
 }
 
-/* CSE banner positioning for Vue dashboard pages */
+/* Cloud banner positioning for Vue dashboard pages */
 #main_page_content:has(cmk-dashboard) {
   position: relative;
 
-  .cse-banner {
+  .cloud-banner {
     position: absolute;
     right: 3px;
     top: 5px;
@@ -55,7 +55,7 @@
     padding-right: 10px;
   }
 
-  &:has(> .warning) .cse-banner {
+  &:has(> .warning) .cloud-banner {
     margin-top: 63px;
   }
 }
