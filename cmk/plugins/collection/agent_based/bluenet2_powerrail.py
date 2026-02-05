@@ -4,7 +4,6 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 # mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
 # mypy: disable-error-code="type-arg"
 
 import dataclasses
@@ -192,10 +191,10 @@ def parse_bluenet2_powerrail(
         "257": "humidity",
     }
 
-    def get_item_name(descr, index_str):
+    def get_item_name(descr: str, index_str: str) -> str:
         return "%s %d" % (descr, int(index_str) + 1)
 
-    def get_pdu_name(pdu_info):
+    def get_pdu_name(pdu_info: str) -> str:
         if pdu_info == "0":
             return "Master"
         return "PDU %s" % pdu_info
