@@ -14,7 +14,7 @@ from cmk.core_client import NagiosClient
 from cmk.fetchers.snmp import SNMPPluginStore
 from cmk.utils import paths
 from cmk.utils.labels import LabelManager
-from cmk.utils.licensing.community_handler import CRELicensingHandler
+from cmk.utils.licensing.community_handler import CommunityLicensingHandler
 from cmk.utils.rulesets.ruleset_matcher import RulesetMatcher
 from cmk.utils.timeperiod import get_all_timeperiods
 
@@ -40,7 +40,7 @@ def create_core(
                     binary_file=paths.nagios_binary,
                     cleanup_base=paths.omd_root,
                 ),
-                CRELicensingHandler,
+                CommunityLicensingHandler,
                 get_all_timeperiods(loaded_config.timeperiods),
             )
         case "cmc":

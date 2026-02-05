@@ -13,14 +13,14 @@ from cmk.utils.licensing.handler import (
 )
 
 
-class CRENotificationHandler(NotificationHandler):
+class CommunityNotificationHandler(NotificationHandler):
     def manage_notification(self) -> None:
         pass
 
 
-class CRELicensingHandler(LicensingHandler):
+class CommunityLicensingHandler(LicensingHandler):
     @classmethod
-    def make(cls) -> CRELicensingHandler:
+    def make(cls) -> CommunityLicensingHandler:
         return cls()
 
     @property
@@ -39,4 +39,4 @@ class CRELicensingHandler(LicensingHandler):
 
     @property
     def notification_handler(self) -> NotificationHandler:
-        return CRENotificationHandler(email_notification=None)
+        return CommunityNotificationHandler(email_notification=None)

@@ -5,7 +5,7 @@
 
 from cmk.ccc.version import Edition, edition
 from cmk.utils import paths
-from cmk.utils.licensing.community_handler import CRELicensingHandler
+from cmk.utils.licensing.community_handler import CommunityLicensingHandler
 from cmk.utils.licensing.handler import (
     LicenseState,
     LicenseStateError,
@@ -89,9 +89,9 @@ def get_licensing_notification_handler() -> NotificationHandler:
     return _make_licensing_handler().notification_handler
 
 
-def register_cre_licensing_handler() -> None:
+def register_community_licensing_handler() -> None:
     # There is no license management planned for Checkmk Community -> Always licensed
     licensing_handler_registry.register(
         cmk_edition=Edition.COMMUNITY,
-        licensing_handler=CRELicensingHandler,
+        licensing_handler=CommunityLicensingHandler,
     )

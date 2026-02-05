@@ -5,11 +5,14 @@
 
 from cmk.ccc.version import Edition
 from cmk.utils.licensing.handler import LicensingHandler
-from cmk.utils.licensing.registry import licensing_handler_registry, register_cre_licensing_handler
+from cmk.utils.licensing.registry import (
+    licensing_handler_registry,
+    register_community_licensing_handler,
+)
 
 
-def test_licensing_handler_registry_cre() -> None:
-    register_cre_licensing_handler()
+def test_licensing_handler_registry_community() -> None:
+    register_community_licensing_handler()
     handler_class = licensing_handler_registry[Edition.COMMUNITY]
-    assert handler_class.__name__ == "CRELicensingHandler"
+    assert handler_class.__name__ == "CommunityLicensingHandler"
     assert issubclass(handler_class, LicensingHandler)

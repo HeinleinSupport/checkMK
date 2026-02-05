@@ -108,7 +108,7 @@ from cmk.gui.watolib.simple_config_file import ConfigFileRegistry
 from cmk.gui.watolib.timeperiods import TimeperiodUsageFinderRegistry
 from cmk.shared_typing.main_menu import NavItemTopicEntry
 from cmk.utils import paths
-from cmk.utils.licensing.registry import register_cre_licensing_handler
+from cmk.utils.licensing.registry import register_community_licensing_handler
 
 
 def register(
@@ -179,7 +179,7 @@ def register(
     )
     activate_menu.register(main_menu_registry)
     default_permissions.register(permission_section_registry, permission_registry)
-    register_cre_licensing_handler()
+    register_community_licensing_handler()
     painter_options.register(painter_option_registry)
     views_registration.register(
         permission_section_registry,

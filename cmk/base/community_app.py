@@ -9,7 +9,7 @@ from cmk.base import notify
 from cmk.ccc.version import Edition
 from cmk.fetchers import PlainFetcherTrigger
 from cmk.utils.labels import get_builtin_host_labels
-from cmk.utils.licensing.community_handler import CRELicensingHandler
+from cmk.utils.licensing.community_handler import CommunityLicensingHandler
 
 from . import diagnostics, localize
 from .automations.automations import Automation, Automations
@@ -43,7 +43,7 @@ def make_app() -> CheckmkBaseApp:
         automations=automations,
         make_bake_on_restart=lambda *args: lambda: None,
         create_core=create_core,
-        licensing_handler_type=CRELicensingHandler,
+        licensing_handler_type=CommunityLicensingHandler,
         make_fetcher_trigger=lambda *a, **kw: PlainFetcherTrigger(),
         make_metric_backend_fetcher=lambda *args: None,
         get_builtin_host_labels=get_builtin_host_labels,
