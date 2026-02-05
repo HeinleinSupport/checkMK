@@ -4,7 +4,6 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 # mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
 
 
 from collections.abc import Mapping, Sequence
@@ -38,7 +37,7 @@ poe_faulty_status_to_string = {
 }
 
 
-def _deci_watt_to_watt(deci_watt):
+def _deci_watt_to_watt(deci_watt: str) -> float:
     """Convert from deci watt to watt"""
     return float(deci_watt) / 10
 
