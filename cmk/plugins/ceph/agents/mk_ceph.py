@@ -3,16 +3,18 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
-# mypy: disable-error-code="type-arg"
+from __future__ import annotations
 
 import json
 import os
 import os.path
 import socket
 import sys
-from typing import Any
+from collections.abc import Mapping
+from typing import Any, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from rados import Rados  # type: ignore[import-not-found]
 
 __version__ = "2.6.0b1"
 
@@ -28,31 +30,31 @@ def _bail_out_missing_dependency() -> int:
     return 0
 
 
-def _output_json_section(name, data):
+def _output_json_section(name: str, data: Any) -> None:
     sys.stdout.write(f"<<<{name}:sep(0)>>>\n{json.dumps(data)}\n")
 
 
 class RadosCMD:
-    def __init__(self, client: Any) -> None:
+    def __init__(self, client: Rados) -> None:
         self.client = client
 
-    def command_mon(self, cmd, params=None):
+    def command_mon(self, cmd: str, params: Mapping[str, Any] | None = None) -> Any:
         data = {"prefix": cmd, "format": "json"}
         if params:
             data.update(params)
         return self.client.mon_command(json.dumps(data), b"", timeout=5)
 
-    def command_mgr(self, cmd):
+    def command_mgr(self, cmd: str) -> Any:
         return self.client.mgr_command(
             json.dumps({"prefix": cmd, "format": "json"}), b"", timeout=5
         )
 
-    def command_osd(self, osdid, cmd):
+    def command_osd(self, osdid: int, cmd: str) -> Any:
         return self.client.osd_command(
             osdid, json.dumps({"prefix": cmd, "format": "json"}), b"", timeout=5
         )
 
-    def command_pg(self, pgid, cmd):
+    def command_pg(self, pgid: str, cmd: str) -> Any:
         return self.client.pg_command(
             pgid, json.dumps({"prefix": cmd, "format": "json"}), b"", timeout=5
         )
@@ -80,10 +82,11 @@ def _load_plugin_config(mk_confdir: str) -> tuple[str, str]:
     return ceph_config, ceph_client
 
 
-def _make_bluefs_section(raw, hostname, fqdn, fsid):
-    # type: (str, str, str, str) -> tuple[dict, list]
-    localosds = []
-    out = {"end": {}}  # type: dict
+def _make_bluefs_section(
+    raw: str, hostname: str, fqdn: str, fsid: str
+) -> tuple[dict[str, Any], list[int]]:
+    localosds: list[int] = []
+    out: dict[str, Any] = {"end": {}}
     for osd in json.loads(raw):
         if osd.get("hostname") in [hostname, fqdn]:
             localosds.append(osd["id"])
@@ -108,8 +111,7 @@ def _make_bluefs_section(raw, hostname, fqdn, fsid):
     return out, localosds
 
 
-def _make_osd_section(raw_df, raw_perf, localosds):
-    # type: (str, str, list) -> dict
+def _make_osd_section(raw_df: str, raw_perf: str, localosds: list[int]) -> dict[str, Any]:
     osddf = json.loads(raw_df)
     osdperf = json.loads(raw_perf)
     osds = []
@@ -135,7 +137,7 @@ def main() -> int:
         # we're importing this module for testing purposes.
         # I guess the right thing to do would be to add 'rados' as a dev
         # dependency and write *actual* tests.
-        from rados import Rados  # type: ignore[import-not-found]
+        from rados import Rados
     except ImportError:
         return _bail_out_missing_dependency()
 
