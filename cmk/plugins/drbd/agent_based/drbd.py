@@ -3,9 +3,6 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
-
 # Author: Lars Michelsen <lm@mathias-kettner.de>
 
 # Example outputs from agent:
@@ -206,7 +203,7 @@ drbd_ds_map = {
 }
 
 
-def inventory_drbd(info, checktype):
+def inventory_drbd(info: StringTable, checktype: str) -> Generator[tuple[str, dict[str, Any]]]:
     for line in info[2:]:
         if not _drbd_block_start_match.search(line[0]):
             continue
@@ -228,8 +225,8 @@ def inventory_drbd(info, checktype):
         yield "drbd%s" % line[0][:-1], levels
 
 
-def drbd_parse_block(block, checktype):
-    parsed = {}
+def drbd_parse_block(block: StringTable, checktype: str) -> dict[str, Any]:
+    parsed: dict[str, Any] = {}
     for line in block:
         for field in line:
             parts = field.split(":")
@@ -251,8 +248,8 @@ def drbd_parse_block(block, checktype):
     return parsed
 
 
-def drbd_extract_block(item, info):
-    block = []
+def drbd_extract_block(item: str, info: StringTable) -> StringTable:
+    block: StringTable = []
     inBlock = False
     # Ignore the first two lines since they contain drbd version information
     for line in info[2:]:
@@ -272,7 +269,7 @@ def drbd_extract_block(item, info):
     return block
 
 
-def drbd_get_block(item, info, checktype):
+def drbd_get_block(item: str, info: StringTable, checktype: str) -> dict[str, Any] | None:
     block = drbd_extract_block(item, info)
     if len(block) > 0:
         return drbd_parse_block(block, checktype)
