@@ -59,10 +59,18 @@ trap cleanup EXIT
 # build/install ################################################################
 
 cd "${WORK_DIR}"
+
+# NOTE: If we use "--depth 1" (which would be faster), we can't cherry-pick.
 git clone \
-    --depth 1 \
     --branch "clang_${TAG_NAME}" \
     https://github.com/include-what-you-use/include-what-you-use
+
+# The fix for https://github.com/include-what-you-use/include-what-you-use/issues/1811
+# is in master only, so we need to cherry-pick that.
+git -C include-what-you-use \
+    -c user.name=foo \
+    -c user.email=foo@bar.com \
+    cherry-pick 7daeac5db9fddada85f5a80f18fe90fe5b4e6b44
 
 IWYU_VERSION=$(
     grep --word-regexp IWYU_VERSION_STRING include-what-you-use/iwyu_version.h |
