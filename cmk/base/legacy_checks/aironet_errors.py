@@ -5,45 +5,42 @@
 
 
 import time
-from collections.abc import Iterator, Mapping
-from typing import Any
 
-from cmk.agent_based.legacy.v0_unstable import check_levels, LegacyCheckDefinition
 from cmk.agent_based.v2 import (
     any_of,
+    check_levels,
+    CheckPlugin,
+    CheckResult,
+    DiscoveryResult,
     equals,
     get_rate,
     get_value_store,
     OIDEnd,
+    Service,
+    SimpleSNMPSection,
     SNMPTree,
     StringTable,
 )
 
-check_info = {}
+
+def discover_aironet_errors(section: StringTable) -> DiscoveryResult:
+    yield from (Service(item=line[0]) for line in section)
 
 
-def discover_aironet_errors(info: StringTable) -> Iterator[tuple[str, dict[str, object]]]:
-    yield from ((line[0], {}) for line in info)
-
-
-def check_aironet_errors(
-    item: str, params: Mapping[str, Any], info: StringTable
-) -> Iterator[tuple[int, str, list[Any]]]:
-    for line in info:
+def check_aironet_errors(item: str, section: StringTable) -> CheckResult:
+    for line in section:
         if line[0] == item:
-            value = int(line[1])
-            this_time = time.time()
-            yield check_levels(
+            yield from check_levels(
                 get_rate(
                     get_value_store(),
-                    "aironet_errors.%s" % item,
-                    this_time,
-                    value,
+                    f"aironet_errors.{item}",
+                    time.time(),
+                    int(line[1]),
                     raise_overflow=True,
                 ),
-                "errors",
-                (1.0, 10.0),
-                infoname="Errors/s",
+                levels_upper=("fixed", (1.0, 10.0)),
+                metric_name="errors",
+                label="Errors/s",
             )
             return
 
@@ -52,9 +49,8 @@ def parse_aironet_errors(string_table: StringTable) -> StringTable:
     return string_table
 
 
-check_info["aironet_errors"] = LegacyCheckDefinition(
+snmp_section_aironet_errors = SimpleSNMPSection(
     name="aironet_errors",
-    parse_function=parse_aironet_errors,
     detect=any_of(
         equals(".1.3.6.1.2.1.1.2.0", ".1.3.6.1.4.1.9.1.525"),
         equals(".1.3.6.1.2.1.1.2.0", ".1.3.6.1.4.1.9.1.618"),
@@ -67,8 +63,13 @@ check_info["aironet_errors"] = LegacyCheckDefinition(
         base=".1.3.6.1.4.1.9.9.272.1.2.1.1.1",
         oids=[OIDEnd(), "2"],
     ),
+    parse_function=parse_aironet_errors,
+)
+
+
+check_plugin_aironet_errors = CheckPlugin(
+    name="aironet_errors",
     service_name="MAC CRC errors radio %s",
-    # CISCO-DOT11-IF-MIB::cd11IfRecFrameMacCrcErrors,
     discovery_function=discover_aironet_errors,
     check_function=check_aironet_errors,
 )
