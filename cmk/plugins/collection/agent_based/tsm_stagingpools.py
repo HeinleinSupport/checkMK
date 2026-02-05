@@ -4,9 +4,8 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 # mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
 
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from typing import Any
 
 from cmk.agent_based.v1 import check_levels as check_levels_v1
@@ -56,7 +55,7 @@ def parse_tsm_stagingpools(string_table: StringTable) -> SECTION:
     """
     parsed: SECTION = {}
 
-    def add_item(lineinfo):
+    def add_item(lineinfo: Sequence[str]) -> None:
         inst, pool, util = lineinfo
         if inst == "default":
             item = pool
