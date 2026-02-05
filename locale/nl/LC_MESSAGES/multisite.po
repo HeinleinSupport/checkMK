@@ -1720,6 +1720,17 @@ msgstr "<li>Kan hosts in map %s niet verwijderen: %s</li>"
 msgid "<li>Cannot move hosts from folder %s: %s</li>"
 msgstr "<li>Kan hosts niet verplaatsen uit map %s: %s</li>"
 
+msgid ""
+"<p><b>Network Configuration: </b>To transmit analytics data, ensure your "
+"firewall permits outbound traffic to <tt>https://analytics.checkmk.com/"
+"upload</tt> on port <tt>443</tt>. If you are using a proxy, please verify "
+"that it allows connections to this destination.</p><p><b>Per-Site "
+"Configuration: </b>You have to ensure connectivity for <b>each site "
+"individually</b>. As every site collects and transmits data independently, "
+"please verify that your firewall rules permit traffic from every site to "
+"prevent local transmission errors.</p>"
+msgstr ""
+
 #, fuzzy
 msgid ""
 "<p>By default each Checkmk site has its own temporary file system (a "
@@ -6513,7 +6524,7 @@ msgstr "Toegang toestaan via TCP"
 msgid "Allow all users to refer to rules contained in this pack"
 msgstr "Sta alle gebruikers toe om te verwijzen naar regels in dit pakket"
 
-msgid "Allow collection and transmission of telemetry data"
+msgid "Allow collection and transmission of product usage data"
 msgstr ""
 
 #, fuzzy
@@ -6735,7 +6746,7 @@ msgstr ""
 "Maakt het mogelijk %s te bekijken en te bewerken die door andere gebruikers "
 "zijn gemaakt."
 
-msgid "Allows users to download the product telemetry data as a JSON file."
+msgid "Allows users to download the product usage data as a JSON file."
 msgstr ""
 
 msgid ""
@@ -16480,9 +16491,10 @@ msgid "Consecutive reachability failures (up to 8)"
 msgstr ""
 
 msgid ""
-"Consent to product telemetry data collection. By default, this is disabled, "
-"the user will be asked for consent via pop-up. Run  <tt>cmk-telemetry --dry-"
-"run</tt> in the command line to see a preview of the data."
+"Consent to product usage analytics data collection. By default, this is "
+"disabled, the user will be asked for consent via pop-up. Run  <tt>cmk-"
+"product-usage --dry-run</tt> in the command line to see a preview of the "
+"data."
 msgstr ""
 
 msgid "Consider alerts for Prism Central only"
@@ -20434,6 +20446,10 @@ msgstr "Verwijderde gebruiker: %s"
 msgid "Deletes"
 msgstr "Verwijdert"
 
+#, fuzzy, python-format
+msgid "Deleting %s..."
+msgstr "Afhalen van '%s'..."
+
 msgid "Delimiter for file grouping"
 msgstr "Scheidingsteken voor bestandsgroepering"
 
@@ -22247,7 +22263,7 @@ msgid "Do not check the node"
 msgstr "Controleer het knooppunt niet"
 
 #, fuzzy
-msgid "Do not collect and transmit telemetry data"
+msgid "Do not collect product usage data"
 msgstr "Niet verzenden naar host op afstand"
 
 msgid "Do not configure Windows Firewall"
@@ -23026,7 +23042,7 @@ msgid "Download license usage report"
 msgstr "Licentie gebruiksrapport downloaden"
 
 #, fuzzy
-msgid "Download product telemetry"
+msgid "Download product usage data"
 msgstr "rapportelement"
 
 msgid "Download snmp walk"
@@ -24437,7 +24453,7 @@ msgid "Enable processing of perfdata"
 msgstr "Verwerking van perfomatiegegevens inschakelen"
 
 #, fuzzy
-msgid "Enable product telemetry"
+msgid "Enable product usage analytics"
 msgstr "rapportelement"
 
 msgid "Enable profiling by request"
@@ -36967,6 +36983,13 @@ msgstr "Inzetstukken"
 
 msgid "Inside unique MACs"
 msgstr "Binnen unieke MAC's"
+
+#, python-format
+msgid ""
+"Inspect product usage data: Run <tt>cmk-product-usage --dry-run</tt> as site "
+"user, or %s. This allows you to review the data locally; it does not enable "
+"the feature or transmit any information."
+msgstr ""
 
 #, fuzzy
 msgid "Install Python automatically when configured plug-ins need it"
@@ -54953,12 +54976,6 @@ msgstr "Preview generatie aan de gang..."
 msgid "Preview generation started in background job <a href=\"%s\">%s</a>"
 msgstr "Preview generatie gestart in achtergrondjob <a href=\"%s\">%s</a>"
 
-#, python-format
-msgid ""
-"Preview telemetry data: Run <tt>cmk-telemetry --dry-run</tt> on the command "
-"line as site user, or download your data by %s."
-msgstr ""
-
 msgid "Preview this report"
 msgstr "Bekijk een voorbeeld van dit verslag"
 
@@ -55235,12 +55252,11 @@ msgid "Product"
 msgstr "Product"
 
 #, fuzzy
-msgid "Product telemetry"
-msgstr "rapportelement"
-
-#, fuzzy
 msgid "Product types"
 msgstr "Product"
+
+msgid "Product usage analytics"
+msgstr ""
 
 msgid "Profile"
 msgstr "Profiel"
@@ -55407,6 +55423,10 @@ msgid "Provisioned concurrency utilization"
 msgstr "Voorziene bezettingsgraad"
 
 msgid "Provisioned space"
+msgstr "Voorziene ruimte"
+
+#, fuzzy
+msgid "Provisioned storage space"
 msgstr "Voorziene ruimte"
 
 #, fuzzy
@@ -92690,10 +92710,6 @@ msgstr "cheque."
 msgid "children"
 msgstr "kinderen"
 
-#, fuzzy
-msgid "clicking here"
-msgstr "Blokkeringspercentage"
-
 msgid "clients"
 msgstr "klanten"
 
@@ -92948,6 +92964,10 @@ msgstr "slapend"
 
 msgid "down"
 msgstr "naar beneden"
+
+#, fuzzy
+msgid "download the full JSON report"
+msgstr "Dit verslag downloaden"
 
 msgid "e.g. 'My_Project/Closed'"
 msgstr "b.v. \"Mijn_Project/Gesloten"
@@ -95488,7 +95508,7 @@ msgid "Add optional filters to refine this widget"
 msgstr "Extra tekst als voorvoegsel bij de uitvoer"
 
 #, fuzzy
-msgid "Add optional filter to refine this widget"
+msgid "Add %{objectType} to refine this widget"
 msgstr "Extra tekst als voorvoegsel bij de uitvoer"
 
 #, fuzzy
@@ -95530,19 +95550,19 @@ msgid ""
 msgstr ""
 
 #, fuzzy
-msgid "Applied %{n} filter"
+msgid "Applied deshboard %{n} filter"
 msgstr "Toegepaste filters:"
 
 #, fuzzy
-msgid "No %{n} filter applied"
+msgid "No dashboard %{n} filter applied"
 msgstr "Ntop gastheer"
 
 #, fuzzy
-msgid "Applied %{n} filters"
+msgid "Applied dashboard %{n} filters"
 msgstr "Toegepaste filters:"
 
 #, fuzzy
-msgid "No %{n} filters applied"
+msgid "No dashboard %{n} filters applied"
 msgstr "Ntop gastheer"
 
 #, fuzzy
@@ -97166,6 +97186,17 @@ msgid "You will be prompted for your user password when running the script."
 msgstr ""
 
 #, fuzzy
+msgid "Install Podman"
+msgstr "Installatiedatum"
+
+msgid ""
+"Before deploying the Relay, ensure that Podman is installed on the host "
+"operating system.\n"
+"            The Relay is distributed as a container image and requires a "
+"functional Podman environment."
+msgstr ""
+
+#, fuzzy
 msgid "Download the Relay installation script to your environment"
 msgstr "De docker container plugin implementeren"
 
@@ -97215,56 +97246,71 @@ msgstr "Aantal gedegradeerde hosts"
 msgid "Go to relay overview"
 msgstr "Overzicht gastheren"
 
-msgid "Help us improve Checkmk with product telemetry"
+msgid "Help us improve Checkmk with product usage analytics"
 msgstr ""
 
-msgid "Why do we need product telemetry in Checkmk?"
+msgid "We want to understand how you use Checkmk."
 msgstr ""
 
 msgid ""
-"Help us shape the future of Checkmk. Your usage data allows us to make "
-"better decisions and focus development on the tools you use regularly. "
-"Please consider consenting to Product Telemetry to help us build the "
-"features that matter the most to you."
+"Product usage analytics allows us to make data-driven decisions and focus "
+"development on what parts of Checkmk you regularly use. \n"
+"            The data you share will help us prioritize the features that "
+"matter most to you."
 msgstr ""
 
 msgid "What data are we collecting?"
 msgstr ""
 
-msgid "We strictly limit data collection to aggregated, non-personal metrics."
-msgstr ""
-
 #, fuzzy
-msgid "We collect:"
+msgid "We collect: "
 msgstr "Collecties"
 
-msgid "Quantity metrics (e.g., count of hosts, folders, and services)."
+msgid ""
+"data about the general usage of features and configuration options (e.g., "
+"counts of hosts, folders, plug-ins, MKPs, and services)."
 msgstr ""
 
 #, fuzzy
-msgid "We do NOT collect:"
+msgid "We do NOT collect: "
 msgstr "Grootte van de logbestanden"
 
 msgid ""
-"User behavior (e.g., visit frequency) or sensitive identifiers (e.g., "
-"hostnames, file paths, service names, or raw metric values)."
+"any data about users or their behavior (e.g., PII) or possibly sensitive "
+"identifiers about your environment (e.g., hostnames, file paths, service "
+"names)."
 msgstr ""
 
-msgid "Do we automatically collect and send data?"
+#, fuzzy
+msgid "Important: "
+msgstr "Importeren"
+
+msgid ""
+"The names of custom check plug-ins (either developed internally or installed "
+"as an MKP from the Checkmk Exchange) will be collected as part of the "
+"product usage data. \n"
+"            If you use MKPs, we recommend you inspect the data carefully via "
+"the data download option to verify the content before opting in, to ensure "
+"no sensitive data is included. \n"
+"            Do not enable product usage analytics if you do not wish to "
+"share this information."
+msgstr ""
+
+msgid "Product usage analytics is turned off by default. "
 msgstr ""
 
 msgid ""
-"No! We firmly believe in only receiving data you are happy to share with us. "
-"For this reason, on default product telemetry is turned off. To make a "
-"decision now, please click on the \"Enable in global settings\" button."
+"We believe in only receiving data you explicitly choose to share. You can "
+"enable sharing analytics data any time from global settings. \n"
+"            If you do not wish to be reminded, please manage your "
+"preferences in global settings."
+msgstr ""
+
+msgid "Remind me again in 30 days"
 msgstr ""
 
 #, fuzzy
-msgid "Ask me later"
-msgstr "De gastheer gaat weer omhoog"
-
-#, fuzzy
-msgid "Enable in global settings"
+msgid "Manage in global settings"
 msgstr "Globale instelling wijzigen"
 
 #, fuzzy
@@ -98068,6 +98114,26 @@ msgid ""
 msgstr ""
 
 #, fuzzy
+#~ msgid "Product telemetry"
+#~ msgstr "rapportelement"
+
+#, fuzzy
+#~ msgid "clicking here"
+#~ msgstr "Blokkeringspercentage"
+
+#, fuzzy
+#~ msgid "No %{n} filter applied"
+#~ msgstr "Ntop gastheer"
+
+#, fuzzy
+#~ msgid "No %{n} filters applied"
+#~ msgstr "Ntop gastheer"
+
+#, fuzzy
+#~ msgid "Ask me later"
+#~ msgstr "De gastheer gaat weer omhoog"
+
+#, fuzzy
 #~ msgid "OTel RED Error: Error rate"
 #~ msgstr "Niveaus voor foutenpercentages"
 
@@ -98366,10 +98432,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Select from list"
 #~ msgstr "Selecteer individuele bestanden uit de lijst"
-
-#, fuzzy
-#~ msgid "No %{n} dashboard filters applied"
-#~ msgstr "Ntop gastheer"
 
 #, fuzzy
 #~ msgid "Edit filter configuration"

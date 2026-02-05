@@ -1739,6 +1739,17 @@ msgid "<li>Cannot move hosts from folder %s: %s</li>"
 msgstr "<li>Non è possibile spostare gli host dalla cartella %s: %s</li>"
 
 msgid ""
+"<p><b>Network Configuration: </b>To transmit analytics data, ensure your "
+"firewall permits outbound traffic to <tt>https://analytics.checkmk.com/"
+"upload</tt> on port <tt>443</tt>. If you are using a proxy, please verify "
+"that it allows connections to this destination.</p><p><b>Per-Site "
+"Configuration: </b>You have to ensure connectivity for <b>each site "
+"individually</b>. As every site collects and transmits data independently, "
+"please verify that your firewall rules permit traffic from every site to "
+"prevent local transmission errors.</p>"
+msgstr ""
+
+msgid ""
 "<p>By default each Checkmk site has its own temporary file system (a "
 "ramdisk) mounted to <tt>[SITE]/tmp</tt>. In case the mount is not possible, "
 "Checkmk starts without this temporary file system.</p><p>Even if this is "
@@ -6547,7 +6558,7 @@ msgstr ""
 "Permettere a tutti gli utenti di fare riferimento alle regole contenute in "
 "questo pacchetto"
 
-msgid "Allow collection and transmission of telemetry data"
+msgid "Allow collection and transmission of product usage data"
 msgstr ""
 
 msgid "Allow growing here"
@@ -6764,7 +6775,7 @@ msgstr ""
 msgid "Allows to view and edit %s created by other users."
 msgstr "Permette di visualizzare e modificare %s creato da altri utenti."
 
-msgid "Allows users to download the product telemetry data as a JSON file."
+msgid "Allows users to download the product usage data as a JSON file."
 msgstr ""
 
 msgid ""
@@ -16418,9 +16429,10 @@ msgid "Consecutive reachability failures (up to 8)"
 msgstr ""
 
 msgid ""
-"Consent to product telemetry data collection. By default, this is disabled, "
-"the user will be asked for consent via pop-up. Run  <tt>cmk-telemetry --dry-"
-"run</tt> in the command line to see a preview of the data."
+"Consent to product usage analytics data collection. By default, this is "
+"disabled, the user will be asked for consent via pop-up. Run  <tt>cmk-"
+"product-usage --dry-run</tt> in the command line to see a preview of the "
+"data."
 msgstr ""
 
 msgid "Consider alerts for Prism Central only"
@@ -20330,6 +20342,10 @@ msgstr "Utente cancellato: %s"
 msgid "Deletes"
 msgstr "Cancella"
 
+#, fuzzy, python-format
+msgid "Deleting %s..."
+msgstr "Recupero di '%s'..."
+
 msgid "Delimiter for file grouping"
 msgstr "Delimitatore per il raggruppamento dei file"
 
@@ -22144,7 +22160,7 @@ msgid "Do not check the node"
 msgstr "Non controllare il nodo"
 
 #, fuzzy
-msgid "Do not collect and transmit telemetry data"
+msgid "Do not collect product usage data"
 msgstr "Non inviare all'host remoto"
 
 msgid "Do not configure Windows Firewall"
@@ -22919,7 +22935,7 @@ msgid "Download license usage report"
 msgstr "Scarica il rapporto sull'uso della licenza"
 
 #, fuzzy
-msgid "Download product telemetry"
+msgid "Download product usage data"
 msgstr "elemento del rapporto"
 
 msgid "Download snmp walk"
@@ -24316,7 +24332,7 @@ msgid "Enable processing of perfdata"
 msgstr "Abilita l'elaborazione di perfdata"
 
 #, fuzzy
-msgid "Enable product telemetry"
+msgid "Enable product usage analytics"
 msgstr "elemento del rapporto"
 
 msgid "Enable profiling by request"
@@ -36770,6 +36786,13 @@ msgstr "Inserti"
 
 msgid "Inside unique MACs"
 msgstr "All'interno di MAC unici"
+
+#, python-format
+msgid ""
+"Inspect product usage data: Run <tt>cmk-product-usage --dry-run</tt> as site "
+"user, or %s. This allows you to review the data locally; it does not enable "
+"the feature or transmit any information."
+msgstr ""
 
 #, fuzzy
 msgid "Install Python automatically when configured plug-ins need it"
@@ -54621,12 +54644,6 @@ msgstr ""
 "La generazione dell'anteprima è iniziata nel lavoro in background <a "
 "href=\"%s\">%s</a>"
 
-#, python-format
-msgid ""
-"Preview telemetry data: Run <tt>cmk-telemetry --dry-run</tt> on the command "
-"line as site user, or download your data by %s."
-msgstr ""
-
 msgid "Preview this report"
 msgstr "Anteprima di questo rapporto"
 
@@ -54902,12 +54919,11 @@ msgid "Product"
 msgstr "Prodotto"
 
 #, fuzzy
-msgid "Product telemetry"
-msgstr "elemento del rapporto"
-
-#, fuzzy
 msgid "Product types"
 msgstr "Prodotto"
+
+msgid "Product usage analytics"
+msgstr ""
 
 msgid "Profile"
 msgstr "Profilo"
@@ -55074,6 +55090,10 @@ msgid "Provisioned concurrency utilization"
 msgstr "Utilizzo della valuta fornita"
 
 msgid "Provisioned space"
+msgstr "Spazio messo a disposizione"
+
+#, fuzzy
+msgid "Provisioned storage space"
 msgstr "Spazio messo a disposizione"
 
 #, fuzzy
@@ -92061,10 +92081,6 @@ msgstr "controllare."
 msgid "children"
 msgstr "bambini"
 
-#, fuzzy
-msgid "clicking here"
-msgstr "Tasso di blocco"
-
 msgid "clients"
 msgstr "clienti"
 
@@ -92314,6 +92330,10 @@ msgstr "dormiente"
 
 msgid "down"
 msgstr "giù"
+
+#, fuzzy
+msgid "download the full JSON report"
+msgstr "Scarica questo rapporto"
 
 msgid "e.g. 'My_Project/Closed'"
 msgstr "Ad esempio, \"Mio_progetto/Chiuso\""
@@ -94830,7 +94850,7 @@ msgid "Add optional filters to refine this widget"
 msgstr "Testo aggiuntivo con prefisso all'output"
 
 #, fuzzy
-msgid "Add optional filter to refine this widget"
+msgid "Add %{objectType} to refine this widget"
 msgstr "Testo aggiuntivo con prefisso all'output"
 
 #, fuzzy
@@ -94872,19 +94892,19 @@ msgid ""
 msgstr ""
 
 #, fuzzy
-msgid "Applied %{n} filter"
+msgid "Applied deshboard %{n} filter"
 msgstr "Filtri applicati:"
 
 #, fuzzy
-msgid "No %{n} filter applied"
+msgid "No dashboard %{n} filter applied"
 msgstr "Host Ntopng"
 
 #, fuzzy
-msgid "Applied %{n} filters"
+msgid "Applied dashboard %{n} filters"
 msgstr "Filtri applicati:"
 
 #, fuzzy
-msgid "No %{n} filters applied"
+msgid "No dashboard %{n} filters applied"
 msgstr "Host Ntopng"
 
 #, fuzzy
@@ -96506,6 +96526,17 @@ msgid "You will be prompted for your user password when running the script."
 msgstr ""
 
 #, fuzzy
+msgid "Install Podman"
+msgstr "Data di installazione"
+
+msgid ""
+"Before deploying the Relay, ensure that Podman is installed on the host "
+"operating system.\n"
+"            The Relay is distributed as a container image and requires a "
+"functional Podman environment."
+msgstr ""
+
+#, fuzzy
 msgid "Download the Relay installation script to your environment"
 msgstr "Distribuire il plugin per container docker"
 
@@ -96555,56 +96586,71 @@ msgstr "Conteggio degli host degradati"
 msgid "Go to relay overview"
 msgstr "Panoramica dell'host"
 
-msgid "Help us improve Checkmk with product telemetry"
+msgid "Help us improve Checkmk with product usage analytics"
 msgstr ""
 
-msgid "Why do we need product telemetry in Checkmk?"
+msgid "We want to understand how you use Checkmk."
 msgstr ""
 
 msgid ""
-"Help us shape the future of Checkmk. Your usage data allows us to make "
-"better decisions and focus development on the tools you use regularly. "
-"Please consider consenting to Product Telemetry to help us build the "
-"features that matter the most to you."
+"Product usage analytics allows us to make data-driven decisions and focus "
+"development on what parts of Checkmk you regularly use. \n"
+"            The data you share will help us prioritize the features that "
+"matter most to you."
 msgstr ""
 
 msgid "What data are we collecting?"
 msgstr ""
 
-msgid "We strictly limit data collection to aggregated, non-personal metrics."
-msgstr ""
-
 #, fuzzy
-msgid "We collect:"
+msgid "We collect: "
 msgstr "Collezioni"
 
-msgid "Quantity metrics (e.g., count of hosts, folders, and services)."
+msgid ""
+"data about the general usage of features and configuration options (e.g., "
+"counts of hosts, folders, plug-ins, MKPs, and services)."
 msgstr ""
 
 #, fuzzy
-msgid "We do NOT collect:"
+msgid "We do NOT collect: "
 msgstr "Dimensione dei file di log"
 
 msgid ""
-"User behavior (e.g., visit frequency) or sensitive identifiers (e.g., "
-"hostnames, file paths, service names, or raw metric values)."
+"any data about users or their behavior (e.g., PII) or possibly sensitive "
+"identifiers about your environment (e.g., hostnames, file paths, service "
+"names)."
 msgstr ""
 
-msgid "Do we automatically collect and send data?"
+#, fuzzy
+msgid "Important: "
+msgstr "Importazione"
+
+msgid ""
+"The names of custom check plug-ins (either developed internally or installed "
+"as an MKP from the Checkmk Exchange) will be collected as part of the "
+"product usage data. \n"
+"            If you use MKPs, we recommend you inspect the data carefully via "
+"the data download option to verify the content before opting in, to ensure "
+"no sensitive data is included. \n"
+"            Do not enable product usage analytics if you do not wish to "
+"share this information."
+msgstr ""
+
+msgid "Product usage analytics is turned off by default. "
 msgstr ""
 
 msgid ""
-"No! We firmly believe in only receiving data you are happy to share with us. "
-"For this reason, on default product telemetry is turned off. To make a "
-"decision now, please click on the \"Enable in global settings\" button."
+"We believe in only receiving data you explicitly choose to share. You can "
+"enable sharing analytics data any time from global settings. \n"
+"            If you do not wish to be reminded, please manage your "
+"preferences in global settings."
+msgstr ""
+
+msgid "Remind me again in 30 days"
 msgstr ""
 
 #, fuzzy
-msgid "Ask me later"
-msgstr "L'ospite sale di nuovo"
-
-#, fuzzy
-msgid "Enable in global settings"
+msgid "Manage in global settings"
 msgstr "Modifica dell'impostazione globale"
 
 #, fuzzy
@@ -97408,6 +97454,26 @@ msgid ""
 msgstr ""
 
 #, fuzzy
+#~ msgid "Product telemetry"
+#~ msgstr "elemento del rapporto"
+
+#, fuzzy
+#~ msgid "clicking here"
+#~ msgstr "Tasso di blocco"
+
+#, fuzzy
+#~ msgid "No %{n} filter applied"
+#~ msgstr "Host Ntopng"
+
+#, fuzzy
+#~ msgid "No %{n} filters applied"
+#~ msgstr "Host Ntopng"
+
+#, fuzzy
+#~ msgid "Ask me later"
+#~ msgstr "L'ospite sale di nuovo"
+
+#, fuzzy
 #~ msgid "OTel RED Error: Error rate"
 #~ msgstr "Livelli per i tassi di errore"
 
@@ -97701,10 +97767,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Select from list"
 #~ msgstr "Selezionare il tipo dall'elenco"
-
-#, fuzzy
-#~ msgid "No %{n} dashboard filters applied"
-#~ msgstr "Host Ntopng"
 
 #, fuzzy
 #~ msgid "Edit filter configuration"
