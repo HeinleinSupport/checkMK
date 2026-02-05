@@ -1,6 +1,6 @@
 {
-  "mode": "acceptEdits",
   "permissions": {
+    "mode": "acceptEdits",
     "allow": [
       "Skill(bazel)",
       "Skill(gerrit)",
