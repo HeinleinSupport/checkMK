@@ -39,7 +39,7 @@
       "Bash(jenkins_build_data.py:*)"
     ],
     "deny": ["Bash(git remote:*)", "Bash(git config:*)"],
-    "ask": []
+    "ask": ["Bash(find *--exec*)"]
   },
   "attribution": {
     "commit": "",
