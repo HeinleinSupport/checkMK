@@ -440,10 +440,6 @@ msgstr "%d条件"
 msgid "%d custom service attributes"
 msgstr "%d カスタムサービス属性"
 
-#, fuzzy, python-format
-msgid "%d day"
-msgstr "%d日間"
-
 #, python-format
 msgid "%d days"
 msgstr "%d日間"
@@ -511,14 +507,6 @@ msgstr "%d ロックされたサイト"
 msgid "%d locked sites"
 msgstr "%d ロック済サイト"
 
-#, fuzzy, python-format
-msgid "%d minute"
-msgstr "分"
-
-#, fuzzy, python-format
-msgid "%d minutes"
-msgstr "5分"
-
 #, python-format
 msgid "%d new label"
 msgid_plural "%d new labels"
@@ -552,10 +540,6 @@ msgstr[0] "%d 削除されたラベル"
 #, python-format
 msgid "%d rows"
 msgstr "%d行"
-
-#, fuzzy, python-format
-msgid "%d seconds"
-msgstr "秒"
 
 #, fuzzy, python-format
 msgid "%d service(s) moved to disabled services table. Monitoring is disabled."
@@ -3903,10 +3887,6 @@ msgstr "アクティブスポットフリートリクエスト"
 msgid "Active time range"
 msgstr "アクティブな時間範囲"
 
-#, fuzzy
-msgid "Active time series (last 24 h)"
-msgstr "アクティブセッション"
-
 msgid "Active unit"
 msgstr "アクティブユニット"
 
@@ -4095,6 +4075,10 @@ msgstr "すべて追加>>"
 
 msgid "Add all detected but not yet monitored services to the monitoring."
 msgstr "検出されたがまだ監視されていないすべてのサービスを監視に追加します。"
+
+#, fuzzy
+msgid "Add and configure hosts and services"
+msgstr "ホストとサービスのコマンド"
 
 msgid "Add attribute"
 msgstr "属性を追加"
@@ -6968,6 +6952,10 @@ msgstr "アプライアンス、その他の専用ハードウェア"
 
 msgid "Application"
 msgstr "アプリケーション"
+
+#, fuzzy
+msgid "Application (Client) ID"
+msgstr "アプリケーション(クライアント) ID"
 
 msgid "Application (client) ID"
 msgstr "アプリケーション(クライアント) ID"
@@ -12956,10 +12944,6 @@ msgid "Checkmk helper usage"
 msgstr "Checkmkヘルパーの使用量"
 
 #, fuzzy
-msgid "Checkmk metric backend"
-msgstr "OpenTelemetryメトリック名"
-
-#, fuzzy
 msgid ""
 "Checkmk metrics are created from OpenTelemetry datapoints. Configure them "
 "here."
@@ -13868,6 +13852,10 @@ msgstr "クライアントID /アプリケーションID"
 msgid "Client ID is required"
 msgstr "ユニークIDですが必須。"
 
+#, fuzzy
+msgid "Client ID must be a valid UUID."
+msgstr "値は文字列であること"
+
 msgid "Client Secret"
 msgstr "クライアントシークレット"
 
@@ -14049,10 +14037,6 @@ msgstr ""
 
 msgid "Close timewarp"
 msgstr "タイムワープを閉じる"
-
-#, python-format
-msgid "Close topic segment %s"
-msgstr "トピックセグメント%sを閉じる"
 
 msgid "Closed"
 msgstr "クローズド"
@@ -17662,6 +17646,10 @@ msgstr "カスタマイズエージェントパッケージ(Linux)"
 msgid "Customize and use %s"
 msgstr "%s をカスタマイズして使用する"
 
+#, fuzzy
+msgid "Customize dashboards and views"
+msgstr "カスタマイズユーザー"
+
 msgid "Customize login screen"
 msgstr "ログイン画面をカスタマイズする"
 
@@ -20201,6 +20189,10 @@ msgstr "ディレクトリ"
 msgid "Directories to search for <tt>EXE</tt> files (Windows)"
 msgstr "<tt> EXE </tt>ファイルを検索するディレクトリ(Windows)"
 
+#, fuzzy
+msgid "Directory (Tenant) ID"
+msgstr "ディレクトリ(テナント)ID"
+
 msgid "Directory (tenant) ID"
 msgstr "ディレクトリ(テナント)ID"
 
@@ -21600,6 +21592,9 @@ msgstr "Dockerノードのディスク使用量"
 
 msgid "Docker nodes"
 msgstr "Dockerノード"
+
+msgid "Docs, references and guides"
+msgstr ""
 
 msgid "Docsis Cable Modem Status"
 msgstr "Docsisケーブルモデムのステータス"
@@ -31525,6 +31520,10 @@ msgstr "ID: %s"
 msgid "IDLE"
 msgstr "IDLE"
 
+#, fuzzy
+msgid "IDs"
+msgstr "ID"
+
 #, python-format
 msgid "IEC with symbol %s"
 msgstr "IECシンボル%s"
@@ -31933,7 +31932,8 @@ msgid ""
 "overview and the dashboard). This affects only users with this permission. "
 "Users with this permission will see failed notifications between now and the "
 "configured <a href=\"wato.py?"
-"mode=edit_configvar&varname=notification_horizon\">Notification horizon</a>."
+"mode=edit_configvar&varname=failed_notification_horizon\">Failed "
+"notification horizon</a>."
 msgstr ""
 "Checkmkが問題に関してユーザーに通知できない場合、サイトはUI内でこの状況につい"
 "て目に見える形で警告します（戦術概要とダッシュボードの両方で）。これは、この"
@@ -36872,6 +36872,9 @@ msgstr "過去35日間"
 msgid "Last 6 months"
 msgstr "過去6か月"
 
+msgid "Last 7 days"
+msgstr "過去7日間"
+
 msgid "Last Contact"
 msgstr "最後の連絡先"
 
@@ -39498,10 +39501,6 @@ msgstr "ポイントツーサイト帯域幅の下位レベル(バイト/秒)"
 msgid "Lower levels on Site-to-site bandwidth in bytes per second"
 msgstr "1秒あたりのバイト数で表したサイト間帯域幅の下位レベル"
 
-#, fuzzy
-msgid "Lower levels on active time series within the last 24 hours"
-msgstr "総エラーレートの下位レベル"
-
 msgid "Lower levels on number of Point-to-site connections"
 msgstr "Point-to-site接続の数の下位レベル"
 
@@ -40146,6 +40145,10 @@ msgstr "監視対象のホストとサービス、およびホストのフォル
 
 msgid "Manage monitoring agents"
 msgstr "監視エージェントの管理"
+
+#, fuzzy
+msgid "Manage personal settings"
+msgstr "個人設定"
 
 msgid ""
 "Manage relay configurations. Relays allow a Checkmk site to monitor SNMP "
@@ -42465,6 +42468,10 @@ msgstr "Inotify(Linux)でファイル操作を監視する"
 
 msgid "Monitor group quotas"
 msgstr "グループクォータを監視"
+
+#, fuzzy
+msgid "Monitor hosts and services"
+msgstr "無効になっているサービスを監視する"
 
 msgid "Monitor hosts for unchecked services (Checkmk Discovery)"
 msgstr "チェックされていないサービスのホストを監視する(Checkmk Discovery)"
@@ -45424,10 +45431,6 @@ msgstr "ホストの通知イベント。"
 
 msgid "Notification frequency and timing"
 msgstr "通知の頻度とタイミング"
-
-#, fuzzy
-msgid "Notification horizon"
-msgstr "通知作成者"
 
 msgid "Notification log level"
 msgstr "通知ログレベル"
@@ -54571,10 +54574,6 @@ msgstr "作成するレポート"
 msgid "Report to schedule"
 msgstr "スケジュールに報告する"
 
-#, fuzzy
-msgid "Reported to licensing server"
-msgstr "製品ライセンスページ"
-
 msgid "Reporting"
 msgstr "報告"
 
@@ -56812,6 +56811,10 @@ msgstr "探す"
 msgid "Search %s"
 msgstr "%s を検索"
 
+#, fuzzy
+msgid "Search accross Checkmk"
+msgstr "Checkmkからトレースを送信する"
+
 msgid "Search all entries one level below the base DN"
 msgstr "ベースDNの1レベル下のすべてのエントリを検索します"
 
@@ -57010,6 +57013,10 @@ msgstr "ポーリングする前に待機する秒数"
 
 msgid "Seconds to wait between sending string and polling for response"
 msgstr "文字列の送信と応答のポーリングの間に待機する秒数"
+
+#, fuzzy
+msgid "Secret"
+msgstr "秘密鍵"
 
 msgid "Secret access key"
 msgstr "秘密アクセスキー"
@@ -57492,6 +57499,11 @@ msgstr "TCP接続を受け付けるサイトを選択してください。"
 
 msgid "Select the site that is establishing the TCP connection."
 msgstr "TCP接続を確立するサイトを選択してください。"
+
+msgid ""
+"Select the site to create a dump for. The actual contents of the dump can be "
+"selected in the next screen."
+msgstr ""
 
 msgid ""
 "Select the software the LDAP directory is based on. Depending on the "
@@ -59332,13 +59344,6 @@ msgid "Show alias if set, else description"
 msgstr ""
 "設定されている場合はエイリアスを表示し、そうでない場合は説明を表示します"
 
-msgid "Show all"
-msgstr "すべて表示する"
-
-#, python-format
-msgid "Show all %s topics"
-msgstr "すべての %s トピックを表示"
-
 msgid "Show all cycles"
 msgstr "すべてのサイクルを表示"
 
@@ -59406,10 +59411,6 @@ msgstr "ダイナミック表示"
 
 msgid "Show empty groups"
 msgstr "空のグループを表示する"
-
-#, python-format
-msgid "Show entries for %s"
-msgstr "%s のエントリーを表示"
 
 msgid "Show failed notifications"
 msgstr "失敗した通知を表示する"
@@ -59732,9 +59733,6 @@ msgstr "長すぎるテキストを縮小する"
 
 msgid "Shutting down"
 msgstr "シャットダウン"
-
-msgid "Sidebar"
-msgstr "サイドバー"
 
 msgid "Sidebar element"
 msgstr "サイドバーエレメント"
@@ -64528,6 +64526,10 @@ msgstr ""
 "が %s である間。この数値を使用すると、Apacheは最大 %s のRAMを使用する可能性が"
 "あります。システムがこれを処理できることを確認してください。"
 
+#, fuzzy
+msgid "The Application (Client) ID of your registered application."
+msgstr "システムレプリケーションがない場合の状態"
+
 msgid "The Area"
 msgstr "エリア"
 
@@ -64719,9 +64721,6 @@ msgid ""
 msgstr ""
 "CheckmkサーバーのURLはFQDNでなければならない(詳細はインラインヘルプを参照)。"
 
-msgid "The Client ID (Application ID) of your registered application."
-msgstr ""
-
 #, fuzzy
 msgid "The Client secret of your registered application."
 msgstr "システムレプリケーションがない場合の状態"
@@ -64745,6 +64744,9 @@ msgstr ""
 "できます。このチェックでは、<tt>init.ora</tt>パラメータ<tt>dg_broker_start</"
 "tt> 必ず<tt>TRUE</tt>である必要があります。適用および転送ラグは、このルールで"
 "構成できます。"
+
+msgid "The Directory (Tenant) ID of your Microsoft Entra ID instance."
+msgstr ""
 
 msgid "The ESX Host"
 msgstr "ESXホスト"
@@ -65182,9 +65184,6 @@ msgid ""
 "The TCP Port the SMTP server is listening on. The default is <tt>25</tt>."
 msgstr ""
 "SMTPサーバーがリッスンしているTCPポート。デフォルトは<tt> 25 </tt>です。"
-
-msgid "The Tenant ID of your Azure AD instance."
-msgstr ""
 
 msgid ""
 "The URI of the request. This should start with '/' and not include the "
@@ -75465,9 +75464,6 @@ msgstr "結果の詳細を切り替える"
 msgid "Toggle suggested actions"
 msgstr "提案されたアクションを切り替えます"
 
-msgid "Toggle the sidebar"
-msgstr "サイドバーを切り替えます"
-
 msgid ""
 "Toggle to either send notifications or suppress all previous notifications "
 "for the method selected."
@@ -79682,14 +79678,6 @@ msgstr "ポイントツーサイト帯域幅の上位レベル(バイト/秒)"
 msgid "Upper levels on Site-to-site bandwidth in bytes per second"
 msgstr "1秒あたりのバイト数で表したサイト間帯域幅の上位レベル"
 
-#, fuzzy
-msgid "Upper levels on active time series reported to licensing server"
-msgstr "サービス稼働期間の上位レベル"
-
-#, fuzzy
-msgid "Upper levels on active time series within the last 24 hours"
-msgstr "リクエストの合計レイテンシの上位レベル"
-
 msgid "Upper levels on daily costs"
 msgstr "1日ごとのコストの上位レベル"
 
@@ -82163,10 +82151,6 @@ msgstr "拡張パッケージマネージャを見る"
 
 msgid "View failed notifications"
 msgstr "失敗した通知を表示する"
-
-#, fuzzy, python-format
-msgid "View last %s"
-msgstr "Vhosts"
 
 msgid "View layout"
 msgstr "レイアウトを表示"
@@ -90591,6 +90575,12 @@ msgstr "ホストかサイトか、文脈によって異なる"
 msgid "Hexagon size"
 msgstr "最大hexagonサイズ"
 
+msgid ""
+"When many hexagons are displayed, they scale to fit into the widget.\n"
+"                 Differences between &quot;Small&quot; and &quot;Large&quot; "
+"may not be visible in the preview."
+msgstr ""
+
 msgid "Small"
 msgstr ""
 
@@ -91166,6 +91156,16 @@ msgstr "%d サイトでエラーが発生しました: %s"
 msgid "Sites logged out: %{n}"
 msgstr "%d サイトでエラーが発生しました: %s"
 
+msgid "Show all"
+msgstr "すべて表示する"
+
+#, fuzzy
+msgid "Toggle sidebar"
+msgstr "サイドバーを切り替えます"
+
+msgid "Sidebar"
+msgstr "サイドバー"
+
 msgid "Key hints"
 msgstr ""
 
@@ -91399,10 +91399,6 @@ msgstr "キーを生成する"
 msgid "Generating token"
 msgstr "一般的なオプション"
 
-#, fuzzy
-msgid "Regenerate a token to use token authentication."
-msgstr "ブローカー認証に使用されるユーザー名。"
-
 msgid "Error on generating token: ${ottError.message}"
 msgstr ""
 
@@ -91412,15 +91408,6 @@ msgstr "クリップボードへのコピーに成功しました。"
 
 msgid "(Expires: ${ottExpiry?.toLocaleString() || 'never'})"
 msgstr ""
-
-msgid ""
-"If an error occurs during OTT authentication, try to authenticate with a "
-"user."
-msgstr ""
-
-#, fuzzy
-msgid "Authenticate with user"
-msgstr "TLS認証"
 
 msgid ""
 "Agent registration will establish trust between the Agent Controller\n"
@@ -91436,10 +91423,8 @@ msgstr ""
 
 msgid ""
 "Maximum number of ping attempts reached.\n"
-"        Please try again after\n"
-"        ${((waitTimeBetweenQueries - (Date.now() - "
-"pingStatus.value[cmd].timerStarted)) / 1000).toFixed(0)}\n"
-"        seconds."
+"        After ${(remainingTime / 1000).toFixed(0)} seconds the next ping "
+"attempt will be made automatically."
 msgstr ""
 
 msgid ""
@@ -91475,6 +91460,80 @@ msgid "You can now close this window."
 msgstr "このルールを保存することはできません。"
 
 #, fuzzy
+msgid "Tenant ID is required."
+msgstr "ユニークIDですが必須。"
+
+#, fuzzy
+msgid "Client ID is required."
+msgstr "ユニークIDですが必須。"
+
+msgid "Copy app IDs"
+msgstr ""
+
+msgid ""
+"Navigate to the app overview (Essentials). Copy the Application (client) ID "
+"and Directory (tenant) ID into the fields below."
+msgstr ""
+
+#, fuzzy
+msgid "Add app permissions"
+msgstr "役割と権限"
+
+msgid ""
+"Navigate to API permissions and add the following Microsoft Graph "
+"permissions."
+msgstr ""
+
+#, fuzzy
+msgid "Authorize the connection"
+msgstr "接続を追加"
+
+msgid ""
+"A new tab will be opened and you will need to log in to Microsoft Azure to "
+"authorize the application. The process has to be completed within 5 minutes."
+msgstr ""
+
+#, fuzzy
+msgid "Start authorization"
+msgstr "基本認証"
+
+#, fuzzy
+msgid "Client secret is required."
+msgstr "ユニークIDですが必須。"
+
+#, fuzzy
+msgid "Please choose a password."
+msgstr "パスワードを指定してください。"
+
+#, fuzzy
+msgid "Create a new client secret"
+msgstr "保存してフォルダを確認"
+
+msgid ""
+"Navigate to Certificates & secrets. Create and copy a new client Secret to "
+"Checkmk. Please copy the client secret immediately, because it will not be "
+"shown again."
+msgstr ""
+
+msgid "Open or register Microsoft Azure Entra ID app"
+msgstr ""
+
+msgid "Open Microsoft Azure and navigate to Microsoft Entra ID."
+msgstr ""
+
+msgid "Open registered app or add a new app registration."
+msgstr ""
+
+#, fuzzy
+msgid "Add redirect URI"
+msgstr "受取人の追加"
+
+msgid ""
+"Open the Redirect URIs or navigate to the Authentication settings and "
+"register the following Web redirect URI"
+msgstr ""
+
+#, fuzzy
 msgid "Verifying the authorization..."
 msgstr "登録を確認中…"
 
@@ -91499,8 +91558,12 @@ msgid "Authorization was not completed. Please try again."
 msgstr "何か問題が発生しました: %s"
 
 #, fuzzy
-msgid "Authorize application"
-msgstr "承認"
+msgid "Title is required."
+msgstr "名前は必須です。"
+
+#, fuzzy
+msgid "Set connection title"
+msgstr "接続タイムアウトを設定する"
 
 #, fuzzy
 msgid "seconds remaining"
@@ -91510,6 +91573,11 @@ msgstr " 秒 残)"
 msgid "OAuth2 connection parameters requested successfully!"
 msgstr "エージェント%sが成功しました"
 
+msgid ""
+"Enter the Checkmk display title for this connection. You can then save and "
+"use the connection."
+msgstr ""
+
 #, fuzzy
 msgid "Saving OAuth2 connection"
 msgstr "接続を追加"
@@ -91517,62 +91585,6 @@ msgstr "接続を追加"
 #, fuzzy
 msgid "Go back to restart authorization process"
 msgstr "認証リクエスト作成不可"
-
-#, fuzzy
-msgid "Title is required."
-msgstr "名前は必須です。"
-
-#, fuzzy
-msgid "Tenant ID is required."
-msgstr "ユニークIDですが必須。"
-
-#, fuzzy
-msgid "Client ID is required."
-msgstr "ユニークIDですが必須。"
-
-#, fuzzy
-msgid "Client ID must be a valid UUID."
-msgstr "値は文字列であること"
-
-#, fuzzy
-msgid "Define OAuth2 parameter"
-msgstr "デフォルトパラメータ"
-
-msgid ""
-"Register an app in Microsoft Entra ID and note the Tenant ID and Client ID."
-msgstr ""
-
-#, fuzzy
-msgid "Create a client secret for the app and store the secret value securely."
-msgstr "アプリのクライアントシークレットを作成し、それをメモする。"
-
-msgid ""
-"Add the following delegated Microsoft Graph API permissions required and "
-"grant admin consent if required."
-msgstr ""
-
-msgid ""
-"Register the following redirect URI (Web platform, HTTPS) in the app’s "
-"Authentication settings."
-msgstr ""
-
-msgid ""
-"Complete OAuth2 authorization from Checkmk and verify that access and "
-"refresh tokens are stored successfully."
-msgstr ""
-
-#, fuzzy
-msgid ""
-"A new tab will be opened. Please follow the instructions to authorize the "
-"application."
-msgstr "ブラウザの指示に従って認証を行ってください。"
-
-msgid "The process has to be completed within 5 minutes."
-msgstr ""
-
-#, fuzzy
-msgid "Start authorization"
-msgstr "基本認証"
 
 #, fuzzy
 msgid "Configure title and site"
@@ -92547,6 +92559,93 @@ msgid ""
 "You can still access it later via Help > Learning Checkmk > Welcome page"
 msgstr ""
 
+#, fuzzy, python-format
+#~ msgid "%d day"
+#~ msgstr "%d日間"
+
+#, fuzzy, python-format
+#~ msgid "%d minute"
+#~ msgstr "分"
+
+#, fuzzy, python-format
+#~ msgid "%d minutes"
+#~ msgstr "5分"
+
+#, fuzzy, python-format
+#~ msgid "%d seconds"
+#~ msgstr "秒"
+
+#, fuzzy
+#~ msgid "Active time series (last 24 h)"
+#~ msgstr "アクティブセッション"
+
+#, fuzzy
+#~ msgid "Checkmk metric backend"
+#~ msgstr "OpenTelemetryメトリック名"
+
+#, python-format
+#~ msgid "Close topic segment %s"
+#~ msgstr "トピックセグメント%sを閉じる"
+
+#, fuzzy
+#~ msgid "Lower levels on active time series within the last 24 hours"
+#~ msgstr "総エラーレートの下位レベル"
+
+#, fuzzy
+#~ msgid "Notification horizon"
+#~ msgstr "通知作成者"
+
+#, fuzzy
+#~ msgid "Reported to licensing server"
+#~ msgstr "製品ライセンスページ"
+
+#, python-format
+#~ msgid "Show all %s topics"
+#~ msgstr "すべての %s トピックを表示"
+
+#, python-format
+#~ msgid "Show entries for %s"
+#~ msgstr "%s のエントリーを表示"
+
+#, fuzzy
+#~ msgid "Upper levels on active time series reported to licensing server"
+#~ msgstr "サービス稼働期間の上位レベル"
+
+#, fuzzy
+#~ msgid "Upper levels on active time series within the last 24 hours"
+#~ msgstr "リクエストの合計レイテンシの上位レベル"
+
+#, fuzzy, python-format
+#~ msgid "View last %s"
+#~ msgstr "Vhosts"
+
+#, fuzzy
+#~ msgid "Regenerate a token to use token authentication."
+#~ msgstr "ブローカー認証に使用されるユーザー名。"
+
+#, fuzzy
+#~ msgid "Authenticate with user"
+#~ msgstr "TLS認証"
+
+#, fuzzy
+#~ msgid "Authorize application"
+#~ msgstr "承認"
+
+#, fuzzy
+#~ msgid "Define OAuth2 parameter"
+#~ msgstr "デフォルトパラメータ"
+
+#, fuzzy
+#~ msgid ""
+#~ "Create a client secret for the app and store the secret value securely."
+#~ msgstr "アプリのクライアントシークレットを作成し、それをメモする。"
+
+#, fuzzy
+#~ msgid ""
+#~ "A new tab will be opened. Please follow the instructions to authorize the "
+#~ "application."
+#~ msgstr "ブラウザの指示に従って認証を行ってください。"
+
 #, fuzzy
 #~ msgid "Product telemetry"
 #~ msgstr "レポート要素"
@@ -92601,9 +92700,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Specify sites this OpenTelemetry Collector should run on."
 #~ msgstr "OpenTelemetry コレクターを実行するサイトを指定します。"
-
-#~ msgid "Last 7 days"
-#~ msgstr "過去7日間"
 
 #, fuzzy
 #~ msgid "Cisco Meraki licensed devices"
@@ -92861,10 +92957,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Create & set dashboard filters"
 #~ msgstr "関連ダッシュボード"
-
-#, fuzzy
-#~ msgid "Create & view list"
-#~ msgstr "保存してフォルダを確認"
 
 #~ msgid "Background in status color and label"
 #~ msgstr "ステータスの色とラベルの背景"
@@ -94600,10 +94692,6 @@ msgstr ""
 
 #~ msgid "The backup has been started."
 #~ msgstr "バックアップが開始されました。"
-
-#, fuzzy
-#~ msgid "Customize dashboard"
-#~ msgstr "カスタマイズユーザー"
 
 #, fuzzy
 #~ msgid "Main dashboard (PEV)"

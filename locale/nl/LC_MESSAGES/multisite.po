@@ -450,10 +450,6 @@ msgstr "%d voorwaarden"
 msgid "%d custom service attributes"
 msgstr "%d aangepaste service attributen"
 
-#, fuzzy, python-format
-msgid "%d day"
-msgstr "%d dagen"
-
 #, python-format
 msgid "%d days"
 msgstr "%d dagen"
@@ -525,14 +521,6 @@ msgid "%d locked sites"
 msgstr "%d vergrendelde sites"
 
 #, fuzzy, python-format
-msgid "%d minute"
-msgstr "minuut"
-
-#, fuzzy, python-format
-msgid "%d minutes"
-msgstr "5 minuten"
-
-#, fuzzy, python-format
 msgid "%d new label"
 msgid_plural "%d new labels"
 msgstr[0] "Nieuw etiket toevoegen"
@@ -567,10 +555,6 @@ msgstr[1] "Verwijder dit etiket"
 #, python-format
 msgid "%d rows"
 msgstr "%d rijen"
-
-#, fuzzy, python-format
-msgid "%d seconds"
-msgstr "seconden"
 
 #, fuzzy, python-format
 msgid "%d service(s) moved to disabled services table. Monitoring is disabled."
@@ -4075,10 +4059,6 @@ msgstr "Actieve Spot Fleet Verzoeken"
 msgid "Active time range"
 msgstr "Actief tijdsverloop"
 
-#, fuzzy
-msgid "Active time series (last 24 h)"
-msgstr "Actieve Sessies"
-
 msgid "Active unit"
 msgstr "Actieve eenheid"
 
@@ -4272,6 +4252,10 @@ msgstr ""
 msgid "Add all detected but not yet monitored services to the monitoring."
 msgstr ""
 "Voeg alle gedetecteerde maar nog niet bewaakte diensten toe aan de bewaking."
+
+#, fuzzy
+msgid "Add and configure hosts and services"
+msgstr "Commando's op host en diensten"
 
 msgid "Add attribute"
 msgstr "Attribuut toevoegen"
@@ -7338,6 +7322,10 @@ msgstr "Apparaten, andere specifieke hardware"
 
 msgid "Application"
 msgstr "Toepassing"
+
+#, fuzzy
+msgid "Application (Client) ID"
+msgstr "Applicatie (cliënt) ID"
 
 msgid "Application (client) ID"
 msgstr "Applicatie (cliënt) ID"
@@ -13703,10 +13691,6 @@ msgstr ""
 msgid "Checkmk helper usage"
 msgstr "Checkmk helper gebruik"
 
-#, fuzzy
-msgid "Checkmk metric backend"
-msgstr "Configuratie toestand toevoegen"
-
 msgid ""
 "Checkmk metrics are created from OpenTelemetry datapoints. Configure them "
 "here."
@@ -14652,6 +14636,10 @@ msgstr "Klant ID / Applicatie ID"
 msgid "Client ID is required"
 msgstr "is vereist"
 
+#, fuzzy
+msgid "Client ID must be a valid UUID."
+msgstr "De waarde moet een string zijn"
+
 msgid "Client Secret"
 msgstr "Geheim van de klant"
 
@@ -14839,10 +14827,6 @@ msgstr ""
 
 msgid "Close timewarp"
 msgstr "Timewarp sluiten"
-
-#, fuzzy, python-format
-msgid "Close topic segment %s"
-msgstr "Kloon dit element"
 
 msgid "Closed"
 msgstr "Gesloten"
@@ -18623,6 +18607,10 @@ msgstr "Naam van agentpakketten (Linux, UNIX)"
 msgid "Customize and use %s"
 msgstr "Aanpassen en gebruiken %s"
 
+#, fuzzy
+msgid "Customize dashboards and views"
+msgstr "Aanpassen"
+
 msgid "Customize login screen"
 msgstr "Aanpassen inlogscherm"
 
@@ -21308,6 +21296,10 @@ msgid "Directories to search for <tt>EXE</tt> files (Windows)"
 msgstr ""
 "Mappen waarin moet worden gezocht naar <tt>EXE</tt> bestanden (Windows)"
 
+#, fuzzy
+msgid "Directory (Tenant) ID"
+msgstr "Directory (huurder) ID"
+
 msgid "Directory (tenant) ID"
 msgstr "Directory (huurder) ID"
 
@@ -22838,6 +22830,9 @@ msgstr "Docker node schijfgebruik"
 
 msgid "Docker nodes"
 msgstr "Docker knooppunten"
+
+msgid "Docs, references and guides"
+msgstr ""
 
 msgid "Docsis Cable Modem Status"
 msgstr "Docsis Kabel Modem Status"
@@ -33446,6 +33441,10 @@ msgstr "ID: %s"
 msgid "IDLE"
 msgstr "IDLE"
 
+#, fuzzy
+msgid "IDs"
+msgstr "ID"
+
 #, python-format
 msgid "IEC with symbol %s"
 msgstr ""
@@ -33899,7 +33898,8 @@ msgid ""
 "overview and the dashboard). This affects only users with this permission. "
 "Users with this permission will see failed notifications between now and the "
 "configured <a href=\"wato.py?"
-"mode=edit_configvar&varname=notification_horizon\">Notification horizon</a>."
+"mode=edit_configvar&varname=failed_notification_horizon\">Failed "
+"notification horizon</a>."
 msgstr ""
 "Als Checkmk niet in staat is gebruikers op de hoogte te stellen van "
 "problemen, zal de site heel zichtbaar in de UI (zowel in het Tactisch "
@@ -39066,6 +39066,10 @@ msgstr "Laatste 35 dagen"
 msgid "Last 6 months"
 msgstr "Laatste 6 maanden"
 
+#, fuzzy
+msgid "Last 7 days"
+msgstr "Laatste 35 dagen"
+
 msgid "Last Contact"
 msgstr "Laatste contact"
 
@@ -41814,10 +41818,6 @@ msgstr "Lagere niveaus op Point-to-site bandbreedte in bytes per seconde"
 msgid "Lower levels on Site-to-site bandwidth in bytes per second"
 msgstr "Lagere niveaus op Site-to-site bandbreedte in bytes per seconde"
 
-#, fuzzy
-msgid "Lower levels on active time series within the last 24 hours"
-msgstr "Lagere niveaus voor het totale foutenpercentage"
-
 msgid "Lower levels on number of Point-to-site connections"
 msgstr "Lagere niveaus voor het aantal Point-to-site verbindingen"
 
@@ -42487,6 +42487,10 @@ msgstr ""
 #, fuzzy
 msgid "Manage monitoring agents"
 msgstr "Beheer van toezichthoudende agenten"
+
+#, fuzzy
+msgid "Manage personal settings"
+msgstr "Persoonlijke instellingen"
 
 msgid ""
 "Manage relay configurations. Relays allow a Checkmk site to monitor SNMP "
@@ -44917,6 +44921,10 @@ msgstr "Bestandsoperaties monitoren met Inotify (Linux)"
 
 msgid "Monitor group quotas"
 msgstr "Groepsquota bewaken"
+
+#, fuzzy
+msgid "Monitor hosts and services"
+msgstr "Toezicht op gehandicaptenvoorzieningen"
 
 msgid "Monitor hosts for unchecked services (Checkmk Discovery)"
 msgstr "Hosts controleren op niet-aangevinkte diensten (Checkmk Discovery)"
@@ -48082,10 +48090,6 @@ msgstr "Meldingsgebeurtenissen van hosts."
 #, fuzzy
 msgid "Notification frequency and timing"
 msgstr "kennisgevingsregel"
-
-#, fuzzy
-msgid "Notification horizon"
-msgstr "Kennisgeving Auteur"
 
 msgid "Notification log level"
 msgstr "Niveau meldingslogboek"
@@ -57953,9 +57957,6 @@ msgstr "Verslag te maken"
 msgid "Report to schedule"
 msgstr "Rapport aan schema"
 
-msgid "Reported to licensing server"
-msgstr ""
-
 msgid "Reporting"
 msgstr "Melding"
 
@@ -60303,6 +60304,10 @@ msgstr "Zoeken op"
 msgid "Search %s"
 msgstr "Zoeken %s"
 
+#, fuzzy
+msgid "Search accross Checkmk"
+msgstr "Welkom bij Checkmk Mobile."
+
 msgid "Search all entries one level below the base DN"
 msgstr "Zoeken in alle vermeldingen één niveau lager dan de basis-DN"
 
@@ -60515,6 +60520,10 @@ msgid "Seconds to wait between sending string and polling for response"
 msgstr ""
 "Seconden om te wachten tussen het verzenden van de string en het zoeken naar "
 "antwoord"
+
+#, fuzzy
+msgid "Secret"
+msgstr "Geheime sleutel"
 
 #, fuzzy
 msgid "Secret access key"
@@ -60984,6 +60993,11 @@ msgid "Select the site that is accepting the TCP connection."
 msgstr ""
 
 msgid "Select the site that is establishing the TCP connection."
+msgstr ""
+
+msgid ""
+"Select the site to create a dump for. The actual contents of the dump can be "
+"selected in the next screen."
 msgstr ""
 
 msgid ""
@@ -62936,13 +62950,6 @@ msgstr "Toon alias en beschrijving"
 msgid "Show alias if set, else description"
 msgstr "Toon alias indien ingesteld, anders beschrijving"
 
-msgid "Show all"
-msgstr "Toon alle"
-
-#, python-format
-msgid "Show all %s topics"
-msgstr "Toon alle %s onderwerpen"
-
 #, fuzzy
 msgid "Show all cycles"
 msgstr "Toon alle regels"
@@ -63014,10 +63021,6 @@ msgstr "Toon dynamisch"
 
 msgid "Show empty groups"
 msgstr "Toon lege groepen"
-
-#, fuzzy, python-format
-msgid "Show entries for %s"
-msgstr "Toon diensten van host %s"
 
 msgid "Show failed notifications"
 msgstr "Toon mislukte meldingen"
@@ -63362,9 +63365,6 @@ msgstr "Krimp te lange teksten"
 
 msgid "Shutting down"
 msgstr "Afsluiten"
-
-msgid "Sidebar"
-msgstr "Zijbalk"
 
 msgid "Sidebar element"
 msgstr "Zijbalk element"
@@ -68439,6 +68439,10 @@ msgstr ""
 "procesgrootte %s is. Met deze proceslimieten kan Apache tot %s RAM "
 "gebruiken. Zorg ervoor dat uw systeem dit aankan."
 
+#, fuzzy
+msgid "The Application (Client) ID of your registered application."
+msgstr "Toestand in geval van geen systeemreplicatie"
+
 msgid "The Area"
 msgstr "Het Gebied"
 
@@ -68643,9 +68647,6 @@ msgid ""
 "The Checkmk server URL should be the FQDN (see inline help for details)."
 msgstr ""
 
-msgid "The Client ID (Application ID) of your registered application."
-msgstr ""
-
 #, fuzzy
 msgid "The Client secret of your registered application."
 msgstr "Toestand in geval van geen systeemreplicatie"
@@ -68668,6 +68669,9 @@ msgstr ""
 "ingeschakelde Data-Guard. De <tt>init.ora</tt> parameter "
 "<tt>dg_broker_start</tt> moet <tt>TRUE</tt> zijn voor deze controle. De "
 "apply en transport lag kunnen met deze regel worden geconfigureerd."
+
+msgid "The Directory (Tenant) ID of your Microsoft Entra ID instance."
+msgstr ""
 
 msgid "The ESX Host"
 msgstr "De ESX Host"
@@ -69114,9 +69118,6 @@ msgid ""
 msgstr ""
 "De TCP-poort waarop de SMTP-server luistert. De standaardinstelling is "
 "<tt>25</tt>."
-
-msgid "The Tenant ID of your Azure AD instance."
-msgstr ""
 
 msgid ""
 "The URI of the request. This should start with '/' and not include the "
@@ -79744,9 +79745,6 @@ msgstr "Toggle resultaat details"
 msgid "Toggle suggested actions"
 msgstr "Voorgestelde acties wijzigen"
 
-msgid "Toggle the sidebar"
-msgstr "Schakel de zijbalk"
-
 msgid ""
 "Toggle to either send notifications or suppress all previous notifications "
 "for the method selected."
@@ -84599,14 +84597,6 @@ msgstr "Bovengrens voor Point-to-site bandbreedte in bytes per seconde"
 msgid "Upper levels on Site-to-site bandwidth in bytes per second"
 msgstr "Bovenste niveaus op Site-to-site bandbreedte in bytes per seconde"
 
-#, fuzzy
-msgid "Upper levels on active time series reported to licensing server"
-msgstr "Bovenste niveaus voor de licentiegrootte"
-
-#, fuzzy
-msgid "Upper levels on active time series within the last 24 hours"
-msgstr "Bovenste niveaus op totale verzoeklatentie"
-
 msgid "Upper levels on daily costs"
 msgstr "Hogere niveaus op dagelijkse kosten"
 
@@ -87340,10 +87330,6 @@ msgstr "Bekijk uitbreiding pakketbeheer"
 #, fuzzy
 msgid "View failed notifications"
 msgstr "Toon mislukte meldingen"
-
-#, fuzzy, python-format
-msgid "View last %s"
-msgstr "Vhosts"
 
 msgid "View layout"
 msgstr "Bekijk lay-out"
@@ -96122,6 +96108,12 @@ msgstr ""
 msgid "Hexagon size"
 msgstr "Maximale grootte"
 
+msgid ""
+"When many hexagons are displayed, they scale to fit into the widget.\n"
+"                 Differences between &quot;Small&quot; and &quot;Large&quot; "
+"may not be visible in the preview."
+msgstr ""
+
 msgid "Small"
 msgstr ""
 
@@ -96721,6 +96713,16 @@ msgstr "%d sites met fouten: %s"
 msgid "Sites logged out: %{n}"
 msgstr "%d sites met fouten: %s"
 
+msgid "Show all"
+msgstr "Toon alle"
+
+#, fuzzy
+msgid "Toggle sidebar"
+msgstr "Schakel de zijbalk"
+
+msgid "Sidebar"
+msgstr "Zijbalk"
+
 msgid "Key hints"
 msgstr ""
 
@@ -96959,10 +96961,6 @@ msgstr "Genereer"
 msgid "Generating token"
 msgstr "Algemene opties"
 
-#, fuzzy
-msgid "Regenerate a token to use token authentication."
-msgstr "De gebruikersnaam die wordt gebruikt voor de brokerauthenticatie."
-
 msgid "Error on generating token: ${ottError.message}"
 msgstr ""
 
@@ -96972,15 +96970,6 @@ msgstr "Wachtwoord succesvol gewijzigd."
 
 msgid "(Expires: ${ottExpiry?.toLocaleString() || 'never'})"
 msgstr ""
-
-msgid ""
-"If an error occurs during OTT authentication, try to authenticate with a "
-"user."
-msgstr ""
-
-#, fuzzy
-msgid "Authenticate with user"
-msgstr "Authenticatie met TLS"
 
 msgid ""
 "Agent registration will establish trust between the Agent Controller\n"
@@ -96996,10 +96985,8 @@ msgstr ""
 
 msgid ""
 "Maximum number of ping attempts reached.\n"
-"        Please try again after\n"
-"        ${((waitTimeBetweenQueries - (Date.now() - "
-"pingStatus.value[cmd].timerStarted)) / 1000).toFixed(0)}\n"
-"        seconds."
+"        After ${(remainingTime / 1000).toFixed(0)} seconds the next ping "
+"attempt will be made automatically."
 msgstr ""
 
 msgid ""
@@ -97032,6 +97019,80 @@ msgid "You can now close this window."
 msgstr "U kunt deze regel niet opslaan."
 
 #, fuzzy
+msgid "Tenant ID is required."
+msgstr "is vereist"
+
+#, fuzzy
+msgid "Client ID is required."
+msgstr "is vereist"
+
+msgid "Copy app IDs"
+msgstr ""
+
+msgid ""
+"Navigate to the app overview (Essentials). Copy the Application (client) ID "
+"and Directory (tenant) ID into the fields below."
+msgstr ""
+
+#, fuzzy
+msgid "Add app permissions"
+msgstr "Rollen en machtigingen"
+
+msgid ""
+"Navigate to API permissions and add the following Microsoft Graph "
+"permissions."
+msgstr ""
+
+#, fuzzy
+msgid "Authorize the connection"
+msgstr "Aansluiting toevoegen"
+
+msgid ""
+"A new tab will be opened and you will need to log in to Microsoft Azure to "
+"authorize the application. The process has to be completed within 5 minutes."
+msgstr ""
+
+#, fuzzy
+msgid "Start authorization"
+msgstr "Basisvergunning"
+
+#, fuzzy
+msgid "Client secret is required."
+msgstr "is vereist"
+
+#, fuzzy
+msgid "Please choose a password."
+msgstr "Geef uw wachtwoord."
+
+#, fuzzy
+msgid "Create a new client secret"
+msgstr "Map opslaan en bekijken"
+
+msgid ""
+"Navigate to Certificates & secrets. Create and copy a new client Secret to "
+"Checkmk. Please copy the client secret immediately, because it will not be "
+"shown again."
+msgstr ""
+
+msgid "Open or register Microsoft Azure Entra ID app"
+msgstr ""
+
+msgid "Open Microsoft Azure and navigate to Microsoft Entra ID."
+msgstr ""
+
+msgid "Open registered app or add a new app registration."
+msgstr ""
+
+#, fuzzy
+msgid "Add redirect URI"
+msgstr "Ontvanger"
+
+msgid ""
+"Open the Redirect URIs or navigate to the Authentication settings and "
+"register the following Web redirect URI"
+msgstr ""
+
+#, fuzzy
 msgid "Verifying the authorization..."
 msgstr "Agent registratie"
 
@@ -97056,8 +97117,12 @@ msgid "Authorization was not completed. Please try again."
 msgstr "Geen overeenkomende rijen gevonden. Probeer een andere zoekterm."
 
 #, fuzzy
-msgid "Authorize application"
-msgstr "Machtiging"
+msgid "Title is required."
+msgstr "is vereist"
+
+#, fuzzy
+msgid "Set connection title"
+msgstr "Time-out verbinding instellen"
 
 #, fuzzy
 msgid "seconds remaining"
@@ -97067,6 +97132,11 @@ msgstr "Resterende kredieten"
 msgid "OAuth2 connection parameters requested successfully!"
 msgstr "Agent %s succesvol"
 
+msgid ""
+"Enter the Checkmk display title for this connection. You can then save and "
+"use the connection."
+msgstr ""
+
 #, fuzzy
 msgid "Saving OAuth2 connection"
 msgstr "Aansluiting toevoegen"
@@ -97074,60 +97144,6 @@ msgstr "Aansluiting toevoegen"
 #, fuzzy
 msgid "Go back to restart authorization process"
 msgstr "Kan geen authenticatieverzoek aanmaken"
-
-#, fuzzy
-msgid "Title is required."
-msgstr "is vereist"
-
-#, fuzzy
-msgid "Tenant ID is required."
-msgstr "is vereist"
-
-#, fuzzy
-msgid "Client ID is required."
-msgstr "is vereist"
-
-#, fuzzy
-msgid "Client ID must be a valid UUID."
-msgstr "De waarde moet een string zijn"
-
-#, fuzzy
-msgid "Define OAuth2 parameter"
-msgstr "Modelparameters"
-
-msgid ""
-"Register an app in Microsoft Entra ID and note the Tenant ID and Client ID."
-msgstr ""
-
-msgid "Create a client secret for the app and store the secret value securely."
-msgstr ""
-
-msgid ""
-"Add the following delegated Microsoft Graph API permissions required and "
-"grant admin consent if required."
-msgstr ""
-
-msgid ""
-"Register the following redirect URI (Web platform, HTTPS) in the app’s "
-"Authentication settings."
-msgstr ""
-
-msgid ""
-"Complete OAuth2 authorization from Checkmk and verify that access and "
-"refresh tokens are stored successfully."
-msgstr ""
-
-msgid ""
-"A new tab will be opened. Please follow the instructions to authorize the "
-"application."
-msgstr ""
-
-msgid "The process has to be completed within 5 minutes."
-msgstr ""
-
-#, fuzzy
-msgid "Start authorization"
-msgstr "Basisvergunning"
 
 #, fuzzy
 msgid "Configure title and site"
@@ -98113,6 +98129,78 @@ msgid ""
 "You can still access it later via Help > Learning Checkmk > Welcome page"
 msgstr ""
 
+#, fuzzy, python-format
+#~ msgid "%d day"
+#~ msgstr "%d dagen"
+
+#, fuzzy, python-format
+#~ msgid "%d minute"
+#~ msgstr "minuut"
+
+#, fuzzy, python-format
+#~ msgid "%d minutes"
+#~ msgstr "5 minuten"
+
+#, fuzzy, python-format
+#~ msgid "%d seconds"
+#~ msgstr "seconden"
+
+#, fuzzy
+#~ msgid "Active time series (last 24 h)"
+#~ msgstr "Actieve Sessies"
+
+#, fuzzy
+#~ msgid "Checkmk metric backend"
+#~ msgstr "Configuratie toestand toevoegen"
+
+#, fuzzy, python-format
+#~ msgid "Close topic segment %s"
+#~ msgstr "Kloon dit element"
+
+#, fuzzy
+#~ msgid "Lower levels on active time series within the last 24 hours"
+#~ msgstr "Lagere niveaus voor het totale foutenpercentage"
+
+#, fuzzy
+#~ msgid "Notification horizon"
+#~ msgstr "Kennisgeving Auteur"
+
+#, python-format
+#~ msgid "Show all %s topics"
+#~ msgstr "Toon alle %s onderwerpen"
+
+#, fuzzy, python-format
+#~ msgid "Show entries for %s"
+#~ msgstr "Toon diensten van host %s"
+
+#, fuzzy
+#~ msgid "Upper levels on active time series reported to licensing server"
+#~ msgstr "Bovenste niveaus voor de licentiegrootte"
+
+#, fuzzy
+#~ msgid "Upper levels on active time series within the last 24 hours"
+#~ msgstr "Bovenste niveaus op totale verzoeklatentie"
+
+#, fuzzy, python-format
+#~ msgid "View last %s"
+#~ msgstr "Vhosts"
+
+#, fuzzy
+#~ msgid "Regenerate a token to use token authentication."
+#~ msgstr "De gebruikersnaam die wordt gebruikt voor de brokerauthenticatie."
+
+#, fuzzy
+#~ msgid "Authenticate with user"
+#~ msgstr "Authenticatie met TLS"
+
+#, fuzzy
+#~ msgid "Authorize application"
+#~ msgstr "Machtiging"
+
+#, fuzzy
+#~ msgid "Define OAuth2 parameter"
+#~ msgstr "Modelparameters"
+
 #, fuzzy
 #~ msgid "Product telemetry"
 #~ msgstr "rapportelement"
@@ -98169,10 +98257,6 @@ msgstr ""
 #~ msgid "Specify sites this OpenTelemetry Collector should run on."
 #~ msgstr ""
 #~ "Specificeer één, meerdere of alle sites waarop deze verbinding moet lopen."
-
-#, fuzzy
-#~ msgid "Last 7 days"
-#~ msgstr "Laatste 35 dagen"
 
 #, fuzzy
 #~ msgid "Cisco Meraki licensed devices"
@@ -98444,10 +98528,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Create & set dashboard filters"
 #~ msgstr "Gerelateerde dashboards"
-
-#, fuzzy
-#~ msgid "Create & view list"
-#~ msgstr "Map opslaan en bekijken"
 
 #~ msgid "Background in status color and label"
 #~ msgstr "Achtergrond in statuskleur en label"
@@ -100111,10 +100191,6 @@ msgstr ""
 
 #~ msgid "The backup has been started."
 #~ msgstr "De back-up is gestart."
-
-#, fuzzy
-#~ msgid "Customize dashboard"
-#~ msgstr "Aanpassen"
 
 #, fuzzy
 #~ msgid "Main dashboard (PEV)"
