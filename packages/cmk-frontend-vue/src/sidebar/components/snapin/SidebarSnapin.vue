@@ -39,8 +39,11 @@ const snapinContentElement = useTemplateRef('snapin-content')
 sidebar.onUpdateSnapinContent((contents) => {
   if (typeof contents[props.name] === 'string') {
     snapinContent.value = contents[props.name] as string
+
     void nextTick(() => {
-      cmk.utils.execute_javascript_by_object(snapinContentElement.value)
+      if (snapinContentElement.value) {
+        cmk.utils.execute_javascript_by_object(snapinContentElement.value)
+      }
     })
   }
 })
