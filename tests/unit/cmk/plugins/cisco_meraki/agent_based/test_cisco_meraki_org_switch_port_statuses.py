@@ -109,7 +109,6 @@ class TestHostLabels:
 @pytest.fixture
 def params() -> CheckParams:
     return CheckParams(
-        show_traffic=True,
         state_admin_change=1,
         state_disabled=0,
         state_not_connected=0,

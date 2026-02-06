@@ -212,7 +212,6 @@ def _state_has_changed(is_state: str | None, was_state: str | None) -> bool:
 
 
 class CheckParams(TypedDict):
-    show_traffic: bool
     state_admin_change: int
     state_disabled: int
     state_not_connected: int
@@ -285,7 +284,7 @@ def check_switch_ports_statuses(item: str, params: CheckParams, section: Section
             summary=f"changed {prior_speed} -> {port.speed}",
         )
 
-    if params["show_traffic"] and port.traffic_in_kbps:
+    if port.traffic_in_kbps:
         yield from check_levels(
             value=port.traffic_in_kbps.recv,  # Bits
             label="In",
@@ -343,7 +342,6 @@ check_plugin_cisco_meraki_org_switch_ports_statuses = CheckPlugin(
         state_not_full_duplex=1,
         state_op_change=1,
         state_speed_change=1,
-        show_traffic=True,
     ),
     check_ruleset_name="cisco_meraki_switch_ports_statuses",
     discovery_ruleset_name="discovery_cisco_meraki_switch_ports_statuses",
