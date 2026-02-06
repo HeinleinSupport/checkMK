@@ -413,7 +413,11 @@ class TestInventoryCDPCache:
         value, *_ = inventorize_meraki_cdp_cache(section)
         expected = TableRow(
             path=["networking", "cdp_cache", "neighbors"],
-            key_columns={"local_port": "1", "neighbor_name": "", "neighbor_port": "Port 20"},
+            key_columns={
+                "local_port": "1",
+                "neighbor_name": "",
+                "neighbor_port": "Port 20",
+            },
             inventory_columns={},
             status_columns={},
         )
@@ -438,7 +442,11 @@ class TestInventoryCDPCache:
         value, *_ = inventorize_meraki_cdp_cache(section)
         expected = TableRow(
             path=["networking", "cdp_cache", "neighbors"],
-            key_columns={"local_port": "1", "neighbor_name": "", "neighbor_port": "Port 20"},
+            key_columns={
+                "local_port": "1",
+                "neighbor_name": "",
+                "neighbor_port": "Port 20",
+            },
             inventory_columns={
                 "capabilities": "Switch",
                 "native_vlan": 1,
