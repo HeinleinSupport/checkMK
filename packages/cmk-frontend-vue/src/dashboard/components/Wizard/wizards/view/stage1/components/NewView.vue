@@ -9,6 +9,7 @@ import { ref, watch } from 'vue'
 import usei18n from '@/lib/i18n'
 
 import CmkIndent from '@/components/CmkIndent.vue'
+import CmkHeading from '@/components/typography/CmkHeading.vue'
 
 import ContentSpacer from '@/dashboard/components/Wizard/components/ContentSpacer.vue'
 import SingleInfosSpecifier from '@/dashboard/components/Wizard/wizards/view/stage1/components/SingleInfosSpecifier.vue'
@@ -51,7 +52,7 @@ watch(
 
 <template>
   <CmkIndent>
-    <h2>{{ _t('Datasource') }}</h2>
+    <CmkHeading type="h2">{{ _t('Datasource') }}</CmkHeading>
     <ContentSpacer :dimension="5" />
     <SelectorDatasource v-model:selected-datasource="selectedDatasource" :read-only="false" />
     <ContentSpacer :dimension="5" />
