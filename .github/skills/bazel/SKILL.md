@@ -1,6 +1,6 @@
 ---
 name: bazel
-description: Guide for running Bazel tests and linting in the Checkmk codebase.
+description: Uses Bazel to run builds, tests and linting
 ---
 
 # Running Tests

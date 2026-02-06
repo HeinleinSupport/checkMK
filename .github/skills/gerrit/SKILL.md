@@ -1,6 +1,6 @@
 ---
 name: gerrit
-description: Interact with Gerrit code review to list changes and improve them
+description: Interacts with Gerrit code review to list changes and improve them
 ---
 
 # When asked to improve a Gerrit change:

@@ -1,6 +1,6 @@
 ---
 name: jenkins
-description: Interact with the Jenkins CI to get build and test job results
+description: Interacts with the Jenkins CI to get build and test job results
 ---
 
 # Commands you can use to interact with Jenkins
