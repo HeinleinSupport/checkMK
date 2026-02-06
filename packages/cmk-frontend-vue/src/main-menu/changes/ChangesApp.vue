@@ -16,6 +16,7 @@ import CmkButton from '@/components/CmkButton.vue'
 import CmkButtonSubmit from '@/components/CmkButtonSubmit.vue'
 import CmkDialog from '@/components/CmkDialog.vue'
 import CmkIcon from '@/components/CmkIcon'
+import CmkHeading from '@/components/typography/CmkHeading.vue'
 
 import { showLoadingTransition } from '@/loading-transition/loadingTransition'
 import { useSiteStatus } from '@/main-menu/changes/useSiteStatus'
@@ -293,7 +294,7 @@ onMounted(async () => {
 <template>
   <DefaultPopup class="cmk-default-popup-mainmenu">
     <div class="cmk-default-popup-mainmenu__header">
-      <h1>{{ _t('Activate pending changes') }}</h1>
+      <CmkHeading type="h1">{{ _t('Activate pending changes') }}</CmkHeading>
     </div>
     <div class="cmk-div-mainmenu-container">
       <div class="cmk-div-buttons-container">
