@@ -204,6 +204,7 @@ STAGES:
               --test_env=TZ="America/Chicago" \
               --test_tag_filters=-component \
               --keep_going \
+              --//:use_faked_artifacts=true \
               -- //... \
               -//agents/... -//omd/... \
               //omd/packages/omd:doctest \
@@ -212,8 +213,7 @@ STAGES:
               -//packages/neb/... \
               -//packages/unixcat/... \
               -//non-free/packages/cmc/... \
-              -//non-free/packages/cmk-relay-engine/... \
-              -//non-free/packages/cmk-update-agent/...
+              -//non-free/packages/cmk-relay-engine/...
           make_rc=$?
           set -e
           ../buildscripts/scripts/bazel_test_post_archive_xunit.sh || :
@@ -426,14 +426,6 @@ STAGES:
       BAZEL_LOCKS_AMOUNT: 1
       TEXT_ON_SKIP: "No otel-collector files changed"
       RESULT_CHECK_FILE_PATTERN: "results/otel-collector.txt"
-
-    - NAME: "Package cmk-update-agent"
-      ONLY_WHEN_NOT_EMPTY: CHANGED_REFERENCE_IMAGE,CHANGED_PYPROJECT_TOML_FILE,CHANGED_CMK_UPDATE_AGENT_FILES,CHANGED_PYTHON_REQUIREMENTS
-      DIR: "non-free/packages/cmk-update-agent"
-      COMMAND: "./run --unit-tests &> ${RESULTS}/cmk-update-agent.txt"
-      BAZEL_LOCKS_AMOUNT: 1
-      TEXT_ON_SKIP: "No cmk-update-agent files changed"
-      RESULT_CHECK_FILE_PATTERN: "results/cmk-update-agent.txt"
 
     - NAME: "Package cmk-frontend-vue"
       ONLY_WHEN_NOT_EMPTY: CHANGED_REFERENCE_IMAGE,CHANGED_FRONTEND_VUE_FILES,CHANGED_SHARED_TYPING_FILES,CHANGED_JS_DEPENDENCIES
