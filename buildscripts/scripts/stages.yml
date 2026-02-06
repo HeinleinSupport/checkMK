@@ -209,7 +209,6 @@ STAGES:
               //omd/packages/omd:doctest \
               -//packages/mk-oracle/... \
               -//packages/livestatus/... \
-              -//packages/cmk-frontend-vue/... \
               -//packages/neb/... \
               -//packages/unixcat/... \
               -//non-free/packages/cmc/... \
@@ -439,7 +438,7 @@ STAGES:
     - NAME: "Package cmk-frontend-vue"
       ONLY_WHEN_NOT_EMPTY: CHANGED_REFERENCE_IMAGE,CHANGED_FRONTEND_VUE_FILES,CHANGED_SHARED_TYPING_FILES,CHANGED_JS_DEPENDENCIES
       DIR: "packages/cmk-frontend-vue"
-      COMMAND: "./run -B --build-dev --tests --tsc --lint &> ${RESULTS}/cmk-frontend-vue.txt"
+      COMMAND: "./run -B --build-dev --lint &> ${RESULTS}/cmk-frontend-vue.txt"
       BAZEL_LOCKS_AMOUNT: 1
       TEXT_ON_SKIP: "No cmk-frontend-vue files changed"
       RESULT_CHECK_FILE_PATTERN: "results/cmk-frontend-vue.txt"
