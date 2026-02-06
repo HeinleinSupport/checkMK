@@ -11,7 +11,6 @@ import usei18n from '@/lib/i18n'
 import { getRelayCollection } from '@/lib/rest-api-client/relay/client'
 
 import CmkAlertBox from '@/components/CmkAlertBox.vue'
-import CmkIcon from '@/components/CmkIcon/CmkIcon.vue'
 import { CmkWizardButton, CmkWizardStep } from '@/components/CmkWizard'
 import type { CmkWizardStepProps } from '@/components/CmkWizard'
 import { getWizardContext } from '@/components/CmkWizard/utils.ts'
@@ -75,10 +74,9 @@ watch(
           )
         }}
       </CmkParagraph>
-      <span v-if="loading">
-        <CmkIcon name="load-graph" />
+      <CmkAlertBox v-if="loading" variant="loading">
         {{ _t('Verifying the registration...') }}
-      </span>
+      </CmkAlertBox>
 
       <CmkAlertBox v-else-if="registrationSuccess" variant="success">
         {{ _t('Relay registered and saved successfully!') }}
