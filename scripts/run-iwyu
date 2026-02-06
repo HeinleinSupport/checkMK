@@ -1,0 +1,32 @@
+#!/bin/bash
+
+set -e
+
+# Change to the workspace root, it makes many things easier and we can call this
+# script from everywhere.
+cd -- "${BASH_SOURCE%/*}"/..
+
+most_recent_timestamp() {
+    du --summarize --time --time-style=+%s "$@" |
+        awk 'NR==1 || $2 > max {max=$2} END {print max}'
+}
+
+# Fragile, but extremely fast performance hack: Generate the compilation DB only
+# when it is not there or older than any file in one of our C++ subdirectories.
+# The timestamp comparison takes only ≈ 10 ms, while the generation takes ≈ 4 s.
+if [ ! -e compile_commands.json ] ||
+    [ "$(most_recent_timestamp compile_commands.json)" -lt \
+        "$(most_recent_timestamp non-free/packages/cmc packages/{livestatus,neb,unixcat})" ]; then
+    bazel run //:refresh_compile_commands
+    scripts/prune_compilation_db.py
+fi
+
+# Now run include-what-you-use in parallel, using the up-to-date compilation DB
+iwyu_tool \
+    --jobs \
+    -p . \
+    --output-format=clang \
+    "$@" \
+    -- \
+    -Xiwyu --error \
+    -Xiwyu --mapping_file=.iwyu_mappings/check_mk.imp
