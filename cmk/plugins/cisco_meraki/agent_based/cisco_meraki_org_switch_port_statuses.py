@@ -298,13 +298,12 @@ def check_switch_ports_statuses(item: str, params: CheckParams, section: Section
             render_func=render_network_bandwidth_bits,  # Bytes
         )
 
-        if port.duplex.lower() == "full":  # check duplex state
-            yield Result(state=State.OK, notice=f"Duplex: {port.duplex}")
-        else:
-            yield Result(
-                state=State(params["state_not_full_duplex"]), notice=f"Duplex: {port.duplex}"
-            )
-        yield Result(state=State.OK, notice=f"Clients: {port.client_count}")
+    if port.duplex.lower() == "full":  # check duplex state
+        yield Result(state=State.OK, notice=f"Duplex: {port.duplex}")
+    else:
+        yield Result(state=State(params["state_not_full_duplex"]), notice=f"Duplex: {port.duplex}")
+
+    yield Result(state=State.OK, notice=f"Clients: {port.client_count}")
 
     if port.is_uplink:
         yield Result(state=State.OK, summary="Uplink", details="Uplink: yes")
