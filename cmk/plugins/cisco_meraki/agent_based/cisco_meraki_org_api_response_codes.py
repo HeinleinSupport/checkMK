@@ -84,7 +84,8 @@ def check_api_response_codes(item: str, section: Section) -> CheckResult:
     if (info := section.get(item)) is None:
         return
 
-    yield Result(state=State.OK, summary=f"Organization: {info.organization_name}")
+    yield Result(state=State.OK, notice=f"Organization name: {info.organization_name}")
+    yield Result(state=State.OK, notice=f"Organization ID: {info.organization_id}")
 
     counter: dict[int, int] = defaultdict(int)
 
