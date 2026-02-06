@@ -138,6 +138,23 @@ class SwitchPortStatus(BaseModel, frozen=True):
 
     @computed_field
     @property
+    def speed_as_int(self) -> int | None:
+        raw_value, unit = self.speed.split()  # "10 Gbps" => ("10", "Gbps")
+        value = float(raw_value.replace(",", "."))  # handle comma decimal point
+        match unit.lower()[0]:
+            case "k":  # kilobit per second
+                return int(value + 1e3)
+            case "m":  # megabit per second
+                return int(value * 1e6)
+            case "g":  # gigabit per second
+                return int(value * 1e9)
+            case "t":  # terabit per second
+                return int(value * 1e12)
+            case _:
+                return None
+
+    @computed_field
+    @property
     def name(self) -> str:
         return f"Port {self.port_id}"
 
@@ -360,7 +377,7 @@ def inventorize_meraki_interfaces(section: Section) -> InventoryResult:
                 "name": port.name,
                 "admin_status": port.admin_status,
                 **({"oper_status": port.oper_status} if port.oper_status else {}),
-                "speed": port.speed,
+                **({"speed": port.speed_as_int} if port.speed_as_int else {}),
                 "port_type": port.port_type,
             },
         )

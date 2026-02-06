@@ -356,7 +356,7 @@ class TestInventoryMerakiInterfaces:
                 "name": "Port 1",
                 "admin_status": 1,
                 "oper_status": 1,
-                "speed": "10 Gbps",
+                "speed": 10_000_000_000,
                 "port_type": 6,
             },
             status_columns={},
@@ -374,7 +374,7 @@ class TestInventoryMerakiInterfaces:
             inventory_columns={
                 "name": "Port 1",
                 "admin_status": 1,
-                "speed": "10 Gbps",
+                "speed": 10_000_000_000,
                 "port_type": 6,
             },
             status_columns={},
