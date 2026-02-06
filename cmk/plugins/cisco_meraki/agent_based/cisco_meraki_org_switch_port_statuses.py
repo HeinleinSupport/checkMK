@@ -398,7 +398,7 @@ def inventorize_meraki_cdp_cache(section: Section) -> InventoryResult:
             yield TableRow(
                 path=path,
                 key_columns={
-                    "local_port": port.port_id,
+                    "local_port": str(port.port_id),
                     # TODO: why include this if it's always empty?
                     "neighbor_name": "",
                     "neighbor_port": port.cdp.port_id,
@@ -429,7 +429,7 @@ def inventorize_meraki_lldp_cache(section: Section) -> InventoryResult:
             yield TableRow(
                 path=path,
                 key_columns={
-                    "local_port": port.port_id,
+                    "local_port": str(port.port_id),
                     "neighbor_name": port.lldp.system_name,
                     "neighbor_port": port.lldp.port_id,
                 },
