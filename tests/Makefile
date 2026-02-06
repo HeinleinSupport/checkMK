@@ -58,7 +58,6 @@ PYTEST_SYSTEM_TEST_ARGS := \
     --log-cli-level=INFO \
     --log-cli-format="%(asctime)s.%(msecs)03d %(levelname)s %(message)s"
 DOCKERABLE_TESTS := \
-	test-bandit \
 	test-code-quality \
 	test-cycles \
 	test-file-content \
@@ -74,7 +73,6 @@ DOCKERABLE_TESTS := \
 	test-unit-shell \
 	test-unit-testlib \
 	test-werks \
-	test-semgrep \
 	test-medium-chain
 
 # Since the unit tests (that are written for Python 3) are executed with Python
@@ -84,7 +82,7 @@ AGENT_PLUGIN_UNIT_TEST_FILES := $(wildcard agent-plugin-unit/test_*.py)
 
 .PHONY: clean help prepare-playwright  \
 	$(foreach VERS,$(AGENT_PLUGIN_PYTHON_VERSIONS_DOCKER),test-agent-plugin-unit-py$(VERS)-docker) \
-	test-bandit test-code-quality test-code-quality-docker
+	test-code-quality test-code-quality-docker
 	test-docker test-docker-docker \
 	test-integration-agent-plugin test-integration-agent-plugin-docker \
 	test-format \
@@ -98,7 +96,6 @@ AGENT_PLUGIN_UNIT_TEST_FILES := $(wildcard agent-plugin-unit/test_*.py)
 	test-unit-omdlib \
 	test-tidy-core test-tidy-docker \
 	test-unit-neb test-unit-core \
-	test-semgrep
 
 clean:
 	$(RM) -r .mypy_cache
@@ -146,20 +143,6 @@ $(foreach VERS,$(AGENT_PLUGIN_PYTHON_VERSIONS),test-agent-plugin-unit-py$(VERS)-
 		-e "PYTHONPATH=/agents/plugins" \
 		${DOCKER_REGISTRY_NO_HTTPS}/python:$$PYTHON_VERSION \
 		tests/agent-plugin-unit/bootstrap.sh --all
-
-.PHONY: test-ruff
-test-ruff:
-	@echo "This target is deprecated, use 'bazel lint [TARGET]' instead."
-
-.PHONY: test-astrein
-test-astrein:
-	@echo "This target is deprecated, use 'bazel lint [TARGET]' instead."
-
-test-semgrep:
-	@echo "This target is deprecated, use 'bazel lint [TARGET]' instead."
-
-test-bandit:
-	@echo "This target is deprecated, use 'bazel lint [TARGET]' instead."
 
 prepare-playwright:
 	$(UVENV) playwright install-deps "chromium";
