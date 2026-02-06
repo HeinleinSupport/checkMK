@@ -6,6 +6,7 @@
       "Skill(bazel)",
       "Skill(gerrit)",
       "Skill(jenkins)",
+      "Skill(owners)",
 
       "Bash(bazel:*)",
       "Bash(make:*)",
