@@ -93,7 +93,7 @@ def check_api_response_codes(item: str, section: Section) -> CheckResult:
 check_plugin_cisco_meraki_org_api_response_codes = CheckPlugin(
     name="cisco_meraki_org_api_response_codes",
     sections=["cisco_meraki_org_api_response_codes"],
-    service_name="Cisco Meraki API %s",
+    service_name="API %s",
     discovery_function=discover_api_response_codes,
     check_function=check_api_response_codes,
 )
