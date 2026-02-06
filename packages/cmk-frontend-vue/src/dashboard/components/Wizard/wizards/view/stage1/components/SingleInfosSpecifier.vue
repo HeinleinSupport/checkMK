@@ -10,6 +10,7 @@ import usei18n from '@/lib/i18n'
 import type { TranslatedString } from '@/lib/i18nString'
 
 import CmkDropdown from '@/components/CmkDropdown'
+import CmkHeading from '@/components/typography/CmkHeading.vue'
 
 import ContentSpacer from '@/dashboard/components/Wizard/components/ContentSpacer.vue'
 import SelectorSingleInfo from '@/dashboard/components/selectors/SelectorSingleInfo.vue'
@@ -63,7 +64,7 @@ watch(
 
 <template>
   <div>
-    <h2>{{ _t('Specific object type') }}</h2>
+    <CmkHeading type="h2">{{ _t('Specific object type') }}</CmkHeading>
     <ContentSpacer :dimension="5" />
     <CmkDropdown
       v-model:selected-option="mode"
