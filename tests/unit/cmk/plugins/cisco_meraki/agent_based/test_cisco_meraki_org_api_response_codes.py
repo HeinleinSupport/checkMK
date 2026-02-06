@@ -37,8 +37,8 @@ def test_discover_api_response_codes() -> None:
 
     value = list(discover_api_response_codes(section))
     expected = [
-        Service(item="123"),
-        Service(item="456"),
+        Service(item="Name1/123"),
+        Service(item="Name2/456"),
     ]
 
     assert value == expected
@@ -68,7 +68,7 @@ def test_check_api_response_codes() -> None:
     string_table = [[f"[{json.dumps(overviews)}]"]]
     section = parse_api_response_codes(string_table)
 
-    value = list(check_api_response_codes("123", section))
+    value = list(check_api_response_codes("Name1/123", section))
     expected = [
         Result(state=State.OK, summary="Organization: Name1"),
         Result(state=State.OK, summary="Code 2xx: 2"),
@@ -93,7 +93,7 @@ def test_check_api_unsupported_response_code() -> None:
     string_table = [[f"[{json.dumps(overviews)}]"]]
     section = parse_api_response_codes(string_table)
 
-    value = list(check_api_response_codes("123", section))
+    value = list(check_api_response_codes("Name1/123", section))
     expected = [
         Result(state=State.OK, summary="Organization: Name1"),
     ]
