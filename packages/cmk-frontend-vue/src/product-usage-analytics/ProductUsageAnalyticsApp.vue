@@ -13,6 +13,7 @@ import usei18n from '@/lib/i18n'
 import CmkButton from '@/components/CmkButton.vue'
 import CmkPopupDialog from '@/components/CmkPopupDialog.vue'
 import CmkSpace from '@/components/CmkSpace.vue'
+import CmkHeading from '@/components/typography/CmkHeading.vue'
 
 const { _t } = usei18n()
 
@@ -41,7 +42,7 @@ const popupOpen = ref(true)
 
       <CmkSpace direction="horizontal" size="small" />
 
-      <h4>{{ _t('What data are we collecting?') }}</h4>
+      <CmkHeading type="h4">{{ _t('What data are we collecting?') }}</CmkHeading>
       <ul>
         <li>
           <b>{{ _t('We collect: ') }}</b
