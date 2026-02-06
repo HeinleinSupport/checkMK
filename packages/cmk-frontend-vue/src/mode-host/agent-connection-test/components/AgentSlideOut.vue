@@ -103,7 +103,7 @@ function getInitStep() {
   <CmkTabs v-model="openedTab">
     <template #tabs>
       <CmkTab v-for="tab in tabs" :id="tab.id" :key="tab.id" class="tabs">
-        <h2>{{ tab.title }}</h2>
+        <CmkHeading type="h2">{{ tab.title }}</CmkHeading>
       </CmkTab>
     </template>
     <template #tab-contents>
