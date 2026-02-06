@@ -33,12 +33,10 @@ class _EditionValue(NamedTuple):
 
 
 class Edition(enum.Enum):
-    COMMUNITY = _EditionValue("community", "community", "Checkmk Community (formerly Raw)")
-    PRO = _EditionValue("pro", "pro", "Checkmk Pro (formerly Enterprise)")
-    ULTIMATE = _EditionValue("ultimate", "ultimate", "Checkmk Ultimate (formerly Cloud)")
-    ULTIMATEMT = _EditionValue(
-        "ultimatemt", "ultimatemt", "Checkmk Ultimate with multi-tenancy (formerly MSP)"
-    )
+    COMMUNITY = _EditionValue("community", "community", "Checkmk Community")
+    PRO = _EditionValue("pro", "pro", "Checkmk Pro")
+    ULTIMATE = _EditionValue("ultimate", "ultimate", "Checkmk Ultimate")
+    ULTIMATEMT = _EditionValue("ultimatemt", "ultimatemt", "Checkmk Ultimate with multi-tenancy")
     CLOUD = _EditionValue("cloud", "cloud", "Checkmk Cloud")
 
     @classmethod
