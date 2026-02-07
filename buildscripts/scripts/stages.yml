@@ -182,7 +182,7 @@ STAGES:
       COMMAND: |
           bazel aquery ... &> ${RESULTS}/results.txt && rm ${RESULTS}/results.txt || exit 1
           bazel cquery ... &> ${RESULTS}/results.txt && rm ${RESULTS}/results.txt || exit 1
-          bazel mod graph --output=json | jq -e ".. | select(.name? == \"boringssl\")" >"${RESULTS}/results.txt" && exit 1
+          bazel mod graph --output=json | jq -e ".. | select(.name? == \"boringssl\")" >"${RESULTS}/results.txt" && exit 1 || true
       RESULT_CHECK_FILE_PATTERN: "results/results.txt"
       BAZEL_LOCKS_AMOUNT: 1
 
