@@ -3246,9 +3246,6 @@ msgstr "Spațiu absolut %s"
 msgid "Absolute archive path"
 msgstr "Spațiu liber exact"
 
-msgid "Absolute commitable memory"
-msgstr "Memorie comutabilă absolută"
-
 msgid "Absolute difference"
 msgstr "Diferența absolută"
 
@@ -3266,6 +3263,10 @@ msgstr "Memorie liberă exactă"
 
 msgid "Absolute free space"
 msgstr "Spațiu liber exact"
+
+#, fuzzy
+msgid "Absolute free virtual memory"
+msgstr "Memorie liberă exactă"
 
 msgid "Absolute levels"
 msgstr "Niveluri absolute"
@@ -3354,13 +3355,14 @@ msgstr "O cale absolută către un certificat CA"
 msgid "Absolute time of alert"
 msgstr "Timpul Exact al Alertei"
 
-msgid "Absolute used commit charge"
-msgstr "Absolut folosit comiterea taxei"
-
 msgid "Absolute used leases levels"
 msgstr "Nivelurile absolute ale contractelor de leasing utilizate"
 
 msgid "Absolute used memory"
+msgstr "Memorie absolută utilizată"
+
+#, fuzzy
+msgid "Absolute used virtual memory"
 msgstr "Memorie absolută utilizată"
 
 msgid "Absolute value"
@@ -15281,22 +15283,6 @@ msgstr "Comentarii de serviciu"
 msgid "Commit Latency"
 msgstr "Latență de scriere"
 
-msgid "Commit charge"
-msgstr "Angajarea taxei"
-
-#, fuzzy
-msgid "Commit charge (Absolute)"
-msgstr "Niveluri de taxă de angajament"
-
-msgid "Commit charge (averaged)"
-msgstr "Taxa de angajament (medie)"
-
-msgid "Commit charge in percent (relative to commit limit)"
-msgstr "Taxa de angajare în procente (în raport cu limita de angajare)"
-
-msgid "Commit charge levels"
-msgstr "Niveluri de taxă de angajament"
-
 msgid "Commit limit"
 msgstr "Limita de angajare"
 
@@ -17487,10 +17473,6 @@ msgstr "Creați o latență de conferință"
 msgid "Create Microsoft Entra ID connections."
 msgstr "Adăugați o conexiune de site"
 
-#, fuzzy
-msgid "Create OAuth2 connections."
-msgstr "Adăugați o conexiune"
-
 msgid "Create SLA"
 msgstr "Creați SLA"
 
@@ -19565,6 +19547,10 @@ msgid "Default BI visualization settings"
 msgstr "Setări implicite de vizualizare BI"
 
 #, fuzzy
+msgid "Default behavior for 'Changes'"
+msgstr "UDP (comportamentul implicit al traceroute)"
+
+#, fuzzy
 msgid "Default cleanup parameters"
 msgstr "Parametrii impliciți"
 
@@ -20568,11 +20554,6 @@ msgid ""
 msgstr ""
 "În funcție de precizie, unitatea de măsură poate fi fie milisecundele, fie "
 "micosecundele."
-
-msgid ""
-"Depending on your Meraki organization size (number of switches) this may "
-"exceed the limits of the allowed API requests per second."
-msgstr ""
 
 #, python-format
 msgid "Deploy %s"
@@ -21724,10 +21705,6 @@ msgstr ""
 "A efectuat descoperirea serviciului pe gazda %s: %d adăugat, %d eliminat, %d "
 "păstrat, %d total servicii și %d etichete gazdă adăugate, %d total etichete "
 "gazdă"
-
-#, fuzzy
-msgid "Discovery options"
-msgstr "Setări de descoperire"
 
 msgid "Discovery rules"
 msgstr "Reguli de descoperire"
@@ -27834,9 +27811,6 @@ msgstr "Dosarul nu există"
 msgid "Folder level %d"
 msgstr "Nivelul dosarului %d"
 
-msgid "Folder of oracle configuration files(oratab,  for example)"
-msgstr ""
-
 msgid "Folder path"
 msgstr "Calea dosarului"
 
@@ -28630,6 +28604,10 @@ msgstr "Descriere completă"
 
 msgid "Full access"
 msgstr "Acces complet"
+
+#, fuzzy
+msgid "Full activation page"
+msgstr "Activarea regulii"
 
 msgid "Full dump of all variables"
 msgstr "Descărcarea completă a tuturor variabilelor"
@@ -37206,6 +37184,10 @@ msgstr "ID-ul instanței"
 msgid "Instance Name(SID)"
 msgstr "Numele instanței"
 
+#, fuzzy
+msgid "Instance discovery"
+msgstr "Rulați descoperirea serviciilor"
+
 msgid "Instance error state"
 msgstr "Starea de eroare a instanței"
 
@@ -37834,6 +37816,10 @@ msgstr "Schemă URL invalidă. Trebuie să fie una dintre următoarele: %s"
 
 #, fuzzy, python-format
 msgid "Invalid regex pattern. Expected: %s"
+msgstr "Expresie regulată invalidă: %s."
+
+#, fuzzy, python-format
+msgid "Invalid regex pattern: %s"
 msgstr "Expresie regulată invalidă: %s."
 
 msgid "Invalid regular expression"
@@ -50605,10 +50591,6 @@ msgid "Oracle Database Identification"
 msgstr "Configurație implicită"
 
 #, fuzzy
-msgid "Oracle Database default configuration"
-msgstr "Configurație implicită"
-
-#, fuzzy
 msgid "Oracle IOSTAT IO"
 msgstr "ORACLE IOSTAT IOs"
 
@@ -50675,6 +50657,10 @@ msgstr "Utilizați acreditările"
 #, fuzzy
 msgid "Oracle Java pool size"
 msgstr "Dimensiunea bazinului Java"
+
+#, fuzzy
+msgid "Oracle Local Registry path"
+msgstr "Memoria totală ORACLE"
 
 msgid "Oracle Locks"
 msgstr "Blocaje Oracle"
@@ -51451,10 +51437,6 @@ msgstr "ORACLE Total așteptat"
 #, fuzzy
 msgid "Oracle total waited (FG)"
 msgstr "ORACLE Total așteptat (FG)"
-
-#, fuzzy
-msgid "Oracle type of authentication"
-msgstr "Reîncercați autentificarea"
 
 #, fuzzy
 msgid "Oracle undo retention"
@@ -52897,9 +52879,6 @@ msgstr ""
 msgid ""
 "Path to the user certificate. If the path is not exist or empty, the user "
 "certificate will not be used."
-msgstr ""
-
-msgid "Path to tnsnames.ora or sqlnet.ora file"
 msgstr ""
 
 msgid "Path-patterns where to search for Jar files"
@@ -55980,6 +55959,10 @@ msgstr "Cozi de monitorizare"
 #, fuzzy
 msgid "Quick Setup"
 msgstr "Configurare rapidă"
+
+#, fuzzy
+msgid "Quick activation"
+msgstr "Activare automată"
 
 msgid "Quick search"
 msgstr "Căutare rapidă"
@@ -62847,6 +62830,14 @@ msgstr ""
 "Stabilește nivelurile privind totalul erorilor de funcționare de la ultima "
 "resetare a contorului."
 
+msgid ""
+"Sets the TNS_ADMIN environment variable for the Oracle plugin. This "
+"directory should contain Oracle network configuration files such as "
+"tnsnames.ora, sqlnet.ora, or wallet files. The plugin must have read access "
+"to all files in this directory. If not specified, the default plugin's "
+"config directory will be used."
+msgstr ""
+
 #, fuzzy
 msgid ""
 "Sets the thresholds for the runtime of a test. Note that runtime monitoring "
@@ -63174,10 +63165,6 @@ msgstr "Afișați toate fazele de notificări"
 msgid "Show all rules"
 msgstr "Afișați toate regulile"
 
-#, fuzzy
-msgid "Show bandwidth"
-msgstr "Lățime de bandă"
-
 msgid "Show bandwidth (use only with cache disabled)"
 msgstr ""
 
@@ -63477,6 +63464,10 @@ msgstr "Afișați știftul"
 
 msgid "Show the service problems contained in this branch"
 msgstr "Arătați problemele de serviciu conținute în această ramură"
+
+msgid ""
+"Show the slideout for activating changes or show the full page view instead."
+msgstr ""
 
 msgid "Show this attribute in host tables of the setup menu"
 msgstr "Afișarea acestui atribut în tabelele gazdă din meniul de configurare"
@@ -67878,6 +67869,9 @@ msgstr "TLS/SSL/Https dezactivat"
 #, python-format
 msgid "TNS Alias %s"
 msgstr "Alias TNS %s"
+
+msgid "TNS_ADMIN directory path"
+msgstr ""
 
 msgid "TP Link: Used memory via SNMP"
 msgstr "TP Link: Memorie utilizată prin SNMP"
@@ -80315,9 +80309,6 @@ msgstr "Utilizarea totală a cache-ului"
 msgid "Total comments: %d"
 msgstr "Total comentarii: %d"
 
-msgid "Total commitable memory"
-msgstr "Memorie totală de comisionare"
-
 #, fuzzy
 msgid "Total connections"
 msgstr "conexiune normală"
@@ -85123,7 +85114,7 @@ msgstr ""
 msgid ""
 "Use Oracle Wallet for secure authentication to the Oracle database without "
 "storing passwords in plain text. If 'Path to tnsnames.ora or sqlnet.ora "
-"file' (TNS_ADMIN) is not set, the wallet must be located in /etc/check_mk/"
+"file' (TNS_ADMIN) is not set, the wallet must be located in $MK_CONFDIR/"
 "oracle_wallet. In this case, the plugin will automatically create a "
 "sqlnet.ora file if it does not exist. If TNS_ADMIN is set to a custom path, "
 "you must ensure that sqlnet.ora (with the correct wallet location) and the "
@@ -86112,6 +86103,10 @@ msgstr "Total memorie virtuală"
 #, fuzzy
 msgid "Used virtual memory (averaged)"
 msgstr "Memorie comutabilă (medie)"
+
+#, fuzzy
+msgid "Used virtual memory in percent"
+msgstr "Total memorie virtuală"
 
 msgid "User"
 msgstr "Utilizator"
@@ -87690,8 +87685,24 @@ msgstr "Instantanee de mașină virtuală"
 msgid "Virtual machines may take a few minutes to show up."
 msgstr ""
 
+#, fuzzy
+msgid "Virtual memory"
+msgstr "Utilizarea memoriei virtuale"
+
+#, fuzzy
+msgid "Virtual memory (Absolute)"
+msgstr "Utilizarea memoriei virtuale"
+
+#, fuzzy
+msgid "Virtual memory (averaged)"
+msgstr "Memorie comutabilă (medie)"
+
 msgid "Virtual memory averaging"
 msgstr "Calcularea mediei de memorie virtuală"
+
+#, fuzzy
+msgid "Virtual memory levels"
+msgstr "Utilizarea memoriei virtuale"
 
 #, fuzzy
 msgid "Virtual memory size"
@@ -88670,6 +88681,12 @@ msgid ""
 msgstr ""
 "Atunci când este activat, titlul fiecărei pagini afișează și data, pe lângă "
 "oră."
+
+msgid ""
+"When enabled, the plugin will automatically discover local Oracle database "
+"instances. This feature only works when the plugin is installed on the same "
+"machine where the Oracle database instances are running."
+msgstr ""
 
 msgid ""
 "When enabled, then the internal names of Setup folder in the filesystem are "
@@ -97300,15 +97317,17 @@ msgid "Failed to save OAuth2 connection"
 msgstr "Adăugați o conexiune"
 
 #, fuzzy
-msgid "Application successfully authorized!"
-msgstr "Gazdă creată cu succes"
+msgid "Your login was successful!"
+msgstr "Coacerea cu succes"
 
 #, fuzzy
-msgid "Access token successfully requested!"
-msgstr "Gazdă creată cu succes"
+msgid "Your login was not successful. Please try again."
+msgstr ""
+"Nu s-au găsit rânduri corespunzătoare. Vă rugăm să încercați un alt termen "
+"de căutare."
 
 #, fuzzy
-msgid "You can now close this window."
+msgid "You can now close this tab."
 msgstr "Nu puteți salva această regulă."
 
 #, fuzzy
@@ -97858,27 +97877,11 @@ msgstr "%d pictograme personalizate"
 msgid "Search in setup"
 msgstr "Căutare în configurare"
 
-#, fuzzy
-msgid "Press"
-msgstr "Presiune"
-
-#, fuzzy
-msgid "to trigger host/service search"
-msgstr "Nu există gazde/servicii corespunzătoare."
-
 msgid "Only available for 'Monitoring' and 'All'"
 msgstr ""
 
-#, fuzzy
-msgid "Search operators"
-msgstr "Model de căutare"
-
 msgid "Type \"/\" to use search operator"
 msgstr ""
-
-#, fuzzy
-msgid "Search in"
-msgstr "Indice de căutare"
 
 #, fuzzy
 msgid "Search in ${provider}"
@@ -97917,6 +97920,14 @@ msgstr "Ștergeți jurnalul"
 #, fuzzy
 msgid "Recently searched"
 msgstr "Servicii schimbate recent"
+
+#, fuzzy
+msgid "Press"
+msgstr "Presiune"
+
+#, fuzzy
+msgid "to trigger host/service search"
+msgstr "Nu există gazde/servicii corespunzătoare."
 
 #, fuzzy
 msgid "Group results by topic"
@@ -97977,7 +97988,17 @@ msgid ""
 "A couple of minutes after the installation, the agent will start reporting"
 msgstr ""
 
-msgid "What's next?"
+#, fuzzy
+msgid "Further topics"
+msgstr "Pe subiect"
+
+msgid ""
+"Structure hosts with folders, labels, tags, parent relationships, and host "
+"groups"
+msgstr ""
+
+msgid ""
+"Organize your hosts to enable clear, scalable, and easy to manage monitoring."
 msgstr ""
 
 #, fuzzy
@@ -98012,6 +98033,14 @@ msgstr "Statul de licență"
 msgid ""
 "It’s time to enjoy the full experience! Set up automated licensing for a "
 "smooth experience."
+msgstr ""
+
+msgid "Choose a different start page"
+msgstr ""
+
+msgid ""
+"Use the 'Start URL to display in main frame' option in your profile to "
+"define which page, dashboard or custom URL is shown when you log in."
 msgstr ""
 
 msgid "Topics to explore"
@@ -98157,6 +98186,9 @@ msgstr "Inventar hardware/software (Linux, Windows, Solaris, AIX)"
 #, fuzzy
 msgid "Network devices and SNMP"
 msgstr "Scanarea rețelei"
+
+msgid "Checkmk Relay (objects behind a firewall)"
+msgstr ""
 
 #, fuzzy
 msgid "Cloud platforms"
@@ -98431,6 +98463,67 @@ msgstr ""
 msgid ""
 "You can still access it later via Help > Learning Checkmk > Welcome page"
 msgstr ""
+
+#~ msgid "Absolute commitable memory"
+#~ msgstr "Memorie comutabilă absolută"
+
+#~ msgid "Absolute used commit charge"
+#~ msgstr "Absolut folosit comiterea taxei"
+
+#~ msgid "Commit charge"
+#~ msgstr "Angajarea taxei"
+
+#, fuzzy
+#~ msgid "Commit charge (Absolute)"
+#~ msgstr "Niveluri de taxă de angajament"
+
+#~ msgid "Commit charge (averaged)"
+#~ msgstr "Taxa de angajament (medie)"
+
+#~ msgid "Commit charge in percent (relative to commit limit)"
+#~ msgstr "Taxa de angajare în procente (în raport cu limita de angajare)"
+
+#~ msgid "Commit charge levels"
+#~ msgstr "Niveluri de taxă de angajament"
+
+#, fuzzy
+#~ msgid "Create OAuth2 connections."
+#~ msgstr "Adăugați o conexiune"
+
+#, fuzzy
+#~ msgid "Discovery options"
+#~ msgstr "Setări de descoperire"
+
+#, fuzzy
+#~ msgid "Oracle Database default configuration"
+#~ msgstr "Configurație implicită"
+
+#, fuzzy
+#~ msgid "Oracle type of authentication"
+#~ msgstr "Reîncercați autentificarea"
+
+#, fuzzy
+#~ msgid "Show bandwidth"
+#~ msgstr "Lățime de bandă"
+
+#~ msgid "Total commitable memory"
+#~ msgstr "Memorie totală de comisionare"
+
+#, fuzzy
+#~ msgid "Application successfully authorized!"
+#~ msgstr "Gazdă creată cu succes"
+
+#, fuzzy
+#~ msgid "Access token successfully requested!"
+#~ msgstr "Gazdă creată cu succes"
+
+#, fuzzy
+#~ msgid "Search operators"
+#~ msgstr "Model de căutare"
+
+#, fuzzy
+#~ msgid "Search in"
+#~ msgstr "Indice de căutare"
 
 #, fuzzy, python-format
 #~ msgid "%d day"

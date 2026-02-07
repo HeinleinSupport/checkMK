@@ -3106,9 +3106,6 @@ msgstr "絶対 %s スペース"
 msgid "Absolute archive path"
 msgstr "絶対アーカイブパス"
 
-msgid "Absolute commitable memory"
-msgstr "絶対コミット可能メモリ"
-
 msgid "Absolute difference"
 msgstr "絶対差"
 
@@ -3126,6 +3123,10 @@ msgstr "絶対空きメモリ"
 
 msgid "Absolute free space"
 msgstr "絶対空きスペース"
+
+#, fuzzy
+msgid "Absolute free virtual memory"
+msgstr "絶対空きメモリ"
 
 msgid "Absolute levels"
 msgstr "絶対レベル"
@@ -3212,13 +3213,14 @@ msgstr "カタログZIPファイルの絶対パス"
 msgid "Absolute time of alert"
 msgstr "アラートの絶対時間"
 
-msgid "Absolute used commit charge"
-msgstr "絶対コミットチャージ"
-
 msgid "Absolute used leases levels"
 msgstr "絶対使用済みリースレベル"
 
 msgid "Absolute used memory"
+msgstr "絶対使用メモリ"
+
+#, fuzzy
+msgid "Absolute used virtual memory"
 msgstr "絶対使用メモリ"
 
 msgid "Absolute value"
@@ -14424,22 +14426,6 @@ msgstr "サービスのコメント"
 msgid "Commit Latency"
 msgstr "コミットレイテンシ"
 
-msgid "Commit charge"
-msgstr "コミットチャージ"
-
-#, fuzzy
-msgid "Commit charge (Absolute)"
-msgstr "コミットチャージレベル"
-
-msgid "Commit charge (averaged)"
-msgstr "コミットチャージ(平均)"
-
-msgid "Commit charge in percent (relative to commit limit)"
-msgstr "パーセント単位のコミットチャージ(コミット制限に対して)"
-
-msgid "Commit charge levels"
-msgstr "コミットチャージレベル"
-
 msgid "Commit limit"
 msgstr "コミット制限"
 
@@ -16536,10 +16522,6 @@ msgstr "会議の遅延を作成する"
 msgid "Create Microsoft Entra ID connections."
 msgstr "サイト接続を追加する"
 
-#, fuzzy
-msgid "Create OAuth2 connections."
-msgstr "接続を追加"
-
 msgid "Create SLA"
 msgstr "SLAを作成する"
 
@@ -18529,6 +18511,10 @@ msgstr "デフォルト(%s)"
 msgid "Default BI visualization settings"
 msgstr "デフォルトのBI視覚化設定"
 
+#, fuzzy
+msgid "Default behavior for 'Changes'"
+msgstr "UDP (tracerouteのデフォルトの動作)"
+
 msgid "Default cleanup parameters"
 msgstr "デフォルトクリーンアップパラメータ"
 
@@ -19497,11 +19483,6 @@ msgid ""
 "Depending on the precision the unit can be either milliseconds or "
 "micoseconds."
 msgstr "精度に応じて、単位はミリ秒またはマイクロ秒のいずれかになります。"
-
-msgid ""
-"Depending on your Meraki organization size (number of switches) this may "
-"exceed the limits of the allowed API requests per second."
-msgstr ""
 
 #, python-format
 msgid "Deploy %s"
@@ -20540,10 +20521,6 @@ msgid ""
 msgstr ""
 "ホスト %s で検出: %dサービス（%d 追加, %d 変更, %d 削除, %d 保持）、%dホスト"
 "ラベル(%d 追加, %d変更, %d 削除, %d 保持)"
-
-#, fuzzy
-msgid "Discovery options"
-msgstr "ディスカバリー設定"
 
 msgid "Discovery rules"
 msgstr "ディスカバリールール"
@@ -26313,9 +26290,6 @@ msgstr "フォルダは存在しません"
 msgid "Folder level %d"
 msgstr "フォルダレベル %d"
 
-msgid "Folder of oracle configuration files(oratab,  for example)"
-msgstr ""
-
 msgid "Folder path"
 msgstr "フォルダパス"
 
@@ -27068,6 +27042,10 @@ msgstr "完全な説明"
 
 msgid "Full access"
 msgstr "フルアクセス"
+
+#, fuzzy
+msgid "Full activation page"
+msgstr "ルールのアクティブ化"
 
 msgid "Full dump of all variables"
 msgstr "すべての変数の完全なダンプ"
@@ -34993,6 +34971,10 @@ msgstr "インスタンスID"
 msgid "Instance Name(SID)"
 msgstr "インスタンス名"
 
+#, fuzzy
+msgid "Instance discovery"
+msgstr "サービスディスカバリ実行"
+
 msgid "Instance error state"
 msgstr "インスタンスエラー状態"
 
@@ -35593,6 +35575,10 @@ msgstr ""
 
 #, fuzzy, python-format
 msgid "Invalid regex pattern. Expected: %s"
+msgstr "無効な正規表現: %s"
+
+#, fuzzy, python-format
+msgid "Invalid regex pattern: %s"
 msgstr "無効な正規表現: %s"
 
 msgid "Invalid regular expression"
@@ -47680,10 +47666,6 @@ msgstr "Oracle Data-Guard Stats"
 msgid "Oracle Database Identification"
 msgstr "デフォルト設定"
 
-#, fuzzy
-msgid "Oracle Database default configuration"
-msgstr "デフォルト設定"
-
 msgid "Oracle IOSTAT IO"
 msgstr "Oracle IOSTAT IOs"
 
@@ -47738,6 +47720,10 @@ msgstr "資格情報を使用する"
 
 msgid "Oracle Java pool size"
 msgstr "Oracle Javaプールサイズ"
+
+#, fuzzy
+msgid "Oracle Local Registry path"
+msgstr "Oracleの合計メモリ"
 
 msgid "Oracle Locks"
 msgstr "Oracle Locks"
@@ -48338,10 +48324,6 @@ msgstr "Oracle合計待機"
 
 msgid "Oracle total waited (FG)"
 msgstr "Oracle合計待機(FG)"
-
-#, fuzzy
-msgid "Oracle type of authentication"
-msgstr "認証の再試行"
 
 msgid "Oracle undo retention"
 msgstr "Oracle Undo Retention"
@@ -49709,9 +49691,6 @@ msgid ""
 msgstr ""
 "ユーザー証明書へのパス。パスが存在しないか空の場合、ユーザー証明書は使用され"
 "ません。"
-
-msgid "Path to tnsnames.ora or sqlnet.ora file"
-msgstr ""
 
 msgid "Path-patterns where to search for Jar files"
 msgstr "Jarファイルを検索するパスパターン"
@@ -52578,6 +52557,10 @@ msgstr "監視するキュー"
 
 msgid "Quick Setup"
 msgstr "クイックセットアップ"
+
+#, fuzzy
+msgid "Quick activation"
+msgstr "自動アクティベーション"
 
 msgid "Quick search"
 msgstr "クイック検索"
@@ -59045,6 +59028,14 @@ msgid "Sets levels on total operation errors since last counter reset."
 msgstr "最後のカウンタリセット以降の合計動作エラーのレベルを設定します。"
 
 msgid ""
+"Sets the TNS_ADMIN environment variable for the Oracle plugin. This "
+"directory should contain Oracle network configuration files such as "
+"tnsnames.ora, sqlnet.ora, or wallet files. The plugin must have read access "
+"to all files in this directory. If not specified, the default plugin's "
+"config directory will be used."
+msgstr ""
+
+msgid ""
 "Sets the thresholds for the runtime of a test. Note that runtime monitoring "
 "is not a feature of Robot Framework, but of Robotmk. That means that even "
 "when a Robot suite has ended with a PASS result, the states of Robotmk test "
@@ -59356,10 +59347,6 @@ msgstr "通知のすべてのフェーズを表示する"
 msgid "Show all rules"
 msgstr "すべてのルールを表示"
 
-#, fuzzy
-msgid "Show bandwidth"
-msgstr "帯域幅"
-
 msgid "Show bandwidth (use only with cache disabled)"
 msgstr ""
 
@@ -59643,6 +59630,10 @@ msgstr "ピンを表示"
 
 msgid "Show the service problems contained in this branch"
 msgstr "このブランチに含まれるサービスの問題を表示する"
+
+msgid ""
+"Show the slideout for activating changes or show the full page view instead."
+msgstr ""
 
 msgid "Show this attribute in host tables of the setup menu"
 msgstr "セットアップメニューのホストテーブルにこの属性を表示する"
@@ -63800,6 +63791,9 @@ msgstr "TLS/SSL/Httpsが無効になっています"
 #, python-format
 msgid "TNS Alias %s"
 msgstr "TNSエイリアス %s"
+
+msgid "TNS_ADMIN directory path"
+msgstr ""
 
 msgid "TP Link: Used memory via SNMP"
 msgstr "TP Link: SNMP経由で使用されたメモリ"
@@ -75690,9 +75684,6 @@ msgstr "キャッシュの合計使用量"
 msgid "Total comments: %d"
 msgstr "トータルコメント :%d"
 
-msgid "Total commitable memory"
-msgstr "合計コミット可能メモリ"
-
 msgid "Total connections"
 msgstr "総接続数"
 
@@ -79928,7 +79919,7 @@ msgstr ""
 msgid ""
 "Use Oracle Wallet for secure authentication to the Oracle database without "
 "storing passwords in plain text. If 'Path to tnsnames.ora or sqlnet.ora "
-"file' (TNS_ADMIN) is not set, the wallet must be located in /etc/check_mk/"
+"file' (TNS_ADMIN) is not set, the wallet must be located in $MK_CONFDIR/"
 "oracle_wallet. In this case, the plugin will automatically create a "
 "sqlnet.ora file if it does not exist. If TNS_ADMIN is set to a custom path, "
 "you must ensure that sqlnet.ora (with the correct wallet location) and the "
@@ -80841,6 +80832,10 @@ msgstr "使用済み仮想メモリ"
 
 msgid "Used virtual memory (averaged)"
 msgstr "使用済み仮想メモリ（平均）"
+
+#, fuzzy
+msgid "Used virtual memory in percent"
+msgstr "使用済み仮想メモリ"
 
 msgid "User"
 msgstr "ユーザー"
@@ -82236,8 +82231,24 @@ msgstr "仮想マシンのスナップショット"
 msgid "Virtual machines may take a few minutes to show up."
 msgstr "仮想マシンが表示されるまで数分かかる場合があります。"
 
+#, fuzzy
+msgid "Virtual memory"
+msgstr "仮想メモリサイズ"
+
+#, fuzzy
+msgid "Virtual memory (Absolute)"
+msgstr "仮想メモリサイズ"
+
+#, fuzzy
+msgid "Virtual memory (averaged)"
+msgstr "仮想メモリの平均化"
+
 msgid "Virtual memory averaging"
 msgstr "仮想メモリの平均化"
+
+#, fuzzy
+msgid "Virtual memory levels"
+msgstr "仮想メモリサイズ"
 
 msgid "Virtual memory size"
 msgstr "仮想メモリサイズ"
@@ -83163,6 +83174,12 @@ msgid ""
 "When enabled, the headline of each page also displays the date in addition "
 "the time."
 msgstr "有効にすると、各ページの見出しに時間に加えて日付も表示されます。"
+
+msgid ""
+"When enabled, the plugin will automatically discover local Oracle database "
+"instances. This feature only works when the plugin is installed on the same "
+"machine where the Oracle database instances are running."
+msgstr ""
 
 msgid ""
 "When enabled, then the internal names of Setup folder in the filesystem are "
@@ -91448,15 +91465,15 @@ msgid "Failed to save OAuth2 connection"
 msgstr "接続を追加"
 
 #, fuzzy
-msgid "Application successfully authorized!"
-msgstr "通知ルールが正常に修正されました！"
+msgid "Your login was successful!"
+msgstr "成功したベーキング"
 
 #, fuzzy
-msgid "Access token successfully requested!"
-msgstr "ホスト作成に成功しました"
+msgid "Your login was not successful. Please try again."
+msgstr "何か問題が発生しました: %s"
 
 #, fuzzy
-msgid "You can now close this window."
+msgid "You can now close this tab."
 msgstr "このルールを保存することはできません。"
 
 #, fuzzy
@@ -91993,26 +92010,11 @@ msgstr "カスタマイズされた %d アイコン"
 msgid "Search in setup"
 msgstr "セットアップで検索"
 
-#, fuzzy
-msgid "Press"
-msgstr "圧力"
-
-msgid "to trigger host/service search"
-msgstr "ホスト/サービスの検索をトリガーする"
-
 msgid "Only available for 'Monitoring' and 'All'"
 msgstr ""
 
-#, fuzzy
-msgid "Search operators"
-msgstr "検索パターン"
-
 msgid "Type \"/\" to use search operator"
 msgstr ""
-
-#, fuzzy
-msgid "Search in"
-msgstr "検索インデックス"
 
 #, fuzzy
 msgid "Search in ${provider}"
@@ -92050,6 +92052,13 @@ msgstr "ログをクリアする"
 #, fuzzy
 msgid "Recently searched"
 msgstr "最近変更されたサービス"
+
+#, fuzzy
+msgid "Press"
+msgstr "圧力"
+
+msgid "to trigger host/service search"
+msgstr "ホスト/サービスの検索をトリガーする"
 
 #, fuzzy
 msgid "Group results by topic"
@@ -92109,7 +92118,17 @@ msgid ""
 "A couple of minutes after the installation, the agent will start reporting"
 msgstr ""
 
-msgid "What's next?"
+#, fuzzy
+msgid "Further topics"
+msgstr "トピックごと"
+
+msgid ""
+"Structure hosts with folders, labels, tags, parent relationships, and host "
+"groups"
+msgstr ""
+
+msgid ""
+"Organize your hosts to enable clear, scalable, and easy to manage monitoring."
 msgstr ""
 
 #, fuzzy
@@ -92144,6 +92163,14 @@ msgstr "ライセンスの状態"
 msgid ""
 "It’s time to enjoy the full experience! Set up automated licensing for a "
 "smooth experience."
+msgstr ""
+
+msgid "Choose a different start page"
+msgstr ""
+
+msgid ""
+"Use the 'Start URL to display in main frame' option in your profile to "
+"define which page, dashboard or custom URL is shown when you log in."
 msgstr ""
 
 msgid "Topics to explore"
@@ -92288,6 +92315,9 @@ msgstr "ハードウェア / ソフトウェアインベントリ(Linux、Window
 #, fuzzy
 msgid "Network devices and SNMP"
 msgstr "ネットワークスキャン"
+
+msgid "Checkmk Relay (objects behind a firewall)"
+msgstr ""
 
 #, fuzzy
 msgid "Cloud platforms"
@@ -92558,6 +92588,67 @@ msgstr ""
 msgid ""
 "You can still access it later via Help > Learning Checkmk > Welcome page"
 msgstr ""
+
+#~ msgid "Absolute commitable memory"
+#~ msgstr "絶対コミット可能メモリ"
+
+#~ msgid "Absolute used commit charge"
+#~ msgstr "絶対コミットチャージ"
+
+#~ msgid "Commit charge"
+#~ msgstr "コミットチャージ"
+
+#, fuzzy
+#~ msgid "Commit charge (Absolute)"
+#~ msgstr "コミットチャージレベル"
+
+#~ msgid "Commit charge (averaged)"
+#~ msgstr "コミットチャージ(平均)"
+
+#~ msgid "Commit charge in percent (relative to commit limit)"
+#~ msgstr "パーセント単位のコミットチャージ(コミット制限に対して)"
+
+#~ msgid "Commit charge levels"
+#~ msgstr "コミットチャージレベル"
+
+#, fuzzy
+#~ msgid "Create OAuth2 connections."
+#~ msgstr "接続を追加"
+
+#, fuzzy
+#~ msgid "Discovery options"
+#~ msgstr "ディスカバリー設定"
+
+#, fuzzy
+#~ msgid "Oracle Database default configuration"
+#~ msgstr "デフォルト設定"
+
+#, fuzzy
+#~ msgid "Oracle type of authentication"
+#~ msgstr "認証の再試行"
+
+#, fuzzy
+#~ msgid "Show bandwidth"
+#~ msgstr "帯域幅"
+
+#~ msgid "Total commitable memory"
+#~ msgstr "合計コミット可能メモリ"
+
+#, fuzzy
+#~ msgid "Application successfully authorized!"
+#~ msgstr "通知ルールが正常に修正されました！"
+
+#, fuzzy
+#~ msgid "Access token successfully requested!"
+#~ msgstr "ホスト作成に成功しました"
+
+#, fuzzy
+#~ msgid "Search operators"
+#~ msgstr "検索パターン"
+
+#, fuzzy
+#~ msgid "Search in"
+#~ msgstr "検索インデックス"
 
 #, fuzzy, python-format
 #~ msgid "%d day"

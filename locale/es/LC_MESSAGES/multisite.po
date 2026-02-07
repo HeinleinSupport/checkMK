@@ -3236,9 +3236,6 @@ msgstr "Espacio absoluto %s"
 msgid "Absolute archive path"
 msgstr "Espacio libre absoluto"
 
-msgid "Absolute commitable memory"
-msgstr "Memoria comprometedora absoluta"
-
 #, fuzzy
 msgid "Absolute difference"
 msgstr "Libre absoluto"
@@ -3257,6 +3254,10 @@ msgstr "Memoria libre absoluta"
 
 msgid "Absolute free space"
 msgstr "Espacio libre absoluto"
+
+#, fuzzy
+msgid "Absolute free virtual memory"
+msgstr "Memoria libre absoluta"
 
 msgid "Absolute levels"
 msgstr "Niveles absolutos"
@@ -3346,15 +3347,15 @@ msgstr "Una ruta absoluta a un certificado CA"
 msgid "Absolute time of alert"
 msgstr "Hora absoluta de alerta"
 
-#, fuzzy
-msgid "Absolute used commit charge"
-msgstr "Memoria comprometedora absoluta"
-
 msgid "Absolute used leases levels"
 msgstr "Niveles absolutos de arrendamientos usados"
 
 #, fuzzy
 msgid "Absolute used memory"
+msgstr "Memoria libre absoluta"
+
+#, fuzzy
+msgid "Absolute used virtual memory"
 msgstr "Memoria libre absoluta"
 
 msgid "Absolute value"
@@ -15338,26 +15339,6 @@ msgstr "Comentarios del servicio"
 msgid "Commit Latency"
 msgstr "Latencia de escritura"
 
-#, fuzzy
-msgid "Commit charge"
-msgstr "Comprometer el cargo"
-
-#, fuzzy
-msgid "Commit charge (Absolute)"
-msgstr "Comprometer niveles de carga"
-
-#, fuzzy
-msgid "Commit charge (averaged)"
-msgstr "Compromiso de carga media"
-
-msgid "Commit charge in percent (relative to commit limit)"
-msgstr ""
-"Carga de compromiso en porcentaje (en relación con el límite de compromiso)"
-
-#, fuzzy
-msgid "Commit charge levels"
-msgstr "Comprometer niveles de carga"
-
 msgid "Commit limit"
 msgstr "Límite de compromiso"
 
@@ -17566,10 +17547,6 @@ msgstr "Creación de latencia de la conferencia"
 msgid "Create Microsoft Entra ID connections."
 msgstr "Añadir conexión al sitio"
 
-#, fuzzy
-msgid "Create OAuth2 connections."
-msgstr "Añadir conexión"
-
 msgid "Create SLA"
 msgstr "Crear SLA"
 
@@ -19656,6 +19633,10 @@ msgid "Default BI visualization settings"
 msgstr "Configuración por defecto de la visualización de BI"
 
 #, fuzzy
+msgid "Default behavior for 'Changes'"
+msgstr "UDP (comportamiento por defecto de traceroute)"
+
+#, fuzzy
 msgid "Default cleanup parameters"
 msgstr "Parámetros del modelo"
 
@@ -20651,11 +20632,6 @@ msgid ""
 "micoseconds."
 msgstr ""
 "Según la precisión, la unidad puede ser de milisegundos o de micosegundos."
-
-msgid ""
-"Depending on your Meraki organization size (number of switches) this may "
-"exceed the limits of the allowed API requests per second."
-msgstr ""
 
 #, python-format
 msgid "Deploy %s"
@@ -21827,10 +21803,6 @@ msgstr ""
 "Se ha realizado la detección de servicios en el host %s: %d añadidos, %d "
 "eliminados, %d conservados, %d servicios totales y %d etiquetas de host "
 "añadidas, %d etiquetas de host totales"
-
-#, fuzzy
-msgid "Discovery options"
-msgstr "Ajustes de descubrimiento"
 
 msgid "Discovery rules"
 msgstr "reglas de descubrimiento"
@@ -27945,9 +27917,6 @@ msgstr "La carpeta %s no existe"
 msgid "Folder level %d"
 msgstr "Nivel de carpeta %d"
 
-msgid "Folder of oracle configuration files(oratab,  for example)"
-msgstr ""
-
 msgid "Folder path"
 msgstr "Ruta de la carpeta"
 
@@ -28748,6 +28717,10 @@ msgstr "Descripción completa"
 
 msgid "Full access"
 msgstr "Acceso total"
+
+#, fuzzy
+msgid "Full activation page"
+msgstr "Activación de la regla"
 
 msgid "Full dump of all variables"
 msgstr "Volcado completo de todas las variables"
@@ -37340,6 +37313,10 @@ msgstr "ID de la instancia"
 msgid "Instance Name(SID)"
 msgstr "Nombre de la instancia"
 
+#, fuzzy
+msgid "Instance discovery"
+msgstr "Ejecutar la detección de servicios"
+
 msgid "Instance error state"
 msgstr "Estado de error de la instancia"
 
@@ -37970,6 +37947,10 @@ msgstr "Esquema de URL inválido. Debe ser uno de los siguientes: %s"
 
 #, fuzzy, python-format
 msgid "Invalid regex pattern. Expected: %s"
+msgstr "Expresión regular inválida: %s"
+
+#, fuzzy, python-format
+msgid "Invalid regex pattern: %s"
 msgstr "Expresión regular inválida: %s"
 
 msgid "Invalid regular expression"
@@ -50859,10 +50840,6 @@ msgid "Oracle Database Identification"
 msgstr "Configuración por defecto"
 
 #, fuzzy
-msgid "Oracle Database default configuration"
-msgstr "Configuración por defecto"
-
-#, fuzzy
 msgid "Oracle IOSTAT IO"
 msgstr "IOs de ORACLE IOSTAT"
 
@@ -50929,6 +50906,10 @@ msgstr "Utilizar las credenciales"
 #, fuzzy
 msgid "Oracle Java pool size"
 msgstr "Tamaño del pool de Java"
+
+#, fuzzy
+msgid "Oracle Local Registry path"
+msgstr "Memoria total de ORACLE"
 
 msgid "Oracle Locks"
 msgstr "Cerraduras Oracle"
@@ -51705,10 +51686,6 @@ msgstr "ORACLE Total esperado"
 #, fuzzy
 msgid "Oracle total waited (FG)"
 msgstr "ORACLE Total esperado (FG)"
-
-#, fuzzy
-msgid "Oracle type of authentication"
-msgstr "Autenticación por token"
 
 #, fuzzy
 msgid "Oracle undo retention"
@@ -53163,9 +53140,6 @@ msgstr ""
 msgid ""
 "Path to the user certificate. If the path is not exist or empty, the user "
 "certificate will not be used."
-msgstr ""
-
-msgid "Path to tnsnames.ora or sqlnet.ora file"
 msgstr ""
 
 msgid "Path-patterns where to search for Jar files"
@@ -56273,6 +56247,10 @@ msgstr "Colas a vigilar"
 #, fuzzy
 msgid "Quick Setup"
 msgstr "Configuración rápida"
+
+#, fuzzy
+msgid "Quick activation"
+msgstr "Activación automática"
 
 msgid "Quick search"
 msgstr "Búsqueda rápida"
@@ -63168,6 +63146,14 @@ msgstr ""
 "reinicio del contador."
 
 msgid ""
+"Sets the TNS_ADMIN environment variable for the Oracle plugin. This "
+"directory should contain Oracle network configuration files such as "
+"tnsnames.ora, sqlnet.ora, or wallet files. The plugin must have read access "
+"to all files in this directory. If not specified, the default plugin's "
+"config directory will be used."
+msgstr ""
+
+msgid ""
 "Sets the thresholds for the runtime of a test. Note that runtime monitoring "
 "is not a feature of Robot Framework, but of Robotmk. That means that even "
 "when a Robot suite has ended with a PASS result, the states of Robotmk test "
@@ -63485,10 +63471,6 @@ msgstr "Mostrar todas las fases de las notificaciones"
 msgid "Show all rules"
 msgstr "Mostrar todas las reglas"
 
-#, fuzzy
-msgid "Show bandwidth"
-msgstr "Ancho de banda"
-
 msgid "Show bandwidth (use only with cache disabled)"
 msgstr ""
 
@@ -63794,6 +63776,10 @@ msgstr "Mostrar el pin"
 
 msgid "Show the service problems contained in this branch"
 msgstr "Mostrar los problemas de servicio contenidos en esta rama"
+
+msgid ""
+"Show the slideout for activating changes or show the full page view instead."
+msgstr ""
 
 msgid "Show this attribute in host tables of the setup menu"
 msgstr "Mostrar este atributo en las tablas de host del menú de configuración"
@@ -68215,6 +68201,9 @@ msgstr "TLS/SSL/Https desactivado"
 #, python-format
 msgid "TNS Alias %s"
 msgstr "TNS Alias %s"
+
+msgid "TNS_ADMIN directory path"
+msgstr ""
 
 msgid "TP Link: Used memory via SNMP"
 msgstr "Enlace TP: Memoria utilizada a través de SNMP"
@@ -80626,10 +80615,6 @@ msgid "Total comments: %d"
 msgstr "Total de comentarios: %d"
 
 #, fuzzy
-msgid "Total commitable memory"
-msgstr "Memoria comprometedora absoluta"
-
-#, fuzzy
 msgid "Total connections"
 msgstr "conexión normal"
 
@@ -85545,7 +85530,7 @@ msgstr ""
 msgid ""
 "Use Oracle Wallet for secure authentication to the Oracle database without "
 "storing passwords in plain text. If 'Path to tnsnames.ora or sqlnet.ora "
-"file' (TNS_ADMIN) is not set, the wallet must be located in /etc/check_mk/"
+"file' (TNS_ADMIN) is not set, the wallet must be located in $MK_CONFDIR/"
 "oracle_wallet. In this case, the plugin will automatically create a "
 "sqlnet.ora file if it does not exist. If TNS_ADMIN is set to a custom path, "
 "you must ensure that sqlnet.ora (with the correct wallet location) and the "
@@ -86537,6 +86522,10 @@ msgstr "Memoria virtual total"
 #, fuzzy
 msgid "Used virtual memory (averaged)"
 msgstr "Promedio de memoria virtual"
+
+#, fuzzy
+msgid "Used virtual memory in percent"
+msgstr "Memoria virtual total"
 
 msgid "User"
 msgstr "Usuario"
@@ -88125,8 +88114,24 @@ msgstr "Instantáneas de máquinas virtuales"
 msgid "Virtual machines may take a few minutes to show up."
 msgstr ""
 
+#, fuzzy
+msgid "Virtual memory"
+msgstr "Uso de la memoria virtual"
+
+#, fuzzy
+msgid "Virtual memory (Absolute)"
+msgstr "Uso de la memoria virtual"
+
+#, fuzzy
+msgid "Virtual memory (averaged)"
+msgstr "Promedio de memoria virtual"
+
 msgid "Virtual memory averaging"
 msgstr "Promedio de memoria virtual"
+
+#, fuzzy
+msgid "Virtual memory levels"
+msgstr "Uso de la memoria virtual"
 
 #, fuzzy
 msgid "Virtual memory size"
@@ -89110,6 +89115,12 @@ msgid ""
 msgstr ""
 "Cuando se activa, el titular de cada página también muestra la fecha además "
 "de la hora."
+
+msgid ""
+"When enabled, the plugin will automatically discover local Oracle database "
+"instances. This feature only works when the plugin is installed on the same "
+"machine where the Oracle database instances are running."
+msgstr ""
 
 msgid ""
 "When enabled, then the internal names of Setup folder in the filesystem are "
@@ -97753,15 +97764,17 @@ msgid "Failed to save OAuth2 connection"
 msgstr "Añadir conexión"
 
 #, fuzzy
-msgid "Application successfully authorized!"
-msgstr "Anfitrión creado con éxito"
+msgid "Your login was successful!"
+msgstr "Horneando con éxito"
 
 #, fuzzy
-msgid "Access token successfully requested!"
-msgstr "Anfitrión creado con éxito"
+msgid "Your login was not successful. Please try again."
+msgstr ""
+"No se han encontrado filas coincidentes. Por favor, intente con otro término "
+"de búsqueda."
 
 #, fuzzy
-msgid "You can now close this window."
+msgid "You can now close this tab."
 msgstr "No se puede guardar esta regla."
 
 #, fuzzy
@@ -98306,27 +98319,11 @@ msgstr "%d íconos personalizados"
 msgid "Search in setup"
 msgstr "Buscar en la configuración"
 
-#, fuzzy
-msgid "Press"
-msgstr "Presión"
-
-#, fuzzy
-msgid "to trigger host/service search"
-msgstr "No hay hosts/servicios que coincidan."
-
 msgid "Only available for 'Monitoring' and 'All'"
 msgstr ""
 
-#, fuzzy
-msgid "Search operators"
-msgstr "Patrón de búsqueda"
-
 msgid "Type \"/\" to use search operator"
 msgstr ""
-
-#, fuzzy
-msgid "Search in"
-msgstr "Índice de búsqueda"
 
 #, fuzzy
 msgid "Search in ${provider}"
@@ -98365,6 +98362,14 @@ msgstr "Borrar el registro"
 #, fuzzy
 msgid "Recently searched"
 msgstr "Servicios modificados recientemente"
+
+#, fuzzy
+msgid "Press"
+msgstr "Presión"
+
+#, fuzzy
+msgid "to trigger host/service search"
+msgstr "No hay hosts/servicios que coincidan."
 
 #, fuzzy
 msgid "Group results by topic"
@@ -98425,7 +98430,17 @@ msgid ""
 "A couple of minutes after the installation, the agent will start reporting"
 msgstr ""
 
-msgid "What's next?"
+#, fuzzy
+msgid "Further topics"
+msgstr "Por tema"
+
+msgid ""
+"Structure hosts with folders, labels, tags, parent relationships, and host "
+"groups"
+msgstr ""
+
+msgid ""
+"Organize your hosts to enable clear, scalable, and easy to manage monitoring."
 msgstr ""
 
 #, fuzzy
@@ -98460,6 +98475,14 @@ msgstr "Estado de la licencia"
 msgid ""
 "It’s time to enjoy the full experience! Set up automated licensing for a "
 "smooth experience."
+msgstr ""
+
+msgid "Choose a different start page"
+msgstr ""
+
+msgid ""
+"Use the 'Start URL to display in main frame' option in your profile to "
+"define which page, dashboard or custom URL is shown when you log in."
 msgstr ""
 
 msgid "Topics to explore"
@@ -98605,6 +98628,9 @@ msgstr "Inventario de hardware/software (Linux, Windows, Solaris, AIX)"
 #, fuzzy
 msgid "Network devices and SNMP"
 msgstr "Exploración de la red"
+
+msgid "Checkmk Relay (objects behind a firewall)"
+msgstr ""
 
 #, fuzzy
 msgid "Cloud platforms"
@@ -98878,6 +98904,74 @@ msgstr ""
 msgid ""
 "You can still access it later via Help > Learning Checkmk > Welcome page"
 msgstr ""
+
+#~ msgid "Absolute commitable memory"
+#~ msgstr "Memoria comprometedora absoluta"
+
+#, fuzzy
+#~ msgid "Absolute used commit charge"
+#~ msgstr "Memoria comprometedora absoluta"
+
+#, fuzzy
+#~ msgid "Commit charge"
+#~ msgstr "Comprometer el cargo"
+
+#, fuzzy
+#~ msgid "Commit charge (Absolute)"
+#~ msgstr "Comprometer niveles de carga"
+
+#, fuzzy
+#~ msgid "Commit charge (averaged)"
+#~ msgstr "Compromiso de carga media"
+
+#~ msgid "Commit charge in percent (relative to commit limit)"
+#~ msgstr ""
+#~ "Carga de compromiso en porcentaje (en relación con el límite de "
+#~ "compromiso)"
+
+#, fuzzy
+#~ msgid "Commit charge levels"
+#~ msgstr "Comprometer niveles de carga"
+
+#, fuzzy
+#~ msgid "Create OAuth2 connections."
+#~ msgstr "Añadir conexión"
+
+#, fuzzy
+#~ msgid "Discovery options"
+#~ msgstr "Ajustes de descubrimiento"
+
+#, fuzzy
+#~ msgid "Oracle Database default configuration"
+#~ msgstr "Configuración por defecto"
+
+#, fuzzy
+#~ msgid "Oracle type of authentication"
+#~ msgstr "Autenticación por token"
+
+#, fuzzy
+#~ msgid "Show bandwidth"
+#~ msgstr "Ancho de banda"
+
+#, fuzzy
+#~ msgid "Total commitable memory"
+#~ msgstr "Memoria comprometedora absoluta"
+
+#, fuzzy
+#~ msgid "Application successfully authorized!"
+#~ msgstr "Anfitrión creado con éxito"
+
+#, fuzzy
+#~ msgid "Access token successfully requested!"
+#~ msgstr "Anfitrión creado con éxito"
+
+#, fuzzy
+#~ msgid "Search operators"
+#~ msgstr "Patrón de búsqueda"
+
+#, fuzzy
+#~ msgid "Search in"
+#~ msgstr "Índice de búsqueda"
 
 #, fuzzy, python-format
 #~ msgid "%d day"

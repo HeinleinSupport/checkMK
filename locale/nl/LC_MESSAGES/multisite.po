@@ -3215,9 +3215,6 @@ msgstr "Absolute %s ruimte"
 msgid "Absolute archive path"
 msgstr "Absolute vrije ruimte"
 
-msgid "Absolute commitable memory"
-msgstr "Absoluut beschikbaar geheugen"
-
 #, fuzzy
 msgid "Absolute difference"
 msgstr "Absoluut vrij"
@@ -3236,6 +3233,10 @@ msgstr "Absoluut vrij geheugen"
 
 msgid "Absolute free space"
 msgstr "Absolute vrije ruimte"
+
+#, fuzzy
+msgid "Absolute free virtual memory"
+msgstr "Absoluut vrij geheugen"
 
 msgid "Absolute levels"
 msgstr "Absolute niveaus"
@@ -3325,15 +3326,15 @@ msgstr "Een absoluut pad naar een CA-certificaat"
 msgid "Absolute time of alert"
 msgstr "Absolute tijd van alarm"
 
-#, fuzzy
-msgid "Absolute used commit charge"
-msgstr "Absoluut beschikbaar geheugen"
-
 msgid "Absolute used leases levels"
 msgstr "Absolute gebruikte leasingniveaus"
 
 #, fuzzy
 msgid "Absolute used memory"
+msgstr "Absoluut vrij geheugen"
+
+#, fuzzy
+msgid "Absolute used virtual memory"
 msgstr "Absoluut vrij geheugen"
 
 msgid "Absolute value"
@@ -15226,25 +15227,6 @@ msgstr "Commentaar van de dienst"
 msgid "Commit Latency"
 msgstr "Schrijf latentie"
 
-#, fuzzy
-msgid "Commit charge"
-msgstr "Vastleggen Last"
-
-#, fuzzy
-msgid "Commit charge (Absolute)"
-msgstr "Vastleggingsniveaus"
-
-#, fuzzy
-msgid "Commit charge (averaged)"
-msgstr "Vastleggingskrediet Gemiddelde"
-
-msgid "Commit charge in percent (relative to commit limit)"
-msgstr "Vastleggingskost in procent (in verhouding tot de vastleggingslimiet)"
-
-#, fuzzy
-msgid "Commit charge levels"
-msgstr "Vastleggingsniveaus"
-
 msgid "Commit limit"
 msgstr "Vastleggingslimiet"
 
@@ -17449,10 +17431,6 @@ msgstr "Conferentie Latency creëren"
 msgid "Create Microsoft Entra ID connections."
 msgstr "Locatieverbinding toevoegen"
 
-#, fuzzy
-msgid "Create OAuth2 connections."
-msgstr "Aansluiting toevoegen"
-
 msgid "Create SLA"
 msgstr "Maak SLA"
 
@@ -19524,6 +19502,10 @@ msgid "Default BI visualization settings"
 msgstr "Standaard BI-visualisatie-instellingen"
 
 #, fuzzy
+msgid "Default behavior for 'Changes'"
+msgstr "UDP (standaard gedrag van traceroute)"
+
+#, fuzzy
 msgid "Default cleanup parameters"
 msgstr "Modelparameters"
 
@@ -20512,11 +20494,6 @@ msgid ""
 msgstr ""
 "Afhankelijk van de nauwkeurigheid kan de eenheid milliseconden of "
 "micoseconden zijn."
-
-msgid ""
-"Depending on your Meraki organization size (number of switches) this may "
-"exceed the limits of the allowed API requests per second."
-msgstr ""
 
 #, python-format
 msgid "Deploy %s"
@@ -21671,10 +21648,6 @@ msgid ""
 msgstr ""
 "Heeft service gevonden op host %s: %d toegevoegd, %d verwijderd, %d bewaard, "
 "%d totaal services en %d hostlabels toegevoegd, %d hostlabels totaal"
-
-#, fuzzy
-msgid "Discovery options"
-msgstr "Ontdekkingsinstellingen"
 
 msgid "Discovery rules"
 msgstr "Ontdekking regels"
@@ -27736,9 +27709,6 @@ msgstr "Map bestaat niet"
 msgid "Folder level %d"
 msgstr "Map niveau %d"
 
-msgid "Folder of oracle configuration files(oratab,  for example)"
-msgstr ""
-
 msgid "Folder path"
 msgstr "Map pad"
 
@@ -28529,6 +28499,10 @@ msgstr "Volledige beschrijving"
 
 msgid "Full access"
 msgstr "Volledige toegang"
+
+#, fuzzy
+msgid "Full activation page"
+msgstr "Activering van de regel"
 
 msgid "Full dump of all variables"
 msgstr "Volledige dump van alle variabelen"
@@ -37063,6 +37037,10 @@ msgstr "Instantie-ID"
 msgid "Instance Name(SID)"
 msgstr "Instantie naam"
 
+#, fuzzy
+msgid "Instance discovery"
+msgstr "Service discovery uitvoeren"
+
 msgid "Instance error state"
 msgstr "Instance error status"
 
@@ -37687,6 +37665,10 @@ msgstr "Ongeldig URL-schema. Moet een van zijn: %s"
 
 #, fuzzy, python-format
 msgid "Invalid regex pattern. Expected: %s"
+msgstr "Ongeldige reguliere expressie: %s"
+
+#, fuzzy, python-format
+msgid "Invalid regex pattern: %s"
 msgstr "Ongeldige reguliere expressie: %s"
 
 msgid "Invalid regular expression"
@@ -50468,10 +50450,6 @@ msgid "Oracle Database Identification"
 msgstr "Standaard configuratie"
 
 #, fuzzy
-msgid "Oracle Database default configuration"
-msgstr "Standaard configuratie"
-
-#, fuzzy
 msgid "Oracle IOSTAT IO"
 msgstr "ORACLE IOSTAT IO's"
 
@@ -50538,6 +50516,10 @@ msgstr "Gebruik geloofsbrieven"
 #, fuzzy
 msgid "Oracle Java pool size"
 msgstr "Java pool grootte"
+
+#, fuzzy
+msgid "Oracle Local Registry path"
+msgstr "ORACLE totaal geheugen"
 
 msgid "Oracle Locks"
 msgstr "Oracle Sloten"
@@ -51314,10 +51296,6 @@ msgstr "ORACLE Totaal gewacht"
 #, fuzzy
 msgid "Oracle total waited (FG)"
 msgstr "ORACLE Totaal gewacht (FG)"
-
-#, fuzzy
-msgid "Oracle type of authentication"
-msgstr "Token authenticatie"
 
 #, fuzzy
 msgid "Oracle undo retention"
@@ -52767,9 +52745,6 @@ msgstr ""
 msgid ""
 "Path to the user certificate. If the path is not exist or empty, the user "
 "certificate will not be used."
-msgstr ""
-
-msgid "Path to tnsnames.ora or sqlnet.ora file"
 msgstr ""
 
 msgid "Path-patterns where to search for Jar files"
@@ -55840,6 +55815,10 @@ msgstr "Te bewaken wachtrijen"
 #, fuzzy
 msgid "Quick Setup"
 msgstr "Snelle installatie"
+
+#, fuzzy
+msgid "Quick activation"
+msgstr "Automatische activering"
 
 msgid "Quick search"
 msgstr "Snel zoeken"
@@ -62653,6 +62632,14 @@ msgstr ""
 "reset van de teller."
 
 msgid ""
+"Sets the TNS_ADMIN environment variable for the Oracle plugin. This "
+"directory should contain Oracle network configuration files such as "
+"tnsnames.ora, sqlnet.ora, or wallet files. The plugin must have read access "
+"to all files in this directory. If not specified, the default plugin's "
+"config directory will be used."
+msgstr ""
+
+msgid ""
 "Sets the thresholds for the runtime of a test. Note that runtime monitoring "
 "is not a feature of Robot Framework, but of Robotmk. That means that even "
 "when a Robot suite has ended with a PASS result, the states of Robotmk test "
@@ -62963,10 +62950,6 @@ msgstr "Toon alle fasen van meldingen"
 msgid "Show all rules"
 msgstr "Toon alle regels"
 
-#, fuzzy
-msgid "Show bandwidth"
-msgstr "Bandbreedte"
-
 msgid "Show bandwidth (use only with cache disabled)"
 msgstr ""
 
@@ -63267,6 +63250,10 @@ msgstr "Toon de speld"
 
 msgid "Show the service problems contained in this branch"
 msgstr "Toon de dienstproblemen in deze tak"
+
+msgid ""
+"Show the slideout for activating changes or show the full page view instead."
+msgstr ""
 
 msgid "Show this attribute in host tables of the setup menu"
 msgstr "Toon dit attribuut in host tabellen van het setup menu"
@@ -67644,6 +67631,9 @@ msgstr "TLS/SSL/Https uitgeschakeld"
 #, python-format
 msgid "TNS Alias %s"
 msgstr "TNS Alias %s"
+
+msgid "TNS_ADMIN directory path"
+msgstr ""
 
 msgid "TP Link: Used memory via SNMP"
 msgstr "TP Link: Gebruikt geheugen via SNMP"
@@ -79980,10 +79970,6 @@ msgid "Total comments: %d"
 msgstr "Totaal documenten"
 
 #, fuzzy
-msgid "Total commitable memory"
-msgstr "Absoluut beschikbaar geheugen"
-
-#, fuzzy
 msgid "Total connections"
 msgstr "normale verbinding"
 
@@ -84866,7 +84852,7 @@ msgstr ""
 msgid ""
 "Use Oracle Wallet for secure authentication to the Oracle database without "
 "storing passwords in plain text. If 'Path to tnsnames.ora or sqlnet.ora "
-"file' (TNS_ADMIN) is not set, the wallet must be located in /etc/check_mk/"
+"file' (TNS_ADMIN) is not set, the wallet must be located in $MK_CONFDIR/"
 "oracle_wallet. In this case, the plugin will automatically create a "
 "sqlnet.ora file if it does not exist. If TNS_ADMIN is set to a custom path, "
 "you must ensure that sqlnet.ora (with the correct wallet location) and the "
@@ -85845,6 +85831,10 @@ msgstr "Totaal virtueel geheugen"
 #, fuzzy
 msgid "Used virtual memory (averaged)"
 msgstr "Gemiddeld virtueel geheugen"
+
+#, fuzzy
+msgid "Used virtual memory in percent"
+msgstr "Totaal virtueel geheugen"
 
 msgid "User"
 msgstr "Gebruiker"
@@ -87423,8 +87413,24 @@ msgstr "Virtuele Machine momentopnamen"
 msgid "Virtual machines may take a few minutes to show up."
 msgstr ""
 
+#, fuzzy
+msgid "Virtual memory"
+msgstr "Gebruik virtueel geheugen"
+
+#, fuzzy
+msgid "Virtual memory (Absolute)"
+msgstr "Gebruik virtueel geheugen"
+
+#, fuzzy
+msgid "Virtual memory (averaged)"
+msgstr "Gemiddeld virtueel geheugen"
+
 msgid "Virtual memory averaging"
 msgstr "Gemiddeld virtueel geheugen"
+
+#, fuzzy
+msgid "Virtual memory levels"
+msgstr "Gebruik virtueel geheugen"
 
 #, fuzzy
 msgid "Virtual memory size"
@@ -88401,6 +88407,12 @@ msgid ""
 msgstr ""
 "Indien geactiveerd, toont de kopregel van elke pagina ook de datum naast de "
 "tijd."
+
+msgid ""
+"When enabled, the plugin will automatically discover local Oracle database "
+"instances. This feature only works when the plugin is installed on the same "
+"machine where the Oracle database instances are running."
+msgstr ""
 
 msgid ""
 "When enabled, then the internal names of Setup folder in the filesystem are "
@@ -97007,15 +97019,15 @@ msgid "Failed to save OAuth2 connection"
 msgstr "Aansluiting toevoegen"
 
 #, fuzzy
-msgid "Application successfully authorized!"
-msgstr "Host succesvol aangemaakt"
+msgid "Your login was successful!"
+msgstr "Succesvol bakken"
 
 #, fuzzy
-msgid "Access token successfully requested!"
-msgstr "Host succesvol aangemaakt"
+msgid "Your login was not successful. Please try again."
+msgstr "Geen overeenkomende rijen gevonden. Probeer een andere zoekterm."
 
 #, fuzzy
-msgid "You can now close this window."
+msgid "You can now close this tab."
 msgstr "U kunt deze regel niet opslaan."
 
 #, fuzzy
@@ -97557,27 +97569,11 @@ msgstr "%d bewerkte iconen"
 msgid "Search in setup"
 msgstr "Zoeken in Setup"
 
-#, fuzzy
-msgid "Press"
-msgstr "Druk"
-
-#, fuzzy
-msgid "to trigger host/service search"
-msgstr "Geen overeenkomende hosts/diensten."
-
 msgid "Only available for 'Monitoring' and 'All'"
 msgstr ""
 
-#, fuzzy
-msgid "Search operators"
-msgstr "Zoekpatroon"
-
 msgid "Type \"/\" to use search operator"
 msgstr ""
-
-#, fuzzy
-msgid "Search in"
-msgstr "Zoek index"
 
 #, fuzzy
 msgid "Search in ${provider}"
@@ -97616,6 +97612,14 @@ msgstr "Logboek wissen"
 #, fuzzy
 msgid "Recently searched"
 msgstr "Onlangs gewijzigde diensten"
+
+#, fuzzy
+msgid "Press"
+msgstr "Druk"
+
+#, fuzzy
+msgid "to trigger host/service search"
+msgstr "Geen overeenkomende hosts/diensten."
 
 #, fuzzy
 msgid "Group results by topic"
@@ -97676,7 +97680,17 @@ msgid ""
 "A couple of minutes after the installation, the agent will start reporting"
 msgstr ""
 
-msgid "What's next?"
+#, fuzzy
+msgid "Further topics"
+msgstr "Per onderwerp"
+
+msgid ""
+"Structure hosts with folders, labels, tags, parent relationships, and host "
+"groups"
+msgstr ""
+
+msgid ""
+"Organize your hosts to enable clear, scalable, and easy to manage monitoring."
 msgstr ""
 
 #, fuzzy
@@ -97711,6 +97725,14 @@ msgstr "Licentie staat"
 msgid ""
 "It’s time to enjoy the full experience! Set up automated licensing for a "
 "smooth experience."
+msgstr ""
+
+msgid "Choose a different start page"
+msgstr ""
+
+msgid ""
+"Use the 'Start URL to display in main frame' option in your profile to "
+"define which page, dashboard or custom URL is shown when you log in."
 msgstr ""
 
 msgid "Topics to explore"
@@ -97856,6 +97878,9 @@ msgstr "Hardware/Software-Inventarisatie (Linux, Windows, Solaris, AIX)"
 #, fuzzy
 msgid "Network devices and SNMP"
 msgstr "Netwerk scan"
+
+msgid "Checkmk Relay (objects behind a firewall)"
+msgstr ""
 
 #, fuzzy
 msgid "Cloud platforms"
@@ -98128,6 +98153,73 @@ msgstr ""
 msgid ""
 "You can still access it later via Help > Learning Checkmk > Welcome page"
 msgstr ""
+
+#~ msgid "Absolute commitable memory"
+#~ msgstr "Absoluut beschikbaar geheugen"
+
+#, fuzzy
+#~ msgid "Absolute used commit charge"
+#~ msgstr "Absoluut beschikbaar geheugen"
+
+#, fuzzy
+#~ msgid "Commit charge"
+#~ msgstr "Vastleggen Last"
+
+#, fuzzy
+#~ msgid "Commit charge (Absolute)"
+#~ msgstr "Vastleggingsniveaus"
+
+#, fuzzy
+#~ msgid "Commit charge (averaged)"
+#~ msgstr "Vastleggingskrediet Gemiddelde"
+
+#~ msgid "Commit charge in percent (relative to commit limit)"
+#~ msgstr ""
+#~ "Vastleggingskost in procent (in verhouding tot de vastleggingslimiet)"
+
+#, fuzzy
+#~ msgid "Commit charge levels"
+#~ msgstr "Vastleggingsniveaus"
+
+#, fuzzy
+#~ msgid "Create OAuth2 connections."
+#~ msgstr "Aansluiting toevoegen"
+
+#, fuzzy
+#~ msgid "Discovery options"
+#~ msgstr "Ontdekkingsinstellingen"
+
+#, fuzzy
+#~ msgid "Oracle Database default configuration"
+#~ msgstr "Standaard configuratie"
+
+#, fuzzy
+#~ msgid "Oracle type of authentication"
+#~ msgstr "Token authenticatie"
+
+#, fuzzy
+#~ msgid "Show bandwidth"
+#~ msgstr "Bandbreedte"
+
+#, fuzzy
+#~ msgid "Total commitable memory"
+#~ msgstr "Absoluut beschikbaar geheugen"
+
+#, fuzzy
+#~ msgid "Application successfully authorized!"
+#~ msgstr "Host succesvol aangemaakt"
+
+#, fuzzy
+#~ msgid "Access token successfully requested!"
+#~ msgstr "Host succesvol aangemaakt"
+
+#, fuzzy
+#~ msgid "Search operators"
+#~ msgstr "Zoekpatroon"
+
+#, fuzzy
+#~ msgid "Search in"
+#~ msgstr "Zoek index"
 
 #, fuzzy, python-format
 #~ msgid "%d day"
