@@ -1,7 +1,6 @@
 """List of legacy check plugin names for backwards compatibility."""
 
 LEGACY_CHECKS = [
-    "aix_paging",
     "akcp_daisy_temp",
     "alcatel_temp_aos7",
     "alcatel_temp",
