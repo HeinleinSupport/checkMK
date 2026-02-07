@@ -3,17 +3,21 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
+from collections.abc import Mapping
+from typing import Any, NamedTuple
 
-
-# mypy: disable-error-code="var-annotated"
-
-from typing import NamedTuple
-
-from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
-from cmk.base.check_legacy_includes.df import df_check_filesystem_single, FILESYSTEM_DEFAULT_PARAMS
-
-check_info = {}
+from cmk.agent_based.v2 import (
+    AgentSection,
+    CheckPlugin,
+    CheckResult,
+    DiscoveryResult,
+    get_value_store,
+    Result,
+    Service,
+    State,
+    StringTable,
+)
+from cmk.plugins.lib.df import df_check_filesystem_single, FILESYSTEM_DEFAULT_PARAMS
 
 # example output
 # <<<aix_paging>>>
@@ -30,13 +34,16 @@ class AIXPaging(NamedTuple):
     type_: str
 
 
-def parse_aix_paging(string_table):
+type Section = Mapping[str, AIXPaging]
+
+
+def parse_aix_paging(string_table: StringTable) -> Section:
     map_type = {
         "lv": "logical volume",
         "nfs": "NFS",
     }
 
-    parsed = {}
+    parsed: dict[str, AIXPaging] = {}
     if len(string_table) <= 1:
         return parsed
 
@@ -51,7 +58,7 @@ def parse_aix_paging(string_table):
             usage = int(line[4])
         except ValueError:
             continue
-        paging_type = map_type.get(line[7], "unknown[%s]" % line[7])
+        paging_type = map_type.get(line[7], f"unknown[{line[7]}]")
         parsed.setdefault(
             f"{line[0]}/{line[1]}",
             AIXPaging(line[2], size, usage, line[5], line[6], paging_type),
@@ -59,21 +66,30 @@ def parse_aix_paging(string_table):
     return parsed
 
 
-def check_aix_paging(item, params, parsed):
-    if not (data := parsed.get(item)):
+def check_aix_paging(item: str, params: Mapping[str, Any], section: Section) -> CheckResult:
+    if not (data := section.get(item)):
         return
     avail_mb = data.size_mb * (1 - data.usage_perc / 100.0)
-    yield df_check_filesystem_single(item, data.size_mb, avail_mb, 0, None, None, params)
-    yield 0, f"Active: {data.active}, Auto: {data.auto}, Type: {data.type_}"
+    yield from df_check_filesystem_single(
+        get_value_store(), item, data.size_mb, avail_mb, 0, None, None, params
+    )
+    yield Result(
+        state=State.OK, summary=f"Active: {data.active}, Auto: {data.auto}, Type: {data.type_}"
+    )
 
 
-def discover_aix_paging(section):
-    yield from ((item, {}) for item in section)
+def discover_aix_paging(section: Section) -> DiscoveryResult:
+    yield from (Service(item=item) for item in section)
 
 
-check_info["aix_paging"] = LegacyCheckDefinition(
+agent_section_aix_paging = AgentSection(
     name="aix_paging",
     parse_function=parse_aix_paging,
+)
+
+
+check_plugin_aix_paging = CheckPlugin(
+    name="aix_paging",
     service_name="Page Space %s",
     discovery_function=discover_aix_paging,
     check_function=check_aix_paging,
