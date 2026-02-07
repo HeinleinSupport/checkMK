@@ -3,51 +3,56 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
-
-
 from collections.abc import Sequence
 from itertools import chain
 
-from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
 from cmk.agent_based.v2 import (
     all_of,
     any_of,
+    CheckPlugin,
+    CheckResult,
+    DiscoveryResult,
     equals,
     exists,
+    get_value_store,
     not_exists,
     OIDEnd,
+    Service,
+    SNMPSection,
     SNMPTree,
     StringTable,
 )
-from cmk.base.check_legacy_includes.temperature import check_temperature
-
-check_info = {}
+from cmk.plugins.lib.temperature import check_temperature, TempParamDict, TempParamType
 
 
-def discover_akcp_daisy_temp(info):
-    for _port, subport, name, _temp in chain.from_iterable(info):
+def discover_akcp_daisy_temp(section: Sequence[StringTable]) -> DiscoveryResult:
+    for _port, subport, name, _temp in chain.from_iterable(section):
         # Ignore sensors that are found by the non-daisychaining-version of
         # this check (akcp_sensor_temp)
         if subport not in ["-1", "0"]:
-            yield name, {}
+            yield Service(item=name)
 
 
-def check_akcp_daisy_temp(item, params, info):
-    for _port, _subport, name, rawtemp in chain.from_iterable(info):
+def check_akcp_daisy_temp(
+    item: str, params: TempParamType, section: Sequence[StringTable]
+) -> CheckResult:
+    for _port, _subport, name, rawtemp in chain.from_iterable(section):
         if name == item:
             temp = float(rawtemp) / 10
-            return check_temperature(temp, params, "akcp_daisy_temp_%s" % item)
-    return None
+            yield from check_temperature(
+                reading=temp,
+                params=params,
+                unique_name=item,
+                value_store=get_value_store(),
+            )
 
 
 def parse_akcp_daisy_temp(string_table: Sequence[StringTable]) -> Sequence[StringTable]:
     return string_table
 
 
-check_info["akcp_daisy_temp"] = LegacyCheckDefinition(
+snmp_section_akcp_daisy_temp = SNMPSection(
     name="akcp_daisy_temp",
-    parse_function=parse_akcp_daisy_temp,
     detect=all_of(
         any_of(
             equals(".1.3.6.1.2.1.1.2.0", ".1.3.6.1.4.1.3854.1.2.2.1.1"),
@@ -90,9 +95,15 @@ check_info["akcp_daisy_temp"] = LegacyCheckDefinition(
             oids=[OIDEnd(), "1", "2", "14"],
         ),
     ],
+    parse_function=parse_akcp_daisy_temp,
+)
+
+
+check_plugin_akcp_daisy_temp = CheckPlugin(
+    name="akcp_daisy_temp",
     service_name="Temperature %s",
     discovery_function=discover_akcp_daisy_temp,
     check_function=check_akcp_daisy_temp,
     check_ruleset_name="temperature",
-    check_default_parameters={"levels": (28.0, 32.0)},
+    check_default_parameters=TempParamDict(levels=(28.0, 32.0)),
 )
