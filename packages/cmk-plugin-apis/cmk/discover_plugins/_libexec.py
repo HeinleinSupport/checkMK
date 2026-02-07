@@ -21,10 +21,10 @@ def family_libexec_dir(module_name: str) -> Path:
         families namespace.
 
     Example:
-      In this example the family is "prism":
-
-      >>> family_libexec_dir("cmk.plugins.checkmk.server_side_calls.cmk_inv").parts[-4:]
-      ('cmk', 'plugins', 'checkmk', 'libexec')
+      `family_libexec_dir("cmk.plugins.checkmk.server_side_calls.cmk_inv")`
+      will return something like
+      `/.../lib/python3/cmk/plugins/checkmk/libexec',
+      depending on the `__file__` attribute of the module.
 
     """
     #    ^- arbitrary example, adjust if this file is ever (re)moved.

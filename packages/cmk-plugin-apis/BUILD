@@ -67,6 +67,19 @@ py_library(
 )
 
 py_library(
+    name = "discover_plugins",
+    srcs = [
+        "cmk/discover_plugins/__init__.py",
+        "cmk/discover_plugins/_libexec.py",
+        "cmk/discover_plugins/_python_plugins.py",
+        "cmk/discover_plugins/_wellknown.py",
+    ],
+    data = ["cmk/discover_plugins/py.typed"],
+    imports = ["."],
+    visibility = ["//visibility:public"],
+)
+
+py_library(
     name = "graphing",
     srcs = [
         "cmk/graphing/__init__.py",
@@ -188,6 +201,7 @@ py_doc_test(
     srcs = [
         ":agent_based",
         ":bakery",
+        ":discover_plugins",
         ":graphing",
         ":inventory_ui",
         ":rulesets",
@@ -224,6 +238,18 @@ py_test(
     deps = [
         ":__test__",
         ":bakery",
+        requirement("pytest"),
+    ],
+)
+
+py_test(
+    name = "discover_plugins-test",
+    size = "small",
+    srcs = glob(["tests/cmk/discover_plugins/**/*.py"]) + [":__test__.py"],
+    main = ":__test__.py",
+    deps = [
+        ":__test__",
+        ":discover_plugins",
         requirement("pytest"),
     ],
 )
@@ -311,6 +337,7 @@ py_wheel(
     deps = [
         ":agent_based",
         ":bakery",
+        ":discover_plugins",
         ":graphing",
         ":inventory_ui",
         ":password_store",
@@ -331,6 +358,7 @@ filegroup(
     srcs = [
         "cmk/agent_based/py.typed",
         "cmk/bakery/py.typed",
+        "cmk/discover_plugins/py.typed",
         "cmk/graphing/py.typed",
         "cmk/inventory_ui/py.typed",
         "cmk/password_store/py.typed",
