@@ -1,7 +1,6 @@
 """List of legacy check plugin names for backwards compatibility."""
 
 LEGACY_CHECKS = [
-    "akcp_daisy_temp",
     "alcatel_temp_aos7",
     "alcatel_temp",
     "alcatel_timetra_cpu",
