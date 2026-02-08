@@ -4,57 +4,56 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 # mypy: disable-error-code="misc"
-# mypy: disable-error-code="no-untyped-def"
 
-from collections.abc import Mapping
+from collections.abc import Sequence
 
 import pytest
 
-from cmk.agent_based.v2 import StringTable
-
-from .checktestlib import Check
-
-pytestmark = pytest.mark.checks
+from cmk.agent_based.v2 import Result, Service, State, StringTable
+from cmk.base.legacy_checks import alcatel_temp
+from cmk.base.legacy_checks.alcatel_temp import (
+    check_alcatel_temp,
+    discover_alcatel_temp,
+    parse_alcatel_temp,
+)
+from cmk.plugins.lib.temperature import TempParamType
 
 
 @pytest.mark.parametrize(
-    "info, item_expected, data_expected",
+    "info, expected_discoveries",
     [
-        ([["29", "0"]], "Board", {}),
-        ([["0", "29"]], "CPU", {}),
+        ([["29", "0"]], [Service(item="Board")]),
+        ([["0", "29"]], [Service(item="CPU")]),
     ],
 )
-def test_discover_function(
-    info: StringTable, item_expected: str, data_expected: Mapping[object, object]
-) -> None:
-    """
-    Verifies if the item is detected corresponding to info content.
-    """
-    check = Check("alcatel_temp")
-    result = list(check.run_discovery(info))
-    assert result[0][0] == item_expected
-    assert result[0][1] == data_expected
+def test_discover_function(info: StringTable, expected_discoveries: Sequence[Service]) -> None:
+    parsed_section = parse_alcatel_temp(info)
+    result = list(discover_alcatel_temp(parsed_section))
+    assert result == expected_discoveries
 
 
 @pytest.mark.parametrize(
-    "parameters, item, info, state_expected, infotext_expected, perfdata_expected",
+    "item, info, expected_state, expected_text",
     [
-        ((30, 40), "Slot 1 Board", [["29", "0"]], 0, "29", [("temp", 29, 30, 40)]),
-        ((30, 40), "Slot 1 Board", [["31", "0"]], 1, "31", [("temp", 31, 30, 40)]),
-        ((30, 40), "Slot 1 Board", [["41", "0"]], 2, "41", [("temp", 41, 30, 40)]),
-        ((30, 40), "Slot 1 CPU", [["0", "29"]], 0, "29", [("temp", 29, 30, 40)]),
-        ((30, 40), "Slot 1 CPU", [["0", "31"]], 1, "31", [("temp", 31, 30, 40)]),
-        ((30, 40), "Slot 1 CPU", [["0", "41"]], 2, "41", [("temp", 41, 30, 40)]),
+        ("Slot 1 Board", [["29", "0"]], State.OK, "29.0"),
+        ("Slot 1 Board", [["31", "0"]], State.WARN, "31.0"),
+        ("Slot 1 Board", [["41", "0"]], State.CRIT, "41.0"),
+        ("Slot 1 CPU", [["0", "29"]], State.OK, "29.0"),
+        ("Slot 1 CPU", [["0", "31"]], State.WARN, "31.0"),
+        ("Slot 1 CPU", [["0", "41"]], State.CRIT, "41.0"),
     ],
 )
 def test_check_function(
-    parameters, item, info, state_expected, infotext_expected, perfdata_expected
-):
-    """
-    Verifies if check function asserts warn and crit Board and CPU temperature levels.
-    """
-    check = Check("alcatel_temp")
-    state, infotext, perfdata = check.run_check(item, parameters, info)
-    assert state == state_expected
-    assert infotext_expected in infotext
-    assert perfdata == perfdata_expected
+    item: str,
+    info: StringTable,
+    expected_state: State,
+    expected_text: str,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(alcatel_temp, "get_value_store", lambda: {})
+    params: TempParamType = {"levels": (30.0, 40.0)}
+    parsed_section = parse_alcatel_temp(info)
+    results = list(check_alcatel_temp(item, params, parsed_section))
+    temp_result = [r for r in results if isinstance(r, Result) and "Temperature" in r.summary][0]
+    assert temp_result.state == expected_state
+    assert expected_text in temp_result.summary
