@@ -4,14 +4,14 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 # mypy: disable-error-code="misc"
-# mypy: disable-error-code="no-untyped-call"
 
-from collections.abc import Mapping, Sequence
+from collections.abc import Mapping
 from typing import Any
 
 import pytest
 
-from cmk.agent_based.v2 import StringTable
+from cmk.agent_based.v2 import Metric, Result, Service, State, StringTable
+from cmk.base.legacy_checks import alcatel_timetra_cpu
 from cmk.base.legacy_checks.alcatel_timetra_cpu import (
     check_alcatel_timetra_cpu,
     discover_alcatel_timetra_cpu,
@@ -22,39 +22,42 @@ from cmk.base.legacy_checks.alcatel_timetra_cpu import (
 @pytest.mark.parametrize(
     "string_table, expected_discoveries",
     [
-        ([["92"]], [(None, {})]),
+        ([["92"]], [Service()]),
     ],
 )
 def test_discover_alcatel_timetra_cpu(
-    string_table: StringTable, expected_discoveries: Sequence[tuple[str, Mapping[str, Any]]]
+    string_table: StringTable, expected_discoveries: list[Service]
 ) -> None:
-    """Test discovery function for alcatel_timetra_cpu check."""
     parsed = parse_alcatel_timetra_cpu(string_table)
+    assert parsed is not None
     result = list(discover_alcatel_timetra_cpu(parsed))
-    assert sorted(result) == sorted(expected_discoveries)
+    assert result == expected_discoveries
 
 
 @pytest.mark.parametrize(
-    "item, params, string_table, expected_results",
+    "params, string_table, expected_state, expected_text",
     [
         (
-            None,
-            (90.0, 95.0),
+            {"util": (90.0, 95.0)},
             [["92"]],
-            [
-                (
-                    1,
-                    "Total CPU: 92.00% (warn/crit at 90.00%/95.00%)",
-                    [("util", 92, 90.0, 95.0, 0, 100)],
-                )
-            ],
+            State.WARN,
+            "92.00%",
         ),
     ],
 )
 def test_check_alcatel_timetra_cpu(
-    item: str, params: Mapping[str, Any], string_table: StringTable, expected_results: Sequence[Any]
+    params: Mapping[str, Any],
+    string_table: StringTable,
+    expected_state: State,
+    expected_text: str,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Test check function for alcatel_timetra_cpu check."""
+    monkeypatch.setattr(alcatel_timetra_cpu, "get_value_store", lambda: {})
     parsed = parse_alcatel_timetra_cpu(string_table)
-    result = list(check_alcatel_timetra_cpu(item, params, parsed))
-    assert result == expected_results
+    assert parsed is not None
+    results = list(check_alcatel_timetra_cpu(params, parsed))
+    result_with_summary = [r for r in results if isinstance(r, Result) and r.summary][0]
+    assert result_with_summary.state == expected_state
+    assert expected_text in result_with_summary.summary
+    metrics = [r for r in results if isinstance(r, Metric)]
+    assert any(m.name == "util" for m in metrics)
