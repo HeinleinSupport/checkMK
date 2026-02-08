@@ -10,8 +10,8 @@ from collections.abc import Sequence
 import pytest
 
 from cmk.agent_based.v2 import Metric, Result, Service, State, StringTable
-from cmk.base.legacy_checks import alcatel_temp_aos7
-from cmk.base.legacy_checks.alcatel_temp_aos7 import (
+from cmk.plugins.alcatel.agent_based import alcatel_temp_aos7
+from cmk.plugins.alcatel.agent_based.alcatel_temp_aos7 import (
     check_alcatel_aos7_temp,
     discover_alcatel_temp_aos7,
     parse_alcatel_aos7_temp,
