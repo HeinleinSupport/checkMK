@@ -10,7 +10,7 @@ import pytest
 import cmk.gui.watolib.password_store
 from cmk.gui import userdb
 from cmk.gui.watolib.password_store import join_password_specs, PasswordStore, split_password_specs
-from cmk.utils.password_store import Password
+from cmk.utils.password_store import PasswordConfig
 
 
 @pytest.fixture
@@ -24,7 +24,7 @@ def mock_update_passwords_merged_file(monkeypatch: pytest.MonkeyPatch) -> Iterab
 
 
 def test_join_password_specs() -> None:
-    meta_data: dict[str, Password] = {
+    meta_data: dict[str, PasswordConfig] = {
         "asd": {
             "title": "Title",
             "comment": "Comment",
@@ -49,7 +49,7 @@ def test_join_password_specs() -> None:
 
 
 def test_join_password_missing_password() -> None:
-    meta_data: dict[str, Password] = {
+    meta_data: dict[str, PasswordConfig] = {
         "asd": {
             "title": "Title",
             "comment": "Comment",
@@ -63,7 +63,7 @@ def test_join_password_missing_password() -> None:
 
 
 def test_join_password_specs_missing_meta_data() -> None:
-    meta_data: dict[str, Password] = {}
+    meta_data: dict[str, PasswordConfig] = {}
     passwords = {"asd": "$ecret"}
     assert not join_password_specs(meta_data, passwords)
 
@@ -103,7 +103,7 @@ def fixture_store() -> PasswordStore:
 @pytest.mark.usefixtures("mock_update_passwords_merged_file")
 def test_password_store_save(store: PasswordStore) -> None:
     entries = {
-        "ding": Password(
+        "ding": PasswordConfig(
             {
                 "title": "Title",
                 "comment": "Comment",
@@ -122,7 +122,7 @@ def test_password_store_save(store: PasswordStore) -> None:
 @pytest.fixture(name="test_store")
 def fixture_test_store(store: PasswordStore) -> PasswordStore:
     entries = {
-        "ding": Password(
+        "ding": PasswordConfig(
             {
                 "title": "Title",
                 "comment": "Comment",

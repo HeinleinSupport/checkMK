@@ -12,7 +12,7 @@ from cmk.gui.openapi.framework.model import ApiOmitted
 from cmk.gui.openapi.framework.model.base_models import LinkModel
 from cmk.gui.openapi.restful_objects.constructors import object_href
 from cmk.gui.utils import permission_verification as permissions
-from cmk.utils.password_store import Password
+from cmk.utils.password_store import PasswordConfig
 
 # mypy: disable-error-code="no-untyped-call"
 
@@ -32,7 +32,7 @@ RW_PERMISSIONS = permissions.AllPerm(
 )
 
 
-def serialize_password(ident: str, details: Password) -> PasswordObject:
+def serialize_password(ident: str, details: PasswordConfig) -> PasswordObject:
     details_with_customer = complement_customer(dict(details))
     return PasswordObject(
         domainType="password",
@@ -50,7 +50,7 @@ def serialize_password(ident: str, details: Password) -> PasswordObject:
     )
 
 
-def password_etag(ident: str, password: Password) -> ETag:
+def password_etag(ident: str, password: PasswordConfig) -> ETag:
     return ETag(
         {
             "id": ident,

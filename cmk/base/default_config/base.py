@@ -20,7 +20,7 @@ from cmk.utils.http_proxy_config import HTTPProxySpec
 from cmk.utils.labels import Labels
 from cmk.utils.notify_types import Contact, ContactName
 from cmk.utils.oauth2_connection import OAuth2Connection
-from cmk.utils.password_store import Password
+from cmk.utils.password_store import PasswordConfig
 from cmk.utils.rulesets.ruleset_matcher import RuleSpec, TagsOfHosts
 from cmk.utils.servicename import ServiceName
 from cmk.utils.tags import TagConfigSpec
@@ -72,7 +72,7 @@ debug_log = False  # deprecated
 monitoring_host: str | None = None  # deprecated
 max_num_processes = 50
 fallback_agent_output_encoding = "latin-1"
-stored_passwords: dict[str, Password] = {}
+stored_passwords: dict[str, PasswordConfig] = {}
 oauth2_connections: dict[str, OAuth2Connection] = {}
 # Collection of predefined rule conditions. For the moment this setting is only stored
 # in this config domain but not used by the base code. The WATO logic for writing out

@@ -24,7 +24,7 @@ from cmk.gui.watolib.hosts_and_folders import Folder, folder_tree, Host
 from cmk.gui.watolib.passwords import load_passwords, remove_password, save_password
 from cmk.gui.watolib.rulesets import AllRulesets, FolderRulesets, Rule, SingleRulesetRecursively
 from cmk.utils.global_ident_type import GlobalIdent, PROGRAM_ID_DCD, PROGRAM_ID_QUICK_SETUP
-from cmk.utils.password_store import Password
+from cmk.utils.password_store import PasswordConfig
 from cmk.utils.rulesets.definition import RuleGroupType
 from cmk.utils.rulesets.ruleset_matcher import RuleSpec
 
@@ -82,7 +82,7 @@ class CreateHost(TypedDict):
 
 class CreatePassword(TypedDict):
     id: str
-    spec: Password
+    spec: PasswordConfig
 
 
 class CreateRule(TypedDict):
@@ -126,7 +126,7 @@ class DCDConnectionHook:
 @dataclass
 class BundleReferences:
     hosts: Sequence[Host] | None = None
-    passwords: Sequence[tuple[str, Password]] | None = None  # PasswordId, Password
+    passwords: Sequence[tuple[str, PasswordConfig]] | None = None  # PasswordId, Password
     rules: Sequence[Rule] | None = None
     dcd_connections: Sequence[tuple[str, DCDConnectionSpec]] | None = None
 
@@ -510,8 +510,8 @@ def _delete_hosts(hosts: Iterable[Host], *, pprint_value: bool, debug: bool, use
 
 
 def _collect_passwords(
-    finder: IdentFinder, passwords: Mapping[str, Password]
-) -> Iterable[tuple[str, tuple[str, Password]]]:
+    finder: IdentFinder, passwords: Mapping[str, PasswordConfig]
+) -> Iterable[tuple[str, tuple[str, PasswordConfig]]]:
     for password_id, password in passwords.items():
         if bundle_id := finder(password.get("locked_by")):
             yield bundle_id, (password_id, password)
@@ -520,7 +520,7 @@ def _collect_passwords(
 def _prepare_create_passwords(
     bundle_ident: GlobalIdent,
     create_passwords: Collection[CreatePassword],
-    all_passwords: Mapping[str, Password],
+    all_passwords: Mapping[str, PasswordConfig],
     *,
     user_id: UserId | None,
     pprint_value: bool,
@@ -558,7 +558,7 @@ def _user_may_delete_passwords(
 
 
 def _delete_passwords(
-    passwords: Iterable[tuple[str, Password]],
+    passwords: Iterable[tuple[str, PasswordConfig]],
     *,
     user_id: UserId | None,
     pprint_value: bool,

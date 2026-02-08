@@ -44,11 +44,11 @@ def update_password_v1(
     """Update a password"""
     user.need_permission("wato.edit")
     user.need_permission("wato.passwords")
-    original_password = load_password_to_modify(name)
+    original_config = load_password_to_modify(name)
     if api_context.etag.enabled:
-        api_context.etag.verify(password_etag(name, original_password))
+        api_context.etag.verify(password_etag(name, original_config))
 
-    password_details = body.update(original_password)
+    password_details = body.update(original_config)
     save_password(
         name,
         password_details,

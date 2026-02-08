@@ -13,7 +13,7 @@ from cmk.gui.fields.utils import edition_field_description
 from cmk.gui.openapi.framework.model import api_field, api_model, ApiOmitted
 from cmk.gui.openapi.framework.model.converter import PasswordConverter
 from cmk.gui.openapi.framework.model.restrict_editions import after_validator_for_customer_field
-from cmk.utils.password_store import Password
+from cmk.utils.password_store import PasswordConfig
 
 
 @api_model
@@ -92,14 +92,14 @@ class CreatePassword:
             )
         return self
 
-    def to_internal(self) -> Password:
+    def to_internal(self) -> PasswordConfig:
         if isinstance(self.editable_by, str):
             owned_by = self.editable_by
         elif isinstance(self.owned_by, str):
             owned_by = self.owned_by
         else:
             owned_by = "admin"
-        password = Password(
+        password = PasswordConfig(
             title=self.title,
             comment=self.comment,
             docu_url=self.documentation_url,
@@ -178,7 +178,7 @@ class UpdatePassword:
             )
         return self
 
-    def update(self, old: Password) -> Password:
+    def update(self, old: PasswordConfig) -> PasswordConfig:
         """Update the old password with the new values."""
 
         if not isinstance(self.title, ApiOmitted):

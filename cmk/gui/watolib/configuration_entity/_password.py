@@ -35,7 +35,7 @@ from cmk.rulesets.v1.form_specs import (
     String,
 )
 from cmk.rulesets.v1.form_specs.validators import ValidationError
-from cmk.utils.password_store._pwstore import Password
+from cmk.utils.password_store._pwstore import PasswordConfig
 
 INTERNAL_TRANSFORM_ERROR = _("FormSpec and internal data structure mismatch")
 
@@ -253,7 +253,7 @@ def save_password_from_slidein_schema(
 
     save_password(
         ident=parsed_data.general_props.id,
-        details=Password(
+        config=PasswordConfig(
             title=parsed_data.general_props.title,
             comment=parsed_data.general_props.comment,
             docu_url=parsed_data.general_props.docu_url,

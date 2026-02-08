@@ -17,7 +17,7 @@ from cmk.gui.watolib.config_domain_name import (
 from cmk.gui.watolib.config_domains import ConfigDomainCore
 from cmk.gui.watolib.groups_io import load_contact_group_information
 from cmk.gui.watolib.password_store import PasswordStore
-from cmk.utils.password_store import Password
+from cmk.utils.password_store import PasswordConfig
 
 
 class PasswordChangeEffectRegistry:
@@ -69,7 +69,7 @@ def sorted_contact_group_choices(only_own: bool = False) -> list[tuple[str, str]
 
 def save_password(
     ident: str,
-    details: Password,
+    config: PasswordConfig,
     *,
     new_password: bool,
     user_id: UserId | None,
@@ -78,7 +78,7 @@ def save_password(
 ) -> None:
     password_store = PasswordStore()
     entries = password_store.load_for_modification()
-    entries[ident] = details
+    entries[ident] = config
     password_store.save(entries, pprint_value)
     if new_password:
         add_change(
@@ -143,20 +143,20 @@ def password_exists(ident: str) -> bool:
     return ident in load_passwords()
 
 
-def load_passwords() -> dict[str, Password]:
+def load_passwords() -> dict[str, PasswordConfig]:
     password_store = PasswordStore()
     return password_store.filter_usable_entries(password_store.load_for_reading())
 
 
-def load_password(password_id: str) -> Password:
+def load_password(password_id: str) -> PasswordConfig:
     return load_passwords()[password_id]
 
 
-def load_passwords_to_modify() -> dict[str, Password]:
+def load_passwords_to_modify() -> dict[str, PasswordConfig]:
     password_store = PasswordStore()
     return password_store.filter_editable_entries(password_store.load_for_modification())
 
 
-def load_password_to_modify(ident: str) -> Password:
+def load_password_to_modify(ident: str) -> PasswordConfig:
     passwords = load_passwords_to_modify()
     return passwords[ident]

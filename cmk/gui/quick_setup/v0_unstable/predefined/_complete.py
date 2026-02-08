@@ -71,7 +71,7 @@ from cmk.password_store.v1_unstable import Secret
 from cmk.rulesets.v1.form_specs import Dictionary
 from cmk.utils.automation_config import LocalAutomationConfig, RemoteAutomationConfig
 from cmk.utils.global_ident_type import GlobalIdent, PROGRAM_ID_QUICK_SETUP
-from cmk.utils.password_store import Password as StorePassword
+from cmk.utils.password_store import PasswordConfig as StorePassword
 from cmk.utils.rulesets.definition import RuleGroup
 from cmk.utils.rulesets.ruleset_matcher import RuleConditionsSpec, RuleOptionsSpec, RuleSpec
 

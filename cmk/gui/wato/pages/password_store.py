@@ -55,7 +55,7 @@ from cmk.gui.watolib.mode import ModeRegistry, WatoMode
 from cmk.gui.watolib.password_store import PasswordStore
 from cmk.gui.watolib.passwords import password_change_effect_registry, sorted_contact_group_choices
 from cmk.rulesets.v1.form_specs import DictElement
-from cmk.utils.password_store import Password
+from cmk.utils.password_store import PasswordConfig
 
 
 def register(mode_registry: ModeRegistry) -> None:
@@ -63,7 +63,7 @@ def register(mode_registry: ModeRegistry) -> None:
     mode_registry.register(ModeEditPassword)
 
 
-class PasswordStoreModeType(SimpleModeType[Password]):
+class PasswordStoreModeType(SimpleModeType[PasswordConfig]):
     def type_name(self) -> str:
         return "password"
 
@@ -81,7 +81,7 @@ class PasswordStoreModeType(SimpleModeType[Password]):
         raise NotImplementedError()
 
 
-class ModePasswords(SimpleListMode[Password]):
+class ModePasswords(SimpleListMode[PasswordConfig]):
     @classmethod
     def name(cls) -> str:
         return "passwords"
@@ -103,7 +103,7 @@ class ModePasswords(SimpleListMode[Password]):
     def _table_title(self) -> str:
         return _("Passwords")
 
-    def _validate_deletion(self, ident: str, entry: Password, *, debug: bool) -> None:
+    def _validate_deletion(self, ident: str, entry: PasswordConfig, *, debug: bool) -> None:
         if is_locked_by_quick_setup(entry.get("locked_by")):
             raise MKUserError(
                 "_delete",
@@ -129,7 +129,7 @@ class ModePasswords(SimpleListMode[Password]):
             ]
         )
 
-    def _show_delete_action(self, nr: int, ident: str, entry: Password) -> None:
+    def _show_delete_action(self, nr: int, ident: str, entry: PasswordConfig) -> None:
         if is_locked_by_quick_setup(entry.get("locked_by")):
             html.icon_button(
                 url="",
@@ -166,7 +166,7 @@ class ModePasswords(SimpleListMode[Password]):
         )
         super().page(config)
 
-    def _show_entry_cells(self, table: Table, ident: str, entry: Password) -> None:
+    def _show_entry_cells(self, table: Table, ident: str, entry: PasswordConfig) -> None:
         table.cell(_("ID"), ident)
         table.cell(_("Title"), entry["title"])
         table.cell(_("Editable by"))
@@ -228,7 +228,7 @@ class ModePasswords(SimpleListMode[Password]):
         )
 
 
-class ModeEditPassword(SimpleEditMode[Password]):
+class ModeEditPassword(SimpleEditMode[PasswordConfig]):
     @classmethod
     def name(cls) -> str:
         return "edit_password"
@@ -242,13 +242,13 @@ class ModeEditPassword(SimpleEditMode[Password]):
         return ModePasswords
 
     def __init__(self) -> None:
-        self._clone_source: Password | None = None
+        self._clone_source: PasswordConfig | None = None
         super().__init__(
             mode_type=PasswordStoreModeType(),
             store=PasswordStore(),
         )
 
-    def _clone_entry(self, entry: Password) -> Password:
+    def _clone_entry(self, entry: PasswordConfig) -> PasswordConfig:
         self._clone_source = entry
         clone = copy.deepcopy(entry)
         # remove the lock when cloning

@@ -15,7 +15,7 @@ from cmk.gui.watolib.simple_config_file import ConfigFileRegistry, WatoSimpleCon
 from cmk.gui.watolib.utils import wato_root_dir
 from cmk.utils.global_ident_type import GlobalIdent, PROGRAM_ID_OAUTH
 from cmk.utils.oauth2_connection import OAuth2Connection, OAuth2ConnectorType
-from cmk.utils.password_store import Password
+from cmk.utils.password_store import PasswordConfig
 
 
 def register(config_file_registry: ConfigFileRegistry) -> None:
@@ -32,7 +32,7 @@ class OAuth2ConnectionsConfigFile(WatoSimpleConfigFile[OAuth2Connection]):
 
     @staticmethod
     def filter_by_passwords(
-        entries: dict[str, OAuth2Connection], allowed_passwords: dict[str, Password]
+        entries: dict[str, OAuth2Connection], allowed_passwords: dict[str, PasswordConfig]
     ) -> dict[str, OAuth2Connection]:
         return {
             k: v
@@ -172,7 +172,7 @@ def save_tokens_to_passwordstore(
         password_ident = f"{ident}_{entry}"
         save_password(
             ident=password_ident,
-            details=Password(
+            config=PasswordConfig(
                 title=f"{pw_title} ({title})",
                 comment=f"Created by OAuth2 connection {title}",
                 docu_url="",

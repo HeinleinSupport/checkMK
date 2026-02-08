@@ -39,9 +39,9 @@ def show_password_v1(
 ) -> ApiResponse[PasswordObject]:
     """Show password store entry"""
     user.need_permission("wato.passwords")
-    password = load_password(name)
+    password_config = load_password(name)
     return ApiResponse(
-        body=serialize_password(name, load_password(name)), etag=password_etag(name, password)
+        body=serialize_password(name, password_config), etag=password_etag(name, password_config)
     )
 
 

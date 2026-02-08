@@ -19,18 +19,20 @@ from cmk.gui.valuespec import DropdownChoice, Transform, ValueSpecValidateFunc
 from cmk.gui.watolib.simple_config_file import ConfigFileRegistry, WatoSimpleConfigFile
 from cmk.gui.watolib.utils import wato_root_dir
 from cmk.utils import password_store
-from cmk.utils.password_store import ad_hoc_password_id, Password
+from cmk.utils.password_store import ad_hoc_password_id, PasswordConfig
 
 
-class PasswordStore(WatoSimpleConfigFile[Password]):
+class PasswordStore(WatoSimpleConfigFile[PasswordConfig]):
     def __init__(self) -> None:
         super().__init__(
             config_file_path=wato_root_dir() / "passwords.mk",
             config_variable="stored_passwords",
-            spec_class=Password,
+            spec_class=PasswordConfig,
         )
 
-    def filter_usable_entries(self, entries: dict[str, Password]) -> dict[str, Password]:
+    def filter_usable_entries(
+        self, entries: dict[str, PasswordConfig]
+    ) -> dict[str, PasswordConfig]:
         if user.may("wato.edit_all_passwords"):
             return entries
 
@@ -43,7 +45,9 @@ class PasswordStore(WatoSimpleConfigFile[Password]):
         )
         return passwords
 
-    def filter_editable_entries(self, entries: dict[str, Password]) -> dict[str, Password]:
+    def filter_editable_entries(
+        self, entries: dict[str, PasswordConfig]
+    ) -> dict[str, PasswordConfig]:
         if user.may("wato.edit_all_passwords"):
             return entries
 
@@ -52,7 +56,7 @@ class PasswordStore(WatoSimpleConfigFile[Password]):
         return {k: v for k, v in entries.items() if v["owned_by"] in user_groups}
 
     @override
-    def _load_file(self, *, lock: bool) -> dict[str, Password]:
+    def _load_file(self, *, lock: bool) -> dict[str, PasswordConfig]:
         """The actual passwords are stored in a separate file for special treatment
 
         Have a look at `cmk.utils.password_store` for further information"""
@@ -68,7 +72,7 @@ class PasswordStore(WatoSimpleConfigFile[Password]):
         return cfg
 
     @override
-    def save(self, cfg: Mapping[str, Password], pprint_value: bool) -> None:
+    def save(self, cfg: Mapping[str, PasswordConfig], pprint_value: bool) -> None:
         """The actual passwords are stored in a separate file for special treatment
 
         Have a look at `cmk.utils.password_store` for further information"""
@@ -86,10 +90,10 @@ def update_passwords_merged_file() -> None:
 
 
 def join_password_specs(
-    meta_data: Mapping[str, Password], passwords: Mapping[str, str]
-) -> dict[str, Password]:
+    meta_data: Mapping[str, PasswordConfig], passwords: Mapping[str, str]
+) -> dict[str, PasswordConfig]:
     """Join passwords with meta data"""
-    joined: dict[str, Password] = {}
+    joined: dict[str, PasswordConfig] = {}
     for password_id, password_spec in meta_data.items():
         joined[password_id] = password_spec.copy()
         joined[password_id]["password"] = passwords.get(password_id, "")
@@ -97,8 +101,8 @@ def join_password_specs(
 
 
 def split_password_specs(
-    joined: Mapping[str, Password],
-) -> tuple[dict[str, Password], dict[str, str]]:
+    joined: Mapping[str, PasswordConfig],
+) -> tuple[dict[str, PasswordConfig], dict[str, str]]:
     """Separate passwords from meta data"""
     meta_data, passwords = {}, {}
     for password_id, joined_password in joined.items():

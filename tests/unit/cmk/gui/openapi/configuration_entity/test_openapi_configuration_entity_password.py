@@ -10,7 +10,7 @@ import pytest
 from cmk.gui.form_specs.visitors._utils import option_id
 from cmk.gui.watolib import password_store
 from cmk.shared_typing.configuration_entity import ConfigEntityType
-from cmk.utils.password_store import lookup, Password, password_store_path
+from cmk.utils.password_store import lookup, password_store_path, PasswordConfig
 from tests.testlib.unit.rest_api_client import ClientRegistry
 
 
@@ -62,7 +62,7 @@ def test_list_passwords_without_permissions(clients: ClientRegistry) -> None:
 def test_list_passwords_with_permissions(clients: ClientRegistry) -> None:
     # GIVEN
     password_store_content = {
-        "protected_password_id": Password(
+        "protected_password_id": PasswordConfig(
             title="Protected title",
             comment="Protected comment",
             docu_url="Protected docu url",
@@ -70,7 +70,7 @@ def test_list_passwords_with_permissions(clients: ClientRegistry) -> None:
             owned_by=None,
             shared_with=["protected"],
         ),
-        "admin_password_id": Password(
+        "admin_password_id": PasswordConfig(
             title="Admin title",
             comment="Admin comment",
             docu_url="Admin docu url",
@@ -106,7 +106,7 @@ def test_list_passwords_with_permissions(clients: ClientRegistry) -> None:
 def test_list_passwords_as_admin(clients: ClientRegistry, with_admin: tuple[str, str]) -> None:
     # GIVEN
     password_store_content = {
-        "admin_password_id": Password(
+        "admin_password_id": PasswordConfig(
             title="Admin title",
             comment="Admin comment",
             docu_url="Admin docu url",
@@ -253,7 +253,7 @@ def test_cannot_overwrite_existing_password(
 ) -> None:
     # GIVEN
     password_store_content = {
-        "existing_password_id": Password(
+        "existing_password_id": PasswordConfig(
             title="Existing title",
             comment="Existing comment",
             docu_url="Existing docu url",
@@ -303,7 +303,7 @@ def test_create_password_existing_passwords_still_exist(
 ) -> None:
     # GIVEN
     password_store_content = {
-        "existing_password_id": Password(
+        "existing_password_id": PasswordConfig(
             title="Existing title",
             comment="Existing comment",
             docu_url="Existing docu url",

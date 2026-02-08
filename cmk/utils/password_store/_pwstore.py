@@ -24,7 +24,7 @@ PasswordId = str | tuple[PasswordLookupType, str]
 _PASSWORD_ID_PREFIX = "uuid"
 
 
-class Password(TypedDict):
+class PasswordConfig(TypedDict):
     title: str
     comment: str
     docu_url: str
