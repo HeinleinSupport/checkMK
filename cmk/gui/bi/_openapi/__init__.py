@@ -14,7 +14,6 @@ You can find an introduction to BI in the
 """
 
 # mypy: disable-error-code="comparison-overlap"
-# mypy: disable-error-code="no-untyped-call"
 
 import http
 import http.client

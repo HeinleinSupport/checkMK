@@ -5,7 +5,6 @@
 
 # mypy: disable-error-code="no-any-return"
 # mypy: disable-error-code="possibly-undefined"
-# mypy: disable-error-code="no-untyped-call"
 # mypy: disable-error-code="type-arg"
 
 # This file is being used by the rule based notifications and (CEE

@@ -5,7 +5,6 @@
 """functions for all redfish components"""
 
 # mypy: disable-error-code="no-any-return"
-# mypy: disable-error-code="no-untyped-call"
 
 import json
 from collections.abc import Mapping

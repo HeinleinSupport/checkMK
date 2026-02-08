@@ -21,8 +21,6 @@
 # delayed_unassigned_shards 0
 
 
-# mypy: disable-error-code="var-annotated"
-
 from collections.abc import Mapping
 from typing import Any
 

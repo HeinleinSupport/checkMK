@@ -5,7 +5,6 @@
 
 # mypy: disable-error-code="possibly-undefined"
 
-# mypy: disable-error-code="arg-type"
 # mypy: disable-error-code="no-untyped-def"
 
 # <<<appdynamics_memory:sep(124)>>>

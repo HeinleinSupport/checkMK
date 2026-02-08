@@ -6,7 +6,6 @@
 # mypy: disable-error-code="misc"
 # mypy: disable-error-code="no-any-return"
 # mypy: disable-error-code="possibly-undefined"
-# mypy: disable-error-code="no-untyped-call"
 # mypy: disable-error-code="type-arg"
 
 import abc

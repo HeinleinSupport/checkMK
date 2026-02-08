@@ -6,7 +6,6 @@
 # mypy: disable-error-code="mutable-override"
 
 # mypy: disable-error-code="no-any-return"
-# mypy: disable-error-code="no-untyped-call"
 
 from __future__ import annotations
 

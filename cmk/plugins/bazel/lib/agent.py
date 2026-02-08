@@ -8,8 +8,6 @@ This agent collects the metrics from https://bazel-cache-server/metrics.
 Since this endpoint is public, no authentication is required.
 """
 
-# mypy: disable-error-code="no-untyped-call"
-
 import argparse
 import json
 import re

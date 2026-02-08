@@ -5,7 +5,6 @@
 
 # mypy: disable-error-code="mutable-override"
 
-# mypy: disable-error-code="no-untyped-call"
 # mypy: disable-error-code="no-untyped-def"
 
 from marshmallow_oneofschema.one_of_schema import OneOfSchema

@@ -11,8 +11,6 @@ Current responsibilities include:
 * logging
 """
 
-# mypy: disable-error-code="no-untyped-call"
-
 import argparse
 
 from cmk.server_side_programs.v1_unstable import vcrtrace

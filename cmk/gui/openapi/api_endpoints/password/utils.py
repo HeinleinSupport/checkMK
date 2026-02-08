@@ -14,8 +14,6 @@ from cmk.gui.openapi.restful_objects.constructors import object_href
 from cmk.gui.utils import permission_verification as permissions
 from cmk.utils.password_store import PasswordConfig
 
-# mypy: disable-error-code="no-untyped-call"
-
 PERMISSIONS = permissions.AllPerm(
     [
         permissions.Perm("wato.passwords"),

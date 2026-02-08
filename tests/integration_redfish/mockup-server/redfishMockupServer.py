@@ -11,7 +11,6 @@
 
 # mypy: disable-error-code="attr-defined"
 
-# mypy: disable-error-code="import-untyped"
 
 # mypy: disable-error-code="assignment"
 

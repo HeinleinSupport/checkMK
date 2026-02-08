@@ -13,8 +13,6 @@ rather than being a comprehensive interface to what the kernel offers.
 As this is currently only needed for the piggyback hub, we put it here.
 """
 
-# mypy: disable-error-code="no-untyped-call"
-
 import enum
 import os
 from collections.abc import Iterator, Sequence

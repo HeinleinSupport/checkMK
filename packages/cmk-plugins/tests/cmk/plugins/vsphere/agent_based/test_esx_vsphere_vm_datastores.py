@@ -3,9 +3,6 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
-# mypy: disable-error-code="type-arg"
-
 
 from cmk.agent_based.v2 import Result
 from cmk.plugins.vsphere.agent_based import esx_vsphere_vm, esx_vsphere_vm_datastores

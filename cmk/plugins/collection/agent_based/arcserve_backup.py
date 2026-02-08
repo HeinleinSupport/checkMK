@@ -58,8 +58,6 @@
 #                                 'size'  : 480413566894}}
 
 
-# mypy: disable-error-code="var-annotated"
-
 from collections.abc import Mapping
 from typing import Any, NotRequired, TypedDict
 

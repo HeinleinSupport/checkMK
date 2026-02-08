@@ -5,10 +5,8 @@
 """Mode for activating pending changes. Does also replication with
 remote sites in distributed Setup."""
 
-# mypy: disable-error-code="no-any-return"
 # mypy: disable-error-code="type-arg"
 # mypy: disable-error-code="unreachable"
-# mypy: disable-error-code="no-untyped-call"
 
 import ast
 import enum

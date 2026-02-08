@@ -6,8 +6,6 @@
 # mypy: disable-error-code="type-arg"
 
 
-# mypy: disable-error-code="var-annotated"
-
 from collections.abc import Iterable, Mapping
 from typing import Any
 

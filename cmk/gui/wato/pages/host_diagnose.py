@@ -6,7 +6,6 @@
 
 # mypy: disable-error-code="exhaustive-match"
 
-# mypy: disable-error-code="no-untyped-call"
 # mypy: disable-error-code="type-arg"
 
 import base64

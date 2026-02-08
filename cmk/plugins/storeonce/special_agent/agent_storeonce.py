@@ -6,8 +6,6 @@
 
 Checkmk special agent for monitoring HPE StoreOnce appliances.
 """
-# mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
 # mypy: disable-error-code="union-attr"
 
 import argparse

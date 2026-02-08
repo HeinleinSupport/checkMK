@@ -7,8 +7,6 @@
 Checkmk special agent for monitoring Cisco Prime Infrastructure.
 """
 
-# mypy: disable-error-code="no-untyped-call"
-
 import argparse
 import json
 import logging

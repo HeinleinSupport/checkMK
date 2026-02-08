@@ -5,9 +5,6 @@
 """WATO's awesome rule editor: Lets the user edit rule based parameters"""
 
 # mypy: disable-error-code="unreachable"
-# mypy: disable-error-code="no-any-return"
-# mypy: disable-error-code="possibly-undefined"
-# mypy: disable-error-code="no-untyped-call"
 # mypy: disable-error-code="type-arg"
 
 from __future__ import annotations

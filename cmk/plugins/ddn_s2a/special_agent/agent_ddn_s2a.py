@@ -7,8 +7,6 @@
 A datasource program for Data DirectNetworks Silicon Storage Appliances
 """
 
-# mypy: disable-error-code="no-untyped-call"
-
 import argparse
 import socket
 import sys

@@ -6,7 +6,6 @@
 # mypy: disable-error-code="comparison-overlap"
 
 # mypy: disable-error-code="no-any-return"
-# mypy: disable-error-code="no-untyped-call"
 
 import hashlib
 import http.client

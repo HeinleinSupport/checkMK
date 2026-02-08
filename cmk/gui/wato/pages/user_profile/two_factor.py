@@ -4,7 +4,6 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 """The user can change own 2FA related settings on this page"""
 
-# mypy: disable-error-code="no-untyped-call"
 # mypy: disable-error-code="possibly-undefined"
 # mypy: disable-error-code="type-arg"
 

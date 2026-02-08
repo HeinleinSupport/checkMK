@@ -7,7 +7,6 @@
 Checkmk special agent for monitoring Tinkerforge.
 """
 # mypy: disable-error-code="comparison-overlap"
-# mypy: disable-error-code="no-untyped-call"
 # mypy: disable-error-code="unreachable"
 
 ###################################################

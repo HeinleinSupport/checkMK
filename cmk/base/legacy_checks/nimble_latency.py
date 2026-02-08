@@ -5,7 +5,6 @@
 
 # mypy: disable-error-code="arg-type"
 # mypy: disable-error-code="index"
-# mypy: disable-error-code="no-untyped-call"
 # mypy: disable-error-code="var-annotated"
 
 from __future__ import annotations
