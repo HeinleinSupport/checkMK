@@ -11,8 +11,8 @@ from typing import Any
 import pytest
 
 from cmk.agent_based.v2 import Metric, Result, Service, State, StringTable
-from cmk.base.legacy_checks import alcatel_timetra_cpu
-from cmk.base.legacy_checks.alcatel_timetra_cpu import (
+from cmk.plugins.alcatel.agent_based import alcatel_timetra_cpu
+from cmk.plugins.alcatel.agent_based.alcatel_timetra_cpu import (
     check_alcatel_timetra_cpu,
     discover_alcatel_timetra_cpu,
     parse_alcatel_timetra_cpu,

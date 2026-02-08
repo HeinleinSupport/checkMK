@@ -1,7 +1,6 @@
 """List of legacy check plugin names for backwards compatibility."""
 
 LEGACY_CHECKS = [
-    "alcatel_timetra_cpu",
     "allnet_ip_sensoric",
     "apc_rackpdu_power",
     "apc_symmetra_ext_temp",
