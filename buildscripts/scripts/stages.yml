@@ -212,8 +212,7 @@ STAGES:
               -//packages/livestatus/... \
               -//packages/neb/... \
               -//packages/unixcat/... \
-              -//non-free/packages/cmc/... \
-              -//non-free/packages/cmk-relay-engine/...
+              -//non-free/packages/cmc/...
           make_rc=$?
           set -e
           ../buildscripts/scripts/bazel_test_post_archive_xunit.sh || :
@@ -449,7 +448,7 @@ STAGES:
     - NAME: "Package cmk-relay-engine"
       ONLY_WHEN_NOT_EMPTY: CHANGED_REFERENCE_IMAGE,CHANGED_PYPROJECT_TOML_FILE,CHANGED_RELAY_ENGINE_FILES,CHANGED_PYTHON_REQUIREMENTS,CHANGED_CMK_RELAY_PROTOCOLS_FILES
       DIR: "non-free/packages/cmk-relay-engine"
-      COMMAND: "./run --unit-tests --component-tests --testlib-tests &> ${RESULTS}/cmk-relay-engine.txt"
+      COMMAND: "./run --component-tests &> ${RESULTS}/cmk-relay-engine.txt"
       BAZEL_LOCKS_AMOUNT: 1
       TEXT_ON_SKIP: "No cmk-relay-engine files changed"
       RESULT_CHECK_FILE_PATTERN: "results/cmk-relay-engine.txt"
