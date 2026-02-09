@@ -33,6 +33,7 @@ Build docs: `make -C doc/documentation html` (also reports about syntax/spelling
 - Document entry points and architecture, things that a developer would need to
   start work on the codebase effectively
 - Use puml diagrams where appropriate
+- Use one sentence per line.
 
 ## Boundaries
 
