@@ -31,6 +31,7 @@ py_library(
         "cmk/agent_receiver/main.py",
         "cmk/agent_receiver/relay/__init__.py",
         "cmk/agent_receiver/relay/api/__init__.py",
+        "cmk/agent_receiver/relay/api/dependencies/__init__.py",
         "cmk/agent_receiver/relay/api/dependencies/relays_repository.py",
         "cmk/agent_receiver/relay/api/routers/__init__.py",
         "cmk/agent_receiver/relay/api/routers/relays/__init__.py",
@@ -49,6 +50,7 @@ py_library(
         "cmk/agent_receiver/relay/api/routers/tasks/handlers/get_tasks.py",
         "cmk/agent_receiver/relay/api/routers/tasks/handlers/get_version.py",
         "cmk/agent_receiver/relay/api/routers/tasks/handlers/update_task.py",
+        "cmk/agent_receiver/relay/api/routers/tasks/libs/__init__.py",
         "cmk/agent_receiver/relay/api/routers/tasks/libs/config_task_factory.py",
         "cmk/agent_receiver/relay/api/routers/tasks/libs/localhost_authorization.py",
         "cmk/agent_receiver/relay/api/routers/tasks/libs/retrieve_config_serial.py",
@@ -56,6 +58,7 @@ py_library(
         "cmk/agent_receiver/relay/api/routers/tasks/libs/tasks_repository.py",
         "cmk/agent_receiver/relay/api/routers/tasks/serializers.py",
         "cmk/agent_receiver/relay/app.py",
+        "cmk/agent_receiver/relay/lib/__init__.py",
         "cmk/agent_receiver/relay/lib/relays_repository.py",
         "cmk/agent_receiver/relay/lib/shared_types.py",
         "cmk/agent_receiver/relay/lib/site_auth.py",
@@ -116,7 +119,7 @@ py_pytest_main(
 py_test(
     name = "unit",
     size = "small",
-    srcs = glob(["tests/unit/agent_receiver/**/*.py"]) + [":__test__.py"],
+    srcs = glob(["tests/unit/**/*.py"]) + [":__test__.py"],
     args = [
         "--random-order",
         "--random-order-bucket=global",
