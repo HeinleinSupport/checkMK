@@ -97117,12 +97117,27 @@ msgid "Requesting access token"
 msgstr "API Toegangstoken"
 
 #, fuzzy
+msgid "Authorization failed"
+msgstr "Authenticatie mislukt"
+
+msgid ""
+"The client secret is invalid. Please ensure that the client secret is stored "
+"in Microsoft\n"
+"            Azure and that you have added the secret value and not the "
+"secret ID to Checkmk.\n"
+"            "
+msgstr ""
+
+#, fuzzy
 msgid "${res.message}"
 msgstr "bericht"
 
 #, fuzzy
-msgid "Failed to request and save access token: ${e}"
+msgid "Failed to request and save access token"
 msgstr "Mislukte verzoeken om Adressbook bestanden"
+
+msgid "${e}"
+msgstr ""
 
 #, fuzzy
 msgid "Authorization was not completed. Please try again."
