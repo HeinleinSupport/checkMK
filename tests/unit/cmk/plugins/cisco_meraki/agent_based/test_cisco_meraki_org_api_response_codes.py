@@ -74,13 +74,13 @@ def test_check_api_response_codes() -> None:
         Result(state=State.OK, notice="Organization name: Name1"),
         Result(state=State.OK, notice="Organization ID: 123"),
         Result(state=State.OK, summary="Status: enabled"),
-        Result(state=State.OK, summary="Code 2xx: 2"),
+        Result(state=State.OK, notice="Code 2xx: 2"),
         Metric("api_code_2xx", 2.0),
-        Result(state=State.OK, summary="Code 3xx: 2"),
+        Result(state=State.OK, notice="Code 3xx: 2"),
         Metric("api_code_3xx", 2.0),
-        Result(state=State.OK, summary="Code 4xx: 2"),
+        Result(state=State.OK, notice="Code 4xx: 2"),
         Metric("api_code_4xx", 2.0),
-        Result(state=State.OK, summary="Code 5xx: 2"),
+        Result(state=State.OK, notice="Code 5xx: 2"),
         Metric("api_code_5xx", 2.0),
     ]
 

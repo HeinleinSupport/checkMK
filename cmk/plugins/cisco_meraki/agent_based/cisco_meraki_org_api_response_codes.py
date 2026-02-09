@@ -82,7 +82,7 @@ def check_response_code_count_levels(value: int | None, *, code: int) -> Iterabl
         label=f"Code {code}xx",
         render_func=lambda v: str(v),
         metric_name=f"api_code_{code}xx",
-        notice_only=False,
+        notice_only=True,
     )
 
 
