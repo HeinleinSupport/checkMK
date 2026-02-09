@@ -87,12 +87,19 @@ def test_check_api_response_codes() -> None:
     assert value == expected
 
 
-def test_check_api_unsupported_response_code() -> None:
+@pytest.mark.parametrize(
+    "counts",
+    [
+        pytest.param([{"code": 900, "count": 1}], id="unsupported response codes"),
+        pytest.param([], id="no response codes"),
+    ],
+)
+def test_check_api_no_response_codes(counts: list[dict[str, int]]) -> None:
     overviews = _ApiResponseCodesFactory.build(
         organization_id="123",
         organization_name="Name1",
         api_enabled=True,
-        counts=[{"code": 900, "count": 1}],
+        counts=counts,
     )
     string_table = [[f"[{json.dumps(overviews)}]"]]
     section = parse_api_response_codes(string_table)

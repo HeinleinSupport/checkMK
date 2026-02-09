@@ -98,6 +98,10 @@ def check_api_response_codes(item: str, section: Section) -> CheckResult:
         summary=f"Status: {info.api_status}",
     )
 
+    # exit early if no response code counts are available.
+    if not info.counts:
+        return
+
     counter: dict[int, int] = defaultdict(int)
 
     for status in info.counts:
