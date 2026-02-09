@@ -48,9 +48,6 @@ VARIABLES:
     - NAME: CHANGED_SHELL_FILES
       SH: "git diff-tree --no-commit-id --name-only -r ${BASE_COMMIT_ID}..HEAD | xargs realpath | ${WORKSPACE}/scripts/find-shell-files --filter"
 
-    - NAME: CHANGED_GROOVY_FILE
-      SH: "echo '${CHANGED_FILES_REL}' | grep '\\.groovy$' || true"
-
     - NAME: CHANGED_GROOVY_LINT_RC
       SH: "echo '${CHANGED_FILES_REL}' | grep '.groovylintrc.json$' || true"
 
@@ -368,17 +365,6 @@ STAGES:
       TEXT_ON_SKIP: "No Bazel files changed"
       RESULT_CHECK_TYPE: "BAZELLINT"
       RESULT_CHECK_FILE_PATTERN: "results/bazel-lint.txt"
-
-    - NAME: "Groovy Lint"
-      ONLY_WHEN_NOT_EMPTY: CHANGED_REFERENCE_IMAGE,CHANGED_GROOVY_FILE,CHANGED_GROOVY_LINT_RC
-      DIR: "tests"
-      ENV_VARS:
-          GROOVYLINT_OUTPUT_ARGS: "-o ${RESULTS}/groovy-lint.sarif"
-      COMMAND: "make --quiet test-lint-groovy"
-      TEXT_ON_SKIP: "No Groovy files changed"
-      BAZEL_LOCKS_AMOUNT: 1
-      RESULT_CHECK_TYPE: "SARIF"
-      RESULT_CHECK_FILE_PATTERN: "results/groovy-lint.sarif"
 
     - NAME: "Agent Plugin Unit Tests"
       ONLY_WHEN_NOT_EMPTY: CHANGED_REFERENCE_IMAGE,CHANGED_AGENT_PLUGINS,CHANGED_AGENT_PLUGINS_TESTS,CHANGED_TESTS_MAKEFILE

@@ -78,3 +78,9 @@ py_binary(
     srcs = ["validate_changes.py"],
     deps = [requirement("pyyaml")],
 )
+
+filegroup(
+    name = "groovy_files",
+    srcs = glob(["**/*.groovy"]),
+    tags = ["groovy"],
+)
