@@ -305,7 +305,6 @@ CROSS_DEPENDING_UTILS_MODULES = (
     "config_path",
     "config_warnings",
     "dateutils",
-    "diagnostics",
     "encryption",
     "escaping",
     "global_ident_type",
@@ -501,6 +500,7 @@ COMPONENTS: Mapping[Component, ImportCheckerProtocol] = {
         "cmk.checkengine",
         "cmk.core_client",
         "cmk.discover_plugins",
+        "cmk.diagnostics",
         "cmk.ec",
         "cmk.events",
         "cmk.fetchers",
@@ -585,6 +585,10 @@ COMPONENTS: Mapping[Component, ImportCheckerProtocol] = {
     ),
     Component("cmk.crypto"): _allow(
         *PACKAGE_CCC,
+    ),
+    Component("cmk.diagnostics"): _allow(
+        "cmk.utils.paths",
+        "cmk.ccc.site",
     ),
     Component("cmk.diskspace"): _allow(*PACKAGE_CCC),
     Component("cmk.events"): _allow(
@@ -821,6 +825,7 @@ COMPONENTS: Mapping[Component, ImportCheckerProtocol] = {
         "cmk.automations",
         "cmk.bi",
         "cmk.checkengine",
+        "cmk.diagnostics",
         "cmk.discover_plugins",
         "cmk.diskspace",
         "cmk.fields",
@@ -840,7 +845,6 @@ COMPONENTS: Mapping[Component, ImportCheckerProtocol] = {
         "cmk.utils.config_warnings",
         "cmk.utils.datastructures",
         "cmk.utils.dateutils",
-        "cmk.utils.diagnostics",
         "cmk.utils.encoding",
         "cmk.utils.encryption",
         "cmk.utils.escaping",
@@ -1376,6 +1380,9 @@ COMPONENTS: Mapping[Component, ImportCheckerProtocol] = {
         "cmk.relay_fetcher_trigger",
         "cmk.snmplib",
         "cmk.utils",
+    ),
+    Component("tests.unit.cmk.diagnostics"): _allow(
+        "cmk.diagnostics",
     ),
     Component("tests.unit.cmk"): _allow(
         *PACKAGE_CCC,

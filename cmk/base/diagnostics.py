@@ -48,18 +48,13 @@ from cmk.ccc.hostaddress import HostName
 from cmk.ccc.i18n import _
 from cmk.ccc.site import omd_site
 from cmk.checkengine.plugins import AgentBasedPlugins
-from cmk.inventory.structured_data import (
-    InventoryStore,
-    SDNodeName,
-    serialize_tree,
-)
-from cmk.utils import log
-from cmk.utils.diagnostics import (
+from cmk.diagnostics import (
     CheckmkFileEncryption,
     CheckmkFileInfoByRelFilePathMap,
     CheckmkFilesMap,
     COMPONENT_DIRECTORIES,
     deserialize_cl_parameters,
+    deserialize_modes_parameters,
     DiagnosticsCLParameters,
     DiagnosticsElementCSVResult,
     DiagnosticsElementFilepaths,
@@ -82,6 +77,12 @@ from cmk.utils.diagnostics import (
     OPT_OMD_CONFIG,
     OPT_PERFORMANCE_GRAPHS,
 )
+from cmk.inventory.structured_data import (
+    InventoryStore,
+    SDNodeName,
+    serialize_tree,
+)
+from cmk.utils import log
 from cmk.utils.licensing.usage import deserialize_dump
 from cmk.utils.local_secrets import SiteInternalSecret
 from cmk.utils.log import console, section
@@ -139,7 +140,7 @@ def _make_mode_create_diagnostics_dump(
                 discovery_rulesets=(),
                 get_builtin_host_labels=app.get_builtin_host_labels,
             ).loaded_config,
-            cmk.utils.diagnostics.deserialize_modes_parameters(options),
+            deserialize_modes_parameters(options),
             core_performance_settings,
         )
 

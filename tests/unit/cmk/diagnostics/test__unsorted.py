@@ -4,9 +4,8 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 import pytest
-from pytest_mock import MockerFixture
 
-from cmk.utils import diagnostics
+from cmk import diagnostics
 
 
 def test_diagnostics_serialize_wato_parameters_boolean() -> None:
@@ -18,7 +17,8 @@ def test_diagnostics_serialize_wato_parameters_boolean() -> None:
                     diagnostics.OPT_OMD_CONFIG: "ANY",
                     diagnostics.OPT_CHECKMK_CRASH_REPORTS: "ANY",
                 },
-            }
+            },
+            max_args=4096,
         )
     ) == [
         sorted(
@@ -75,11 +75,12 @@ def test_diagnostics_serialize_wato_parameters_boolean() -> None:
     ],
 )
 def test_diagnostics_serialize_wato_parameters_with_host(
-    mocker: MockerFixture,
     wato_parameters: diagnostics.DiagnosticsParameters,
     expected_parameters: list[list[str]],
 ) -> None:
-    assert diagnostics.serialize_wato_parameters(wato_parameters) == expected_parameters
+    assert (
+        diagnostics.serialize_wato_parameters(wato_parameters, max_args=4096) == expected_parameters
+    )
 
 
 @pytest.mark.parametrize(
@@ -157,12 +158,10 @@ def test_diagnostics_serialize_wato_parameters_with_host(
     ],
 )
 def test_diagnostics_serialize_wato_parameters_files(
-    mocker: MockerFixture,
     wato_parameters: diagnostics.DiagnosticsParameters,
     expected_parameters: list[list[str]],
 ) -> None:
-    mocker.patch("cmk.utils.diagnostics._get_max_args", return_value=5)
-    assert diagnostics.serialize_wato_parameters(wato_parameters) == expected_parameters
+    assert diagnostics.serialize_wato_parameters(wato_parameters, max_args=5) == expected_parameters
 
 
 @pytest.mark.parametrize(

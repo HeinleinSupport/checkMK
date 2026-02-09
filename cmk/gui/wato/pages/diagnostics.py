@@ -22,6 +22,36 @@ import cmk.utils.paths
 from cmk.automations.results import CreateDiagnosticsDumpResult
 from cmk.ccc.archive import CheckmkTarArchive
 from cmk.ccc.site import omd_site, SiteId
+from cmk.diagnostics import (
+    CheckmkFileInfo,
+    CheckmkFileSensitivity,
+    CheckmkFilesMap,
+    DiagnosticsParameters,
+    FILE_MAP_CONFIG,
+    FILE_MAP_CORE,
+    FILE_MAP_LICENSING,
+    FILE_MAP_LOG,
+    get_checkmk_file_description,
+    get_checkmk_file_info,
+    get_checkmk_file_sensitivity_for_humans,
+    OPT_APACHE_CONFIG,
+    OPT_BI_RUNTIME_DATA,
+    OPT_CHECKMK_CONFIG_FILES,
+    OPT_CHECKMK_CRASH_REPORTS,
+    OPT_CHECKMK_LOG_FILES,
+    OPT_CHECKMK_OVERVIEW,
+    OPT_COMP_BUSINESS_INTELLIGENCE,
+    OPT_COMP_CMC,
+    OPT_COMP_GLOBAL_SETTINGS,
+    OPT_COMP_HOSTS_AND_FOLDERS,
+    OPT_COMP_LICENSING,
+    OPT_COMP_NOTIFICATIONS,
+    OPT_LOCAL_FILES,
+    OPT_OMD_CONFIG,
+    OPT_PERFORMANCE_GRAPHS,
+    OSWalk,
+    serialize_wato_parameters,
+)
 from cmk.gui.background_job import (
     BackgroundJob,
     BackgroundJobRegistry,
@@ -78,36 +108,6 @@ from cmk.gui.watolib.automations import (
 from cmk.gui.watolib.check_mk_automations import create_diagnostics_dump
 from cmk.gui.watolib.mode import ModeRegistry, redirect, WatoMode
 from cmk.utils.automation_config import LocalAutomationConfig, RemoteAutomationConfig
-from cmk.utils.diagnostics import (
-    CheckmkFileInfo,
-    CheckmkFileSensitivity,
-    CheckmkFilesMap,
-    DiagnosticsParameters,
-    FILE_MAP_CONFIG,
-    FILE_MAP_CORE,
-    FILE_MAP_LICENSING,
-    FILE_MAP_LOG,
-    get_checkmk_file_description,
-    get_checkmk_file_info,
-    get_checkmk_file_sensitivity_for_humans,
-    OPT_APACHE_CONFIG,
-    OPT_BI_RUNTIME_DATA,
-    OPT_CHECKMK_CONFIG_FILES,
-    OPT_CHECKMK_CRASH_REPORTS,
-    OPT_CHECKMK_LOG_FILES,
-    OPT_CHECKMK_OVERVIEW,
-    OPT_COMP_BUSINESS_INTELLIGENCE,
-    OPT_COMP_CMC,
-    OPT_COMP_GLOBAL_SETTINGS,
-    OPT_COMP_HOSTS_AND_FOLDERS,
-    OPT_COMP_LICENSING,
-    OPT_COMP_NOTIFICATIONS,
-    OPT_LOCAL_FILES,
-    OPT_OMD_CONFIG,
-    OPT_PERFORMANCE_GRAPHS,
-    OSWalk,
-    serialize_wato_parameters,
-)
 
 _FILE_MAPS = [
     FILE_MAP_CONFIG,
@@ -861,7 +861,7 @@ class DiagnosticsDumpBackgroundJob(BackgroundJob):
     ) -> None:
         job_interface.send_progress_update(_("Diagnostics dump started..."))
 
-        chunks = serialize_wato_parameters(diagnostics_parameters)
+        chunks = serialize_wato_parameters(diagnostics_parameters, max_args=_get_max_args())
 
         site = diagnostics_parameters["site"]
         results = []
@@ -918,6 +918,15 @@ class DiagnosticsDumpBackgroundJob(BackgroundJob):
 
         else:
             job_interface.send_result_message(_("Creating dump file failed"))
+
+
+def _get_max_args() -> int:
+    try:
+        # maybe there is a better way, but this seems a reliable source
+        # and a manageable result
+        return int(os.sysconf("SC_PAGESIZES"))
+    except ValueError:
+        return 4096
 
 
 def _merge_results(

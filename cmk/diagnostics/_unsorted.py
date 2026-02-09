@@ -7,7 +7,6 @@
 
 # mypy: disable-error-code="unreachable"
 
-import os
 import re
 from collections.abc import Callable, Iterator, Mapping, Sequence
 from enum import auto, Enum, IntEnum
@@ -115,7 +114,7 @@ COMPONENT_DIRECTORIES = {
 
 
 def serialize_wato_parameters(
-    wato_parameters: DiagnosticsParameters,
+    wato_parameters: DiagnosticsParameters, *, max_args: int
 ) -> list[DiagnosticsCLParameters]:
     # TODO: reduce the number of branches and do the whole procedure in a more generic/elegant way
 
@@ -182,7 +181,7 @@ def serialize_wato_parameters(
     for opt in opts_with_host:
         chunks.append(opt)
 
-    max_args: int = _get_max_args() - 1  # OPT will be appended in for loop
+    max_args = max_args - 1  # OPT will be appended in for loop
     for config_args in [
         sorted(config_files)[i : i + max_args]
         for i in range(0, len(sorted(config_files)), max_args)
@@ -209,17 +208,6 @@ def serialize_wato_parameters(
         chunks.append([])
 
     return chunks
-
-
-def _get_max_args() -> int:
-    try:
-        # maybe there is a better way, but this seems a reliable source
-        # and a manageable result
-        max_args = int(os.sysconf("SC_PAGESIZES"))
-    except ValueError:
-        max_args = 4096
-
-    return max_args
 
 
 def _extract_list_of_files(value: tuple[str, list[str]] | None) -> set[str]:

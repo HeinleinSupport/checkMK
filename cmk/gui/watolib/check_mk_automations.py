@@ -15,6 +15,7 @@ from cmk.automations.results import SetAutochecksInput
 from cmk.ccc.hostaddress import HostName
 from cmk.checkengine.discovery import DiscoverySettings
 from cmk.checkengine.plugins import CheckPluginName
+from cmk.diagnostics import DiagnosticsCLParameters
 from cmk.gui.hooks import request_memoize
 from cmk.gui.i18n import _
 from cmk.gui.watolib.activate_changes import sync_changes_before_remote_automation
@@ -26,7 +27,6 @@ from cmk.gui.watolib.automations import (
 )
 from cmk.gui.watolib.hosts_and_folders import collect_all_hosts
 from cmk.utils.automation_config import LocalAutomationConfig, RemoteAutomationConfig
-from cmk.utils.diagnostics import DiagnosticsCLParameters
 from cmk.utils.labels import HostLabel, Labels
 from cmk.utils.notify import NotificationContext
 from cmk.utils.rulesets.ruleset_matcher import RuleSpec
