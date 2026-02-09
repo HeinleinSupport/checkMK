@@ -344,26 +344,26 @@ export function scroll_window(speed: number) {
 
 export function toggle_sidebar() {
   const sidebar = document.getElementById('check_mk_sidebar')
-  if (has_class(sidebar, 'folded')) unfold_sidebar()
-  else fold_sidebar()
+  if (sidebar) {
+    if (has_class(sidebar, 'folded')) unfold_sidebar()
+    else fold_sidebar()
+  }
 }
 
 export function fold_sidebar() {
   const sidebar = document.getElementById('check_mk_sidebar')
-  add_class(sidebar, 'folded')
-  const button = document.getElementById('side_fold')
-  add_class(button, 'folded')
-
-  call_ajax('sidebar_fold.py?fold=yes', { method: 'POST' })
+  if (sidebar) {
+    add_class(sidebar, 'folded')
+    call_ajax('sidebar_fold.py?fold=yes', { method: 'POST' })
+  }
 }
 
 function unfold_sidebar() {
   const sidebar = document.getElementById('check_mk_sidebar')
-  remove_class(sidebar, 'folded')
-  const button = document.getElementById('side_fold')
-  remove_class(button, 'folded')
-
-  call_ajax('sidebar_fold.py?fold=no', { method: 'POST' })
+  if (sidebar) {
+    remove_class(sidebar, 'folded')
+    call_ajax('sidebar_fold.py?fold=no', { method: 'POST' })
+  }
 }
 
 //
