@@ -54,6 +54,7 @@ def test_check_api_response_codes() -> None:
     overviews = _ApiResponseCodesFactory.build(
         organization_id="123",
         organization_name="Name1",
+        api_enabled=True,
         counts=[
             {"code": 200, "count": 1},
             {"code": 201, "count": 1},
@@ -72,6 +73,7 @@ def test_check_api_response_codes() -> None:
     expected = [
         Result(state=State.OK, notice="Organization name: Name1"),
         Result(state=State.OK, notice="Organization ID: 123"),
+        Result(state=State.OK, summary="Status: enabled"),
         Result(state=State.OK, summary="Code 2xx: 2"),
         Metric("api_code_2xx", 2.0),
         Result(state=State.OK, summary="Code 3xx: 2"),
@@ -89,6 +91,7 @@ def test_check_api_unsupported_response_code() -> None:
     overviews = _ApiResponseCodesFactory.build(
         organization_id="123",
         organization_name="Name1",
+        api_enabled=True,
         counts=[{"code": 900, "count": 1}],
     )
     string_table = [[f"[{json.dumps(overviews)}]"]]
@@ -98,6 +101,26 @@ def test_check_api_unsupported_response_code() -> None:
     expected = [
         Result(state=State.OK, notice="Organization name: Name1"),
         Result(state=State.OK, notice="Organization ID: 123"),
+        Result(state=State.OK, summary="Status: enabled"),
+    ]
+
+    assert value == expected
+
+
+def test_check_api_disabled() -> None:
+    overviews = _ApiResponseCodesFactory.build(
+        organization_id="123",
+        organization_name="Name1",
+        api_enabled=False,
+    )
+    string_table = [[f"[{json.dumps(overviews)}]"]]
+    section = parse_api_response_codes(string_table)
+
+    value = list(check_api_response_codes("Name1/123", section))
+    expected = [
+        Result(state=State.OK, notice="Organization name: Name1"),
+        Result(state=State.OK, notice="Organization ID: 123"),
+        Result(state=State.CRIT, summary="Status: disabled"),
     ]
 
     assert value == expected

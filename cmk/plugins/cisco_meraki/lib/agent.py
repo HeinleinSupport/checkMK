@@ -98,6 +98,7 @@ class MerakiOrganisation:
                 response_codes = ApiResponseCodes(
                     organization_id=self.id,
                     organization_name=self.name,
+                    api_enabled=self.api_enabled,
                     **raw_response_codes,
                 )
                 yield Section(

@@ -38,12 +38,18 @@ class ResponseCodeCount(BaseModel, frozen=True):
 class ResponseCodes(BaseModel, frozen=True):
     organization_id: str
     organization_name: str
+    api_enabled: bool
     counts: list[ResponseCodeCount]
 
     @computed_field
     @property
     def identifier(self) -> str:
         return f"{self.organization_name}/{self.organization_id}"
+
+    @computed_field
+    @property
+    def api_status(self) -> str:
+        return "enabled" if self.api_enabled else "disabled"
 
 
 def parse_api_response_codes(string_table: StringTable) -> Section:
@@ -86,6 +92,11 @@ def check_api_response_codes(item: str, section: Section) -> CheckResult:
 
     yield Result(state=State.OK, notice=f"Organization name: {info.organization_name}")
     yield Result(state=State.OK, notice=f"Organization ID: {info.organization_id}")
+
+    yield Result(
+        state=State.OK if info.api_enabled else State.CRIT,
+        summary=f"Status: {info.api_status}",
+    )
 
     counter: dict[int, int] = defaultdict(int)
 
