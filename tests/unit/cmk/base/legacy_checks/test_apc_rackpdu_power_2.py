@@ -3,21 +3,15 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-
-# NOTE: This file has been created by an LLM (from something that was worse).
-# It mostly serves as test to ensure we don't accidentally break anything.
-# If you encounter something weird in here, do not hesitate to replace this
-# test by something more appropriate.
-
-from collections.abc import Mapping
-from typing import Any
-
-from cmk.base.legacy_checks.apc_rackpdu_power import discover_apc_rackpdu_power
+from cmk.agent_based.v2 import Metric, Result, Service, State
+from cmk.base.legacy_checks.apc_rackpdu_power import (
+    check_apc_rackpdu_power,
+    discover_apc_rackpdu_power,
+)
 from cmk.plugins.collection.agent_based.apc_rackpdu_power import parse_apc_rackpdu_power
 
 
-def parsed() -> Mapping[str, Any]:
-    """Return parsed data from actual parse function."""
+def test_apc_rackpdu_power_discovery() -> None:
     section = parse_apc_rackpdu_power(
         [
             [["pb-n15-115", "420"]],
@@ -25,21 +19,30 @@ def parsed() -> Mapping[str, Any]:
             [["20", "1", "1", "0"], ["10", "1", "0", "1"], ["9", "1", "0", "2"]],
         ]
     )
-    assert section
-    return section
+    assert section is not None
+
+    discoveries = sorted(discover_apc_rackpdu_power(section), key=lambda s: s.item or "")
+    assert discoveries == [
+        Service(item="Bank 1"),
+        Service(item="Bank 2"),
+        Service(item="Device pb-n15-115"),
+    ]
 
 
-def test_apc_rackpdu_power_discovery() -> None:
-    """Test discovery function."""
-    section = parsed()
+def test_apc_rackpdu_power_check_device() -> None:
+    section = parse_apc_rackpdu_power(
+        [
+            [["pb-n15-115", "420"]],
+            [["1"]],
+            [["20", "1", "1", "0"], ["10", "1", "0", "1"], ["9", "1", "0", "2"]],
+        ]
+    )
+    assert section is not None
 
-    discoveries = list(discover_apc_rackpdu_power(section))
-
-    # Should discover device and two banks
-    assert len(discoveries) == 3
-
-    # Extract items from discovery tuples
-    items = [item for item, params in discoveries]
-    assert "Device pb-n15-115" in items
-    assert "Bank 1" in items
-    assert "Bank 2" in items
+    # Device has both power and current (single phase)
+    result = list(check_apc_rackpdu_power("Device pb-n15-115", {}, section))
+    assert any(isinstance(r, Metric) and r.name == "current" for r in result)
+    assert any(isinstance(r, Metric) and r.name == "power" for r in result)
+    assert any(
+        isinstance(r, Result) and r.state == State.OK and "load normal" in r.summary for r in result
+    )
