@@ -12,6 +12,7 @@ from cmk.agent_based.v2 import (
     CheckResult,
     DiscoveryResult,
     get_value_store,
+    IgnoreResultsError,
     Result,
     Service,
     State,
@@ -70,9 +71,12 @@ def check_aix_paging(item: str, params: Mapping[str, Any], section: Section) -> 
     if not (data := section.get(item)):
         return
     avail_mb = data.size_mb * (1 - data.usage_perc / 100.0)
-    yield from df_check_filesystem_single(
-        get_value_store(), item, data.size_mb, avail_mb, 0, None, None, params
-    )
+    try:
+        yield from df_check_filesystem_single(
+            get_value_store(), item, data.size_mb, avail_mb, 0, None, None, params
+        )
+    except IgnoreResultsError:
+        pass
     yield Result(
         state=State.OK, summary=f"Active: {data.active}, Auto: {data.auto}, Type: {data.type_}"
     )
