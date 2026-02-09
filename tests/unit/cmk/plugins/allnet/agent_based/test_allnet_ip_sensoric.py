@@ -6,7 +6,7 @@
 # mypy: disable-error-code="misc"
 
 from cmk.agent_based.v2 import Result, Service
-from cmk.base.legacy_checks.allnet_ip_sensoric import (
+from cmk.plugins.allnet.agent_based.allnet_ip_sensoric import (
     check_allnet_ip_sensoric_humidity,
     check_allnet_ip_sensoric_pressure,
     check_allnet_ip_sensoric_tension,
