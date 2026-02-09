@@ -1,7 +1,6 @@
 """List of legacy check plugin names for backwards compatibility."""
 
 LEGACY_CHECKS = [
-    "apc_rackpdu_power",
     "apc_symmetra_ext_temp",
     "apc_symmetra_input",
     "apc_symmetra_output",

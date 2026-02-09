@@ -4,7 +4,7 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 from cmk.agent_based.v2 import Metric, Result, Service, State
-from cmk.base.legacy_checks.apc_rackpdu_power import (
+from cmk.plugins.apc.agent_based.apc_rackpdu_power import (
     check_apc_rackpdu_power,
     discover_apc_rackpdu_power,
 )
