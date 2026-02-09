@@ -45,8 +45,8 @@ remove_suppression() {
         git checkout $(extract_failed_files "${TMPFILE}" "${st}")
         echo "Changed files: $(git df | wc -l)"
     done
-    # shellcheck disable=SC2046  # we want word splitting here
-    bazel run //:format $(git diff --name-only --pretty=)
+    # we're removing lines before the imports. This is 'reformatting':
+    bazel lint --fix //...
     git commit -am "Remove unnecessary mypy suppression: ${st}"
 }
 
