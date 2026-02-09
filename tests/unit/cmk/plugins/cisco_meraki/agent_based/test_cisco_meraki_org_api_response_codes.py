@@ -11,6 +11,7 @@ from polyfactory.factories import TypedDictFactory
 from cmk.agent_based.v2 import Metric, Result, Service, State, StringTable
 from cmk.plugins.cisco_meraki.agent_based.cisco_meraki_org_api_response_codes import (
     check_api_response_codes,
+    CheckParams,
     discover_api_response_codes,
     parse_api_response_codes,
 )
@@ -47,7 +48,8 @@ def test_discover_api_response_codes() -> None:
 @pytest.mark.parametrize("string_table", [[], [[]], [[""]]])
 def test_check_api_response_codes_no_payload(string_table: StringTable) -> None:
     section = parse_api_response_codes(string_table)
-    assert not list(check_api_response_codes("", section))
+    params = CheckParams(state_api_not_enabled=State.CRIT.value)
+    assert not list(check_api_response_codes("", params, section))
 
 
 def test_check_api_response_codes() -> None:
@@ -68,8 +70,9 @@ def test_check_api_response_codes() -> None:
     )
     string_table = [[f"[{json.dumps(overviews)}]"]]
     section = parse_api_response_codes(string_table)
+    params = CheckParams(state_api_not_enabled=State.CRIT.value)
 
-    value = list(check_api_response_codes("Name1/123", section))
+    value = list(check_api_response_codes("Name1/123", params, section))
     expected = [
         Result(state=State.OK, notice="Organization name: Name1"),
         Result(state=State.OK, notice="Organization ID: 123"),
@@ -103,8 +106,9 @@ def test_check_api_no_response_codes(counts: list[dict[str, int]]) -> None:
     )
     string_table = [[f"[{json.dumps(overviews)}]"]]
     section = parse_api_response_codes(string_table)
+    params = CheckParams(state_api_not_enabled=State.CRIT.value)
 
-    value = list(check_api_response_codes("Name1/123", section))
+    value = list(check_api_response_codes("Name1/123", params, section))
     expected = [
         Result(state=State.OK, notice="Organization name: Name1"),
         Result(state=State.OK, notice="Organization ID: 123"),
@@ -114,7 +118,15 @@ def test_check_api_no_response_codes(counts: list[dict[str, int]]) -> None:
     assert value == expected
 
 
-def test_check_api_disabled() -> None:
+@pytest.mark.parametrize(
+    "state_override",
+    [
+        pytest.param(State.OK.value, id="OK when disabled"),
+        pytest.param(State.WARN.value, id="WARN when disabled"),
+        pytest.param(State.CRIT.value, id="CRIT when disabled"),
+    ],
+)
+def test_check_api_disabled(state_override: int) -> None:
     overviews = _ApiResponseCodesFactory.build(
         organization_id="123",
         organization_name="Name1",
@@ -122,12 +134,13 @@ def test_check_api_disabled() -> None:
     )
     string_table = [[f"[{json.dumps(overviews)}]"]]
     section = parse_api_response_codes(string_table)
+    params = CheckParams(state_api_not_enabled=state_override)
 
-    value = list(check_api_response_codes("Name1/123", section))
+    value = list(check_api_response_codes("Name1/123", params, section))
     expected = [
         Result(state=State.OK, notice="Organization name: Name1"),
         Result(state=State.OK, notice="Organization ID: 123"),
-        Result(state=State.CRIT, summary="Status: disabled"),
+        Result(state=State(state_override), summary="Status: disabled"),
     ]
 
     assert value == expected

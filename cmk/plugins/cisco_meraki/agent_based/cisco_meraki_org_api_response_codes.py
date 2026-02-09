@@ -11,6 +11,7 @@
 import json
 from collections import defaultdict
 from collections.abc import Iterable, Mapping
+from typing import TypedDict
 
 from pydantic import BaseModel, computed_field
 
@@ -73,6 +74,10 @@ def discover_api_response_codes(section: Section) -> DiscoveryResult:
         yield Service(item=identifier)
 
 
+class CheckParams(TypedDict):
+    state_api_not_enabled: int
+
+
 def check_response_code_count_levels(value: int | None, *, code: int) -> Iterable[Result | Metric]:
     if not value:
         return []
@@ -86,7 +91,7 @@ def check_response_code_count_levels(value: int | None, *, code: int) -> Iterabl
     )
 
 
-def check_api_response_codes(item: str, section: Section) -> CheckResult:
+def check_api_response_codes(item: str, params: CheckParams, section: Section) -> CheckResult:
     if (info := section.get(item)) is None:
         return
 
@@ -94,7 +99,7 @@ def check_api_response_codes(item: str, section: Section) -> CheckResult:
     yield Result(state=State.OK, notice=f"Organization ID: {info.organization_id}")
 
     yield Result(
-        state=State.OK if info.api_enabled else State.CRIT,
+        state=State.OK if info.api_enabled else State(params["state_api_not_enabled"]),
         summary=f"Status: {info.api_status}",
     )
 
@@ -120,4 +125,8 @@ check_plugin_cisco_meraki_org_api_response_codes = CheckPlugin(
     service_name="API %s",
     discovery_function=discover_api_response_codes,
     check_function=check_api_response_codes,
+    check_ruleset_name="cisco_meraki_org_api_response_codes",
+    check_default_parameters=CheckParams(
+        state_api_not_enabled=State.CRIT.value,
+    ),
 )
