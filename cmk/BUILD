@@ -189,9 +189,8 @@ filegroup(
 filegroup(
     name = "agents",
     srcs = glob(
-        [
-            "plugins/**/agents/*",
-        ],
+        include = ["plugins/**/agents/**/*"],
+        exclude = ["plugins/**/agents/**/*.py"],
     ),
 )
 
@@ -260,7 +259,6 @@ py_library(
         include = ["**/*.py"],
         exclude = DO_NOT_DEPLOY + [
             "base/legacy_checks/*",
-            "plugins/**/agents/*",
             "**/community/**",
             "**/nonfree/**",
         ],
