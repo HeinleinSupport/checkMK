@@ -9,23 +9,10 @@ import { ref, watch } from 'vue'
 import { RouterView } from 'vue-router'
 import { useRoute } from 'vue-router'
 
-import { immediateWatch } from '@/lib/watch'
-
-import CmkButton from '@/components/CmkButton.vue'
-import CmkToggleButtonGroup from '@/components/CmkToggleButtonGroup.vue'
-
 import DemoNavigation from './DemoNavigation.vue'
-import router from './router'
-
-const selectedTheme = ref<'facelift' | 'modern-dark'>('facelift')
-const selectedCss = ref<'cmk' | 'none'>('cmk')
 
 const currentRoute = useRoute()
 const screenshotMode = ref(currentRoute.query.screenshot === 'true')
-
-async function enableScreenshotMode() {
-  await router.push({ path: currentRoute.path, query: { screenshot: 'true' } })
-}
 
 watch(
   () => currentRoute.query.screenshot,
@@ -33,63 +20,11 @@ watch(
     screenshotMode.value = screenshot === 'true'
   }
 )
-
-async function setTheme(name: 'modern-dark' | 'facelift') {
-  document.getElementsByTagName('body')[0]!.dataset['theme'] = name
-}
-
-async function setCss(name: 'cmk' | 'none') {
-  let url: string
-  if (name === 'none') {
-    url = ''
-  } else {
-    url = (await import(`~cmk-frontend/themes/${selectedTheme.value}/theme.css?url`)).default
-  }
-  ;(document.getElementById('cmk-theming-stylesheet') as HTMLLinkElement).href = url
-}
-
-immediateWatch(
-  () => selectedCss.value,
-  async (name: 'cmk' | 'none') => {
-    selectedCss.value = name
-    await setCss(name)
-    await setTheme(selectedTheme.value)
-  }
-)
-
-immediateWatch(
-  () => selectedTheme.value,
-  async (name: 'facelift' | 'modern-dark') => {
-    selectedTheme.value = name
-    await setCss(selectedCss.value)
-    await setTheme(name)
-  }
-)
 </script>
 
 <template>
   <div v-if="!screenshotMode" class="cmk-vue-app demo-app">
     <div class="demo-app__sidebar">
-      <div class="demo-app__controls">
-        <fieldset>
-          <legend>global styles</legend>
-          <CmkToggleButtonGroup
-            v-model="selectedCss"
-            :options="[
-              { label: 'cmk', value: 'cmk' },
-              { label: 'none', value: 'none' }
-            ]"
-          />
-          <CmkToggleButtonGroup
-            v-model="selectedTheme"
-            :options="[
-              { label: 'light', value: 'facelift' },
-              { label: 'dark', value: 'modern-dark' }
-            ]"
-          />
-          <CmkButton @click="enableScreenshotMode">screenshot mode</CmkButton>
-        </fieldset>
-      </div>
       <DemoNavigation />
     </div>
 
