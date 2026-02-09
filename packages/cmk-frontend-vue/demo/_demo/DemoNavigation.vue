@@ -5,25 +5,32 @@ conditions defined in the file COPYING, which is part of this source code packag
 -->
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
 
 import DemoNavFolder from './DemoNavFolder.vue'
+import DemoSearch from './DemoSearch.vue'
 import { useNavigation } from './useNavigation'
 
 const { navTrees } = useNavigation()
+const isSearching = ref(false)
 </script>
 
 <template>
-  <RouterLink
-    to="/"
-    class="demo-navigation__home-link"
-    active-class="demo-navigation__home-link--active"
-  >
-    Home
-  </RouterLink>
+  <DemoSearch v-model:is-searching="isSearching" :nav-trees="navTrees" />
 
-  <template v-for="navTree in navTrees" :key="navTree.path">
-    <DemoNavFolder :folder="navTree" :is-root="true" />
+  <template v-if="!isSearching">
+    <RouterLink
+      to="/"
+      class="demo-navigation__home-link"
+      active-class="demo-navigation__home-link--active"
+    >
+      Home
+    </RouterLink>
+
+    <template v-for="navTree in navTrees" :key="navTree.path">
+      <DemoNavFolder :folder="navTree" :is-root="true" />
+    </template>
   </template>
 </template>
 
