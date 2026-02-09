@@ -21,7 +21,6 @@ BRANCH_VERSION     := 2.6.0
 BRANCH_NAME_IS_BRANCH_VERSION :=
 
 SHELL              := /bin/bash
-CLANG_VERSION      := 19
 
 PLANTUML_JAR_PATH  := $(REPO_PATH)/third_party/plantuml
 

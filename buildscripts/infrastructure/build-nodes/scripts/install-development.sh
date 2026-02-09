@@ -97,14 +97,12 @@ setup_env_variables() {
     DISTRO_CODENAME=$(lsb_release -cs)
     BRANCH_NAME=$(get_version "$SCRIPT_DIR" BRANCH_NAME)
     BRANCH_VERSION=$(get_version "$SCRIPT_DIR" BRANCH_VERSION)
-    CLANG_VERSION=$(get_version "$SCRIPT_DIR" CLANG_VERSION)
     VIRTUALENV_VERSION=$(get_version "$SCRIPT_DIR" VIRTUALENV_VERSION)
     export DISTRO="${DISTRO_NAME,,}-${VERSION_NUMBER}"
     # export NEXUS_ARCHIVES_URL here (as well) in case no creds have to be collected, e.g. CI build
     export NEXUS_ARCHIVES_URL="https://artifacts.lan.tribe29.com/repository/archives/"
     export BRANCH_NAME
     export BRANCH_VERSION
-    export CLANG_VERSION
     export VIRTUALENV_VERSION
     export DISTRO_NAME
     export VERSION_NUMBER
@@ -116,7 +114,6 @@ setup_env_variables() {
     print_debug "NEXUS_ARCHIVES_URL    = ${NEXUS_ARCHIVES_URL}"
     print_debug "BRANCH_NAME           = ${BRANCH_NAME}"
     print_debug "BRANCH_VERSION        = ${BRANCH_VERSION}"
-    print_debug "CLANG_VERSION         = ${CLANG_VERSION}"
     print_debug "VIRTUALENV_VERSION    = ${VIRTUALENV_VERSION}"
     print_green "Env variables setup done"
 }
