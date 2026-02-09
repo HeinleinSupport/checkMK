@@ -64,7 +64,11 @@ const createMockCards = (): WelcomeCards => ({
   add_custom_dashboard: 'dashboard.py?mode=create',
   all_dashboards: 'dashboard.py',
   mark_step_completed: '/api/welcome/mark_step_completed',
-  get_stage_information: '/api/welcome/get_stage_information'
+  get_stage_information: '/api/welcome/get_stage_information',
+  intro_users: 'https://docs.checkmk.com/2.5.0/en/intro_users.html?origin=checkmk',
+  intro_notifications: 'https://docs.checkmk.com/2.5.0/en/intro_notifications.html?origin=checkmk',
+  setup_folder_structure: 'https://docs.checkmk.com/2.5.0/en/host_structure.html?origin=checkmk',
+  start_page: 'user_profile.py'
 })
 
 test('clicking "Continue exploration" button on sidebar snapin opens slideout with welcome steps', async () => {
