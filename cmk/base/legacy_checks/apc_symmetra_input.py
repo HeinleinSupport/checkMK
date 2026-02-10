@@ -3,34 +3,47 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
+from collections.abc import Mapping
+from typing import Any
 
-
-from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
-from cmk.agent_based.v2 import SNMPTree
-from cmk.base.check_legacy_includes.elphase import check_elphase
+from cmk.agent_based.v2 import (
+    CheckPlugin,
+    CheckResult,
+    DiscoveryResult,
+    Service,
+    SimpleSNMPSection,
+    SNMPTree,
+    StringTable,
+)
 from cmk.plugins.apc.lib_ats import DETECT
-
-check_info = {}
+from cmk.plugins.lib.elphase import check_elphase, ElPhase, ReadingWithState
 
 # .1.3.6.1.4.1.318.1.1.1.3.2.1.0 231
 
+type Section = Mapping[str, ElPhase]
 
-def parse_apc_symmetra_input(string_table):
+
+def parse_apc_symmetra_input(string_table: StringTable) -> Section:
     if not string_table:
         return {}
     return {
-        "Input": {
-            "voltage": float(string_table[0][0]),
-        }
+        "Input": ElPhase(
+            voltage=ReadingWithState(value=float(string_table[0][0])),
+        )
     }
 
 
-def discover_apc_symmetra_input(section):
-    yield from ((item, {}) for item in section)
+def discover_apc_symmetra_input(section: Section) -> DiscoveryResult:
+    yield from (Service(item=item) for item in section)
 
 
-check_info["apc_symmetra_input"] = LegacyCheckDefinition(
+def check_apc_symmetra_input(item: str, params: Mapping[str, Any], section: Section) -> CheckResult:
+    if (data := section.get(item)) is None:
+        return
+    yield from check_elphase(params, data)
+
+
+snmp_section_apc_symmetra_input = SimpleSNMPSection(
     name="apc_symmetra_input",
     detect=DETECT,
     fetch=SNMPTree(
@@ -38,8 +51,14 @@ check_info["apc_symmetra_input"] = LegacyCheckDefinition(
         oids=["1"],
     ),
     parse_function=parse_apc_symmetra_input,
+)
+
+
+check_plugin_apc_symmetra_input = CheckPlugin(
+    name="apc_symmetra_input",
     service_name="Phase %s",
     discovery_function=discover_apc_symmetra_input,
-    check_function=check_elphase,
+    check_function=check_apc_symmetra_input,
     check_ruleset_name="el_inphase",
+    check_default_parameters={},
 )
