@@ -197,6 +197,25 @@ def default_developer_entries() -> list[NavItemTopicEntry]:
                         ),
                     ],
                 ),
+                NavItemTopicEntry(
+                    mode=TopicItemMode.indented,
+                    id="rest_api_unstable",
+                    title=_("Unstable"),
+                    sort_index=30,
+                    entries=[
+                        NavItemTopicEntry(
+                            id="rest_api_unstable_documentation",
+                            title=_("Documentation"),
+                            url="api/unstable/doc/",
+                            target="_blank",
+                            sort_index=10,
+                            icon=EmblemIcon(
+                                icon=DefaultIcon(id=IconNames.global_settings),
+                                emblem="api",
+                            ),
+                        ),
+                    ],
+                ),
             ],
             icon=EmblemIcon(
                 icon=DefaultIcon(id=IconNames.global_settings),
