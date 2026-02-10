@@ -21,6 +21,10 @@ jenkins_build_data.py <Jenkins stage job URL> --include=full-console
 # INCLUDE can be: console,tests,artifacts,stages,full-console
 ```
 
+# Parsing of the downloaded json
+
+Prefer `jq` over `python3` commands.
+
 # In case the commands jenkins_build_data.py is missing
 
 Ask the user to clone the zeug_cmk git repository and add it to their PATH.
