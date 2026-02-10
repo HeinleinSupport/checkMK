@@ -41,20 +41,7 @@ Section = Mapping[str, Backup]
 
 
 def _backup_timestamp(backup_time_readable: str, tz: tzinfo | None) -> datetime | None:
-    """
-    >>> from datetime import datetime, timedelta, timezone
-
-    >>> _backup_timestamp("", timezone.utc) is None
-    True
-    >>> _backup_timestamp("???", timezone.utc) is None
-    True
-
-    >>> _backup_timestamp("2022-05-20 08:00:00", timezone.utc)
-    datetime.datetime(2022, 5, 20, 8, 0, tzinfo=datetime.timezone.utc)
-
-    >>> _backup_timestamp("2022-05-20 08:00:00", timezone(timedelta(seconds=7200), 'CEST'))
-    datetime.datetime(2022, 5, 20, 8, 0, tzinfo=datetime.timezone(datetime.timedelta(seconds=7200), 'CEST'))
-    """
+    """Parse a backup timestamp string, returning None on failure."""
 
     try:
         return datetime.strptime(backup_time_readable, "%Y-%m-%d %H:%M:%S").replace(tzinfo=tz)

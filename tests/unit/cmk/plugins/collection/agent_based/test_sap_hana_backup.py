@@ -3,7 +3,7 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-from datetime import datetime, UTC
+from datetime import datetime, timedelta, timezone, UTC
 from zoneinfo import ZoneInfo
 
 import pytest
@@ -22,6 +22,29 @@ SECTION = {
         message="<ok>",
     )
 }
+
+
+@pytest.mark.parametrize(
+    "backup_time,tz_info,expected",
+    [
+        pytest.param("", UTC, None, id="empty-string"),
+        pytest.param("???", UTC, None, id="invalid-string"),
+        pytest.param(
+            "2022-05-20 08:00:00",
+            UTC,
+            datetime(2022, 5, 20, 8, 0, tzinfo=UTC),
+            id="utc",
+        ),
+        pytest.param(
+            "2022-05-20 08:00:00",
+            timezone(timedelta(seconds=7200), "CEST"),
+            datetime(2022, 5, 20, 8, 0, tzinfo=timezone(timedelta(seconds=7200), "CEST")),
+            id="cest",
+        ),
+    ],
+)
+def test_backup_timestamp(backup_time: str, tz_info: timezone, expected: datetime | None) -> None:
+    assert sap_hana_backup._backup_timestamp(backup_time, tz_info) == expected
 
 
 @pytest.mark.parametrize(
