@@ -70,7 +70,7 @@ The `packages/` directory contains independent subprojects, each with its own `r
 
 We use Bazel as the primary build system with Make for legacy compatibility.
 
-- Use the bazel skill for all testing and linting tasks, except integration and end-to-end tests, which use make
+- **ALWAYS** Use the bazel skill for all testing and linting tasks, except integration and end-to-end tests, which use make
 - Always format, lint and test your code when you are done with a task
 
 <example-legacy-make-tests>
