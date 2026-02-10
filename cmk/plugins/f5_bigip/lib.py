@@ -2,22 +2,7 @@
 # Copyright (C) 2019 Checkmk GmbH - License: GNU General Public License v2
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
-"""F5-BIGIP Commons
-
->>> import re
->>> any(re.match(VERSION_GE_V11_2_PATTERN, v) for v in
-...    ("9.2.5", "10.2.0", "10.2.4", "10.2.4", "11,2.4", "11.2-4"))
-False
->>> all(re.match(VERSION_GE_V11_2_PATTERN, v) for v in
-...    ("11.4.0", "11.4.1", "11.5.1", "11.5.4", "11.6.0", "12.0.0", "12.1.0", "12.1.1", "13.1.0.1"))
-True
->>> any(re.match(VERSION_GE_V11_PATTERN, v) for v in
-...    ("9.2.5", "10.2.0", "10.2.4", "10.99.2", "11-2"))
-False
->>> all(re.match(VERSION_GE_V11_PATTERN, v) for v in
-...    ("11.0.1", "11.4.0", "11.4.1", "11.5.4", "11.6.0", "12.1.0", "12.1.1", "13.1.0.1"))
-True
-"""
+"""F5-BIGIP Commons"""
 
 from typing import Literal, TypedDict
 
