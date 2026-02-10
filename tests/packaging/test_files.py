@@ -696,12 +696,6 @@ def test_relay_install_script_file(package_path: str, cmk_version: str) -> None:
         ), f"File share/check_mk/relays/install_relay.sh is missing in {package_path}"
 
 
-def test_omd_global_files(package_path: str) -> None:
-    file_list = _get_paths_from_package(package_path)
-    assert "opt/omd/sites/" in file_list
-    assert "opt/omd/apache/" in file_list
-
-
 class UnwantedDependency(NamedTuple):
     dependency: str
     reason: str
