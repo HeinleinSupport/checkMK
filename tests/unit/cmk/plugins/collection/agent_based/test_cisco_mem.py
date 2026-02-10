@@ -3,6 +3,7 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
+import re
 from collections.abc import Iterable, Mapping
 
 import pytest
@@ -10,11 +11,33 @@ import pytest
 from cmk.agent_based.v2 import CheckResult, Metric, Result, Service, State, StringTable
 from cmk.plugins.collection.agent_based.cisco_mem import (
     _idem_check_cisco_mem,
+    CISCO_ASA_PRE_V9_PATTERN,
     discovery_cisco_mem,
     MemEntry,
     parse_cisco_mem,
     Section,
 )
+
+
+@pytest.mark.parametrize(
+    "version,expected",
+    [
+        pytest.param("Cisco adaptive security Version 8.2(1)", True, id="v8.2-match"),
+        pytest.param("Cisco adaptive security Version 8.4(2)", True, id="v8.4-match"),
+        pytest.param("cisco adaptive security Version 8.4(3)", True, id="v8.4-lowercase-match"),
+        pytest.param("Cisco adaptive security Version 9.1(5)", False, id="v9.1-no-match"),
+        pytest.param("Cisco adaptive security Version 9.2(4)", False, id="v9.2-no-match"),
+        pytest.param("Cisco adaptive security Version 9.2(4)5", False, id="v9.2-sub-no-match"),
+        pytest.param("Cisco adaptive security Version 9.4(3)8", False, id="v9.4-no-match"),
+        pytest.param("Cisco adaptive security Version 9.5(1)", False, id="v9.5-no-match"),
+        pytest.param("Cisco adaptive security Version 9.9(2)61", False, id="v9.9-no-match"),
+        pytest.param("Cisco adaptive security Version 10.9(1)2", False, id="v10-no-match"),
+        pytest.param("Cisco adaptive security Version 20.9(1)2", False, id="v20-no-match"),
+        pytest.param("cisco Version 8.4(3)", False, id="missing-adaptive-security"),
+    ],
+)
+def test_cisco_asa_pre_v9_pattern(version: str, expected: bool) -> None:
+    assert bool(re.match(CISCO_ASA_PRE_V9_PATTERN, version)) is expected
 
 
 @pytest.mark.parametrize(

@@ -2,28 +2,7 @@
 # Copyright (C) 2019 Checkmk GmbH - License: GNU General Public License v2
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
-"""F5-BIGIP Commons
-
->>> import re
->>> all(re.match(CISCO_ASA_PRE_V9_PATTERN, v) for v in (
-...     "Cisco adaptive security Version 8.2(1)",
-...     "Cisco adaptive security Version 8.4(2)",
-...     "cisco adaptive security Version 8.4(3)",
-... ))
-True
->>> any(re.match(CISCO_ASA_PRE_V9_PATTERN, v) for v in (
-...     "Cisco adaptive security Version 9.1(5)",
-...     "Cisco adaptive security Version 9.2(4)",
-...     "Cisco adaptive security Version 9.2(4)5",
-...     "Cisco adaptive security Version 9.4(3)8",
-...     "Cisco adaptive security Version 9.5(1)",
-...     "Cisco adaptive security Version 9.9(2)61",
-...     "Cisco adaptive security Version 10.9(1)2",
-...     "Cisco adaptive security Version 20.9(1)2",
-...     "cisco Version 8.4(3)",
-... ))
-False
-"""
+"""Cisco memory checks"""
 
 from collections.abc import Mapping, MutableMapping, Sequence
 from dataclasses import dataclass
