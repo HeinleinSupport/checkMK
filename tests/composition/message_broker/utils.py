@@ -133,6 +133,7 @@ def assert_message_exchange_working(site1: Site, site2: Site) -> None:
     time_out_ = 2
     for _ in range(retries):
         with contextlib.suppress(Timeout):
+            purge_queues_messages((site1, site2))  # purge queues to avoid receiving old messages
             with broker_pong(site1):
                 check_broker_ping(site2, site1.id, time_out_=time_out_)
             break
@@ -237,3 +238,28 @@ def rabbitmq_info_on_failure(sites: Sequence[Site]) -> Iterator[None]:
                 error_message += f"Error occurred trying to determine rabbitmq status: {exc}\n"
                 continue
         raise type(e)(error_message) from e
+
+
+def purge_queues_messages(sites: Sequence[Site]) -> None:
+    def _list_sites_queues(site: Site) -> list[str]:
+        try:
+            return (
+                site.run(["rabbitmqctl", "list_queues", "--quiet", "--no-table-headers", "name"])
+                .stdout.strip()
+                .splitlines()
+            )
+        except Exception as e:
+            logger.error("Failed to list RabbitMQ queues on %s: %s", site.id, e)
+            raise
+
+    def _purge_queues(site: Site, queues: list[str]) -> None:
+        for queue in queues:
+            try:
+                logger.info("Purging RabbitMQ queue %s on %s", queue, site.id)
+                site.run(["rabbitmqctl", "purge_queue", queue])
+            except Exception as e:
+                logger.error("Failed to purge RabbitMQ queue %s on %s: %s", queue, site.id, e)
+                raise
+
+    for site in sites:
+        _purge_queues(site, _list_sites_queues(site))
