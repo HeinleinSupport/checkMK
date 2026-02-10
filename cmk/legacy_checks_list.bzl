@@ -1,7 +1,6 @@
 """List of legacy check plugin names for backwards compatibility."""
 
 LEGACY_CHECKS = [
-    "apc_symmetra_input",
     "apc_symmetra_output",
     "appdynamics_memory",
     "appdynamics_sessions",
