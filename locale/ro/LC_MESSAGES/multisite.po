@@ -14439,6 +14439,10 @@ msgid "Cisco Meraki licenses remaining time"
 msgstr "Prezentare generală a licențelor Cisco Meraki Organisation"
 
 #, fuzzy
+msgid "Cisco Meraki organization API"
+msgstr "Afișați starea serviciului"
+
+#, fuzzy
 msgid "Cisco Meraki power supply"
 msgstr "Cisco Meraki"
 
@@ -37818,10 +37822,6 @@ msgstr "Schemă URL invalidă. Trebuie să fie una dintre următoarele: %s"
 msgid "Invalid regex pattern. Expected: %s"
 msgstr "Expresie regulată invalidă: %s."
 
-#, fuzzy, python-format
-msgid "Invalid regex pattern: %s"
-msgstr "Expresie regulată invalidă: %s."
-
 msgid "Invalid regular expression"
 msgstr "Expresie regulată invalidă"
 
@@ -45249,6 +45249,10 @@ msgstr "Starea de monitorizare dacă serviciul este activ"
 #, fuzzy
 msgid "Monitoring state for device state \"online\""
 msgstr "Starea de monitorizare dacă serviciul este activ"
+
+#, fuzzy
+msgid "Monitoring state if API is not enabled"
+msgstr "Starea de monitorizare în cazul în care sarcina nu este activată"
 
 #, fuzzy, python-format
 msgid "Monitoring state if HAProxy server is '%s'"
@@ -95844,7 +95848,7 @@ msgid ""
 msgstr ""
 
 #, fuzzy
-msgid "Applied deshboard %{n} filter"
+msgid "Applied dashboard %{n} filter"
 msgstr "Filtre aplicate:"
 
 #, fuzzy
@@ -96156,6 +96160,16 @@ msgid "Service selection"
 msgstr "Selecția fișierelor"
 
 #, fuzzy
+msgid "Log selection"
+msgstr "Selecția fișierelor"
+
+msgid ""
+"Filters override default/runtime values for this widget only.<br />\n"
+"             Required runtime filters must still be set on the dashboard "
+"level."
+msgstr ""
+
+#, fuzzy
 msgid "Available visualization types"
 msgstr "Opțiuni disponibile"
 
@@ -96375,12 +96389,6 @@ msgstr "Schimbare de stare"
 #, fuzzy
 msgid "Event selection"
 msgstr "Selecția fișierelor"
-
-msgid ""
-"Filters override default/runtime values for this widget only.<br />\n"
-"             Required runtime filters must still be set on the dashboard "
-"level."
-msgstr ""
 
 #, fuzzy
 msgid "Available visualization type"
@@ -96781,9 +96789,6 @@ msgstr "Zona"
 msgid "Stack"
 msgstr "Stive"
 
-msgid "Graph lines (OpenTelemetry)"
-msgstr ""
-
 #, fuzzy
 msgid "Graph lines (Standard)"
 msgstr "Opțiuni grafice"
@@ -96802,6 +96807,9 @@ msgstr "Informații termice"
 #, fuzzy
 msgid "Graph options"
 msgstr "Opțiuni grafice"
+
+msgid "Graph lines (OpenTelemetry)"
+msgstr ""
 
 msgid "Cannot change rule value for rules managed by custom graph editor."
 msgstr ""
@@ -98478,6 +98486,14 @@ msgstr ""
 msgid ""
 "You can still access it later via Help > Learning Checkmk > Welcome page"
 msgstr ""
+
+#, fuzzy, python-format
+#~ msgid "Invalid regex pattern: %s"
+#~ msgstr "Expresie regulată invalidă: %s."
+
+#, fuzzy
+#~ msgid "Applied deshboard %{n} filter"
+#~ msgstr "Filtre aplicate:"
 
 #~ msgid "Absolute commitable memory"
 #~ msgstr "Memorie comutabilă absolută"

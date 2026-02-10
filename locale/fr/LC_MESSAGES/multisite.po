@@ -14478,6 +14478,10 @@ msgid "Cisco Meraki licenses remaining time"
 msgstr "Présentation des licences de l'organisation Cisco Meraki"
 
 #, fuzzy
+msgid "Cisco Meraki organization API"
+msgstr "Afficher l'état du service"
+
+#, fuzzy
 msgid "Cisco Meraki power supply"
 msgstr "Cisco Meraki"
 
@@ -37973,10 +37977,6 @@ msgstr "Schéma d'URL non valide. Doit être l'un de : %s"
 msgid "Invalid regex pattern. Expected: %s"
 msgstr "Expression régulière invalide : %s"
 
-#, fuzzy, python-format
-msgid "Invalid regex pattern: %s"
-msgstr "Expression régulière invalide : %s"
-
 msgid "Invalid regular expression"
 msgstr "Expression régulière invalide"
 
@@ -45463,6 +45463,10 @@ msgstr "État de surveillance si le service est actif"
 #, fuzzy
 msgid "Monitoring state for device state \"online\""
 msgstr "État de surveillance si le service est actif"
+
+#, fuzzy
+msgid "Monitoring state if API is not enabled"
+msgstr "État de surveillance si la tâche n'est pas activée"
 
 #, fuzzy, python-format
 msgid "Monitoring state if HAProxy server is '%s'"
@@ -96390,7 +96394,7 @@ msgid ""
 msgstr ""
 
 #, fuzzy
-msgid "Applied deshboard %{n} filter"
+msgid "Applied dashboard %{n} filter"
 msgstr "Filtres appliqués :"
 
 #, fuzzy
@@ -96702,6 +96706,16 @@ msgid "Service selection"
 msgstr "Sélection des dossiers"
 
 #, fuzzy
+msgid "Log selection"
+msgstr "Sélection des dossiers"
+
+msgid ""
+"Filters override default/runtime values for this widget only.<br />\n"
+"             Required runtime filters must still be set on the dashboard "
+"level."
+msgstr ""
+
+#, fuzzy
 msgid "Available visualization types"
 msgstr "Options disponibles"
 
@@ -96925,12 +96939,6 @@ msgstr "A changé"
 #, fuzzy
 msgid "Event selection"
 msgstr "Sélection des dossiers"
-
-msgid ""
-"Filters override default/runtime values for this widget only.<br />\n"
-"             Required runtime filters must still be set on the dashboard "
-"level."
-msgstr ""
 
 #, fuzzy
 msgid "Available visualization type"
@@ -97329,9 +97337,6 @@ msgstr "Zone"
 msgid "Stack"
 msgstr "Piles"
 
-msgid "Graph lines (OpenTelemetry)"
-msgstr ""
-
 #, fuzzy
 msgid "Graph lines (Standard)"
 msgstr "Options graphiques"
@@ -97350,6 +97355,9 @@ msgstr "Informations thermiques"
 #, fuzzy
 msgid "Graph options"
 msgstr "Options graphiques"
+
+msgid "Graph lines (OpenTelemetry)"
+msgstr ""
 
 msgid "Cannot change rule value for rules managed by custom graph editor."
 msgstr ""
@@ -99019,6 +99027,14 @@ msgstr ""
 msgid ""
 "You can still access it later via Help > Learning Checkmk > Welcome page"
 msgstr ""
+
+#, fuzzy, python-format
+#~ msgid "Invalid regex pattern: %s"
+#~ msgstr "Expression régulière invalide : %s"
+
+#, fuzzy
+#~ msgid "Applied deshboard %{n} filter"
+#~ msgstr "Filtres appliqués :"
 
 #~ msgid "Absolute commitable memory"
 #~ msgstr "Mémoire commutable absolue"

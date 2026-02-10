@@ -13603,6 +13603,10 @@ msgstr "Cisco Meraki Organisation Licensesの概要"
 msgid "Cisco Meraki licenses remaining time"
 msgstr "Cisco Meraki Organisation Licensesの概要"
 
+#, fuzzy
+msgid "Cisco Meraki organization API"
+msgstr "Cisco Meraki デバイスステータス"
+
 msgid "Cisco Meraki power supply"
 msgstr "Cisco Meraki power supply"
 
@@ -35577,10 +35581,6 @@ msgstr ""
 msgid "Invalid regex pattern. Expected: %s"
 msgstr "無効な正規表現: %s"
 
-#, fuzzy, python-format
-msgid "Invalid regex pattern: %s"
-msgstr "無効な正規表現: %s"
-
 msgid "Invalid regular expression"
 msgstr "無効な正規表現"
 
@@ -42660,6 +42660,10 @@ msgstr "デバイス状態 \"オフライン \"の監視状態"
 
 msgid "Monitoring state for device state \"online\""
 msgstr "デバイス状態 \"オンライン \"の監視状態"
+
+#, fuzzy
+msgid "Monitoring state if API is not enabled"
+msgstr "タスクが有効になっていない場合の状態の監視"
 
 #, python-format
 msgid "Monitoring state if HAProxy server is '%s'"
@@ -90025,7 +90029,7 @@ msgid ""
 msgstr ""
 
 #, fuzzy
-msgid "Applied deshboard %{n} filter"
+msgid "Applied dashboard %{n} filter"
 msgstr "適用されたフィルター:"
 
 #, fuzzy
@@ -90336,6 +90340,16 @@ msgid "Service selection"
 msgstr "サイト選択"
 
 #, fuzzy
+msgid "Log selection"
+msgstr "サイト選択"
+
+msgid ""
+"Filters override default/runtime values for this widget only.<br />\n"
+"             Required runtime filters must still be set on the dashboard "
+"level."
+msgstr ""
+
+#, fuzzy
 msgid "Available visualization types"
 msgstr "利用可能なオプション"
 
@@ -90551,12 +90565,6 @@ msgstr "ステータス変更"
 #, fuzzy
 msgid "Event selection"
 msgstr "ファイル選択"
-
-msgid ""
-"Filters override default/runtime values for this widget only.<br />\n"
-"             Required runtime filters must still be set on the dashboard "
-"level."
-msgstr ""
 
 #, fuzzy
 msgid "Available visualization type"
@@ -90946,9 +90954,6 @@ msgstr "範囲"
 msgid "Stack"
 msgstr "スタック"
 
-msgid "Graph lines (OpenTelemetry)"
-msgstr ""
-
 #, fuzzy
 msgid "Graph lines (Standard)"
 msgstr "グラフライン"
@@ -90964,6 +90969,9 @@ msgstr "トランスフォーメーション"
 
 msgid "Graph options"
 msgstr "グラフオプション"
+
+msgid "Graph lines (OpenTelemetry)"
+msgstr ""
 
 #, fuzzy
 msgid "Cannot change rule value for rules managed by custom graph editor."
@@ -92603,6 +92611,14 @@ msgstr ""
 msgid ""
 "You can still access it later via Help > Learning Checkmk > Welcome page"
 msgstr ""
+
+#, fuzzy, python-format
+#~ msgid "Invalid regex pattern: %s"
+#~ msgstr "無効な正規表現: %s"
+
+#, fuzzy
+#~ msgid "Applied deshboard %{n} filter"
+#~ msgstr "適用されたフィルター:"
 
 #~ msgid "Absolute commitable memory"
 #~ msgstr "絶対コミット可能メモリ"
