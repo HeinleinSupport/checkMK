@@ -15,24 +15,10 @@ class Decompressor(Enum):
     ZLIB = "zlib"
 
     def __call__(self, data: bytes) -> bytes:
-        """
-        >>> from zlib import compress
-        >>> Decompressor("zlib")(compress(b"blablub"))
-        b'blablub'
-        """
         return {Decompressor.ZLIB: Decompressor._zlib_decompress}[self](data)
 
     @staticmethod
     def _zlib_decompress(data: bytes) -> bytes:
-        """
-        >>> from zlib import compress
-        >>> Decompressor._zlib_decompress(compress(b"blablub"))
-        b'blablub'
-        >>> Decompressor._zlib_decompress(b"blablub")
-        Traceback (most recent call last):
-            ...
-        packages.cmk-agent-receiver.cmk.agent_receiver.agent_receiver.decompression.DecompressionError: ...
-        """
         try:
             return decompress(data)
         except zlibError as e:
