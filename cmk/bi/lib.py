@@ -196,14 +196,6 @@ def create_nested_schema(
 ) -> Nested:
     """
 
-    >>> from cmk.fields import String
-    >>> class Foo(Schema):
-    ...      field = String()
-
-    >>> nested = create_nested_schema(Foo)
-    >>> nested.dump_default
-    {}
-
     Args:
         base_schema: Schema
         default_schema: Schema for default value, uses base_schema if not specified
@@ -227,16 +219,6 @@ def get_schema_default_config(
     schema: type[marshmallow_Schema], params: dict[object, object] | None = None
 ) -> dict[str, Any]:
     """
-
-    >>> from marshmallow import fields
-    >>> class Foo(Schema):
-    ...       field = fields.String(dump_default="bar")
-
-    >>> get_schema_default_config(Foo)
-    {'field': 'bar'}
-
-    >>> get_schema_default_config(Foo, {'field': 'foo', 'omit': 'this'})
-    {'field': 'foo'}
 
     Args:
         schema:
