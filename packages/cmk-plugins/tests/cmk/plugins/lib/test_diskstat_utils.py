@@ -9,7 +9,7 @@
 
 import datetime
 import time
-from collections.abc import Iterable, Mapping
+from collections.abc import Iterable, Mapping, MutableMapping
 from typing import Any
 from zoneinfo import ZoneInfo
 
@@ -381,9 +381,15 @@ def test_summarize_disks(
             },
             DISK,
             [
-                Result(state=State.CRIT, notice="Utilization: 53.24% (warn/crit at 10.00%/20.00%)"),
+                Result(
+                    state=State.CRIT,
+                    notice="Utilization: 53.24% (warn/crit at 10.00%/20.00%)",
+                ),
                 Metric("disk_utilization", 0.53242, levels=(0.1, 0.2)),
-                Result(state=State.CRIT, summary="Read: 12.3 kB/s (warn/crit at 10.0 B/s/100 B/s)"),
+                Result(
+                    state=State.CRIT,
+                    summary="Read: 12.3 kB/s (warn/crit at 10.0 B/s/100 B/s)",
+                ),
                 Metric("disk_read_throughput", 12312.4324, levels=(10.0, 100.0)),
                 Result(
                     state=State.CRIT,
@@ -469,9 +475,49 @@ def test_check_diskstat_dict(
         ),
     ) == [
         *(
-            [Result(state=State.OK, notice="All values averaged over 5 minutes 0 seconds")]
+            [
+                Result(
+                    state=State.OK,
+                    notice="All values averaged over 5 minutes 0 seconds",
+                )
+            ]
             if expected
             else []
         ),
         *expected,
     ]
+
+
+def test_compute_rates() -> None:
+    value_store: dict[str, Any] = {}
+    disk = {"read_throughput": 60000, "write_throughput": 0}
+
+    with pytest.raises(IgnoreResultsError):
+        diskstat.compute_rates(disk=disk, value_store=value_store, this_time=0)
+
+    disk_next = {"read_throughput": 61024, "write_throughput": 1024 * 1024}
+    result = diskstat.compute_rates(disk=disk_next, value_store=value_store, this_time=10)
+    assert result == {"read_throughput": 102.4, "write_throughput": 104857.6}
+
+
+def test_compute_rates_multiple_disks_2() -> None:
+    value_store: dict[str, Any] = {}
+    this_time = 0
+    disks = {"sda": {"read_ios": 11}, "sdb": {"read_ios": 22}}
+
+    def single_disk_rate_computer(
+        disk_absolute: Mapping[str, Any], vs: MutableMapping[str, Any], suffix: str
+    ) -> Mapping[str, Any]:
+        return diskstat.compute_rates(
+            disk=disk_absolute, value_store=vs, disk_name=suffix, this_time=this_time
+        )
+
+    with pytest.raises(IgnoreResultsError):
+        diskstat.compute_rates_multiple_disks(disks, value_store, single_disk_rate_computer)
+
+    this_time = 10
+    disks_next = {"sda": {"read_ios": 22}, "sdb": {"read_ios": 44}}
+    result = diskstat.compute_rates_multiple_disks(
+        disks_next, value_store, single_disk_rate_computer
+    )
+    assert result == {"sda": {"read_ios": 1.1}, "sdb": {"read_ios": 2.2}}

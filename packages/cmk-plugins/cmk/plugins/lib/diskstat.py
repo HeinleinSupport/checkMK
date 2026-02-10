@@ -9,7 +9,14 @@
 
 import re
 from collections import defaultdict
-from collections.abc import Callable, Generator, Iterable, Mapping, MutableMapping, Sequence
+from collections.abc import (
+    Callable,
+    Generator,
+    Iterable,
+    Mapping,
+    MutableMapping,
+    Sequence,
+)
 from dataclasses import dataclass
 from typing import Any, TypedDict
 
@@ -93,25 +100,6 @@ def compute_rates_multiple_disks(
                 'read_ios' of multiple disks, the key will be suffixed with the
                 disk name before asking get_rate for the values.
             return value: dictionary with relative disk stats: {'read_ios': 1}
-
-    Example:
-        >>> from contextlib import suppress
-        >>> VALUE_STORE = {}  # normally obtained via get_value_store()
-        >>> THIS_TIME = 0  # either read from section or time.time()
-        >>> DISKS_ABSOLUTE = {'sda': {'read_ios': 11}, 'sdb': {'read_ios': 22}}
-        >>> def single_disk_rate_computer(disk_absolute, value_store, value_store_suffix):
-        ...     return compute_rates(  # or use your own function
-        ...         disk=disk_absolute,
-        ...         value_store=value_store,
-        ...         disk_name=value_store_suffix,
-        ...         this_time=THIS_TIME)
-        >>> with suppress(IgnoreResultsError):
-        ...     # first computation will throw error as value_store is empty
-        ...     compute_rates_multiple_disks(DISKS_ABSOLUTE, VALUE_STORE, single_disk_rate_computer)
-        >>> THIS_TIME = 10
-        >>> DISKS_ABSOLUTE = {'sda': {'read_ios': 22}, 'sdb': {'read_ios': 44}}
-        >>> compute_rates_multiple_disks(DISKS_ABSOLUTE, VALUE_STORE, single_disk_rate_computer)
-        {'sda': {'read_ios': 1.1}, 'sdb': {'read_ios': 2.2}}
 
     This may be used as input for summarize_disks.
     """
@@ -351,17 +339,6 @@ def compute_rates(
         disk_name: Can be empty when used for a single disk item, if item ==
             'SUMMARIZE' the disk_name must hold the item name of the disk.
 
-    Example:
-        >>> from contextlib import suppress
-        >>> VALUE_STORE = {} # use the real value_store via get_value_store()
-        >>> DISK = {"read_throughput": 60000, "write_throughput": 0}
-        >>> with suppress(IgnoreResultsError):
-        ...     # first computation will throw error as value_store is empty
-        ...     compute_rates(disk=DISK, value_store=VALUE_STORE, this_time=0)
-        >>> DISK = {"read_throughput": 61024, "write_throughput": 1024*1024}
-        >>> compute_rates(disk=DISK, value_store=VALUE_STORE, this_time=10)
-        {'read_throughput': 102.4, 'write_throughput': 104857.6}
-
     """
     disk_with_rates = {}
     initialized = []
@@ -460,7 +437,11 @@ def check_diskstat_dict(
     this_time: float,
 ) -> CheckResult:
     return _check_diskstat_dict(
-        params=params, disk=disk, value_store=value_store, this_time=this_time, metrics=_METRICS
+        params=params,
+        disk=disk,
+        value_store=value_store,
+        this_time=this_time,
+        metrics=_METRICS,
     )
 
 
