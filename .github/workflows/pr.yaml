@@ -19,6 +19,7 @@ jobs:
             BAZEL_CACHE_URL: ""
             # Needed by "make .venv" to compute PYTHON_REQUIREMENTS_TEST
             EDITION: community
+        timeout-minutes: 90
         strategy:
             matrix:
                 os: [ubuntu-latest-m]
