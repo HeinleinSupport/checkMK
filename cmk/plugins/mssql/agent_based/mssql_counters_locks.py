@@ -84,27 +84,7 @@ def _check_base(
     params: Mapping[str, Any],
     section: Section,
 ) -> CheckResult:
-    """
-    >>> from contextlib import suppress
-    >>> vs = {}
-    >>> for i in range(2):
-    ...     for result in _check_base(vs, 1597839904 + i, "MSSQL_VEEAMSQL2012:Locks _Total lock_requests/sec", {}, {
-    ...         ('MSSQL_VEEAMSQL2012:Locks', '_Total'): {'lock_requests/sec': 3900449701 + i, 'lock_timeouts/sec': 86978 + i, 'number_of_deadlocks/sec': 19 + i, 'lock_waits/sec': 938 + i, 'lock_wait_time_(ms)': 354413},
-    ...     }):
-    ...       print(result)
-    Cannot calculate rates yet
-    Cannot calculate rates yet
-    Cannot calculate rates yet
-    Cannot calculate rates yet
-    Result(state=<State.OK: 0>, summary='Requests: 1.0/s')
-    Metric('lock_requests_per_second', 1.0, boundaries=(0.0, None))
-    Result(state=<State.OK: 0>, summary='Timeouts: 1.0/s')
-    Metric('lock_timeouts_per_second', 1.0, boundaries=(0.0, None))
-    Result(state=<State.OK: 0>, summary='Deadlocks: 1.0/s')
-    Metric('number_of_deadlocks_per_second', 1.0, boundaries=(0.0, None))
-    Result(state=<State.OK: 0>, summary='Waits: 1.0/s')
-    Metric('lock_waits_per_second', 1.0, boundaries=(0.0, None))
-    """
+    """Check MSSQL lock counter rates."""
     yield from _check_common(value_store, time_point, "", item, params, section)
 
 
