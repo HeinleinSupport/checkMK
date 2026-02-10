@@ -48,6 +48,10 @@ jobs:
                   done
                   declare -i used_disk_after=$(df --block-size=$((1024*1024)) --output="used" / | tail -n 1)
                   echo "Saved disk space: $(((used_disk_before-used_disk_after)/1024))G"
+            - name: "Print OS information"
+              run: |
+                  echo ${{ matrix.os }}
+                  cat /etc/os-release
             - name: Set Environment Variables
               run: |
                   # Using existing environment variables within another variables is not working in the jobs.*.env section
