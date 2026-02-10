@@ -646,7 +646,8 @@ fn _prepare_register_updater_cmd(
         .arg(updater_registration_config.protocol.as_str())
         // this is a temporary solution, will be replaced with a more secure one in the future
         .arg("--password-file")
-        .arg(password_file_path);
+        .arg(password_file_path)
+        .arg("--non-interactive");
     cmd.stdin(std::process::Stdio::null());
     Ok(cmd)
 }
@@ -1445,6 +1446,7 @@ mod tests {
                 "http",
                 "--password-file",
                 test_password_file.to_str().unwrap(),
+                "--non-interactive",
             ];
             #[cfg(unix)]
             let expected_args = [
@@ -1461,6 +1463,7 @@ mod tests {
                 "http",
                 "--password-file",
                 test_password_file.to_str().unwrap(),
+                "--non-interactive",
             ];
 
             assert_eq!(cmd.get_program(), CMK_UPDATE_AGENT_CMD);
