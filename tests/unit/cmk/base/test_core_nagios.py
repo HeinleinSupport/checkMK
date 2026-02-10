@@ -23,12 +23,13 @@ from pytest import MonkeyPatch
 
 import cmk.ccc.debug
 import cmk.ccc.version as cmk_version
-import cmk.plugins.collection.server_side_calls.ftp
-from cmk.base import config
 
 # We need an active check plugin that exists.
 # The ExecutableFinder demands a location that exits :-/
 # We're importing it here, so that this fails the linters if that is removed.
+# TODO: implement a dedicated minimal plugin
+import cmk.plugins.monitoring_plugins.server_side_calls.ftp
+from cmk.base import config
 from cmk.base.app import make_app
 from cmk.base.configlib.servicename import make_final_service_name_config
 from cmk.base.core.nagios._create_config import (
@@ -56,7 +57,7 @@ from tests.testlib.unit.base_configuration_scenario import Scenario
 from tests.unit.cmk.base.empty_config import EMPTY_CONFIG
 
 _TEST_LOCATION = PluginLocation(
-    cmk.plugins.collection.server_side_calls.ftp.__name__,
+    cmk.plugins.monitoring_plugins.server_side_calls.ftp.__name__,
     "yolo",
 )
 

@@ -14,16 +14,17 @@ import pytest
 
 import cmk.ccc.debug
 import cmk.ccc.resulttype as result
-import cmk.plugins.collection.server_side_calls.ftp
+
+# We need an active check plugin that exists.
+# The ExecutableFinder demands a location that exits :-/
+# We're importing it here, so that this fails the linters if that is removed.
+# TODO: implement a dedicated minimal plugin
+import cmk.plugins.monitoring_plugins.server_side_calls.ftp
 from cmk.automations import results as automation_results
 from cmk.automations.results import DiagHostResult
 from cmk.base import config
 from cmk.base.app import make_app
 from cmk.base.automations import check_mk
-
-# We need an active check plugin that exists.
-# The ExecutableFinder demands a location that exits :-/
-# We're importing it here, so that this fails the linters if that is removed.
 from cmk.base.automations.automations import AutomationContext
 from cmk.base.config import ConfigCache
 from cmk.ccc.hostaddress import HostAddress, HostName
@@ -45,7 +46,7 @@ from tests.testlib.unit.base_configuration_scenario import Scenario
 from tests.unit.cmk.base.empty_config import EMPTY_CONFIG
 
 _TEST_LOCATION = PluginLocation(
-    cmk.plugins.collection.server_side_calls.ftp.__name__,
+    cmk.plugins.monitoring_plugins.server_side_calls.ftp.__name__,
     "yolo",
 )
 

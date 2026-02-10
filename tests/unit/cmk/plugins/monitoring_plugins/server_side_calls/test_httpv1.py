@@ -10,7 +10,7 @@ from typing import Any
 
 import pytest
 
-from cmk.plugins.collection.server_side_calls.httpv1 import (
+from cmk.plugins.monitoring_plugins.server_side_calls.httpv1 import (
     active_check_http,
     check_http_description,
     HttpParams,
