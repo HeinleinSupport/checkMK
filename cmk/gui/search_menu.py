@@ -45,7 +45,7 @@ def register(mega_menu_registry: MainMenuRegistry) -> None:
             sort_index=1,
             topics=None,
             set_focus_on_element_by_id="unified-search-input",
-            shortcut=NavItemShortcut(key="k", alt=True),
+            shortcut=NavItemShortcut(key="k", ctrl=True),
             get_vue_app=_get_unified_search_app,
             hint=_("Search accross Checkmk"),
         )
