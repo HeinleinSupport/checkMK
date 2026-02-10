@@ -6,7 +6,7 @@ import re
 
 import pytest
 
-from cmk.ccc.regex import combine_patterns
+from cmk.ccc.regex import combine_patterns, unescape
 
 
 @pytest.mark.parametrize(
@@ -64,3 +64,16 @@ def test_combined_pattern_matching(
 ) -> None:
     combined_pattern = combine_patterns(patterns)
     assert bool(re.match(combined_pattern, text)) == expected
+
+
+@pytest.mark.parametrize(
+    "original",
+    [
+        r"a b c",
+        r"http://abc.de/",
+        r"\\u\n\c",
+        r"ä b .*(C)",
+    ],
+)
+def test_unescape_round_trip(original: str) -> None:
+    assert unescape(re.escape(original)) == original
