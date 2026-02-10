@@ -16,44 +16,31 @@ def log_duration[**P, R](
     level: Literal["debug", "info", "warning", "critical"],
     print_params: bool = False,
 ) -> Callable[[Callable[P, R]], Callable[P, R]]:
-    """
-    Decorator factory for logging how long a function takes to run.
+    """Decorator factory for logging how long a function takes to run.
 
     A common pattern for this utility would be to create an instance in your package that
-    wraps the local logger:
+    wraps the local logger::
 
-    >>> import logging
-    >>> log_duration_debug = log_duration(logger=logging.getLogger("fetcher"), level="debug")
+        log_duration_debug = log_duration(logger=logging.getLogger("fetcher"), level="debug")
 
     Here we are specifying the log level, but you could make this a partial and then pass the log
-    level later. With the decorator instance, you can wrap the function definition like so:
+    level later. With the decorator instance, you can wrap the function definition like so::
 
-    >>> @log_duration_debug
-    ... def fetch_site_names() -> list[str]:
-    ...     return ["heute"]
+        @log_duration_debug
+        def fetch_site_names() -> list[str]:
+            return ["heute"]
 
-    Calling `fetch_site_names()` will then produce the following log output:
+    Calling ``fetch_site_names()`` will then produce the following log output::
 
-    ```
-    CALLING path.to.module.fetch_site_names …
-    FINISHED path.to.module.fetch_site_names (3.02142s)
-    ```
+        CALLING path.to.module.fetch_site_names …
+        FINISHED path.to.module.fetch_site_names (3.02142s)
 
-    Alternatively, you can wrap an existing function like a builtin function or third party library:
+    Alternatively, you can wrap an existing function like a builtin function or third party
+    library::
 
-    >>> log_duration_debug(len)(fetch_site_names())
-    1
+        log_duration_debug(len)(fetch_site_names())  # returns 1
 
-    This call outputs the following log:
-
-    ```
-    CALLING builtins.len …
-    CALLING path.to.module.fetch_site_names …
-    FINISHED path.to.module.fetch_site_names (3.02142s)
-    FINISHED builtins.len (4.03982s)
-    ```
-
-    If you want to see what parameters were passed to the function, set the `print_params=True`.
+    If you want to see what parameters were passed to the function, set the ``print_params=True``.
 
     The main goal of this utility is to offer an easy, consistent way to log the duration of known
     bottlenecks in the source code. This decorator may also be useful to you when debugging a live
