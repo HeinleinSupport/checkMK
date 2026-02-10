@@ -68,6 +68,7 @@ During Commit 1, the plugin lives in the old location but uses the new API. To m
      - Use f-strings instead of `%` or `.format()`
      - Remove `parameters=None` (it's the default)
    - **Other improvements**: Apply modern Python idioms as needed
+   - **Human in the loop**: Avoid changes like reorderings that increase the diff
 
 3. **Temporarily enable plugin discovery**:
    - Edit `cmk/checkengine/plugin_backend/_discover.py`
