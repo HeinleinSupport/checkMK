@@ -104,6 +104,12 @@ build_test(
     targets = [":mk-oracle"],
 )
 
+genrule(
+    name = "test-runtime-dir",
+    outs = ["runtimes/plugins/packages/mk-oracle/.marker"],
+    cmd = "mkdir -p $$(dirname $@) && touch $@",
+)
+
 rust_test(
     name = "mk-oracle-lib-test-internal",
     compile_data = [
@@ -114,9 +120,12 @@ rust_test(
         "tests/files/endpoints.txt",
     ],
     crate = ":mk-oracle-lib",
-    env_inherit = [
-        "MK_CONFDIR",
+    data = [
+        ":test-runtime-dir",
     ],
+    env = {
+        "MK_CONFDIR": "packages/mk-oracle",
+    },
 )
 
 rust_library(
@@ -156,6 +165,7 @@ rust_test_suite(
         "MK_CONFDIR",
         "MK_LIBDIR",
     ],
+    tags = ["component"],
     deps = all_crate_deps() + [
         ":mk-oracle",
         ":mk-oracle-lib",

@@ -203,7 +203,6 @@ STAGES:
               --keep_going \
               --//:use_faked_artifacts=true \
               -- //... \
-              -//packages/mk-oracle/... \
               -//packages/livestatus/... \
               -//packages/neb/... \
               -//packages/unixcat/... \
@@ -406,7 +405,7 @@ STAGES:
           - "CI_TEST_SQL_DB_ENDPOINT"
           - "CI_ORA2_DB_TEST_PASSWORD"
       DIR: "packages/mk-oracle"
-      COMMAND: "./run --unit-tests --component-tests"
+      COMMAND: "./run --component-tests"
       BAZEL_LOCKS_AMOUNT: 1
       TEXT_ON_SKIP: "No mk-oracle files changed"
       RESULT_CHECK_FILE_PATTERN: "mk-oracle.txt"
