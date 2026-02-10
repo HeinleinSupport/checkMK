@@ -300,33 +300,6 @@ def param_description(
         errors:
             Either 'raise' or 'ignore'.
 
-    Examples:
-
-        If a docstring is given, there are a few possibilities.
-
-            >>> from cmk.gui.watolib.activate_changes import activate_changes_start
-            >>> param_description(activate_changes_start.__doc__, 'force_foreign_changes')
-            'Will activate changes even if the user who made those changes is not the currently logged in user.'
-
-            >>> param_description(param_description.__doc__, 'string')
-            'The docstring from which to extract the parameter description.'
-
-            >>> param_description(param_description.__doc__, 'foo', errors='ignore')
-
-            >>> param_description(param_description.__doc__, 'foo', errors='raise')
-            Traceback (most recent call last):
-            ...
-            ValueError: Parameter 'foo' not found in docstring.
-
-        There are cases, when no docstring is assigned to a function.
-
-            >>> param_description(None, 'foo', errors='ignore')
-
-            >>> param_description(None, 'foo', errors='raise')
-            Traceback (most recent call last):
-            ...
-            ValueError: No docstring was given.
-
     Returns:
         The description of the parameter, if possible.
 

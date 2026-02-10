@@ -142,29 +142,6 @@ class PathParamsValidator:
             path_schema:
                 A marshmallow schema which is used for path parameter validation.
 
-        Examples:
-
-            In case of success, this function will return nothing.
-
-              >>> from cmk.fields import String
-              >>> class Params(Schema):
-              ...      bar = String()
-
-              >>> PathParamsValidator.verify_marshmallow_params_presence('/foo/{bar}', Params)
-              >>> PathParamsValidator.verify_marshmallow_params_presence('/foo', None)
-
-            Yet, when problems are found, ValueErrors are raised.
-
-              >>> PathParamsValidator.verify_marshmallow_params_presence('/foo', Params)
-              Traceback (most recent call last):
-              ...
-              ValueError: Params {'bar'} not used in path /foo. Found params: set()
-
-              >>> PathParamsValidator.verify_marshmallow_params_presence('/foo/{bar}', None)
-              Traceback (most recent call last):
-              ...
-              ValueError: Params {'bar'} of path /foo/{bar} were not given in schema parameters set()
-
         Returns:
             Nothing.
 

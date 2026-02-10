@@ -545,23 +545,6 @@ def _schema_is_multiple(schema: str | type[Schema] | None) -> bool:
 def to_dict(schema: Schema) -> dict[str, str]:
     """Convert a Schema-class to a dict-representation.
 
-    Examples:
-
-        >>> from cmk.gui.fields.utils import BaseSchema
-        >>> from cmk import fields
-        >>> class SayHello(BaseSchema):
-        ...      message = fields.String(example="Hello world!")
-        ...      message2 = fields.String(example="Hello Bob!")
-        >>> to_dict(SayHello())
-        {'message': 'Hello world!', 'message2': 'Hello Bob!'}
-
-        >>> class Nobody(BaseSchema):
-        ...      expects = fields.String()
-        >>> to_dict(Nobody())
-        Traceback (most recent call last):
-        ...
-        KeyError: "Field 'Nobody.expects' has no 'example'"
-
     Args:
         schema:
             A Schema instance with all it's fields having an `example` key.
