@@ -225,8 +225,6 @@ def pytest_internalerror(excinfo: pytest.ExceptionInfo[BaseException]) -> None:
         raise excinfo.value
 
 
-collect_ignore: list[str] = []
-
 # Faker creates a bunch of annoying DEBUG level log entries, which clutter the output of test
 # runs and prevent us from spot the important messages easily. Reduce the Reduce the log level
 # selectively.
@@ -348,10 +346,6 @@ def pytest_configure(config: pytest.Config) -> None:
     config.stash[metadata_key]["Variables"] = (
         "<ul><li>\n" + ("</li><li>\n".join(env_lines)) + "</li></ul>"
     )
-
-    # Exclude schemathesis_openapi tests from global collection
-    global collect_ignore
-    collect_ignore = ["schemathesis_openapi"]
 
     config.addinivalue_line(
         "markers",

@@ -463,22 +463,6 @@ py_library(
 )
 
 py_library(
-    name = "schemathesis_openapi",
-    testonly = True,
-    srcs = glob(
-        include = ["schemathesis_openapi/**/*.py"],
-    ),
-    imports = [".."],
-    deps = [
-        requirement("pytest"),
-        requirement("schemathesis"),
-        requirement("hypothesis"),
-        requirement("requests"),
-        ":testlib",
-    ],
-)
-
-py_library(
     name = "typeshed",
     testonly = True,
     srcs = glob(
