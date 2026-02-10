@@ -1,24 +1,16 @@
 load("@aspect_rules_py//py:defs.bzl", "py_binary", "py_library", "py_pytest_main")
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("@cmk_requirements//:requirements.bzl", "requirement")
-load("@rules_pkg//pkg:mappings.bzl", "pkg_files")
-load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
 load("@rules_python//python:packaging.bzl", "py_wheel")
 load("//bazel/rules:doctest.bzl", "py_doc_test")
 load("//bazel/rules:package_wheel.bzl", "package_wheel")
-
-# To update the list run the following command:
-# echo "LEGACY_CHECKS = [" > legacy_checks_list.bzl;for F in $(ls *.py); do echo $F | sed 's/\(.*\)\.py/    "\1",/' >> legacy_checks_list.bzl; done; echo "]" >> legacy_checks_list.bzl
-load("legacy_checks_list.bzl", "LEGACY_CHECKS")
-
-LEGACY_CHECKS_DICT = {"base/legacy_checks/" + name + ".py": name for name in LEGACY_CHECKS}
 
 exports_files([
     "requirements.in",
     "utils/password_store/cli.py",
     "gui/openapi/spec/spec_generator/generate_api_spec.py",
     "product_usage/cmk_product_usage_cli.py",
-] + LEGACY_CHECKS_DICT.keys())
+])
 
 REQUIRED_EXTERNAL_DEPS = [
     # alphabetical order
@@ -257,7 +249,6 @@ py_library(
     srcs = glob(
         include = ["**/*.py"],
         exclude = [
-            "base/legacy_checks/*",
             "**/community/**",
             "**/nonfree/**",
         ],
@@ -505,20 +496,6 @@ py_binary(
         ":cmk_ultimatemt",
         requirement("pyyaml"),
     ],
-)
-
-pkg_files(
-    name = "legacy_checks_pkg",
-    srcs = LEGACY_CHECKS_DICT.keys(),
-    prefix = "share/check_mk/checks",
-    renames = LEGACY_CHECKS_DICT,
-)
-
-pkg_tar(
-    name = "legacy_checks",
-    srcs = ["legacy_checks_pkg"],
-    stamp = 1,
-    visibility = ["//omd:__pkg__"],
 )
 
 sh_library(

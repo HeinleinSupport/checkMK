@@ -3,20 +3,14 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-from pathlib import Path
 
-import cmk.ccc.debug
-import cmk.crypto.password_hashing
-import cmk.utils.caching
-import cmk.utils.paths
-from cmk.agent_based.legacy import discover_legacy_checks, FileLoader, find_plugin_files
+from cmk.agent_based.legacy import discover_legacy_checks, find_legacy_check_modules
 from cmk.utils.licensing.handler import (
     LicenseState,
     LicensingHandler,
     NotificationHandler,
     UserEffect,
 )
-from tests.testlib.common.repo import repo_path
 
 
 class FixPluginLegacy:
@@ -24,11 +18,7 @@ class FixPluginLegacy:
 
     def __init__(self) -> None:
         result = discover_legacy_checks(
-            find_plugin_files(repo_path() / "cmk/base/legacy_checks"),
-            FileLoader(
-                precomile_path=cmk.utils.paths.precompiled_checks_dir,
-                makedirs=lambda path: Path(path).mkdir(mode=0o770, exist_ok=True, parents=True),
-            ),
+            find_legacy_check_modules(),
             raise_errors=True,
         )
         self.check_info = {p.name: p for p in result.sane_check_info}

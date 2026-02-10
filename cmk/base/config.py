@@ -46,7 +46,7 @@ import cmk.utils
 import cmk.utils.paths
 import cmk.utils.tags
 from cmk import trace
-from cmk.agent_based.legacy import discover_legacy_checks, FileLoader, find_plugin_files
+from cmk.agent_based.legacy import discover_legacy_checks, find_legacy_check_modules
 from cmk.base import default_config
 from cmk.base.configlib.checkengine import CheckingConfig
 from cmk.base.configlib.fetchers import make_tcp_fetcher_config
@@ -1293,9 +1293,9 @@ service_rule_groups = {"temperature"}
 def load_all_pluginX(checks_dir: Path) -> AgentBasedPlugins:
     with tracer.span("load_legacy_check_plugins"):
         with tracer.span("discover_legacy_check_plugins"):
-            filelist = find_plugin_files(checks_dir)
+            module_names = find_legacy_check_modules()
 
-        legacy_errors, sections, checks = load_and_convert_legacy_checks(filelist)
+        legacy_errors, sections, checks = load_and_convert_legacy_checks(module_names)
 
     return agent_based_register.load_all_plugins(
         sections=sections,
@@ -1307,15 +1307,10 @@ def load_all_pluginX(checks_dir: Path) -> AgentBasedPlugins:
 
 @tracer.instrument("load_and_convert_legacy_checks")
 def load_and_convert_legacy_checks(
-    filelist: Iterable[str],
+    module_list: Iterable[str],
 ) -> tuple[list[str], Sequence[SNMPSectionPlugin | AgentSectionPlugin], Sequence[CheckPlugin]]:
     discovered_legacy_checks = discover_legacy_checks(
-        filelist,
-        FileLoader(
-            precomile_path=cmk.utils.paths.precompiled_checks_dir,
-            makedirs=lambda path: Path(path).mkdir(mode=0o770, parents=True, exist_ok=True),
-        ),
-        raise_errors=cmk.ccc.debug.enabled(),
+        module_list, raise_errors=cmk.ccc.debug.enabled()
     )
 
     section_errors, sections = convert_legacy_sections(
@@ -1326,7 +1321,8 @@ def load_and_convert_legacy_checks(
     check_errors, checks = convert_legacy_check_plugins(
         discovered_legacy_checks.sane_check_info,
         discovered_legacy_checks.plugin_files,
-        validate_creation_kwargs=discovered_legacy_checks.did_compile,
+        # skip validation. These plugins are not changed anymore.
+        validate_creation_kwargs=False,
         raise_errors=cmk.ccc.debug.enabled(),
     )
 

@@ -9,14 +9,11 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Mapping
-from pathlib import Path
 from typing import Any, NamedTuple
 from unittest import mock
 
-import cmk.utils.paths
-from cmk.agent_based.legacy import discover_legacy_checks, FileLoader, find_plugin_files
+from cmk.agent_based.legacy import discover_legacy_checks, find_legacy_check_modules
 from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
-from tests.testlib.common.repo import repo_path
 
 
 class MissingCheckInfoError(KeyError):
@@ -29,11 +26,7 @@ class Check:
     @classmethod
     def _load_checks(cls) -> None:
         for legacy_check in discover_legacy_checks(
-            find_plugin_files(repo_path() / "cmk/base/legacy_checks"),
-            FileLoader(
-                precomile_path=cmk.utils.paths.precompiled_checks_dir,
-                makedirs=lambda path: Path(path).mkdir(mode=0o770, exist_ok=True, parents=True),
-            ),
+            find_legacy_check_modules(),
             raise_errors=True,
         ).sane_check_info:
             cls._LEGACY_CHECKS[legacy_check.name] = legacy_check

@@ -6,7 +6,7 @@
 from logging import Logger
 from typing import override
 
-from cmk.agent_based.legacy import find_plugin_files
+from cmk.agent_based.legacy import find_legacy_check_modules
 from cmk.base.config import load_and_convert_legacy_checks
 from cmk.gui.exceptions import MKUserError
 from cmk.update_config.lib import ExpiryVersion
@@ -16,7 +16,6 @@ from cmk.update_config.plugins.pre_actions.utils import (
     Resume,
 )
 from cmk.update_config.registry import pre_update_action_registry, PreUpdateAction
-from cmk.utils.paths import local_checks_dir
 
 
 class PreUpdateLegacyCheckPlugins(PreUpdateAction):
@@ -24,9 +23,7 @@ class PreUpdateLegacyCheckPlugins(PreUpdateAction):
 
     @override
     def __call__(self, logger: Logger, conflict_mode: ConflictMode) -> None:
-        err_list, _sections, _checks = load_and_convert_legacy_checks(
-            find_plugin_files(local_checks_dir)
-        )
+        err_list, _sections, _checks = load_and_convert_legacy_checks(find_legacy_check_modules())
         if errors := "".join(err_list):
             logger.error(errors)
             if _continue_on_incomp_legacy_check(conflict_mode).is_abort():
