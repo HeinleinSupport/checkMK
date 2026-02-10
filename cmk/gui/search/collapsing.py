@@ -74,18 +74,18 @@ def _collapse_items(
             host_items.get(tr_hostalias),
         ):
             case (
-                UnifiedSearchResultItem() as setup_item,
+                UnifiedSearchResultItem() as setup,
                 UnifiedSearchResultItem() as name,
                 UnifiedSearchResultItem() as alias,
             ):
-                collapsed_results.append(_collapse_host_items([name, alias], setup_item))
+                collapsed_results.append(_collapse_host_items([name, alias], setup))
                 collapsed_result_count += 1
             case (
-                UnifiedSearchResultItem() as setup_item,
+                UnifiedSearchResultItem() as setup,
                 UnifiedSearchResultItem() as name,
                 None,
             ):
-                collapsed_results.append(_collapse_host_items([name], setup_item))
+                collapsed_results.append(_collapse_host_items([name], setup))
             case (
                 None,
                 UnifiedSearchResultItem() as name,
