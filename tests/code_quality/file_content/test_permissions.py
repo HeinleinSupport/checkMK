@@ -10,7 +10,6 @@ from pathlib import Path
 
 import pytest
 
-from tests.code_quality.utils import ChangedFiles
 from tests.testlib.common.repo import repo_path
 
 
@@ -74,7 +73,6 @@ _PERMISSIONS = (
     _PERMISSIONS,
 )
 def test_permissions(
-    changed_files: ChangedFiles,
     pattern: str,
     check_func: Callable[[Path], bool],
     explicit_excludes: tuple[str, ...],
@@ -93,8 +91,7 @@ def test_permissions(
     # see if we can update our test cases
     assert found_files
 
-    tested_files = {f for f in found_files if changed_files.is_changed(f)}
-    offending_files = {f for f in tested_files if not check_func(f)}
+    offending_files = {f for f in found_files if not check_func(f)}
 
     assert not offending_files, f"{offending_files} have wrong permissions ({check_func!r})"
 
@@ -103,7 +100,7 @@ def _executable_iff_in_libexec(path: Path) -> bool:
     return ("libexec" in path.parts) is os.access(path, os.X_OK)
 
 
-def test_plugin_family_permissions(changed_files: ChangedFiles) -> None:
+def test_plugin_family_permissions() -> None:
     found_files = {
         f
         for f in repo_path().rglob("cmk/plugins/*")
@@ -112,7 +109,6 @@ def test_plugin_family_permissions(changed_files: ChangedFiles) -> None:
     # see if we can remove this test
     assert found_files
 
-    tested_files = {f for f in found_files if changed_files.is_changed(f)}
-    offending_files = {f for f in tested_files if not _executable_iff_in_libexec(f)}
+    offending_files = {f for f in found_files if not _executable_iff_in_libexec(f)}
 
     assert not offending_files, f"{offending_files} have wrong permissions"

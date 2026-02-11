@@ -286,11 +286,7 @@ test-py-extensions:
 	fi
 
 test-file-content:
-	if test -z "$$CHANGED_FILES_REL_FILE"; then \
-	    $(PYTEST) --log-cli-level=INFO $(realpath code_quality)/file_content --test-all-files ; \
-	else \
-	    cat "$$CHANGED_FILES_REL_FILE" | xargs $(MAX_CHARS:%=--max-chars=%) --no-run-if-empty $(PYTEST) --log-cli-level=INFO $(realpath code_quality)/file_content --changed-files ; \
-	fi \
+	$(PYTEST) --log-cli-level=INFO $(realpath code_quality)/file_content;
 
 test-format:
 	bazel run //:format.check

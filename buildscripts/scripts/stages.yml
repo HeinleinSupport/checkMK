@@ -285,14 +285,7 @@ STAGES:
       DIR: "tests"
       ENV_VARS:
           PYTEST_ADDOPTS: "--junitxml=${RESULTS}/python3-file-content-junit.xml --color=no"
-      # ${CHANGED_FILES_REL} can be huge, so we use a file to transport the list
-      # to the pytest command. This will be tidied up with CMK-17048
-      # TODO: CHANGED_FILES_REL_FILE needs to be set in the environment for make test-file-content
-      COMMAND: |
-          CHANGED_FILES_REL_FILE=$(mktemp)
-          echo "${CHANGED_FILES_REL}" > $CHANGED_FILES_REL_FILE
-          trap "rm -f $CHANGED_FILES_REL_FILE" EXIT
-          CHANGED_FILES_REL_FILE=$CHANGED_FILES_REL_FILE make test-file-content
+      COMMAND: "make test-file-content"
       TEXT_ON_SKIP: "No files changed"
       BAZEL_LOCKS_AMOUNT: 1
       RESULT_CHECK_TYPE: "JUNIT"
