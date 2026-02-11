@@ -93,23 +93,7 @@ class ValidateIPv4Network(Validator):
 
 
 class ValidateAnyOfValidators(Validator):
-    """
-
-    Examples:
-
-        >>> from marshmallow.validate import Length
-        >>> validator = ValidateAnyOfValidators([Length(min=0, max=4), Length(min=6, max=10)])
-
-        >>> validator("foo")
-        >>> validator("barbarbar")
-
-        >>> validator("12345")
-        Traceback (most recent call last):
-        ...
-        marshmallow.exceptions.ValidationError: ['Any of this needs to be true:', \
-'Length must be between 0 and 4.', 'Length must be between 6 and 10.']
-
-    """
+    """Validates that at least one of the given validators passes."""
 
     def __init__(self, validators: Iterable[Validator]) -> None:
         self.validators = validators
