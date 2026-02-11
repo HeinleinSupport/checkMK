@@ -203,8 +203,6 @@ STAGES:
               --keep_going \
               --//:use_faked_artifacts=true \
               -- //... \
-              -//agents/... -//omd/... \
-              //omd/packages/omd:doctest \
               -//packages/mk-oracle/... \
               -//packages/livestatus/... \
               -//packages/neb/... \
@@ -231,8 +229,7 @@ STAGES:
             --keep_going \
             --//:use_faked_artifacts=True \
             --run_under="$(which valgrind) --quiet --num-callers=30 --error-exitcode=42" \
-            -- //... \
-            -//agents/... -//omd/...
+            -- //...
         make_rc=$?
         set -e
         ../buildscripts/scripts/bazel_test_post_archive_xunit.sh || :
