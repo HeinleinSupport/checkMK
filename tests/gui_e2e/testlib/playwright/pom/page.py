@@ -266,7 +266,12 @@ class MainMenu(LocatorHelper):
         """main menu -> Open help -> show more(optional) -> sub menu"""
         return self._sub_menu("Help", sub_menu, show_more=False, exact=exact)
 
-    def rest_api_help_menu(self, sub_menu: str | None = None, exact: bool = False) -> Locator:
+    def rest_api_help_menu(
+        self,
+        sub_menu: str | None = None,
+        exact: bool = False,
+        link_url: str | None = None,
+    ) -> Locator:
         """main menu -> Open help -> REST API -> sub menu"""
         rest_api_text = "REST API"
 
@@ -274,6 +279,10 @@ class MainMenu(LocatorHelper):
 
         if sub_menu:
             _loc.click()
+            if link_url:
+                _loc = self.locator().locator(f"a[href*='{link_url}']")
+                self._unique_web_element(_loc)
+                return _loc
             return self._sub_menu(sub_menu, None, show_more=False, exact=exact)
         else:
             return _loc
@@ -383,7 +392,11 @@ class MainMenu(LocatorHelper):
 
     @property
     def help_rest_api_docs(self) -> Locator:
-        return self.rest_api_help_menu("Documentation")
+        return self.rest_api_help_menu("Documentation", link_url="openapi/")
+
+    @property
+    def help_rest_api_unstable_docs(self) -> Locator:
+        return self.rest_api_help_menu("Documentation", link_url="unstable/doc/")
 
     @property
     def help_rest_api_gui(self) -> Locator:
