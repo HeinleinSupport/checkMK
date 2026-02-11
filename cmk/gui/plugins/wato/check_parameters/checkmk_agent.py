@@ -12,6 +12,7 @@ from cmk.gui.plugins.wato.utils import (
     RulespecGroupCheckParametersApplications,
 )
 from cmk.gui.valuespec import (
+    Age,
     CascadingDropdown,
     Dictionary,
     FixedValue,
@@ -283,6 +284,16 @@ def _parameter_valuespec_checkmk_agent() -> Dictionary:
                         "with the required versions specified in '%s' and from the duplicates check."
                     )
                     % _("Local checks: versions"),
+                ),
+            ),
+            (
+                "max_time_since_last_update_check",
+                Tuple(
+                    title=_("Maximum time since last update check"),
+                    elements=[
+                        Age(title=_("Warning at"), default_value=2 * 3600 * 24),
+                        Age(title=_("Critical at"), default_value=30 * 3600 * 24),
+                    ],
                 ),
             ),
         ],
