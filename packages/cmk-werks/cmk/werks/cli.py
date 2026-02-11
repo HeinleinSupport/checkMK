@@ -25,11 +25,11 @@ from .config import Config, load_config, try_load_current_version_from_defines_m
 from .convert import werkv1_metadata_to_markdown_werk_metadata
 from .format import format_as_markdown_werk
 from .in_out_elements import (
+    ask_user_if_not_provided,
     bail_out,
     get_input,
     get_tty_size,
     grep_colors,
-    input_choice,
     TTY_BG_WHITE,
     TTY_BLUE,
     TTY_BOLD,
@@ -51,11 +51,7 @@ from .meisterwerk import (
 )
 from .parse import WerkV3ParseResult
 from .schemas.requests import Werk as WerkRequest
-from .schemas.werk import (
-    Stash,
-    Werk,
-    WerkId,
-)
+from .schemas.werk import Stash, Werk, WerkId
 
 WerkVersion = Literal["v1", "markdown"]
 
@@ -167,6 +163,43 @@ def parse_arguments(argv: Sequence[str]) -> argparse.Namespace:
         "custom_files",
         nargs="*",
         help="files passed to 'git commit'",
+    )
+    parser_new.add_argument(
+        "--title",
+        help="Werk title",
+    )
+    parser_new.add_argument(
+        "--class",
+        dest="class_",
+        choices=[item[0] for item in get_config().classes],
+        help="Werk class",
+    )
+    parser_new.add_argument(
+        "--edition",
+        choices=[item[0] for item in get_config().editions],
+        help="Checkmk edition",
+    )
+    parser_new.add_argument(
+        "--component",
+        # Can't use get_edition_components here, because it needs the edition which is an argument itself
+        # But will be validated in main_create before creating the Werk
+        choices=[item[0] for item in get_config().all_components()],
+        help="Component name (see .werks/config)",
+    )
+    parser_new.add_argument(
+        "--level",
+        choices=[item[0] for item in get_config().levels],
+        help="Werk level",
+    )
+    parser_new.add_argument(
+        "--compatible",
+        choices=[item[0] for item in get_config().compatible],
+        help="Compatibility",
+    )
+    parser_new.add_argument(
+        "--description-file",
+        type=Path,
+        help="Read description from file. Provide absolute path",
     )
     parser_new.set_defaults(func=main_new)
 
@@ -621,30 +654,42 @@ def main_new(args: argparse.Namespace) -> None:
     sys.stdout.write(TTY_GREEN + WERK_NOTES + TTY_NORMAL)
 
     stash = Stash.load_from_file()
+    werk_id = stash.pick_id(project=get_config().project)
 
     metadata: WerkMetadata = {}
-    werk_id = stash.pick_id(project=get_config().project)
-    metadata["id"] = str(werk_id)
 
     # this is the metadata format of werkv1
+    metadata["id"] = str(werk_id)
     metadata["date"] = str(int(time.time()))
     metadata["version"] = get_config().current_version
-    metadata["title"] = get_input("Title")
+    metadata["title"] = args.title or get_input("Title")
     if metadata["title"] == "":
         sys.stderr.write("Cancelled.\n")
         sys.exit(0)
-    metadata["class"] = input_choice("Class", get_config().classes)
-    metadata["edition"] = input_choice("Edition", get_config().editions)
-    metadata["component"] = input_choice("Component", get_edition_components(metadata["edition"]))
-    metadata["level"] = input_choice("Level", get_config().levels)
-    metadata["compatible"] = input_choice("Compatible", get_config().compatible)
+    metadata["class"] = ask_user_if_not_provided("Class", get_config().classes, args.class_)
+    metadata["edition"] = ask_user_if_not_provided("Edition", get_config().editions, args.edition)
+    metadata["component"] = ask_user_if_not_provided(
+        "Component", get_edition_components(metadata["edition"]), args.component
+    )
+    metadata["level"] = ask_user_if_not_provided("Level", get_config().levels, args.level)
+    metadata["compatible"] = ask_user_if_not_provided(
+        "Compatible",
+        get_config().compatible,
+        args.compatible,
+    )
+    if args.description_file:
+        description = args.description_file.read_text(encoding="utf-8")
+    else:
+        # Interactive modes opens the editor, so the user can add
+        # the description to the freshly created werk
+        description = "\n"
 
     werk_path = get_werk_filename(werk_id, get_werk_file_version())
     werk = Werk(
         id=werk_id,
         path=werk_path,
         content=WerkV3ParseResult(
-            metadata=werkv1_metadata_to_markdown_werk_metadata(metadata), description="\n"
+            metadata=werkv1_metadata_to_markdown_werk_metadata(metadata), description=description
         ),
     )
     save_werk(werk, get_werk_file_version())

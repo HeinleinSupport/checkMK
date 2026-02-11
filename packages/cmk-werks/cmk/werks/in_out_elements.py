@@ -87,8 +87,26 @@ def getch() -> str:
     return ch
 
 
-def input_choice(
-    what: str, choices: list[str] | list[tuple[str, str]] | list[tuple[str, str, str]]
+def ask_user_if_not_provided(
+    what: str,
+    choices: list[str] | list[tuple[str, str]] | list[tuple[str, str, str]],
+    provided_key: str | None,
+) -> str:
+    if not provided_key:
+        return _input_choice(what, choices)
+
+    choice_ids = [entry[0] if isinstance(entry, tuple) else entry for entry in choices]
+    if provided_key in choice_ids:
+        return provided_key
+
+    raise ValueError(
+        f"Invalid choice for {what}: {provided_key}. Available choices are: {choice_ids}"
+    )
+
+
+def _input_choice(
+    what: str,
+    choices: list[str] | list[tuple[str, str]] | list[tuple[str, str, str]],
 ) -> str:
     next_index = 0
     ctc = {}
