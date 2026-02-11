@@ -20,7 +20,7 @@ import CmkParagraph from '@/components/typography/CmkParagraph.vue'
 const { _t } = usei18n()
 
 const relayId = defineModel<string>({ default: '' })
-const props = defineProps<CmkWizardStepProps & { relayAlias: string }>()
+const props = defineProps<CmkWizardStepProps & { relayAlias: string; documentationUrl: string }>()
 
 defineEmits(['openCreateHostPage', 'openRelayOverviewPage'])
 
@@ -63,16 +63,20 @@ watch(
 <template>
   <CmkWizardStep :index="index" :is-completed="isCompleted">
     <template #header>
-      <CmkHeading type="h2"> {{ _t('Verify registration') }}</CmkHeading>
+      <CmkHeading type="h2"> {{ _t('Registration results') }}</CmkHeading>
     </template>
 
     <template #content>
       <CmkParagraph>
         {{
           _t(
-            'After the registration is triggered, verify the registration between the Relay and Checkmk site.'
+            'The Registration of the Relay to the Checkmk site has been checked. Results are displayed here.'
           )
         }}
+        <br />
+        {{ _t('In case of problems, read the ') }}
+        <a :href="props.documentationUrl" target="_blank">{{ _t('User Guide') }}</a>
+        {{ _t(' for help with troubleshooting.') }}
       </CmkParagraph>
       <CmkAlertBox v-if="loading" variant="loading">
         {{ _t('Verifying the registration...') }}
