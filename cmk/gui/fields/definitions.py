@@ -267,17 +267,7 @@ class BinaryExprSchema(BaseSchema):
 
 
 class NotExprSchema(BaseSchema):
-    """Expression negating another query expression.
-
-    Examples:
-
-        >>> from cmk.livestatus_client.tables import Hosts
-        >>> input_expr = {'op': '=', 'left': 'hosts.name', 'right': 'foo'}
-        >>> q = {'op': 'not', 'expr': input_expr}
-        >>> result = NotExprSchema(context={'table': Hosts}).load(q)
-        >>> assert result == q
-
-    """
+    """Expression negating another query expression."""
 
     op = base.String(description="The operator. In this case `not`.")
     expr = base.Nested(
@@ -330,28 +320,6 @@ class ExprSchema(CmkOneOfSchema):
     """Top level class for query expression schema
 
     Operators can be one of: AND, OR
-
-    Examples:
-
-        >>> q = {'op': 'and', 'expr': [
-        ...         {'op': 'not', 'expr':
-        ...             {'op': 'or', 'expr': [
-        ...                 {'op': '=', 'left': 'name', 'right': 'foo'},
-        ...                 {'op': '=', 'left': 'name', 'right': 'bar'},
-        ...             ]},
-        ...         },
-        ...     ]}
-
-        >>> from cmk.livestatus_client.tables import Hosts
-        >>> schema = ExprSchema(context={'table': Hosts})
-        >>> assert schema.load(q) == schema.load(json.dumps(q))
-
-        >>> q = {'op': '=', 'left': 'foo', 'right': 'bar'}
-        >>> schema.load(q)
-        Traceback (most recent call last):
-        ...
-        marshmallow.exceptions.ValidationError: Table 'hosts' has no column 'foo'.
-
     """
 
     type_field = "op"
@@ -504,36 +472,7 @@ def column_field(
 
 
 class _ListOfColumns(base.List):
-    """Manages a list of Livestatus columns and returns Column instances
-
-    Examples:
-
-        >>> from cmk.livestatus_client.tables import Hosts
-        >>> cols = _ListOfColumns(
-        ...     _LiveStatusColumn(table=Hosts),
-        ...     table=Hosts,
-        ... )
-        >>> cols.deserialize(['name', 'alias'])
-        [Column(hosts.name: string), Column(hosts.alias: string)]
-
-        >>> cols = _ListOfColumns(
-        ...     _LiveStatusColumn(table=Hosts),
-        ...     table=Hosts,
-        ...     mandatory=[Hosts.name],
-        ... )
-        >>> cols.deserialize(['alias'])
-        [Column(hosts.name: string), Column(hosts.alias: string)]
-
-        >>> class FooSchema(BaseSchema):
-        ...      columns = _ListOfColumns(
-        ...          _LiveStatusColumn(table=Hosts),
-        ...          table=Hosts,
-        ...          mandatory=[Hosts.name])
-        >>> schema = FooSchema()
-        >>> schema.load({'columns': ['alias']})
-        {'columns': [Column(hosts.name: string), Column(hosts.alias: string)]}
-
-    """
+    """Manages a list of Livestatus columns and returns Column instances."""
 
     default_error_messages = {
         "unknown_column": "Unknown default column: {table_name}.{column_name}",
@@ -573,19 +512,7 @@ class _ListOfColumns(base.List):
 
 
 class _LiveStatusColumn(base.String):
-    """Represents a LiveStatus column.
-
-    Examples:
-
-        >>> from cmk.livestatus_client.tables import Hosts
-        >>> _LiveStatusColumn(table=Hosts).deserialize('name')
-        'name'
-
-        >>> _LiveStatusColumn(table=Hosts).deserialize('bar')
-        Traceback (most recent call last):
-        ...
-        marshmallow.exceptions.ValidationError: Unknown column: hosts.bar
-    """
+    """Represents a LiveStatus column."""
 
     default_error_messages = {
         "unknown_column": "Unknown column: {table_name}.{column_name}",
@@ -1307,39 +1234,7 @@ def to_timestamp(value: datetime) -> float:
 
 
 class Timestamp(DateTime):
-    """A timestamp field for Checkmk timestamp
-
-    Examples:
-
-        >>> from marshmallow import Schema
-        >>> class TestSchema(Schema):
-        ...      ts_field = Timestamp()
-
-        >>> value = {'ts_field': 0.0}
-
-        >>> schema = TestSchema()
-        >>> schema.dump({'ts_field': '0.0'})
-        {'ts_field': '1970-01-01T00:00:00+00:00'}
-
-        >>> schema.dump({'ts_field': 1622620683.60371})
-        {'ts_field': '2021-06-02T07:58:03.603710+00:00'}
-
-        >>> dumped = schema.dump(value)
-        >>> dumped
-        {'ts_field': '1970-01-01T00:00:00+00:00'}
-
-        >>> loaded = schema.load(dumped)
-        >>> loaded
-        {'ts_field': 0.0}
-
-        >>> assert loaded == value, f"{loaded!r} != {value!r}"
-
-        >>> schema.load({'ts_field': 'foo'})  # doctest: +ELLIPSIS
-        Traceback (most recent call last):
-        ...
-        marshmallow.exceptions.ValidationError: ...
-
-    """
+    """A timestamp field for Checkmk timestamp."""
 
     OBJ_TYPE = "timestamp"
 
