@@ -4226,10 +4226,6 @@ msgid "Add Prefix"
 msgstr "Adăugați prefixul"
 
 #, fuzzy
-msgid "Add Relay"
-msgstr "Adăugați cheia"
-
-#, fuzzy
 msgid "Add Relay configuration"
 msgstr "Configurația RRA"
 
@@ -14663,8 +14659,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Click the \"Add Relay\" button to start setting up your first Relay "
-"configuration."
+"Click the \"Add Relay configuration\" button to start setting up your first "
+"Relay configuration."
 msgstr ""
 
 msgid ""
@@ -37820,6 +37816,10 @@ msgstr "Schemă URL invalidă. Trebuie să fie una dintre următoarele: %s"
 
 #, fuzzy, python-format
 msgid "Invalid regex pattern. Expected: %s"
+msgstr "Expresie regulată invalidă: %s."
+
+#, fuzzy, python-format
+msgid "Invalid regex pattern: %s"
 msgstr "Expresie regulată invalidă: %s."
 
 msgid "Invalid regular expression"
@@ -72970,6 +72970,9 @@ msgstr "Gazdele selectate nu au atribute explicite"
 msgid "The selected icon does not exist."
 msgstr "Pictograma selectată nu există."
 
+msgid "The selected options do not match any hosts, nothing to do."
+msgstr ""
+
 msgid "The sensor name"
 msgstr "Numele senzorului"
 
@@ -83921,6 +83924,10 @@ msgstr "Backup nespecific"
 
 msgid "Unspecified."
 msgstr "Nespecificat."
+
+#, fuzzy
+msgid "Unstable"
+msgstr "Activați"
 
 msgid "Unsupported action"
 msgstr "Acțiune neacceptată"
@@ -95259,10 +95266,6 @@ msgid "Dashboard filter"
 msgstr "Element de tablou de bord"
 
 #, fuzzy
-msgid "Remove row"
-msgstr "Eliminat: %s"
-
-#, fuzzy
 msgid "Filter settings"
 msgstr "%d setări de Filtrare"
 
@@ -95521,6 +95524,10 @@ msgid "Select value..."
 msgstr "Selectați vizualizarea"
 
 #, fuzzy
+msgid "Remove row"
+msgstr "Eliminat: %s"
+
+#, fuzzy
 msgid "(required)"
 msgstr " (obligatoriu)"
 
@@ -95546,6 +95553,10 @@ msgstr ""
 #, fuzzy
 msgid "No filters found matching: %{search}"
 msgstr "Potrivirea numelui procesului"
+
+#, fuzzy
+msgid "Remove %{name} filter"
+msgstr "Eliminați filtrul"
 
 #, fuzzy
 msgid "Widget"
@@ -95618,6 +95629,9 @@ msgstr "Selectați vizualizarea"
 #, fuzzy
 msgid "Choose from available views"
 msgstr "Porturi disponibile"
+
+msgid "Available in Checkmk Pro or higher."
+msgstr ""
 
 # georgem ##############
 #, fuzzy
@@ -96112,6 +96126,22 @@ msgstr "Conexiuni respinse"
 #, fuzzy
 msgid "Value must be a valid URL"
 msgstr "Valoarea trebuie să fie un șir de caractere"
+
+#, fuzzy
+msgid ""
+"To create a dynamic title, use the following macros to automatically insert "
+"contextual information:"
+msgstr ""
+"Puteți utiliza următoarele macrocomenzi pentru a completa informațiile "
+"corespunzătoare:%s%s."
+
+#, fuzzy
+msgid ""
+"These macros can be combined with custom text, e.g. \"some text "
+"<tt>$MACRO1$</tt> -- <tt>$MACRO2$</tt>\"."
+msgstr ""
+"Aceste macrocomenzi pot fi combinate cu elemente de text arbitrare, de "
+"exemplu \"some text <tt>$MACRO1$</tt> -- <tt>$MACRO2$</tt>\"."
 
 #, fuzzy
 msgid "Link title to"
@@ -98487,9 +98517,9 @@ msgid ""
 "You can still access it later via Help > Learning Checkmk > Welcome page"
 msgstr ""
 
-#, fuzzy, python-format
-#~ msgid "Invalid regex pattern: %s"
-#~ msgstr "Expresie regulată invalidă: %s."
+#, fuzzy
+#~ msgid "Add Relay"
+#~ msgstr "Adăugați cheia"
 
 #, fuzzy
 #~ msgid "Applied deshboard %{n} filter"

@@ -4229,10 +4229,6 @@ msgid "Add Prefix"
 msgstr "Añadir prefijo"
 
 #, fuzzy
-msgid "Add Relay"
-msgstr "Añadir clave"
-
-#, fuzzy
 msgid "Add Relay configuration"
 msgstr "Configuración RRA"
 
@@ -14714,8 +14710,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Click the \"Add Relay\" button to start setting up your first Relay "
-"configuration."
+"Click the \"Add Relay configuration\" button to start setting up your first "
+"Relay configuration."
 msgstr ""
 
 msgid ""
@@ -37951,6 +37947,10 @@ msgstr "Esquema de URL inválido. Debe ser uno de los siguientes: %s"
 
 #, fuzzy, python-format
 msgid "Invalid regex pattern. Expected: %s"
+msgstr "Expresión regular inválida: %s"
+
+#, fuzzy, python-format
+msgid "Invalid regex pattern: %s"
 msgstr "Expresión regular inválida: %s"
 
 msgid "Invalid regular expression"
@@ -73307,6 +73307,9 @@ msgstr "Los hosts seleccionados no tienen atributos explícitos"
 msgid "The selected icon does not exist."
 msgstr "El icono seleccionado no existe."
 
+msgid "The selected options do not match any hosts, nothing to do."
+msgstr ""
+
 msgid "The sensor name"
 msgstr "El nombre del sensor"
 
@@ -84315,6 +84318,10 @@ msgstr "Copia de seguridad no específica"
 
 msgid "Unspecified."
 msgstr "Sin especificar."
+
+#, fuzzy
+msgid "Unstable"
+msgstr "Activar"
 
 msgid "Unsupported action"
 msgstr "Acción no admitida"
@@ -95708,10 +95715,6 @@ msgid "Dashboard filter"
 msgstr "Elemento del cuadro de mandos"
 
 #, fuzzy
-msgid "Remove row"
-msgstr "Eliminado: %s"
-
-#, fuzzy
 msgid "Filter settings"
 msgstr "%d Configuración del filtro"
 
@@ -95970,6 +95973,10 @@ msgid "Select value..."
 msgstr "Seleccione la vista"
 
 #, fuzzy
+msgid "Remove row"
+msgstr "Eliminado: %s"
+
+#, fuzzy
 msgid "(required)"
 msgstr " (es necesario)"
 
@@ -95995,6 +96002,10 @@ msgstr ""
 #, fuzzy
 msgid "No filters found matching: %{search}"
 msgstr "Coincidencia de nombres de proceso"
+
+#, fuzzy
+msgid "Remove %{name} filter"
+msgstr "Eliminar el filtro"
 
 #, fuzzy
 msgid "Widget"
@@ -96067,6 +96078,9 @@ msgstr "Seleccione la vista"
 #, fuzzy
 msgid "Choose from available views"
 msgstr "Puertos disponibles"
+
+msgid "Available in Checkmk Pro or higher."
+msgstr ""
 
 #, fuzzy
 msgid "Metrics & graphs"
@@ -96558,6 +96572,22 @@ msgstr "Conexiones rechazadas"
 #, fuzzy
 msgid "Value must be a valid URL"
 msgstr "El valor debe ser una cadena"
+
+#, fuzzy
+msgid ""
+"To create a dynamic title, use the following macros to automatically insert "
+"contextual information:"
+msgstr ""
+"Puede utilizar las siguientes macros para rellenar la información "
+"correspondiente:%s%s"
+
+#, fuzzy
+msgid ""
+"These macros can be combined with custom text, e.g. \"some text "
+"<tt>$MACRO1$</tt> -- <tt>$MACRO2$</tt>\"."
+msgstr ""
+"Estas macros pueden combinarse con elementos de texto arbitrarios, por "
+"ejemplo, \"algún texto <tt>$MACRO1$</tt> -- <tt>$MACRO2$</tt>\"."
 
 #, fuzzy
 msgid "Link title to"
@@ -98928,9 +98958,9 @@ msgid ""
 "You can still access it later via Help > Learning Checkmk > Welcome page"
 msgstr ""
 
-#, fuzzy, python-format
-#~ msgid "Invalid regex pattern: %s"
-#~ msgstr "Expresión regular inválida: %s"
+#, fuzzy
+#~ msgid "Add Relay"
+#~ msgstr "Añadir clave"
 
 #, fuzzy
 #~ msgid "Applied deshboard %{n} filter"

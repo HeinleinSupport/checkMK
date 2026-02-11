@@ -4030,10 +4030,6 @@ msgid "Add Prefix"
 msgstr "プレフィックスを追加"
 
 #, fuzzy
-msgid "Add Relay"
-msgstr "リレーを追加"
-
-#, fuzzy
 msgid "Add Relay configuration"
 msgstr "リレー設定の追加"
 
@@ -13823,8 +13819,8 @@ msgstr ""
 
 #, fuzzy
 msgid ""
-"Click the \"Add Relay\" button to start setting up your first Relay "
-"configuration."
+"Click the \"Add Relay configuration\" button to start setting up your first "
+"Relay configuration."
 msgstr ""
 "\"Add configuration\"ボタンをクリックして、最初のコンフィギュレーションの設定"
 "を開始します。"
@@ -35579,6 +35575,10 @@ msgstr ""
 
 #, fuzzy, python-format
 msgid "Invalid regex pattern. Expected: %s"
+msgstr "無効な正規表現: %s"
+
+#, fuzzy, python-format
+msgid "Invalid regex pattern: %s"
 msgstr "無効な正規表現: %s"
 
 msgid "Invalid regular expression"
@@ -68690,6 +68690,9 @@ msgstr "選択したホストには明示的な属性がありません"
 msgid "The selected icon does not exist."
 msgstr "選択したアイコンは存在しません。"
 
+msgid "The selected options do not match any hosts, nothing to do."
+msgstr ""
+
 msgid "The sensor name"
 msgstr "センサー名"
 
@@ -78794,6 +78797,10 @@ msgstr "不特定多数へのバックアップ"
 
 msgid "Unspecified."
 msgstr "不特定。"
+
+#, fuzzy
+msgid "Unstable"
+msgstr "有効にする"
 
 msgid "Unsupported action"
 msgstr "未対応のアクション"
@@ -89457,10 +89464,6 @@ msgid "Dashboard filter"
 msgstr "ダッシュボード要素"
 
 #, fuzzy
-msgid "Remove row"
-msgstr "削除：%r"
-
-#, fuzzy
 msgid "Filter settings"
 msgstr "%d フィルター設定"
 
@@ -89714,6 +89717,10 @@ msgid "Select value..."
 msgstr "ビューを選択..."
 
 #, fuzzy
+msgid "Remove row"
+msgstr "削除：%r"
+
+#, fuzzy
 msgid "(required)"
 msgstr " (必須)"
 
@@ -89738,6 +89745,10 @@ msgstr ""
 #, fuzzy
 msgid "No filters found matching: %{search}"
 msgstr "プロセス名照合"
+
+#, fuzzy
+msgid "Remove %{name} filter"
+msgstr "フィルタを取り外します"
 
 #, fuzzy
 msgid "Widget"
@@ -89806,6 +89817,9 @@ msgstr "ビューを選択"
 #, fuzzy
 msgid "Choose from available views"
 msgstr "利用可能なユーザーはいません"
+
+msgid "Available in Checkmk Pro or higher."
+msgstr ""
 
 #, fuzzy
 msgid "Metrics & graphs"
@@ -90292,6 +90306,20 @@ msgstr "オプション選択"
 #, fuzzy
 msgid "Value must be a valid URL"
 msgstr "値は文字列であること"
+
+#, fuzzy
+msgid ""
+"To create a dynamic title, use the following macros to automatically insert "
+"contextual information:"
+msgstr "次のマクロを使用して、対応する情報を入力できます。%s%s"
+
+#, fuzzy
+msgid ""
+"These macros can be combined with custom text, e.g. \"some text "
+"<tt>$MACRO1$</tt> -- <tt>$MACRO2$</tt>\"."
+msgstr ""
+"これらのマクロは、\"一部のテキスト<tt> $ MACRO1 $ </tt>-<tt> $ MACRO2 $ </"
+"tt>\"などの任意のテキスト要素と組み合わせることができます。"
 
 #, fuzzy
 msgid "Link title to"
@@ -92612,9 +92640,17 @@ msgid ""
 "You can still access it later via Help > Learning Checkmk > Welcome page"
 msgstr ""
 
-#, fuzzy, python-format
-#~ msgid "Invalid regex pattern: %s"
-#~ msgstr "無効な正規表現: %s"
+#, fuzzy
+#~ msgid "Add Relay"
+#~ msgstr "リレーを追加"
+
+#, fuzzy
+#~ msgid ""
+#~ "Click the \"Add Relay\" button to start setting up your first Relay "
+#~ "configuration."
+#~ msgstr ""
+#~ "\"Add configuration\"ボタンをクリックして、最初のコンフィギュレーションの"
+#~ "設定を開始します。"
 
 #, fuzzy
 #~ msgid "Applied deshboard %{n} filter"
