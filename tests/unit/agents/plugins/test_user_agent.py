@@ -9,7 +9,6 @@
 import pytest
 
 import apache_status  # type: ignore[import-not-found,unused-ignore]
-import mk_jolokia  # type: ignore[import-not-found,unused-ignore]
 import nginx_status  # type: ignore[import-not-found,unused-ignore]
 from cmk.ccc import version
 
@@ -18,7 +17,6 @@ from cmk.ccc import version
     "user_agent",
     [
         apache_status.USER_AGENT,
-        mk_jolokia.USER_AGENT,
         nginx_status.USER_AGENT,
     ],
 )

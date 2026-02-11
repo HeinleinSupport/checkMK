@@ -30,18 +30,6 @@ py_binary(
 )
 
 py_binary(
-    # Shares code with `agent_jolokia` in the site.
-    name = "mk_jolokia",
-    srcs = ["mk_jolokia.py"],
-    imports = ["."],
-    visibility = ["//visibility:public"],
-    deps = [
-        requirement("requests"),
-        requirement("simplejson"),
-    ],
-)
-
-py_binary(
     name = "nginx_status",
     srcs = ["nginx_status.py"],
     imports = ["."],

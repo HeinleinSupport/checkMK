@@ -257,8 +257,6 @@ py_library(
     visibility = ["//:__subpackages__"],
     deps = [
         "@rrdtool_native//:rrdtool_python_lib",
-        # `cmk.special_agent.agent_jolokia` imports `mk_jolokia`
-        "//agents/plugins:mk_jolokia",
     ] + CMK_PACKAGES + [requirement(dep) for dep in REQUIRED_EXTERNAL_DEPS],
 )
 

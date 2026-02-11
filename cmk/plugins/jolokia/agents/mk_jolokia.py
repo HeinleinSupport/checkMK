@@ -55,7 +55,7 @@ try:
 
     # These days urllib3 would be included directly, but we leave it as it is for the moment
     # for compatibility reasons - at least for the agent plugin here.
-    from requests.packages import urllib3  # type: ignore[attr-defined]
+    from requests.packages import urllib3
 except ImportError:
     sys.stdout.write(
         "<<<jolokia_info>>>\n"
@@ -631,7 +631,7 @@ def _process_queries(inst, queries):
     for mbean_path, title, itemspec in queries:
         try:
             yield from fetch_metric(inst, mbean_path, title, itemspec)
-        except (OSError, socket.timeout):
+        except (TimeoutError, OSError):
             raise SkipInstance()
         except SkipMBean:
             continue
@@ -712,7 +712,7 @@ def generate_json(inst, mbeans):
             data = inst.get_post_data(mbean, "read", use_target=True)
             obj = inst.post(data)
             yield inst.name, mbean, json.dumps(obj["value"])
-        except (OSError, socket.timeout):
+        except (TimeoutError, OSError):
             raise SkipInstance()
         except SkipMBean:
             pass

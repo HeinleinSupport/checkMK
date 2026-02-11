@@ -14,15 +14,9 @@ import argparse
 import sys
 from contextlib import suppress
 
-import cmk.utils.paths
 from cmk.password_store.v1_unstable import parser_add_secret_option, resolve_secret_option
+from cmk.plugins.jolokia.agents import mk_jolokia
 from cmk.server_side_programs.v1_unstable import vcrtrace
-
-# TODO: is there a better way to do this?
-# yes there is. Migrate bakery plugin; cleanup; problem goes away.
-sys.path.append(str(cmk.utils.paths.local_agents_dir / "plugins"))
-sys.path.append(str(cmk.utils.paths.agents_dir / "plugins"))
-import mk_jolokia
 
 __version__ = "2.6.0b1"
 
