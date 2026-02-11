@@ -61,6 +61,17 @@ ignored_files = [
     "omd/packages/Python/pip",
     "tests/integration_redfish/mockup-server/redfishMockupServer.py",
     "tests/integration_redfish/mockup-server/rfSsdpServer.py",
+    # Remove when CMK-31227 is implemented
+    "packages/cmk-agent-receiver/cmk/agent_receiver/relay/api/__init__.py",
+    "packages/cmk-agent-receiver/cmk/agent_receiver/relay/api/routers/relays/handlers/cert_retriever.py",
+    "packages/cmk-agent-receiver/cmk/testlib/agent_receiver/schema.py",
+    "packages/cmk-agent-receiver/tests/component/relay/test_activate_config.py",
+    "packages/cmk-agent-receiver/tests/component/relay/test_cert_refresh.py",
+    "packages/cmk-agent-receiver/tests/component/relay/test_create_task_unknown_relay.py",
+    "packages/cmk-agent-receiver/tests/component/relay/test_forward_monitoring_data.py",
+    "packages/cmk-agent-receiver/tests/component/relay/test_get_tasks_should_not_fail.py",
+    "packages/cmk-agent-receiver/tests/unit/agent_receiver/relay/test_cert_retriever.py",
+    "packages/cmk-agent-receiver/tests/unit/testlib/__init__.py",
 ]
 
 # Similar logic to our partial GitHub sync approach. Both select enterprise files or directories
@@ -112,12 +123,12 @@ def check_for_license_header_violation(rel_path, abs_path):
             yield "gpl header not matching", rel_path
 
 
-def test_license_headers(python_files: Sequence[str]) -> None:
+def test_license_headers(all_python_files: Sequence[str]) -> None:
     files_checked = []
     files_ignored = []
 
     def generator():
-        for path in python_files:
+        for path in all_python_files:
             abs_path = os.path.realpath(path)
             rel_path = os.path.relpath(abs_path, repo_path())
 
@@ -128,7 +139,7 @@ def test_license_headers(python_files: Sequence[str]) -> None:
             files_checked.append(rel_path)
             yield from check_for_license_header_violation(rel_path, abs_path)
 
-    LOGGER.info("Scanning %d files", len(python_files))
+    LOGGER.info("Scanning %d files", len(all_python_files))
     violations = sorted(list(generator()))
     violations_formatted = "\n".join(f"{ident}: {path}" for (ident, path) in violations)
 

@@ -244,7 +244,6 @@ STAGES:
       DIR: "tests"
       ENV_VARS:
           PYTEST_ADDOPTS: "--junitxml=${RESULTS}/python3-license-headers-junit.xml --color=no"
-          PYTHON_FILES: "${CHANGED_PYTHON_FILES}"
       COMMAND: "make test-license-headers"
       BAZEL_LOCKS_AMOUNT: 1
       TEXT_ON_SKIP: "No Python files changed"

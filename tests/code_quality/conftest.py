@@ -26,6 +26,27 @@ def pytest_addoption(parser: pytest.Parser) -> None:
 
 
 @pytest.fixture
+def all_python_files() -> Sequence[str]:
+    """Get all Python files in the repository using the find-python-files script."""
+    repo_root = Path(__file__).resolve().parent.parent.parent
+    script_path = repo_root / "scripts" / "find-python-files"
+
+    try:
+        result = subprocess.run(
+            [str(script_path), "--with-packages"],
+            capture_output=True,
+            text=True,
+            check=True,
+            cwd=str(repo_root),
+        )
+        files = result.stdout.strip().split("\n")
+        return [f for f in files if f]  # Filter out empty strings
+    except subprocess.CalledProcessError as e:
+        logger.error("Failed to run find-python-files script: %s", e)
+        pytest.skip("Could not retrieve Python files from find-python-files script")
+
+
+@pytest.fixture
 def python_files(request: pytest.FixtureRequest) -> Sequence[str]:
     logger.debug("Getting python files from request: %s", request)
     test_all_files = request.config.getoption("--test-all-files")

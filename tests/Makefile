@@ -271,9 +271,7 @@ $(foreach TEST,$(DOCKERABLE_TESTS),$(TEST)-docker):
 	../scripts/run-in-docker.sh make --quiet "$(subst -docker,,$@)"
 
 test-license-headers:
-	if test -z "$$PYTHON_FILES"; then $(FIND_PYTHON_FILES); else echo "$$PYTHON_FILES"; fi | \
-	xargs $(MAX_CHARS:%=--max-chars=%) --no-run-if-empty $(PYTEST) --log-cli-level=INFO $(realpath code_quality)/test_license_headers.py \
-	--python-files;
+	$(PYTEST) --log-cli-level=INFO $(realpath code_quality)/test_license_headers.py
 
 test-requirements:
 	$(PYTEST) --log-cli-level=INFO $(realpath code_quality)/test_requirements.py;
