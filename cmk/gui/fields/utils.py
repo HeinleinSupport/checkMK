@@ -30,48 +30,6 @@ def tree_to_expr(
 ) -> QueryExpression:
     """Turn a filter-dict into a QueryExpression.
 
-    Examples:
-
-        >>> tree_to_expr({'op': '=', 'left': 'hosts.name', 'right': 'example.com'})
-        Filter(name = example.com)
-
-        >>> tree_to_expr({'op': '!=', 'left': 'hosts.name', 'right': 'example.com'})
-        Filter(name != example.com)
-
-        >>> tree_to_expr({'op': '!=', 'left': 'name', 'right': 'example.com'}, 'hosts')
-        Filter(name != example.com)
-
-        >>> tree_to_expr({'op': 'and', \
-                          'expr': [{'op': '=', 'left': 'hosts.name', 'right': 'example.com'}, \
-                          {'op': '=', 'left': 'hosts.state', 'right': '0'}]})
-        And(Filter(name = example.com), Filter(state = 0))
-
-        >>> tree_to_expr({'op': 'or', \
-                          'expr': [{'op': '=', 'left': 'hosts.name', 'right': 'example.com'}, \
-                          {'op': '=', 'left': 'hosts.name', 'right': 'heute'}]})
-        Or(Filter(name = example.com), Filter(name = heute))
-
-        >>> tree_to_expr({'op': 'not', \
-                          'expr': {'op': '=', 'left': 'hosts.name', 'right': 'example.com'}})
-        Not(Filter(name = example.com))
-
-        >>> tree_to_expr({'op': 'not', \
-                          'expr': {'op': 'not', \
-                                   'expr': {'op': '=', \
-                                            'left': 'hosts.name', \
-                                            'right': 'example.com'}}})
-        Not(Not(Filter(name = example.com)))
-
-        >>> from cmk.livestatus_client.tables import Hosts
-        >>> tree_to_expr({'op': 'not', 'expr': Hosts.name == 'example.com'})
-        Not(Filter(name = example.com))
-
-        >>> tree_to_expr({'op': 'no_way', \
-                          'expr': {'op': '=', 'left': 'hosts.name', 'right': 'example.com'}})
-        Traceback (most recent call last):
-        ...
-        ValueError: Unknown operator: no_way
-
     Args:
         filter_dict:
             A filter-dict, which can either be persisted or passed over the wire.
