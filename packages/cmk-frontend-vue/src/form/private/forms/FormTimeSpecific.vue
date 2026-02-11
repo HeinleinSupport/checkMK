@@ -15,7 +15,7 @@ import CmkHelpText from '@/components/CmkHelpText.vue'
 import CmkSpace from '@/components/CmkSpace.vue'
 import FormValidation from '@/components/user-input/CmkInlineValidation.vue'
 
-import { useFormEditDispatcher } from '@/form/private/FormEditDispatcher/useFormEditDispatcher'
+import FormEditDispatcher from '@/form/private/FormEditDispatcher/FormEditDispatcher.vue'
 import { type ValidationMessages } from '@/form/private/validation'
 
 const props = defineProps<{
@@ -62,9 +62,6 @@ function toggleTimeSpecific() {
     data.value = { tp_default_value: data.value, tp_values: [] }
   }
 }
-
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const { FormEditDispatcher } = useFormEditDispatcher()
 </script>
 
 <template>
@@ -78,14 +75,14 @@ const { FormEditDispatcher } = useFormEditDispatcher()
     <template v-if="timespecificActive">
       <FormEditDispatcher
         v-model:data="data"
-        :spec="spec.parameter_form_enabled"
+        :spec="spec.parameter_form_enabled as FormSpec.Components"
         :backend-validation="embeddedValidation"
       />
     </template>
     <template v-else>
       <FormEditDispatcher
         v-model:data="data"
-        :spec="spec.parameter_form_disabled"
+        :spec="spec.parameter_form_disabled as FormSpec.Components"
         :backend-validation="embeddedValidation"
       />
     </template>

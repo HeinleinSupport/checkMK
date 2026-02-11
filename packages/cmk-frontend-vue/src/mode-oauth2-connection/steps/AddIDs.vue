@@ -19,7 +19,7 @@ import type { CmkWizardStepProps } from '@/components/CmkWizard'
 import CmkHeading from '@/components/typography/CmkHeading.vue'
 
 import type { ValidationMessages } from '@/form'
-import FormEdit from '@/form/FormEdit.vue'
+import FormEditDispatcher from '@/form/private/FormEditDispatcher/FormEditDispatcher.vue'
 
 import type { OAuth2FormData } from '@/mode-oauth2-connection/lib/service/oauth2-connection-api.ts'
 
@@ -116,7 +116,7 @@ immediateWatch(
           'Navigate to the app overview (Essentials). Copy the Application (client) ID and Directory (tenant) ID into the fields below.'
         )
       }}
-      <FormEdit
+      <FormEditDispatcher
         v-model:data="filteredData"
         :backend-validation="filteredValidation"
         :spec="filteredDictionary"

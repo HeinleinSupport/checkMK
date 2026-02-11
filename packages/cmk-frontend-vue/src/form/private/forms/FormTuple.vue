@@ -14,7 +14,7 @@ import CmkHelpText from '@/components/CmkHelpText.vue'
 import CmkSpace from '@/components/CmkSpace.vue'
 import FormValidation from '@/components/user-input/CmkInlineValidation.vue'
 
-import { useFormEditDispatcher } from '@/form/private/FormEditDispatcher/useFormEditDispatcher'
+import FormEditDispatcher from '@/form/private/FormEditDispatcher/FormEditDispatcher.vue'
 import FormLabel from '@/form/private/FormLabel.vue'
 import { type ValidationMessages, groupIndexedValidations } from '@/form/private/validation'
 
@@ -46,9 +46,6 @@ function setValidation(newBackendValidation: ValidationMessages) {
   validation.value = _tupleValidations
   elementValidation.value = _elementValidations
 }
-
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const { FormEditDispatcher } = useFormEditDispatcher()
 
 const CLASS_LOOKUP: Record<FormSpec.Tuple['layout'], string> = {
   horizontal_titles_top: 'form-tuple--horizontal-titles-top',
@@ -92,14 +89,14 @@ const CLASS_LOOKUP: Record<FormSpec.Tuple['layout'], string> = {
           <CmkSpace size="small" />
           <FormEditDispatcher
             v-model:data="data[index]"
-            :spec="element"
+            :spec="element as FormSpec.Components"
             :backend-validation="elementValidation[index]!"
           />
         </div>
         <FormEditDispatcher
           v-else
           v-model:data="data[index]"
-          :spec="element"
+          :spec="element as FormSpec.Components"
           :backend-validation="elementValidation[index]!"
         />
       </div>

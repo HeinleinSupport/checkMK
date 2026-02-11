@@ -16,7 +16,7 @@ import { immediateWatch } from '@/lib/watch'
 
 import CmkLabel from '@/components/CmkLabel.vue'
 
-import { useFormEditDispatcher } from '@/form/private/FormEditDispatcher/useFormEditDispatcher'
+import FormEditDispatcher from '@/form/private/FormEditDispatcher/FormEditDispatcher.vue'
 import { type ValidationMessages } from '@/form/private/validation'
 
 const props = defineProps<{
@@ -69,8 +69,6 @@ function convertToDictionarySpec(topicGroup: TopicGroup): Dictionary {
     })
   }
 }
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const { FormEditDispatcher } = useFormEditDispatcher()
 </script>
 
 <template>
@@ -90,7 +88,7 @@ const { FormEditDispatcher } = useFormEditDispatcher()
       <FormEditDispatcher
         :spec="convertToDictionarySpec(topic_group)"
         :data="data"
-        :backend-validation="topicGroupValidation[topic_group.title]"
+        :backend-validation="topicGroupValidation[topic_group.title] || []"
       />
     </td>
   </tr>

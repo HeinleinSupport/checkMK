@@ -12,18 +12,14 @@ import type {
 
 import FormSingleChoiceEditableEditAsync from '@/form/FormEditAsync.vue'
 import type { SetDataResult } from '@/form/FormEditAsync.vue'
-import FormEditDispatcher from '@/form/private/FormEditDispatcher/FormEditDispatcher.vue'
-import { dispatcherKey } from '@/form/private/FormEditDispatcher/useFormEditDispatcher'
+import { initializeComponentRegistry } from '@/form/private/FormEditDispatcher/dispatch'
+
+initializeComponentRegistry()
 
 test('FormSingleChoiceEditableEditAsync renders form', async () => {
   type Data = Record<string, unknown>
 
   render(FormSingleChoiceEditableEditAsync<string, Data>, {
-    global: {
-      provide: {
-        [dispatcherKey]: FormEditDispatcher
-      }
-    },
     props: {
       objectId: null,
       api: {

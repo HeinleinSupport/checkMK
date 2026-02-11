@@ -5,7 +5,11 @@
  */
 import { render } from '@testing-library/vue'
 
+import { initializeComponentRegistry } from '@/form/private/FormEditDispatcher/dispatch'
+
 import FormTitle from '@/graph-designer/private/FormTitle.vue'
+
+initializeComponentRegistry()
 
 test('Render FormTitle', () => {
   render(FormTitle)

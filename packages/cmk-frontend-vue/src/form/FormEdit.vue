@@ -8,7 +8,7 @@ import type { Components, FormSpec } from 'cmk-shared-typing/typescript/vue_form
 
 import { useCmkErrorBoundary } from '@/components/CmkErrorBoundary'
 
-import { useFormEditDispatcher } from '@/form/private/FormEditDispatcher/useFormEditDispatcher'
+import FormEditDispatcher from '@/form/private/FormEditDispatcher/FormEditDispatcher.vue'
 import type { ValidationMessages } from '@/form/private/validation'
 
 defineProps<{
@@ -18,8 +18,6 @@ defineProps<{
 
 const data = defineModel<unknown>('data', { required: true })
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const { FormEditDispatcher } = useFormEditDispatcher()
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const { CmkErrorBoundary } = useCmkErrorBoundary()
 </script>

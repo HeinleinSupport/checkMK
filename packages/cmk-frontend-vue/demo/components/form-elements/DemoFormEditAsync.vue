@@ -10,14 +10,15 @@ import type {
   String,
   ValidationMessage
 } from 'cmk-shared-typing/typescript/vue_formspec_components'
-import { provide, ref, toRaw } from 'vue'
+import { ref, toRaw } from 'vue'
 
 import FormSingleChoiceEditableEditAsync, {
   type API,
   type SetDataResult
 } from '@/form/FormEditAsync.vue'
-import FormEditDispatcher from '@/form/private/FormEditDispatcher/FormEditDispatcher.vue'
-import { dispatcherKey } from '@/form/private/FormEditDispatcher/useFormEditDispatcher'
+import { initializeComponentRegistry } from '@/form/private/FormEditDispatcher/dispatch'
+
+initializeComponentRegistry()
 
 defineProps<{ screenshotMode: boolean }>()
 
@@ -97,9 +98,6 @@ const api: API<ObjectId, ObjectId> = {
     return dict as FormSpec
   }
 }
-// this is a hack to use FormSingleChoiceEditableEditAsync outside a FormEdit context:
-// if you need this in production code, we should think about a better solution
-provide(dispatcherKey, FormEditDispatcher)
 </script>
 
 <template>

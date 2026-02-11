@@ -9,7 +9,11 @@ import { type GraphLines, type GraphOptions } from 'cmk-shared-typing/typescript
 import { HttpResponse, http } from 'msw'
 import { setupServer } from 'msw/node'
 
+import { initializeComponentRegistry } from '@/form/private/FormEditDispatcher/dispatch'
+
 import GraphDesignerApp from '@/graph-designer/GraphDesignerApp.vue'
+
+initializeComponentRegistry()
 
 async function fakeGraphRenderer(
   _graphId: string,

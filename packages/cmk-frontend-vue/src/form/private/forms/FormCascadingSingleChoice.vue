@@ -7,6 +7,7 @@ conditions defined in the file COPYING, which is part of this source code packag
 import type {
   CascadingSingleChoice,
   CascadingSingleChoiceElement,
+  Components,
   FormSpec
 } from 'cmk-shared-typing/typescript/vue_formspec_components'
 import { computed, ref, toRaw, watch } from 'vue'
@@ -22,7 +23,7 @@ import CmkSpace from '@/components/CmkSpace.vue'
 import CmkToggleButtonGroup from '@/components/CmkToggleButtonGroup.vue'
 import FormValidation from '@/components/user-input/CmkInlineValidation.vue'
 
-import { useFormEditDispatcher } from '@/form/private/FormEditDispatcher/useFormEditDispatcher'
+import FormEditDispatcher from '@/form/private/FormEditDispatcher/FormEditDispatcher.vue'
 import FormLabel from '@/form/private/FormLabel.vue'
 import { type ValidationMessages, validateValue } from '@/form/private/validation'
 
@@ -118,9 +119,6 @@ const buttonGroupButtons = computed((): Array<{ label: string; value: string }> 
     return { label: element.title, value: element.name }
   })
 })
-
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const { FormEditDispatcher } = useFormEditDispatcher()
 </script>
 
 <template>
@@ -171,7 +169,7 @@ const { FormEditDispatcher } = useFormEditDispatcher()
           <FormEditDispatcher
             :key="data[0]"
             v-model:data="data[1]"
-            :spec="activeElement.spec"
+            :spec="activeElement.spec as Components"
             :backend-validation="elementValidation"
           />
         </template>

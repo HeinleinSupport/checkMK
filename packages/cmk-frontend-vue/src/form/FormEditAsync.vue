@@ -5,6 +5,7 @@ conditions defined in the file COPYING, which is part of this source code packag
 -->
 <script setup lang="ts" generic="ObjectIdent, Result">
 import type {
+  Components,
   FormSpec,
   ValidationMessage
 } from 'cmk-shared-typing/typescript/vue_formspec_components'
@@ -22,7 +23,7 @@ import { useCmkErrorBoundary } from '@/components/CmkErrorBoundary'
 import CmkIcon from '@/components/CmkIcon'
 import CmkSpace from '@/components/CmkSpace.vue'
 
-import { useFormEditDispatcher } from '@/form/private/FormEditDispatcher/useFormEditDispatcher'
+import FormEditDispatcher from '@/form/private/FormEditDispatcher/FormEditDispatcher.vue'
 
 export type Payload = Record<string, unknown>
 
@@ -105,8 +106,6 @@ async function reloadAll({
 immediateWatch(() => ({ api: props.api, objectId: props.objectId }), reloadAll)
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const { FormEditDispatcher } = useFormEditDispatcher()
-// eslint-disable-next-line @typescript-eslint/naming-convention
 const { CmkErrorBoundary } = useCmkErrorBoundary()
 </script>
 
@@ -140,7 +139,7 @@ const { CmkErrorBoundary } = useCmkErrorBoundary()
       <div v-if="schema !== undefined && data !== undefined">
         <FormEditDispatcher
           v-model:data="data"
-          :spec="schema"
+          :spec="schema as Components"
           :backend-validation="backendValidation"
         />
       </div>

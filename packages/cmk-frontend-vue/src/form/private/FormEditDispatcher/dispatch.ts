@@ -44,6 +44,8 @@ import FormTimeSpan from '@/form/private/forms/FormTimeSpan/FormTimeSpan.vue'
 import FormTimeSpecific from '@/form/private/forms/FormTimeSpecific.vue'
 import FormTuple from '@/form/private/forms/FormTuple.vue'
 
+import { setComponentRegistry } from './componentRegistry'
+
 // TODO: https://forum.vuejs.org/t/use-typescript-to-make-sure-a-vue3-component-has-certain-props/127239/9
 const components: Record<Components['type'], Component> = {
   binary_condition_choices: FormBinaryConditionChoices,
@@ -85,10 +87,8 @@ const components: Record<Components['type'], Component> = {
   regex: FormRegex
 }
 
-export function getComponent(type: string): Component {
-  const result = components[type as Components['type']]
-  if (result !== undefined) {
-    return result
-  }
-  throw new Error(`Could not find Component for type=${type}`)
+export function initializeComponentRegistry() {
+  setComponentRegistry(components)
 }
+
+export { getComponent } from './componentRegistry'

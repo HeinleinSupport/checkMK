@@ -9,7 +9,7 @@ import { computed, onBeforeMount, ref, watch } from 'vue'
 
 import FormValidation from '@/components/user-input/CmkInlineValidation.vue'
 
-import { useFormEditDispatcher } from '@/form/private/FormEditDispatcher/useFormEditDispatcher'
+import FormEditDispatcher from '@/form/private/FormEditDispatcher/FormEditDispatcher.vue'
 import { type ValidationMessages, groupIndexedValidations } from '@/form/private/validation'
 
 const props = defineProps<{
@@ -111,9 +111,6 @@ const specWithoutLabel = computed(() => {
   clone.label = null
   return clone
 })
-
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const { FormEditDispatcher } = useFormEditDispatcher()
 </script>
 
 <template>

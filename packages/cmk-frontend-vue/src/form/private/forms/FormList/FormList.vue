@@ -4,13 +4,13 @@ This file is part of Checkmk (https://checkmk.com). It is subject to the terms a
 conditions defined in the file COPYING, which is part of this source code package.
 -->
 <script setup lang="ts">
-import type { List } from 'cmk-shared-typing/typescript/vue_formspec_components'
+import type { Components, List } from 'cmk-shared-typing/typescript/vue_formspec_components'
 import { ref, watch } from 'vue'
 
 import CmkList from '@/components/CmkList'
 import FormValidation from '@/components/user-input/CmkInlineValidation.vue'
 
-import { useFormEditDispatcher } from '@/form/private/FormEditDispatcher/useFormEditDispatcher'
+import FormEditDispatcher from '@/form/private/FormEditDispatcher/FormEditDispatcher.vue'
 import { type ValidationMessages } from '@/form/private/validation'
 
 import formListActions from './formListActions'
@@ -45,9 +45,6 @@ function reorderElements(order: number[]) {
   data.value = order.map((index) => data.value[index])
   elementValidation.value = order.map((index) => elementValidation.value[index]!)
 }
-
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const { FormEditDispatcher } = useFormEditDispatcher()
 </script>
 
 <template>
@@ -68,7 +65,7 @@ const { FormEditDispatcher } = useFormEditDispatcher()
       <template #item-props="{ index, itemData, itemElementValidation }">
         <FormEditDispatcher
           :data="itemData"
-          :spec="spec.element_template"
+          :spec="spec.element_template as Components"
           :backend-validation="itemElementValidation"
           @update:data="(new_value: unknown) => updateElementData(new_value, index)"
         />

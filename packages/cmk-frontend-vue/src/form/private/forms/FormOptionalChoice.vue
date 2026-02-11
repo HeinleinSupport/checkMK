@@ -14,7 +14,7 @@ import FormIndent from '@/components/CmkIndent.vue'
 import CmkCheckbox from '@/components/user-input/CmkCheckbox.vue'
 import FormValidation from '@/components/user-input/CmkInlineValidation.vue'
 
-import { useFormEditDispatcher } from '@/form/private/FormEditDispatcher/useFormEditDispatcher'
+import FormEditDispatcher from '@/form/private/FormEditDispatcher/FormEditDispatcher.vue'
 import { type ValidationMessages } from '@/form/private/validation'
 
 import { immediateWatch } from '../../../lib/watch'
@@ -56,8 +56,6 @@ watch(checkboxValue, (newValue: boolean) => {
     data.value = null
   }
 })
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const { FormEditDispatcher } = useFormEditDispatcher()
 </script>
 
 <template>
@@ -67,7 +65,7 @@ const { FormEditDispatcher } = useFormEditDispatcher()
   <FormIndent v-if="data !== null">
     <FormEditDispatcher
       v-model:data="data"
-      :spec="spec.parameter_form"
+      :spec="spec.parameter_form as FormSpec.Components"
       :backend-validation="embeddedValidation"
     />
   </FormIndent>

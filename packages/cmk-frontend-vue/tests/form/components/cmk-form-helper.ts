@@ -6,9 +6,12 @@
 import { type RenderResult, render } from '@testing-library/vue'
 import type { FormSpec } from 'cmk-shared-typing/typescript/vue_formspec_components'
 
+import { initializeComponentRegistry } from '@/form/private/FormEditDispatcher/dispatch'
 import type { ValidationMessages } from '@/form/private/validation'
 
 import FormDataVisualizer from './FormDataVisualizer.vue'
+
+initializeComponentRegistry()
 
 export async function renderForm(props: {
   spec: FormSpec
@@ -16,8 +19,6 @@ export async function renderForm(props: {
   backendValidation: ValidationMessages
 }): Promise<RenderResult & { getCurrentData: () => string | null | undefined }> {
   const { container, ...renderResult } = render(FormDataVisualizer, { props: props })
-
-  await vi.dynamicImportSettled()
 
   const getCurrentData = () => container.querySelector('[id=test-data]')?.textContent
 

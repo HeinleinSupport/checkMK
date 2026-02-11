@@ -6,6 +6,7 @@
 import defineCmkComponent from '@/lib/web-component/defineCmkComponent'
 
 import { FormApp } from '@/form'
+import { initializeComponentRegistry } from '@/form/private/FormEditDispatcher/dispatch'
 
 import '@/assets/variables.css'
 import GraphDesignerApp from '@/graph-designer/GraphDesignerApp.vue'
@@ -36,6 +37,8 @@ import WebAuthnRegisterButtonApp from './two-factor-auth/WebAuthnRegisterButtonA
 import UnifiedSearchApp from './unified-search/UnifiedSearchApp.vue'
 import WelcomeApp from './welcome/WelcomeApp.vue'
 import WelcomeSnapin from './welcome/components/snapin/WelcomeSnapin.vue'
+
+initializeComponentRegistry()
 
 defineCmkComponent('cmk-form-spec', FormApp)
 defineCmkComponent('cmk-quick-setup', QuickSetup)

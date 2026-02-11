@@ -4,13 +4,16 @@ This file is part of Checkmk (https://checkmk.com). It is subject to the terms a
 conditions defined in the file COPYING, which is part of this source code package.
 -->
 <script setup lang="ts">
-import type { ListUniqueSelection } from 'cmk-shared-typing/typescript/vue_formspec_components'
+import type {
+  Components,
+  ListUniqueSelection
+} from 'cmk-shared-typing/typescript/vue_formspec_components'
 import { computed, ref, watch } from 'vue'
 
 import CmkList from '@/components/CmkList'
 import FormValidation from '@/components/user-input/CmkInlineValidation.vue'
 
-import { useFormEditDispatcher } from '@/form/private/FormEditDispatcher/useFormEditDispatcher'
+import FormEditDispatcher from '@/form/private/FormEditDispatcher/FormEditDispatcher.vue'
 import { type ValidationMessages } from '@/form/private/validation'
 
 import formListActions from './formListActions'
@@ -85,9 +88,6 @@ const showAddButton = computed(() => {
   }
   return false
 })
-
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const { FormEditDispatcher } = useFormEditDispatcher()
 </script>
 
 <template>
@@ -106,7 +106,7 @@ const { FormEditDispatcher } = useFormEditDispatcher()
     <template #item-props="{ index, itemData, itemElementValidation }">
       <FormEditDispatcher
         :data="itemData"
-        :spec="filteredElementTemplate(index)"
+        :spec="filteredElementTemplate(index) as Components"
         :backend-validation="itemElementValidation"
         @update:data="(new_value: unknown) => updateElementData(new_value, index)"
       />

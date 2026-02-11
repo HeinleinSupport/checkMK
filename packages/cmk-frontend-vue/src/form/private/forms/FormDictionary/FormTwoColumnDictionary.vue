@@ -17,7 +17,7 @@ import CmkCheckbox from '@/components/user-input/CmkCheckbox.vue'
 import FormValidation from '@/components/user-input/CmkInlineValidation.vue'
 
 import FormReadonly from '@/form/FormReadonly.vue'
-import { useFormEditDispatcher } from '@/form/private/FormEditDispatcher/useFormEditDispatcher'
+import FormEditDispatcher from '@/form/private/FormEditDispatcher/FormEditDispatcher.vue'
 import FormHelp from '@/form/private/FormHelp.vue'
 import FormRequired from '@/form/private/FormRequired.vue'
 import { rendersRequiredLabelItself } from '@/form/private/requiredValidator'
@@ -73,9 +73,6 @@ immediateWatch(
 const groups = computed(() => getElementsInGroupsFromProps(props.spec.elements, data))
 
 const componentId = useId()
-
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const { FormEditDispatcher } = useFormEditDispatcher()
 </script>
 
 <template>
@@ -125,7 +122,7 @@ const { FormEditDispatcher } = useFormEditDispatcher()
                 <FormEditDispatcher
                   v-if="!dict_element.dict_config.render_only"
                   v-model:data="data[dict_element.dict_config.name]"
-                  :spec="dict_element.dict_config.parameter_form"
+                  :spec="dict_element.dict_config.parameter_form as FormSpec.Components"
                   :backend-validation="elementValidation[dict_element.dict_config.name]!"
                 />
                 <FormReadonly

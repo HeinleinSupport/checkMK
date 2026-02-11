@@ -7,12 +7,13 @@ conditions defined in the file COPYING, which is part of this source code packag
 import type { SingleChoiceEditable } from 'cmk-shared-typing/typescript/vue_formspec_components'
 import { HttpResponse, bypass, http, passthrough } from 'msw'
 import { setupWorker } from 'msw/browser'
-import { onBeforeMount, onBeforeUnmount, provide, ref } from 'vue'
+import { onBeforeMount, onBeforeUnmount, ref } from 'vue'
 
-import FormEditDispatcher from '@/form/private/FormEditDispatcher/FormEditDispatcher.vue'
-import { dispatcherKey } from '@/form/private/FormEditDispatcher/useFormEditDispatcher'
+import { initializeComponentRegistry } from '@/form/private/FormEditDispatcher/dispatch'
 import FormSingleChoiceEditable from '@/form/private/forms/FormSingleChoiceEditable/FormSingleChoiceEditable.vue'
 import { configEntityAPI } from '@/form/private/forms/FormSingleChoiceEditable/configuration_entity'
+
+initializeComponentRegistry()
 
 defineProps<{ screenshotMode: boolean }>()
 
@@ -159,8 +160,6 @@ const reloadCount = ref<number>(0)
 const apiDelay = ref<number>(0)
 const apiError = ref<false | 'proxy' | 'crash' | 'error'>(false)
 const spec = ref<SingleChoiceEditable>()
-
-provide(dispatcherKey, FormEditDispatcher)
 </script>
 
 <template>

@@ -4,7 +4,7 @@ This file is part of Checkmk (https://checkmk.com). It is subject to the terms a
 conditions defined in the file COPYING, which is part of this source code package.
 -->
 <script setup lang="ts">
-import type { TopicElement } from 'cmk-shared-typing/typescript/vue_formspec_components'
+import type { Components, TopicElement } from 'cmk-shared-typing/typescript/vue_formspec_components'
 import { onMounted, ref, watch } from 'vue'
 
 import { untranslated } from '@/lib/i18n'
@@ -14,7 +14,7 @@ import { immediateWatch } from '@/lib/watch'
 import CmkLabel from '@/components/CmkLabel.vue'
 import CmkCheckbox from '@/components/user-input/CmkCheckbox.vue'
 
-import { useFormEditDispatcher } from '@/form/private/FormEditDispatcher/useFormEditDispatcher'
+import FormEditDispatcher from '@/form/private/FormEditDispatcher/FormEditDispatcher.vue'
 import FormRequired from '@/form/private/FormRequired.vue'
 import { rendersRequiredLabelItself } from '@/form/private/requiredValidator'
 import { type ValidationMessages, groupNestedValidations } from '@/form/private/validation'
@@ -69,8 +69,6 @@ watch(checkedElements, (newCheckedElements) => {
 })
 
 const componentId = useId()
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const { FormEditDispatcher } = useFormEditDispatcher()
 </script>
 
 <template>
@@ -107,7 +105,7 @@ const { FormEditDispatcher } = useFormEditDispatcher()
       <FormEditDispatcher
         v-if="element.name in data"
         v-model:data="data[element.name]"
-        :spec="element.parameter_form"
+        :spec="element.parameter_form as Components"
         :backend-validation="elementValidation[element.name]!"
       />
     </td>
