@@ -4,9 +4,7 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 # mypy: disable-error-code="comparison-overlap"
-
 # mypy: disable-error-code="type-arg"
-# mypy: disable-error-code="unreachable"
 
 from collections.abc import Iterable
 from importlib import import_module
@@ -14,6 +12,7 @@ from typing import assert_never
 
 import cmk.trace
 from cmk.agent_based import v2
+from cmk.agent_based.legacy import find_legacy_check_modules
 from cmk.checkengine import plugins
 from cmk.checkengine.plugins import SectionName
 from cmk.discover_plugins import (
@@ -35,14 +34,6 @@ _ABPlugins = (
 tracer = cmk.trace.get_tracer()
 
 
-_NOT_YET_MOVED_PLUGINS = (
-    # HACK for migrating plugins: also search in certain modules that are not yet moved.
-    # This datastructure should only be filled for one commit in a chain, and be emptied
-    # right away. This is for convenience of the reviewer of a plugin migration only:
-    # This way we can separate migration and moving.
-)
-
-
 @tracer.instrument("load_all_plugins")
 def load_all_plugins(
     sections: Iterable[plugins.SNMPSectionPlugin | plugins.AgentSectionPlugin],
@@ -55,10 +46,15 @@ def load_all_plugins(
         discovered_plugins: DiscoveredPlugins[_ABPlugins] = discover_all_plugins(
             PluginGroup.AGENT_BASED, v2.entry_point_prefixes(), raise_errors=raise_errors
         )
-        if _NOT_YET_MOVED_PLUGINS:
+        # HACK for migrating plugins: also search in legacy check modules.
+        # This is for convenience of the reviewer of a plugin migration only:
+        # This way we can separate migration and moving.
+        # We do it this way rather than listing individual modules because it
+        # prevents unrelated migrations from creating merge conflict.
+        if not_yet_moved_plugins := find_legacy_check_modules():
             more_discovered_plugins = discover_plugins_from_modules(
                 v2.entry_point_prefixes(),
-                _NOT_YET_MOVED_PLUGINS,
+                not_yet_moved_plugins,
                 raise_errors=raise_errors,
             )
             discovered_plugins = DiscoveredPlugins(
