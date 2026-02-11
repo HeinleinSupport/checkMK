@@ -416,6 +416,7 @@ pkg_files(
     srcs = [
         "//agents",
     ],
+    attributes = pkg_attributes(mode = "0775"),
     prefix = "share/check_mk/agents",
     strip_prefix = strip_prefix.from_pkg(""),
 )
