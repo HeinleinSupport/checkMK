@@ -40,6 +40,7 @@ _NOT_YET_MOVED_PLUGINS = (
     # This datastructure should only be filled for one commit in a chain, and be emptied
     # right away. This is for convenience of the reviewer of a plugin migration only:
     # This way we can separate migration and moving.
+    "cmk.base.legacy_checks.appdynamics_memory",
 )
 
 
