@@ -29,7 +29,9 @@ from cmk.plugins.kube.schemata.section import (
 
 
 # TODO: change section from info to components
-def parse_collector_processing_logs(string_table: StringTable) -> CollectorProcessingLogs:
+def parse_collector_processing_logs(
+    string_table: StringTable,
+) -> CollectorProcessingLogs:
     return CollectorProcessingLogs.model_validate_json(string_table[0][0])
 
 
@@ -98,14 +100,7 @@ def _component_check(
 
 
 def _collector_component_versions(components: Sequence[NodeComponent]) -> str:
-    """
-    Examples:
-        >>> from cmk.plugins.kube.schemata.section import CollectorType, CheckmkKubeAgentMetadata
-        >>> _collector_component_versions([NodeComponent(name="component", version="1",
-        ... checkmk_kube_agent=CheckmkKubeAgentMetadata(project_version="1"),
-        ... collector_type=CollectorType.CONTAINER_METRICS)])
-        'Container Metrics: Checkmk_kube_agent v1, component 1'
-    """
+    """Format component version strings for display."""
     formatted_components: list[str] = []
     for component in sorted(components, key=lambda c: c.collector_type.value):
         formatted_components.append(

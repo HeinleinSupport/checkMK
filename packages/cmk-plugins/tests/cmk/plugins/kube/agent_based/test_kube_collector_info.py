@@ -373,6 +373,21 @@ def test_check_api_daemonsets_not_found() -> None:
     assert additional_info_result.details.startswith("Collector DaemonSets")
 
 
+def test_collector_component_versions() -> None:
+    components = [
+        NodeComponent(
+            name="component",
+            version=Version("1"),
+            checkmk_kube_agent=CheckmkKubeAgentMetadata(project_version=Version("1")),
+            collector_type=CollectorType.CONTAINER_METRICS,
+        )
+    ]
+    assert (
+        kube_collector_info._collector_component_versions(components)
+        == "Container Metrics: Checkmk_kube_agent v1, component 1"
+    )
+
+
 def test_check_api_daemonsets_multiple_with_same_label() -> None:
     # Arrange
     collector_metadata = CollectorComponentsMetadata(
