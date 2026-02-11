@@ -16,11 +16,7 @@ bazel lint --fix //cmk/... || exit $?
 # run mypy on more than the changed files. Takes longer, but coming back later takes even more time.
 bazel build --config=mypy //cmk/... || exit $?
 
-# ignore some that fail on collection.
-scripts/run-uvenv pytest tests/unit/cmk/base/legacy_checks tests/unit/cmk/plugins/ \
-    --ignore tests/unit/cmk/plugins/metric_backend/ \
-    --ignore tests/unit/cmk/plugins/metric_backend_omd/ \
-    --ignore tests/unit/cmk/plugins/custom_query_metric_backend/ \
-    --ignore tests/unit/cmk/plugins/ceph || exit $?
+# at least exclude gui. Only collecting what we need keeps failing :-/
+bazel test //tests/unit:repo --test_arg=--ignore --test_arg=tests/unit/cmk/gui || exit $?
 
 make -C tests test-plugins-consistency
