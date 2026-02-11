@@ -637,6 +637,7 @@ pkg_tar(
         "//omd/packages/protobuf",
         "//packages/check-http:check_http_pkg",
     ],
+    stamp = 1,
     tags = ["manual"],
     deps = [
         "//bin:pkg_tar",
