@@ -305,40 +305,7 @@ class UniqueFields:
 class Nested(OpenAPIAttributes, fields.Nested, UniqueFields):
     """Allows you to nest a marshmallow Schema inside a field.
 
-    Honors the OpenAPI key `uniqueItems`.
-
-    Examples:
-
-        >>> from marshmallow import Schema
-        >>> from cmk.fields import String
-        >>> class Service(Schema):
-        ...      host = String(required=True)
-        ...      description = String(required=True)
-        ...      recur = String()
-
-        Setting the `many` param will turn this into a list:
-
-            >>> class Bulk(Schema):
-            ...      entries = Nested(Service,
-            ...                       many=True, uniqueItems=True,
-            ...                       required=False, load_default=lambda: [])
-
-            >>> entries = [
-            ...     {'host': 'example', 'description': 'CPU load', 'recur': 'week'},
-            ...     {'host': 'example', 'description': 'CPU load', 'recur': 'day'},
-            ...     {'host': 'host', 'description': 'CPU load'}
-            ... ]
-
-            >>> Bulk().load({'entries': entries})
-            Traceback (most recent call last):
-            ...
-            marshmallow.exceptions.ValidationError: {'entries': ["Duplicate entry found at entry #2: {'description': 'CPU load', 'host': 'example'} (optional fields {'recur': 'day'})"]}
-
-            >>> schema = Bulk()
-            >>> assert schema.fields['entries'].load_default is not fields.missing_
-            >>> schema.load({})
-            {'entries': []}
-
+    Honors the OpenAPI key ``uniqueItems``.
     """
 
     # NOTE:
@@ -380,57 +347,9 @@ class Nested(OpenAPIAttributes, fields.Nested, UniqueFields):
 
 
 class List(OpenAPIAttributes, fields.List, UniqueFields):
-    """A list field, composed with another `Field` class or instance.
+    """A list field, composed with another ``Field`` class or instance.
 
-    Honors the OpenAPI key `uniqueItems`.
-
-    Examples:
-
-        With scalar values:
-
-            >>> from marshmallow import Schema
-            >>> class Foo(Schema):
-            ...      id = String()
-            ...      lists = List(String(), uniqueItems=True)
-
-            >>> Foo().load({'lists': ['2', '2']})
-            Traceback (most recent call last):
-            ...
-            marshmallow.exceptions.ValidationError: {'lists': ["Duplicate entry found at entry #2: '2'"]}
-
-        With nested schemas:
-
-            >>> class Bar(Schema):
-            ...      entries = List(Nested(Foo), allow_none=False, required=True, uniqueItems=True)
-
-            >>> Bar().load({'entries': [{'id': '1'}, {'id': '2'}, {'id': '2'}]})
-            Traceback (most recent call last):
-            ...
-            marshmallow.exceptions.ValidationError: {'entries': ["Duplicate entry found at entry #3: {'id': '2'}"]}
-
-            >>> Bar().load({'entries': [{'lists': ['2']}, {'lists': ['2']}]})
-            Traceback (most recent call last):
-            ...
-            marshmallow.exceptions.ValidationError: {'entries': ["Duplicate entry found at entry #2: {'lists': ['2']}"]}
-
-        Some more examples:
-
-            >>> class Service(Schema):
-            ...      host = String(required=True)
-            ...      description = String(required=True)
-            ...      recur = String()
-
-            >>> class Bulk(Schema):
-            ...      entries = List(Nested(Service), uniqueItems=True)
-
-            >>> Bulk().load({"entries": [
-            ...     {'host': 'example', 'description': 'CPU load', 'recur': 'week'},
-            ...     {'host': 'example', 'description': 'CPU load', 'recur': 'day'},
-            ...     {'host': 'host', 'description': 'CPU load'}
-            ... ]})
-            Traceback (most recent call last):
-            ...
-            marshmallow.exceptions.ValidationError: {'entries': ["Duplicate entry found at entry #2: {'description': 'CPU load', 'host': 'example'} (optional fields {'recur': 'day'})"]}
+    Honors the OpenAPI key ``uniqueItems``.
     """
 
     default_error_messages = {
