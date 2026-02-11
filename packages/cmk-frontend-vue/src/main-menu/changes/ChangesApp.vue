@@ -15,6 +15,7 @@ import CmkAlertBox from '@/components/CmkAlertBox.vue'
 import CmkButton from '@/components/CmkButton.vue'
 import CmkButtonSubmit from '@/components/CmkButtonSubmit.vue'
 import CmkDialog from '@/components/CmkDialog.vue'
+import CmkHtml from '@/components/CmkHtml.vue'
 import CmkIcon from '@/components/CmkIcon'
 import CmkHeading from '@/components/typography/CmkHeading.vue'
 
@@ -55,7 +56,8 @@ const activationError = ref<string | null>(null)
 
 const sitesAndChanges = ref<SitesAndChanges>({
   sites: [],
-  pendingChanges: []
+  pendingChanges: [],
+  licenseMessage: null
 })
 
 const sitesRef = computed(() => sitesAndChanges.value.sites)
@@ -234,6 +236,9 @@ const userCanActivateSelectedSites = computed((): boolean => {
 })
 
 const activateChangesButtonDisabled = computed((): boolean => {
+  if (sitesAndChanges.value.licenseMessage !== null) {
+    return true
+  }
   if (!userCanActivateSelectedSites.value) {
     return true
   }
@@ -333,6 +338,13 @@ onMounted(async () => {
       </CmkAlertBox>
       <CmkAlertBox v-if="activationError" variant="error" class="cmk-alert-box">
         {{ activationError }}
+      </CmkAlertBox>
+      <CmkAlertBox
+        v-if="sitesAndChanges.licenseMessage !== null"
+        variant="warning"
+        class="cmk-alert-box"
+      >
+        <CmkHtml :html="sitesAndChanges.licenseMessage" />
       </CmkAlertBox>
       <ChangesActivating
         v-if="activateChangesInProgress"
