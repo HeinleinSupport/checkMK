@@ -448,10 +448,10 @@ STAGES:
     - NAME: "Package cmk-relay-engine"
       ONLY_WHEN_NOT_EMPTY: CHANGED_REFERENCE_IMAGE,CHANGED_PYPROJECT_TOML_FILE,CHANGED_RELAY_ENGINE_FILES,CHANGED_PYTHON_REQUIREMENTS,CHANGED_CMK_RELAY_PROTOCOLS_FILES
       DIR: "non-free/packages/cmk-relay-engine"
-      COMMAND: "./run --component-tests &> ${RESULTS}/cmk-relay-engine.txt"
+      COMMAND: "./run --component-tests"
       BAZEL_LOCKS_AMOUNT: 1
       TEXT_ON_SKIP: "No cmk-relay-engine files changed"
-      RESULT_CHECK_FILE_PATTERN: "results/cmk-relay-engine.txt"
+      RESULT_CHECK_FILE_PATTERN: "cmk-relay-engine.txt"
 
     - NAME: "Format repository"
       COMMAND: "bazel run //:format.check &> ${RESULTS}/format.txt"
