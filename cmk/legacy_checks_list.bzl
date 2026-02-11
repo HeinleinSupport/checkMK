@@ -1,7 +1,6 @@
 """List of legacy check plugin names for backwards compatibility."""
 
 LEGACY_CHECKS = [
-    "appdynamics_memory",
     "appdynamics_sessions",
     "appdynamics_web_container",
     "arris_cmts_cpu",
