@@ -6,7 +6,6 @@ load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
 load("@rules_python//python:packaging.bzl", "py_wheel")
 load("//bazel/rules:doctest.bzl", "py_doc_test")
 load("//bazel/rules:package_wheel.bzl", "package_wheel")
-load("do_not_deploy.bzl", "DO_NOT_DEPLOY")
 
 # To update the list run the following command:
 # echo "LEGACY_CHECKS = [" > legacy_checks_list.bzl;for F in $(ls *.py); do echo $F | sed 's/\(.*\)\.py/    "\1",/' >> legacy_checks_list.bzl; done; echo "]" >> legacy_checks_list.bzl
@@ -257,7 +256,7 @@ py_library(
     name = "cmk_cmk",
     srcs = glob(
         include = ["**/*.py"],
-        exclude = DO_NOT_DEPLOY + [
+        exclude = [
             "base/legacy_checks/*",
             "**/community/**",
             "**/nonfree/**",
@@ -278,7 +277,7 @@ py_library(
     srcs = glob(
         include = ["**/community/**/*.py"],
         allow_empty = True,
-        exclude = DO_NOT_DEPLOY + ["**/nonfree/**"],
+        exclude = ["**/nonfree/**"],
     ),
     imports = [".."],
     visibility = ["//:__subpackages__"],
@@ -293,7 +292,7 @@ py_library(
             "**/nonfree/**/*.py",
         ],
         allow_empty = True,
-        exclude = DO_NOT_DEPLOY + [
+        exclude = [
             "**/nonfree/**/cloud/**",
             "**/nonfree/**/ultimate/**",
             "**/nonfree/**/ultimatemt/**",
@@ -324,7 +323,6 @@ py_library(
     srcs = glob(
         include = ["**/nonfree/**/ultimate/**/*.py"],
         allow_empty = True,
-        exclude = DO_NOT_DEPLOY,
     ),
     imports = [".."],
     visibility = ["//:__subpackages__"],
@@ -347,7 +345,6 @@ py_library(
     srcs = glob(
         include = ["**/nonfree/**/cloud/**/*.py"],
         allow_empty = True,
-        exclude = DO_NOT_DEPLOY,
     ),
     imports = [".."],
     visibility = ["//:__subpackages__"],
@@ -376,7 +373,6 @@ py_library(
     srcs = glob(
         include = ["**/nonfree/**/ultimatemt/**/*.py"],
         allow_empty = True,
-        exclude = DO_NOT_DEPLOY,
     ),
     imports = [".."],
     visibility = ["//:__subpackages__"],

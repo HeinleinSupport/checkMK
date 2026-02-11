@@ -61,9 +61,6 @@ rsync \
     "${PYTHON3_PATHS[@]}" \
     "$ROOT"/lib/python3/cmk/
 
-# Transform required packages to namespace package
-grep --recursive --files-with-matches --null 'check_mk.make: do-not-deploy' "${ROOT}/lib/python3/cmk" | xargs --null rm -f
-
 # cloud stuff is only in cloud (not sure if this suffices to fake a "real" cloud).
 if [ "$CMK_EDITION" != "cloud" ]; then
     find "${ROOT}/lib/python3" -regex '.*/cloud*' -print0 | xargs --null rm -rf
