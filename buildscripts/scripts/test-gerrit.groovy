@@ -164,7 +164,6 @@ void main() {
                             ];
                             break;
                         case "Package cmk-agent-receiver":  // Tries to start docker containers, CMK-29585
-                        case "Package cmk-update-agent":    // Has issues with pytest
                         // exception: The 'enchant' C library was not found and maybe needs to be installed.
                         case "Software Documentation Generation":
                             relative_job_name = "${branch_base_folder}/cv/test-gerrit-single";
