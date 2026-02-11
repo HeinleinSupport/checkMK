@@ -3,27 +3,41 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
-
 # <<<appdynamics_sessions:sep(124)>>>
 # Hans|/hans|rejectedSessions:0|sessionAverageAliveTime:1800|sessionCounter:13377|expiredSessions:13371|processingTime:1044|maxActive:7|activeSessions:6|sessionMaxAliveTime:4153
 
 
 import time
+from collections.abc import Mapping
+from typing import Any
 
-from cmk.agent_based.legacy.v0_unstable import check_levels, LegacyCheckDefinition
-from cmk.agent_based.v2 import get_rate, get_value_store, StringTable
+from cmk.agent_based.legacy.conversion import (
+    # Temporary compatibility layer untile we migrate the corresponding ruleset.
+    check_levels_legacy_compatible as check_levels,
+)
+from cmk.agent_based.v2 import (
+    AgentSection,
+    CheckPlugin,
+    CheckResult,
+    DiscoveryResult,
+    get_rate,
+    get_value_store,
+    Result,
+    Service,
+    State,
+    StringTable,
+)
 
-check_info = {}
+
+def discover_appdynamics_sessions(section: StringTable) -> DiscoveryResult:
+    for line in section:
+        yield Service(item=" ".join(line[0:2]))
 
 
-def discover_appdynamics_sessions(info):
-    for line in info:
-        yield " ".join(line[0:2]), {}
-
-
-def check_appdynamics_sessions(item, params, info):
-    for line in info:
+def check_appdynamics_sessions(
+    item: str, params: Mapping[str, Any], section: StringTable
+) -> CheckResult:
+    for line in section:
         if item == " ".join(line[0:2]):
             values = {}
             for metric in line[2:]:
@@ -36,10 +50,10 @@ def check_appdynamics_sessions(item, params, info):
             counter = values["sessionCounter"]
 
             now = time.time()
-            rate_id = "appdynamics_sessions.%s.counter" % (item.lower().replace(" ", "_"))
+            rate_id = f"appdynamics_sessions.{item.lower().replace(' ', '_')}.counter"
             counter_rate = get_rate(get_value_store(), rate_id, now, counter, raise_overflow=True)
 
-            yield check_levels(
+            yield from check_levels(
                 active,
                 "running_sessions",
                 (params["levels_upper"] or (None, None)) + (params["levels_lower"] or (None, None)),
@@ -47,22 +61,29 @@ def check_appdynamics_sessions(item, params, info):
                 infoname="Running sessions",
             )
 
-            yield check_levels(counter_rate, None, None, human_readable_func=lambda x: f"{x}/sec")
+            yield from check_levels(
+                counter_rate, None, None, human_readable_func=lambda x: f"{x}/sec"
+            )
 
-            yield check_levels(
+            yield from check_levels(
                 rejected, "rejected_sessions", None, human_readable_func=str, infoname="Rejected"
             )
 
-            yield 0, "Maximum active: %d" % max_active
+            yield Result(state=State.OK, summary=f"Maximum active: {max_active}")
 
 
 def parse_appdynamics_sessions(string_table: StringTable) -> StringTable:
     return string_table
 
 
-check_info["appdynamics_sessions"] = LegacyCheckDefinition(
+agent_section_appdynamics_sessions = AgentSection(
     name="appdynamics_sessions",
     parse_function=parse_appdynamics_sessions,
+)
+
+
+check_plugin_appdynamics_sessions = CheckPlugin(
+    name="appdynamics_sessions",
     service_name="AppDynamics Sessions %s",
     discovery_function=discover_appdynamics_sessions,
     check_function=check_appdynamics_sessions,
