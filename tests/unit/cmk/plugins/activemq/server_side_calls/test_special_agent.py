@@ -73,7 +73,6 @@ from cmk.server_side_calls.v1 import HostConfig, IPv4Config, Secret, SpecialAgen
                     "--piggyback",
                 ]
             ),
-            marks=pytest.mark.xfail(reason="SUP-27436", strict=True),
             id="with macro",
         ),
     ],
