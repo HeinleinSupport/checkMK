@@ -3,8 +3,6 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="type-arg"
-
 # <<<appdynamics_web_container:sep(124)>>>
 # Hans|http-8180|Error Count:0|Busy Threads:0|Current Threads In Pool:0|Request Count:0|Maximum Threads:200
 # Hans|jk-8109|Error Count:0|Request Count:2
@@ -13,16 +11,25 @@ import time
 from collections.abc import Iterable, Mapping, Sequence
 from typing import Any
 
-from cmk.agent_based.legacy.v0_unstable import check_levels, LegacyCheckDefinition
-from cmk.agent_based.v2 import get_rate, get_value_store, render, StringTable
+from cmk.agent_based.legacy.conversion import (
+    # Temporary compatibility layer untile we migrate the corresponding ruleset.
+    check_levels_legacy_compatible as check_levels,
+)
+from cmk.agent_based.v2 import (
+    AgentSection,
+    CheckPlugin,
+    CheckResult,
+    DiscoveryResult,
+    get_rate,
+    get_value_store,
+    render,
+    Result,
+    Service,
+    State,
+    StringTable,
+)
 
-check_info = {}
-
-Section = Mapping[str, Mapping[str, int]]
-
-DiscoveryResult = Iterable[tuple[str, Mapping]]
-
-CheckResult = Iterable[tuple[int, str, list]]
+type Section = Mapping[str, Mapping[str, int]]
 
 
 def _parse_metrics(raw_metrics: Sequence[str]) -> Iterable[tuple[str, int]]:
@@ -44,7 +51,7 @@ def parse_appdynamics_web_container(string_table: StringTable) -> Section:
 
 
 def discover_appdynamics_web_container(section: Section) -> DiscoveryResult:
-    yield from ((name, {}) for name in section)
+    yield from (Service(item=name) for name in section)
 
 
 def check_appdynamics_web_container(
@@ -61,7 +68,7 @@ def check_appdynamics_web_container(
     max_threads = values.get("Maximum Threads", None)
 
     if current_threads is not None:
-        yield check_levels(
+        yield from check_levels(
             current_threads,
             "current_threads",
             params["levels"],
@@ -71,10 +78,13 @@ def check_appdynamics_web_container(
 
         if max_threads:
             threads_percent = 100.0 * current_threads / max(1, max_threads)
-            yield 0, f"{render.percent(threads_percent)} of {max_threads}", []
+            yield Result(
+                state=State.OK,
+                summary=f"{render.percent(threads_percent)} of {max_threads}",
+            )
 
         if busy_threads is not None:
-            yield check_levels(
+            yield from check_levels(
                 busy_threads,
                 "busy_threads",
                 None,
@@ -85,7 +95,7 @@ def check_appdynamics_web_container(
     now = time.time()
     store = get_value_store()
     if error_count is not None:
-        yield check_levels(
+        yield from check_levels(
             get_rate(store, "error", now, error_count, raise_overflow=True),
             "error_rate",
             None,
@@ -94,7 +104,7 @@ def check_appdynamics_web_container(
         )
 
     if request_count is not None:
-        yield check_levels(
+        yield from check_levels(
             get_rate(store, "request", now, request_count, raise_overflow=True),
             "request_rate",
             None,
@@ -103,10 +113,15 @@ def check_appdynamics_web_container(
         )
 
 
-check_info["appdynamics_web_container"] = LegacyCheckDefinition(
+agent_section_appdynamics_web_container = AgentSection(
+    name="appdynamics_web_container",
+    parse_function=parse_appdynamics_web_container,
+)
+
+
+check_plugin_appdynamics_web_container = CheckPlugin(
     name="appdynamics_web_container",
     service_name="AppDynamics Web Container %s",
-    parse_function=parse_appdynamics_web_container,
     discovery_function=discover_appdynamics_web_container,
     check_function=check_appdynamics_web_container,
     check_ruleset_name="jvm_threads",
