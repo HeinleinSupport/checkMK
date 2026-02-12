@@ -2058,11 +2058,6 @@ msgstr ""
 "especificando la expresión \"%s\" (sin las comillas), y seleccionando \"%s\"."
 "</p>"
 
-msgid ""
-"<p>The minimum value is 15 minutes and the maximum value is 31 days.</p>This "
-"applies to the following sections: <ul><li>switch port statuses</li></ul>"
-msgstr ""
-
 #, fuzzy
 msgid ""
 "<p>The process name may contain one or more occurrences of <tt>%s</tt>. If "
@@ -7421,10 +7416,6 @@ msgstr "Certificados del equilibrador de carga de aplicaciones"
 msgid "Application Load balancers"
 msgstr "Equilibradores de carga de aplicaciones"
 
-#, fuzzy
-msgid "Application Monitoring"
-msgstr "Buscar en la supervisión"
-
 msgid "Application Pool name"
 msgstr "Nombre del grupo de aplicaciones"
 
@@ -8302,6 +8293,11 @@ msgstr "Configuración de la detección de volatiles para los hosts"
 
 msgid "Auto-disconnect time"
 msgstr "Tiempo de desconexión automática"
+
+msgid ""
+"Autocompletion is only available on sites with a configured metric backend. "
+"The metric backend can be enabled in the Global Settings."
+msgstr ""
 
 msgid "Autodetect instances"
 msgstr "Instancias de autodetección"
@@ -35315,6 +35311,13 @@ msgstr ""
 "Livestatus del sitio de destino."
 
 msgid ""
+"If you enable the OpenTelemetry data, the data collected from the "
+"OpenTelemetry Collector or the Prometheus scraper will be used for this host "
+"if they match the resource attribute key. You must also enable the metric "
+"backend under Global Settings > Site Management."
+msgstr ""
+
+msgid ""
 "If you enable the replication of MKPs then during each <i>Activate Changes</"
 "i> MKPs that are installed on your central site and all other files below "
 "the <tt>~/local/</tt> directory will be also transferred to the remote site. "
@@ -49750,10 +49753,6 @@ msgid "OTel collector memory usage"
 msgstr "Uso de la memoria de Netscaler"
 
 #, fuzzy
-msgid "OTel metrics"
-msgstr "Métrica"
-
-#, fuzzy
 msgid "OVS bonding"
 msgstr "Vinculación de Vswitch"
 
@@ -50530,6 +50529,10 @@ msgstr "Añadir configuración de estado"
 
 #, fuzzy
 msgid "OpenTelemetry RED Requests"
+msgstr "Añadir configuración de estado"
+
+#, fuzzy
+msgid "OpenTelemetry data"
 msgstr "Añadir configuración de estado"
 
 #, fuzzy
@@ -63178,11 +63181,6 @@ msgid "Setting"
 msgstr "Configuración"
 
 msgid ""
-"Setting a resource attribute requires to enable the metric backend in the "
-"Global Settings."
-msgstr ""
-
-msgid ""
 "Setting levels on non-unicast packet rates is optional. This may help to "
 "detect broadcast storms and other unwanted traffic."
 msgstr ""
@@ -68572,6 +68570,10 @@ msgid "Tel2IP Total duration of SIP/H323 calls"
 msgstr "Duración total"
 
 #, fuzzy
+msgid "Telemetry"
+msgstr "Añadir configuración de estado"
+
+#, fuzzy
 msgid ""
 "Tell the Jolokia plug-in to stop waiting for a response from each configured "
 "instance after the provided number of seconds have passed. This time limit "
@@ -71507,9 +71509,6 @@ msgid ""
 msgstr ""
 "El nombre de la instancia, el nombre de la base de datos y el nombre del "
 "tablespace combinados así db2wps8:WPSCOMT8.USERSPACE1"
-
-msgid "The interval for which the information will be fetched."
-msgstr ""
 
 #, fuzzy
 msgid ""
@@ -80106,10 +80105,6 @@ msgstr "Times"
 msgid "Timeseries"
 msgstr "Timeseries"
 
-#, fuzzy
-msgid "Timespan"
-msgstr "Times"
-
 msgid "Timespan for difference calculation of summed up values"
 msgstr "Tiempo de cálculo de la diferencia de los valores sumados"
 
@@ -84515,6 +84510,10 @@ msgstr ""
 "La actualización de la caché DNS de los sitios es necesaria para reflejar "
 "los cambios de dirección IP en los hosts que están configurados sin una "
 "dirección explícita."
+
+#, fuzzy
+msgid "Updating..."
+msgstr "Esperando"
 
 #, fuzzy
 msgid "Upgrade to Checkmk Enterprise or Checkmk Ultimate to use this feature"
@@ -95060,6 +95059,10 @@ msgstr "servicio en estado %s"
 msgid "service names"
 msgstr "Nombre del servicio"
 
+#, fuzzy
+msgid "service.name"
+msgstr "Nombre del servicio"
+
 msgid "services"
 msgstr "servicios"
 
@@ -96748,8 +96751,8 @@ msgid "Only show when \"Show more\" is enabled"
 msgstr "Sólo mostrar el %s si mostrar más está activo"
 
 #, fuzzy
-msgid "Show in dropdown menus"
-msgstr "Ocultar este %s en los menús desplegables"
+msgid "Show in dashboard name dropdown"
+msgstr "Desde el almacén de contraseñas"
 
 #, fuzzy
 msgid "Dashboard settings of %{name}"
@@ -97499,14 +97502,6 @@ msgstr "%d cambios"
 msgid "Sites with changes: %{n}"
 msgstr "Comenzó a activar los cambios: %s"
 
-#, fuzzy
-msgid "Sites with errors: %{n}"
-msgstr "%d sitios con errores: %s"
-
-#, fuzzy
-msgid "Sites logged out: %{n}"
-msgstr "%d sitios con errores: %s"
-
 msgid "Show all"
 msgstr "Mostrar todo"
 
@@ -97593,12 +97588,13 @@ msgstr "Nuevas conexiones TLS"
 msgid "Failed to connect to the Checkmk agent"
 msgstr "Puerto TCP para la conexión con el agente Checkmk"
 
-#, fuzzy
 msgid ""
-"This problem might be caused by a missing agent or the firewall settings."
+"This can have different reasons. The Checkmk agent might not be installed, "
+"or communication may be blocked by firewall or network settings.\n"
+"If this host should be monitored via an agent, download and install the "
+"agent and check the connectivity.\n"
+"If not, you can ignore this message."
 msgstr ""
-"Los problemas anteriores pueden deberse a la falta de cachés. Por favor, "
-"vuelva a escanear."
 
 #, fuzzy
 msgid "Download & install agent"
@@ -97776,6 +97772,39 @@ msgid "This requires the generation of a registration token."
 msgstr "Este permiso permite el registro de cualquier host existente."
 
 msgid "Run this command to register the Checkmk agent controller."
+msgstr ""
+
+msgid ""
+"Troubleshooting registration issues: Authenticate with the registration user"
+msgstr ""
+
+msgid ""
+"Registration fails if the token cannot be authorized. In this case,\n"
+"              authenticate using the"
+msgstr ""
+
+#, fuzzy
+msgid "agent_registration"
+msgstr "Registro de agentes"
+
+#, fuzzy
+msgid "user instead of the token."
+msgstr "Utiliza el estado del servicio..."
+
+msgid ""
+"When you run the command in the terminal, you will be prompted for the "
+"password of the"
+msgstr ""
+
+#, fuzzy
+msgid "agent_registration user"
+msgstr "Usuario de registro del agente"
+
+msgid ""
+"Copy the 'Automation secret for machine accounts' from the "
+"agent_registration\n"
+"                   user and paste it into the terminal to continue the "
+"registration."
 msgstr ""
 
 msgid ""
@@ -98147,6 +98176,13 @@ msgstr "Editar la configuración global"
 #, fuzzy
 msgid "Already installed the Checkmk agent?"
 msgstr "Instalar siempre Python con el agente"
+
+#, fuzzy
+msgid ""
+"This problem might be caused by a missing agent or the firewall settings."
+msgstr ""
+"Los problemas anteriores pueden deberse a la falta de cachés. Por favor, "
+"vuelva a escanear."
 
 #, fuzzy
 msgid "Already registered the Checkmk agent?"
@@ -98957,6 +98993,30 @@ msgstr ""
 msgid ""
 "You can still access it later via Help > Learning Checkmk > Welcome page"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Application Monitoring"
+#~ msgstr "Buscar en la supervisión"
+
+#, fuzzy
+#~ msgid "OTel metrics"
+#~ msgstr "Métrica"
+
+#, fuzzy
+#~ msgid "Timespan"
+#~ msgstr "Times"
+
+#, fuzzy
+#~ msgid "Show in dropdown menus"
+#~ msgstr "Ocultar este %s en los menús desplegables"
+
+#, fuzzy
+#~ msgid "Sites with errors: %{n}"
+#~ msgstr "%d sitios con errores: %s"
+
+#, fuzzy
+#~ msgid "Sites logged out: %{n}"
+#~ msgstr "%d sitios con errores: %s"
 
 #, fuzzy
 #~ msgid "Add Relay"
@@ -102573,10 +102633,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Rules for host names"
 #~ msgstr "Regex para el nombre de host"
-
-#, fuzzy
-#~ msgid "Use the value of the key"
-#~ msgstr "Utiliza el estado del servicio..."
 
 #, fuzzy
 #~ msgid "Advanced - Number of retries"
