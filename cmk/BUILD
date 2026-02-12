@@ -528,11 +528,8 @@ sh_library(
         "base/.f12",
         "config_anonymizer/.f12",
         "gui/.f12",
-        "gui/nonfree/pro/dcd/.f12",
         "gui/openapi/.f12",
         "gui/wsgi/.f12",
-        "nonfree/pro/dcd/.f12",
-        "nonfree/pro/robotmk/.f12",
         "plugins/activemq/libexec/agent_activemq",
         "plugins/alertmanager/libexec/agent_alertmanager",
         "plugins/allnet_ip_sensoric/libexec/agent_allnet_ip_sensoric",
@@ -588,6 +585,13 @@ sh_library(
         "plugins/uniserv/libexec/check_uniserv",
         "plugins/vnx_quotas/libexec/agent_vnx_quotas",
         "plugins/zerto/libexec/agent_zerto",
-        "utils/nonfree/pro/dcd/.f12",
-    ],
+    ] + select({
+        "@//:gpl+nonfree_repo": [
+            "gui/nonfree/pro/dcd/.f12",
+            "nonfree/pro/dcd/.f12",
+            "nonfree/pro/robotmk/.f12",
+            "utils/nonfree/pro/dcd/.f12",
+        ],
+        "@//:gpl_repo": [],
+    }),
 )
