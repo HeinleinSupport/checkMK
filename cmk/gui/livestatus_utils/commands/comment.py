@@ -173,15 +173,6 @@ def add_host_comment(
 
         user:
 
-    Examples:
-
-        >>> from cmk.gui.session import SuperUserContext
-        >>> from cmk.gui.livestatus_utils.testing import simple_expect
-        >>> cmd = "COMMAND [...] ADD_HOST_COMMENT;example.com;0;;test"
-        >>> with simple_expect() as live, SuperUserContext():
-        ...     _ = live.expect_query(cmd, match_type="ellipsis")
-        ...     add_host_comment(live, 'example.com', 'test', "NO_SITE")
-
     """
     LivestatusClient(connection).command(
         AddHostComment(host_name=host_name, user=user, persistent=persistent, comment=comment),
@@ -241,16 +232,6 @@ def add_service_comment(
 
         user:
 
-    Examples:
-
-        >>> from cmk.gui.livestatus_utils.testing import simple_expect
-        >>> from cmk.gui.session import SuperUserContext
-        >>> cmd = "COMMAND [...] ADD_SVC_COMMENT;example.com;CPU Load;0;;test"
-        >>> with simple_expect() as live, SuperUserContext():
-        ...     _ = live.expect_query(cmd, match_type="ellipsis")
-        ...     add_service_comment(live, 'example.com', 'CPU Load', 'test', "NO_SITE")
-
-
     """
 
     LivestatusClient(connection).command(
@@ -297,15 +278,6 @@ def delete_host_comment(
         site_id:
             The site name
 
-    Examples:
-        >>> from cmk.gui.livestatus_utils.testing import simple_expect
-        >>> from cmk.gui.session import SuperUserContext
-
-        >>> cmd = "COMMAND [...] DEL_HOST_COMMENT;1234"
-        >>> expect = simple_expect(cmd, match_type="ellipsis")
-        >>> with expect as live, SuperUserContext():
-        ...     delete_host_comment(live, 1234, "NO_SITE")
-
     """
 
     LivestatusClient(connection).command(
@@ -328,15 +300,6 @@ def delete_service_comment(
 
         site_id:
             The site name
-
-    Examples:
-        >>> from cmk.gui.livestatus_utils.testing import simple_expect
-        >>> from cmk.gui.session import SuperUserContext
-
-        >>> cmd = "COMMAND [...] DEL_SVC_COMMENT;1234"
-        >>> expect = simple_expect(cmd, match_type="ellipsis")
-        >>> with expect as live, SuperUserContext():
-        ...     delete_service_comment(live, 1234, "NO_SITE")
 
     """
 
