@@ -8,7 +8,7 @@ from collections.abc import Callable
 from cmk.ccc.version import __version__, edition
 from cmk.gui.htmllib.generator import HTMLWriter
 from cmk.gui.http import request
-from cmk.gui.i18n import _
+from cmk.gui.i18n import _, _l
 from cmk.gui.logged_in import user
 from cmk.gui.main_menu import MainMenuRegistry
 from cmk.gui.main_menu_types import MainMenuItem
@@ -44,7 +44,7 @@ def register(
     main_menu_registry.register(
         MainMenuItem(
             id=NavItemIdEnum.help,
-            title=_("Help"),
+            title=_l("Help"),
             sort_index=18,
             get_topics=_help_menu_topics(
                 learning_entries, developer_entries, about_checkmk_entries
@@ -60,7 +60,7 @@ def register(
                     url="ajax_sidebar_get_unack_incomp_werks.py",
                 ),
             ),
-            hint=_("Docs, references and guides"),
+            hint=_l("Docs, references and guides"),
         )
     )
 

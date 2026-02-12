@@ -90,6 +90,9 @@ class LazyString:
     def __rmod__(self, other: str) -> str:
         return other + str(self)
 
+    def __json__(self) -> str:
+        return self.to_json()
+
     def to_json(self) -> str:
         return str(self)
 

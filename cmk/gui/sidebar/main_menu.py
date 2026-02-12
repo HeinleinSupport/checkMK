@@ -144,7 +144,7 @@ class MainMenuConfigCreator:
                 shortcut=menu.shortcut,
                 show_more=NavItemShowMore(active=show_more) if has_show_more else None,
                 popup_small=menu.popup_small,
-                hint=menu.hint,
+                hint=str(menu.hint),
                 badge=menu.badge,
             )
 
@@ -155,7 +155,7 @@ class MainMenuConfigCreator:
             url=menu.url or menu.get_url(self.request) if callable(menu.get_url) else None,
             target=menu.target,
             shortcut=menu.shortcut,
-            hint=menu.hint,
+            hint=str(menu.hint),
             badge=menu.badge,
         )
 

@@ -14,7 +14,7 @@ from cmk.gui.dashboard import get_permitted_dashboards
 from cmk.gui.htmllib.foldable_container import foldable_container
 from cmk.gui.htmllib.generator import HTMLWriter
 from cmk.gui.htmllib.html import html
-from cmk.gui.i18n import _
+from cmk.gui.i18n import _, _l
 from cmk.gui.icon_helpers import migrate_to_dynamic_icon, migrate_to_static_icon
 from cmk.gui.logged_in import user
 from cmk.gui.main_menu import (
@@ -146,14 +146,14 @@ def _hide_menu() -> bool:
 
 MainMenuSetup = MainMenuItem(
     id=NavItemIdEnum.setup,
-    title=_("Setup"),
+    title=_l("Setup"),
     sort_index=15,
     get_topics=get_wato_menu_items,
     shortcut=NavItemShortcut(key="s", alt=True),
     hide=_hide_menu,
     header=NavItemHeader(show_more=True),
     set_focus_on_element_by_id="unified-search-input-setup",
-    hint=_("Add and configure hosts and services"),
+    hint=_l("Add and configure hosts and services"),
 )
 
 

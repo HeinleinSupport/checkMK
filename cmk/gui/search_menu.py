@@ -6,7 +6,7 @@
 
 from cmk.ccc.version import edition
 from cmk.gui.http import Request
-from cmk.gui.i18n import _
+from cmk.gui.i18n import _l
 from cmk.gui.logged_in import user
 from cmk.gui.main_menu import MainMenuRegistry
 from cmk.gui.main_menu_types import MainMenuItem
@@ -41,12 +41,12 @@ def register(mega_menu_registry: MainMenuRegistry) -> None:
     mega_menu_registry.register(
         MainMenuItem(
             id=NavItemIdEnum.search,
-            title=_("Search"),
+            title=_l("Search"),
             sort_index=1,
             topics=None,
             set_focus_on_element_by_id="unified-search-input",
             shortcut=NavItemShortcut(key="k", ctrl=True),
             get_vue_app=_get_unified_search_app,
-            hint=_("Search accross Checkmk"),
+            hint=_l("Search accross Checkmk"),
         )
     )

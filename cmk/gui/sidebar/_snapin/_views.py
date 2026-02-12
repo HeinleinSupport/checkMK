@@ -11,7 +11,7 @@ from cmk.gui import pagetypes
 from cmk.gui.config import Config
 from cmk.gui.dashboard import get_permitted_dashboards
 from cmk.gui.http import response
-from cmk.gui.i18n import _
+from cmk.gui.i18n import _, _l
 from cmk.gui.logged_in import user
 from cmk.gui.main_menu import MainMenuRegistry
 from cmk.gui.main_menu_types import MainMenuItem
@@ -46,13 +46,13 @@ def register(
     main_menu_registry.register(
         MainMenuItem(
             id=NavItemIdEnum.monitoring,
-            title=_("Monitor"),
+            title=_l("Monitor"),
             sort_index=5,
             get_topics=view_menu_topics,
             shortcut=NavItemShortcut(key="m", alt=True),
             header=NavItemHeader(show_more=True),
             set_focus_on_element_by_id="unified-search-input-monitoring",
-            hint=_("Monitor hosts and services"),
+            hint=_l("Monitor hosts and services"),
         )
     )
 

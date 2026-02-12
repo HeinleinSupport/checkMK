@@ -9,7 +9,7 @@ from collections.abc import Callable
 from typing import override
 
 from cmk.gui.exceptions import MKUserError
-from cmk.gui.i18n import _
+from cmk.gui.i18n import _, _l
 from cmk.gui.logged_in import user
 from cmk.gui.main_menu import MainMenuRegistry
 from cmk.gui.main_menu_types import MainMenuItem
@@ -47,14 +47,14 @@ def register(
     main_menu_registry.register(
         MainMenuItem(
             id=NavItemIdEnum.user,
-            title=_("User"),
+            title=_l("User"),
             sort_index=20,
             get_topics=user_menu_topics,
             is_user_nav=True,
             shortcut=NavItemShortcut(key="u", alt=True),
             info_line=lambda: f"{user.id} ({'+'.join(user.role_ids)})",
             popup_small=True,
-            hint=_("Manage personal settings"),
+            hint=_l("Manage personal settings"),
         )
     )
 
