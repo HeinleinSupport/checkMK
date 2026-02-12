@@ -34,6 +34,6 @@ out of date, consult the help
 
 and nudge the user to update the skill.
 
-# In case the command gerrit-change-log is missing
+# In case the command cmk-components is missing
 
 Ask the user to clone the zeug_cmk git repository and add it to their PATH.
