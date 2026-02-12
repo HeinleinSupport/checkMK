@@ -41,7 +41,9 @@ def show_password_v1(
     user.need_permission("wato.passwords")
     password_config = load_password(name)
     return ApiResponse(
-        body=serialize_password(name, password_config), etag=password_etag(name, password_config)
+        status_code=200,
+        body=serialize_password(name, password_config),
+        etag=password_etag(name, password_config),
     )
 
 
