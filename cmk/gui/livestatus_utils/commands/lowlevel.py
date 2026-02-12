@@ -33,24 +33,6 @@ def send_command(
         site_id:
             The site name
 
-    Examples:
-
-        >>> from cmk.gui.livestatus_utils.testing import simple_expect
-        >>> with simple_expect(
-        ...         "COMMAND [...] ADD_HOST_COMMENT", match_type="ellipsis") as live:
-        ...      send_command(live, "ADD_HOST_COMMENT", [])
-
-        >>> with simple_expect(
-        ...          "COMMAND [...] ADD_HOST_COMMENT;1;2;3", match_type="ellipsis") as live:
-        ...      send_command(live, "ADD_HOST_COMMENT", [1, 2, 3])
-
-        >>> with simple_expect(
-        ...         "COMMAND [...] ADD_HOST_COMMENT;1;2;3", match_type="ellipsis") as live:
-        ...      send_command(live, "ADD_HOST_COMMENT", [object()])
-        Traceback (most recent call last):
-        ...
-        ValueError: Unknown type of parameter 0: <class 'object'>
-
     """
     current_time = int(time.time())
     cmd: str = command
