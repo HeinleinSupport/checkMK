@@ -6,6 +6,7 @@
 # mypy: disable-error-code="misc"
 # mypy: disable-error-code="no-untyped-def"
 # mypy: disable-error-code="type-arg"
+# mypy: disable-error-code="import-not-found"
 
 
 from __future__ import annotations
