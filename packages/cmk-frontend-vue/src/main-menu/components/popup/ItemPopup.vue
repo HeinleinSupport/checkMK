@@ -107,7 +107,18 @@ mainMenu.onNavigate((item: NavItem) => {
 <style scoped>
 .mm-item-popup__topics {
   display: flex;
-  flex-flow: column wrap;
   height: calc(100% - 81px);
+  flex-wrap: wrap;
+
+  /*
+    Workaround for nav item topics overflowing the popup.
+    See https://stackoverflow.com/a/68904668
+  */
+  writing-mode: vertical-lr;
+
+  /* stylelint-disable-next-line checkmk/vue-bem-naming-convention */
+  .mm-nav-item-topic {
+    writing-mode: horizontal-tb;
+  }
 }
 </style>
