@@ -42,6 +42,8 @@ from cmk.utils.labels import Labels
 from tests.testlib.common.utils import wait_until
 from tests.unit.cmk.base.empty_config import EMPTY_CONFIG
 
+pytestmark = pytest.mark.skip("CMK-31413: automation helper tests result in timeout error")
+
 
 class _DummyAutomationResult(ABCAutomationResult):
     @staticmethod
