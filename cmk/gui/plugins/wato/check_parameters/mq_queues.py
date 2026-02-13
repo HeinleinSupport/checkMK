@@ -49,7 +49,7 @@ def _parameter_valuespec_mq_queues() -> Dictionary:
             (
                 "size",
                 SimpleLevels(
-                    title=_("Levels for the queue length"),
+                    title=_("Upper levels for the queue length"),
                     help=_("Set the maximum and minimum length for the queue size"),
                     spec=Integer,
                 ),
