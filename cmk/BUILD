@@ -9,7 +9,6 @@ exports_files([
     "requirements.in",
     "utils/password_store/cli.py",
     "gui/openapi/spec/spec_generator/generate_api_spec.py",
-    "product_usage/cmk_product_usage_cli.py",
 ])
 
 REQUIRED_EXTERNAL_DEPS = [

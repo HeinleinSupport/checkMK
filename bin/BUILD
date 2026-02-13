@@ -102,7 +102,6 @@ pkg_tar(
     srcs = [
         ":bin_750",
         ":bin_755",
-        ":cmk-product-usage",
         ":cmk-pwstore",
         ":cmk_link",
     ],
@@ -119,15 +118,6 @@ pkg_files(
     renames = {"//cmk:utils/password_store/cli.py": "bin/cmk-pwstore"},
 )
 
-pkg_files(
-    name = "cmk-product-usage",
-    srcs = ["//cmk:product_usage/cmk_product_usage_cli.py"],
-    attributes = pkg_attributes(
-        mode = "0755",
-    ),
-    renames = {"//cmk:product_usage/cmk_product_usage_cli.py": "bin/cmk-product-usage"},
-)
-
 sh_library(
     name = "bin_sh",
     srcs = [
@@ -141,6 +131,7 @@ sh_library(
         "cmk-monitor-mkbackup",
         "cmk-monitor-mknotifyd",
         "cmk-monitor-otel-collector",
+        "cmk-product-usage",
         "cmk-ui-job-scheduler-health",
         "message-broker-certs",
     ],
