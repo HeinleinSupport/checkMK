@@ -59,8 +59,8 @@ import logging
 import re
 from collections.abc import Callable, Iterator, Mapping
 from contextlib import contextmanager
+from datetime import date, timedelta
 from datetime import datetime as Datetime
-from datetime import timedelta
 from os import getenv
 from pathlib import Path
 from statistics import fmean
@@ -1623,7 +1623,10 @@ class PerftestPlot:
         baseline_name = {0: "weekly", 30: "monthly", 365: "yearly"}.get(
             baseline_offset, f"{baseline_offset}d"
         )
+        baseline_date = Datetime.today() - timedelta(days=baseline_offset)
+
         ignored_scenarios = {"test_performance_piggyback": "CMK-27171"}
+        known_scenario_changes = {"test_performance_ui_response_.*": date(2026, 2, 6)}
 
         alerts = []
         for scenario_name in self.scenario_names:
@@ -1636,6 +1639,18 @@ class PerftestPlot:
                         baseline_name,
                         scenario_name,
                         scenario_ignored_reason,
+                    )
+                    continue
+            for scenario_changed_pattern, scenario_changed_date in known_scenario_changes.items():
+                if (
+                    re.fullmatch(scenario_changed_pattern, scenario_name)
+                    and baseline_date < scenario_changed_date
+                ):
+                    logger.info(
+                        "Ignoring baseline %s for scenario %s due to scenario changes on %s.",
+                        baseline_name,
+                        scenario_name,
+                        scenario_changed_date,
                     )
                     continue
 
