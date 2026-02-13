@@ -58,6 +58,16 @@ py_console_script_binary(
 )
 
 py_console_script_binary(
+    name = "py-import-cycles",
+    pkg = requirement("py-import-cycles"),
+    script = "py_import_cycles",
+    tags = [
+        "manual",
+        "no-mypy",
+    ],
+)
+
+py_console_script_binary(
     name = "semgrep",
     pkg = tooling_pip("semgrep"),
     script = "pysemgrep",
@@ -104,6 +114,7 @@ bazel_env(
         "mypy": ":mypy_cli_original",
         "osslsigncode": "@osslsigncode",
         "pnpm": "@pnpm",
+        "py_import_cycles": ":py-import-cycles",
         "semgrep": ":semgrep",
         "uv": "@multitool//tools/uv",
     },
