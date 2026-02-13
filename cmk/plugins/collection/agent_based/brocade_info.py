@@ -4,7 +4,6 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 # mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
 
 
 from collections.abc import Sequence
@@ -33,7 +32,7 @@ def discover_brocade_info(section: Sequence[StringTable]) -> DiscoveryResult:
         yield Service()
 
 
-def brocade_info_try_it(info):
+def brocade_info_try_it(info: Sequence[StringTable]) -> tuple[str, str, str, str]:
     try:
         model = info[0][0][0]
     except Exception:
@@ -55,7 +54,7 @@ def brocade_info_try_it(info):
     return model, ssn, fw, wwn
 
 
-def brocade_info_parse_wwn(val):
+def brocade_info_parse_wwn(val: str) -> str:
     if val == "":
         val = "-"
     elif val != "-":
