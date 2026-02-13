@@ -121,6 +121,8 @@ single_version_override(
         # https://github.com/aspect-build/rules_lint/pull/747
         "//bazel/patches:rules_lint-no_copy.patch",
         "//bazel/patches:rules_lint-clippy_fail_on_violation.patch",
+        # For astrein and other internal tooling.
+        "//bazel/patches:rules_lint_export_helpers.patch",
     ],
     version = "2.0.0",
 )
