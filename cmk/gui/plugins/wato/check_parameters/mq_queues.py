@@ -50,7 +50,10 @@ def _parameter_valuespec_mq_queues() -> Dictionary:
                 "size",
                 SimpleLevels(
                     title=_("Upper levels for the queue length"),
-                    help=_("Set the maximum and minimum length for the queue size"),
+                    help=_(
+                        "Queue length refers to the total number of messages that have "
+                        "not been acknowledged by a consumer."
+                    ),
                     spec=Integer,
                 ),
             ),
