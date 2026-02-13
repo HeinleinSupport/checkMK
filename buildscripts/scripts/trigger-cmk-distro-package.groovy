@@ -174,7 +174,7 @@ void main() {
 
     smart_stage(
         name: "Archive stuff",
-        condition: signing_build_instance != null && signing_build_instance.result == "SUCCESS",
+        condition: signing_build_instance && signing_build_instance.result == "SUCCESS",
         raiseOnError: true,
     ) {
         dir("${checkout_dir}") {
