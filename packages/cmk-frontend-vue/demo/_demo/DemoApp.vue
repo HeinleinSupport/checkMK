@@ -58,7 +58,7 @@ watch(
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5em 1.5em;
+  padding: 8px 24px;
   background-color: var(--default-bg-color);
   border-bottom: 1px solid var(--default-form-element-bg-color);
   height: 50px;
@@ -68,8 +68,8 @@ watch(
   display: flex;
   flex: 1;
   overflow: hidden;
-  padding: 1em;
-  gap: 1em;
+  padding: 16px;
+  gap: 16px;
 }
 
 .demo-app__sidebar {
@@ -100,13 +100,24 @@ watch(
   flex: 1;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow: hidden auto;
+}
+
+.demo-app__main::-webkit-scrollbar {
+  width: 6px;
+}
+
+.demo-app__main::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.demo-app__main::-webkit-scrollbar-thumb {
+  background-color: var(--demo-nav-tree-scroll-bar-color);
+  border-radius: 20px;
 }
 
 .demo-app__area {
   flex: 1;
-  padding: 1em;
-  border: 2px solid var(--default-form-element-bg-color);
-  background-color: var(--default-component-bg-color);
+  padding: 16px;
 }
 </style>

@@ -163,6 +163,8 @@ SRCS = [
     "demo/**/*.ts",
     "demo/**/*.vue",
     "demo/**/*.css",
+    "demo/**/*.png",
+    "demo/**/*.svg",
     "demo/public/*",
 ])
 

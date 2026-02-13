@@ -3,37 +3,47 @@ Copyright (C) 2026 Checkmk GmbH - License: GNU General Public License v2
 This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 conditions defined in the file COPYING, which is part of this source code package.
 -->
-
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed } from 'vue'
 
 import { immediateWatch } from '@/lib/watch'
 
 import CmkDropdown from '@/components/CmkDropdown'
 
-const { theme = 'facelift' } = defineProps<{
-  theme?: 'facelift' | 'modern-dark'
+import { type Theme, useTheme } from './useTheme'
+
+const props = defineProps<{
+  theme?: Theme
 }>()
 
-const selectedTheme = ref<'facelift' | 'modern-dark'>(theme)
+const { currentTheme, setTheme } = useTheme()
+
+if (props.theme) {
+  setTheme(props.theme)
+}
+
+const selectedThemeModel = computed({
+  get: () => currentTheme.value,
+  set: (newTheme: Theme) => setTheme(newTheme)
+})
 
 async function setCss() {
-  const url = (await import(`~cmk-frontend/themes/${selectedTheme.value}/theme.css?url`)).default
+  const url = (await import(`~cmk-frontend/themes/${currentTheme.value}/theme.css?url`)).default
   const linkEl = document.getElementById('cmk-theming-stylesheet')
   if (linkEl instanceof HTMLLinkElement) {
     linkEl.href = url
   }
 }
 
-function setTheme(name: 'modern-dark' | 'facelift') {
+function applyThemeToBody(name: Theme) {
   document.body!.dataset['theme'] = name
 }
 
 immediateWatch(
-  () => selectedTheme.value,
+  () => currentTheme.value,
   async (name) => {
     await setCss()
-    await setTheme(name)
+    await applyThemeToBody(name as Theme)
   }
 )
 
@@ -45,7 +55,7 @@ const themeOptions = [
 
 <template>
   <CmkDropdown
-    v-model:selected-option="selectedTheme"
+    v-model:selected-option="selectedThemeModel"
     :options="{ type: 'fixed', suggestions: themeOptions }"
     label="Theme"
   />

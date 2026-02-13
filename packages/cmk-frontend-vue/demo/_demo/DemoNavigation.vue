@@ -39,7 +39,7 @@ const isSearching = ref(false)
   display: block;
   font-size: 14px;
   font-weight: 700;
-  color: var(--demo-nav-tree-parent-item-font-color);
+  color: var(--demo-headings-font-color);
   padding: 8px 0 8px 40px;
   margin-bottom: 4px;
   text-decoration: none;

@@ -185,6 +185,7 @@ import lightIconDeploymentStatusPng from '~cmk-frontend/themes/facelift/images/i
 import lightIconDerivedDowntimePng from '~cmk-frontend/themes/facelift/images/icon_derived_downtime.png?url&no-inline'
 import lightIconDetailPng from '~cmk-frontend/themes/facelift/images/icon_detail.png?url&no-inline'
 import lightIconDeveloperResourcesSvg from '~cmk-frontend/themes/facelift/images/icon_developer_resources.svg?url&no-inline'
+import lightIconDevelopmentSvg from '~cmk-frontend/themes/facelift/images/icon_development.svg?url&no-inline'
 import lightIconDiagnosePng from '~cmk-frontend/themes/facelift/images/icon_diagnose.png?url&no-inline'
 import lightIconDiagnosticsSvg from '~cmk-frontend/themes/facelift/images/icon_diagnostics.svg?url&no-inline'
 import lightIconDiagnosticsDumpFilePng from '~cmk-frontend/themes/facelift/images/icon_diagnostics_dump_file.png?url&no-inline'
@@ -391,7 +392,9 @@ import lightIconPnpPng from '~cmk-frontend/themes/facelift/images/icon_pnp.png?u
 import lightIconPredefinedConditionsSvg from '~cmk-frontend/themes/facelift/images/icon_predefined_conditions.svg?url&no-inline'
 import lightIconPredictionPng from '~cmk-frontend/themes/facelift/images/icon_prediction.png?url&no-inline'
 import lightIconProblemSvg from '~cmk-frontend/themes/facelift/images/icon_problem.svg?url&no-inline'
+import lightIconProductSvg from '~cmk-frontend/themes/facelift/images/icon_product.svg?url&no-inline'
 import lightIconPrometheusSvg from '~cmk-frontend/themes/facelift/images/icon_prometheus.svg?url&no-inline'
+import lightIconQaSvg from '~cmk-frontend/themes/facelift/images/icon_qa.svg?url&no-inline'
 import lightIconQsAwsSvg from '~cmk-frontend/themes/facelift/images/icon_qs_aws.svg?url&no-inline'
 import lightIconQsAzureSvg from '~cmk-frontend/themes/facelift/images/icon_qs_azure.svg?url&no-inline'
 import lightIconQsGcpSvg from '~cmk-frontend/themes/facelift/images/icon_qs_gcp.svg?url&no-inline'
@@ -595,6 +598,7 @@ import lightIconUrlPng from '~cmk-frontend/themes/facelift/images/icon_url.png?u
 import lightIconUsedrulesetsPng from '~cmk-frontend/themes/facelift/images/icon_usedrulesets.png?url&no-inline'
 import lightIconUserLockedPng from '~cmk-frontend/themes/facelift/images/icon_user_locked.png?url&no-inline'
 import lightIconUsersSvg from '~cmk-frontend/themes/facelift/images/icon_users.svg?url&no-inline'
+import lightIconUXSvg from '~cmk-frontend/themes/facelift/images/icon_ux.svg?url&no-inline'
 import lightIconValidationErrorPng from '~cmk-frontend/themes/facelift/images/icon_validation_error.png?url&no-inline'
 import lightIconVideoPng from '~cmk-frontend/themes/facelift/images/icon_video.png?url&no-inline'
 import lightIconViewSvg from '~cmk-frontend/themes/facelift/images/icon_view.svg?url&no-inline'
@@ -646,6 +650,7 @@ import darkIconConfigurationSvg from '~cmk-frontend/themes/modern-dark/images/ic
 import darkIconCrossBgWhiteSvg from '~cmk-frontend/themes/modern-dark/images/icon_cross_bg_white.svg?url&no-inline'
 import darkIconDashboardGridSvg from '~cmk-frontend/themes/modern-dark/images/icon_dashboard_grid.svg?url&no-inline'
 import darkIconDashboardMenuarrowSvg from '~cmk-frontend/themes/modern-dark/images/icon_dashboard_menuarrow.svg?url&no-inline'
+import darkIconDevelopmentSvg from '~cmk-frontend/themes/modern-dark/images/icon_development.svg?url&no-inline'
 import darkIconDragSvg from '~cmk-frontend/themes/modern-dark/images/icon_drag.svg?url&no-inline'
 import darkIconExportLinkSvg from '~cmk-frontend/themes/modern-dark/images/icon_export_link.svg?url&no-inline'
 import darkIconExternalSvg from '~cmk-frontend/themes/modern-dark/images/icon_external.svg?url&no-inline'
@@ -669,6 +674,8 @@ import darkIconManualSvg from '~cmk-frontend/themes/modern-dark/images/icon_manu
 import darkIconNagiosSvg from '~cmk-frontend/themes/modern-dark/images/icon_nagios.svg?url&no-inline'
 import darkIconNetworkSvg from '~cmk-frontend/themes/modern-dark/images/icon_network.svg?url&no-inline'
 import darkIconPerformanceDataSvg from '~cmk-frontend/themes/modern-dark/images/icon_performance_data.svg?url&no-inline'
+import darkIconProductSvg from '~cmk-frontend/themes/modern-dark/images/icon_product.svg?url&no-inline'
+import darkIconQaSvg from '~cmk-frontend/themes/modern-dark/images/icon_qa.svg?url&no-inline'
 import darkIconReloadCmkSvg from '~cmk-frontend/themes/modern-dark/images/icon_reload_cmk.svg?url&no-inline'
 import darkIconRulesetsSvg from '~cmk-frontend/themes/modern-dark/images/icon_rulesets.svg?url&no-inline'
 import darkIconSaasSvg from '~cmk-frontend/themes/modern-dark/images/icon_saas.svg?url&no-inline'
@@ -695,6 +702,7 @@ import darkIconTableActionsOnSvg from '~cmk-frontend/themes/modern-dark/images/i
 import darkIconTickSvg from '~cmk-frontend/themes/modern-dark/images/icon_tick.svg?url&no-inline'
 import darkIconToggleOffSvg from '~cmk-frontend/themes/modern-dark/images/icon_toggle_off.svg?url&no-inline'
 import darkIconTreeClosedSvg from '~cmk-frontend/themes/modern-dark/images/icon_tree_closed.svg?url&no-inline'
+import darkIconUXSvg from '~cmk-frontend/themes/modern-dark/images/icon_ux.svg?url&no-inline'
 import darkReleaseAutomatedSvg from '~cmk-frontend/themes/modern-dark/images/release_automated.svg?url&no-inline'
 import darkSpeedometerSvg from '~cmk-frontend/themes/modern-dark/images/speedometer.svg?url&no-inline'
 
@@ -1434,7 +1442,11 @@ export const themedIcons: Record<string, Partial<Record<IconNames, string>>> = {
     'table-actions-on': lightIconTableActionsOnSvg,
     tick: lightIconTickSvg,
     'toggle-off': lightIconToggleOffSvg,
-    'tree-closed': lightIconTreeClosedSvg
+    'tree-closed': lightIconTreeClosedSvg,
+    qa: lightIconQaSvg,
+    development: lightIconDevelopmentSvg,
+    product: lightIconProductSvg,
+    ux: lightIconUXSvg
   },
   dark: {
     'agent-registration': darkIconAgentRegistrationSvg,
@@ -1504,6 +1516,10 @@ export const themedIcons: Record<string, Partial<Record<IconNames, string>>> = {
     'table-actions-on': darkIconTableActionsOnSvg,
     tick: darkIconTickSvg,
     'toggle-off': darkIconToggleOffSvg,
-    'tree-closed': darkIconTreeClosedSvg
+    'tree-closed': darkIconTreeClosedSvg,
+    qa: darkIconQaSvg,
+    development: darkIconDevelopmentSvg,
+    product: darkIconProductSvg,
+    ux: darkIconUXSvg
   }
 }

@@ -730,7 +730,11 @@
         "windows-msi",
         "wrong-agent",
         "www",
-        "zoom"
+        "zoom",
+        "qa",
+        "development",
+        "product",
+        "ux"
       ]
     },
     "static_icon_app_props": {

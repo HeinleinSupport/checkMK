@@ -55,7 +55,7 @@ function toggle(f: NavFolder) {
   font-size: 12px;
   text-decoration: none;
   cursor: pointer;
-  color: var(--demo-nav-tree-parent-item-font-color);
+  color: var(--demo-headings-font-color);
   font-weight: 700;
 }
 

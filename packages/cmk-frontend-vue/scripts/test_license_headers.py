@@ -59,7 +59,7 @@ ROOT_FOLDERS_IGNORED = {
     "dist-dev",
 }
 
-SUFFIX_IGNORED = {".swp", ".pyc", ".svg"}
+SUFFIX_IGNORED = {".swp", ".pyc", ".svg", ".png"}
 
 GLOB_IGNORED = [
     "*.log",  # added by ci
