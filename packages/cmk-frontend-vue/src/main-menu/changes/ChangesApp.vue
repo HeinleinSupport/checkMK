@@ -64,11 +64,11 @@ const sitesRef = computed(() => sitesAndChanges.value.sites)
 const pendingChangesRef = computed(() => sitesAndChanges.value.pendingChanges)
 const userCanActivateForeignRef = computed(() => props.user_has_activate_foreign)
 
-const { hasSitesWithChangesOrErrors } = useSiteStatus(
-  sitesRef,
-  pendingChangesRef,
-  userCanActivateForeignRef
-)
+const {
+  hasSitesWithChangesOrErrors,
+  siteSelectionIsDisabled,
+  allSitesWithChangesAreNotSelectable
+} = useSiteStatus(sitesRef, pendingChangesRef, userCanActivateForeignRef)
 
 const activationPollStartTime = ref<number | null>(null)
 const restartInfoShown = ref(false)
@@ -174,8 +174,8 @@ function setSelectedSites() {
    * Only sites that are logged in and online/disabled should have their checkboxes selected.
    */
   selectedSites.value = sitesAndChanges.value.sites
-    .filter((site: Site) => site.changes > 0 && ['online', 'disabled'].includes(site.onlineStatus))
-    .filter((site: Site) => site.loggedIn)
+    .filter((site: Site) => site.changes > 0)
+    .filter((site: Site) => !siteSelectionIsDisabled(site))
     .map((site: Site) => site.siteId)
 }
 
@@ -253,6 +253,9 @@ const activateChangesButtonDisabled = computed((): boolean => {
     return true
   }
   if (selectedSites.value.length === 0) {
+    return true
+  }
+  if (allSitesWithChangesAreNotSelectable.value) {
     return true
   }
   return !sitesAndChanges.value.sites.some(
