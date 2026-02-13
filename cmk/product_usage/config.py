@@ -36,21 +36,27 @@ class ProductUsageConfig:
     proxy_config: http_proxy_config.HTTPProxyConfig
 
 
+def load_product_usage_config(
+    config_dir: Path, logger: logging.Logger
+) -> ProductUsageAnalyticsSettings:
+    try:
+        return read_config_file(config_dir)
+    except ConfigError:
+        logger.exception("Failed to load config from file")
+
+        return ProductUsageAnalyticsSettings(
+            enabled="not_decided",
+            proxy_setting=("environment", "environment"),
+        )
+
+
 def load_config(logger: logging.Logger) -> ProductUsageConfig:
     base_config = load(
         discovery_rulesets=(),
         get_builtin_host_labels=make_app(edition(paths.omd_root)).get_builtin_host_labels,
     )
 
-    try:
-        config = read_config_file(paths.default_config_dir)
-    except ConfigError:
-        logger.exception("Failed to load config from file")
-
-        config = ProductUsageAnalyticsSettings(
-            enabled="not_decided",
-            proxy_setting=("environment", "environment"),
-        )
+    config = load_product_usage_config(paths.default_config_dir, logger)
 
     proxy_config = get_proxy_config(
         proxy_setting=config.proxy_setting,
