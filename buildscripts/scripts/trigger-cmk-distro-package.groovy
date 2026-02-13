@@ -138,7 +138,7 @@ void main() {
                     CIPARAM_BISECT_COMMENT: params.CIPARAM_BISECT_COMMENT,
                 ],
                 no_remove_others: true, // do not delete other files in the dest dir
-                download: false,
+                download: true,
                 dest: "${checkout_dir}",
             );
         }
