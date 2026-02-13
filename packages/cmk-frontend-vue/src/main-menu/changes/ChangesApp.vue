@@ -61,7 +61,14 @@ const sitesAndChanges = ref<SitesAndChanges>({
 })
 
 const sitesRef = computed(() => sitesAndChanges.value.sites)
-const { hasSitesWithChangesOrErrors } = useSiteStatus(sitesRef)
+const pendingChangesRef = computed(() => sitesAndChanges.value.pendingChanges)
+const userCanActivateForeignRef = computed(() => props.user_has_activate_foreign)
+
+const { hasSitesWithChangesOrErrors } = useSiteStatus(
+  sitesRef,
+  pendingChangesRef,
+  userCanActivateForeignRef
+)
 
 const activationPollStartTime = ref<number | null>(null)
 const restartInfoShown = ref(false)
