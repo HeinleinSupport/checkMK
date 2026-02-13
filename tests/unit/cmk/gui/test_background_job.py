@@ -3,10 +3,6 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="import-not-found"
-# mypy: disable-error-code="attr-defined"
-# mypy: disable-error-code="misc"
-
 import logging
 import threading
 import time

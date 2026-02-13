@@ -88,10 +88,6 @@ py_test(
         include = ["**/*.py"],
         exclude = [
             "omdlib/**/*.py",
-            "cmk/gui/nonfree/pro/agent_bakery/test_bake_agents.py",
-            "cmk/gui/nonfree/pro/agent_bakery/test_misc.py",
-            "cmk/gui/test_background_job.py",
-            "cmk/gui/watolib/test_automation_background_job.py",
         ],
     ),
     args = [
@@ -211,42 +207,4 @@ py_test(
         ],
         "@//:gpl_repo": [],
     }),
-)
-
-py_test(
-    name = "allow_background_jobs",
-    size = "medium",
-    srcs = [
-        "__test__.py",
-        "cmk/gui/common_fixtures.py",
-        "cmk/gui/conftest.py",
-        "cmk/gui/nonfree/pro/agent_bakery/test_bake_agents.py",
-        "cmk/gui/nonfree/pro/agent_bakery/test_misc.py",
-        "cmk/gui/test_background_job.py",
-        "cmk/gui/users.py",
-        "cmk/gui/watolib/test_automation_background_job.py",
-        "cmk/web_test_app.py",
-    ],
-    args = [
-        "--config-file=$(location @//:pyproject.toml)",
-        "--import-mode=importlib",
-        "--random-order-bucket=global",
-        "--dist=loadfile",
-        "--numprocesses=4",
-    ],
-    data = ["@//:pyproject.toml"],
-    main = ":__test__.py",
-    visibility = ["//tests:__subpackages__"],
-    deps = [
-        ":__test__",
-        requirement("pytest-mock"),
-        requirement("pytest-random-order"),
-        "//cmk:cmk_cloud",
-        "//cmk:cmk_community",
-        "//cmk:cmk_pro",
-        "//cmk:cmk_ultimate",
-        "//cmk:cmk_ultimatemt",
-        "//tests:testlib",
-        "//tests/unit:conftest",
-    ],
 )
