@@ -775,6 +775,8 @@ class ConditionType(str, enum.Enum):
     INITIALIZED = "initialized"
     READY = "ready"
     DISRUPTIONTARGET = "disruptiontarget"
+    PODRESIZEPENDING = "resizepending"
+    PODRESIZEINPROGRESS = "resizeinprogress"
 
 
 class PodCondition(BaseModel):
