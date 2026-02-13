@@ -42,7 +42,8 @@ def discover_legacy_checks(
             check_context = importlib.import_module(f)
             if not isinstance(defined_checks := check_context.check_info, dict):
                 raise TypeError(defined_checks)
-
+        except AttributeError:
+            continue  # no check_info, happens during migration.
         except Exception as e:
             if raise_errors:
                 raise
