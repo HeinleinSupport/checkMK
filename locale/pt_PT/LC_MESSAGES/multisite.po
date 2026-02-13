@@ -7326,6 +7326,10 @@ msgstr "Desempenho Oracle"
 msgid "Appliance uplink statuses"
 msgstr "estado Apache"
 
+#, fuzzy
+msgid "Appliances"
+msgstr "Electrodomésticos"
+
 msgid "Appliances, other dedicated hardware"
 msgstr "Aparelhos, outro hardware dedicado"
 
@@ -12166,8 +12170,8 @@ msgid "Cache misses per second"
 msgstr "Falhas de cache por segundo"
 
 #, fuzzy
-msgid "Cache per section"
-msgstr "desactivar esta secção"
+msgid "Cache per resource"
+msgstr "Recursos para programadores"
 
 #, fuzzy
 msgid "Cache read throughput (/sec)"
@@ -21136,10 +21140,6 @@ msgid "Device state not available"
 msgstr "Estado do dispositivo não disponível"
 
 #, fuzzy
-msgid "Device statuses"
-msgstr "Status do serviço"
-
-#, fuzzy
 msgid "Device statuses <b>[deprecated]</b>"
 msgstr "Status do serviço"
 
@@ -26642,8 +26642,8 @@ msgstr "Falha ao estimar o tamanho do processo do Apache"
 msgid "Failed to execute DCD connection (%s)"
 msgstr "Falha na execução da conexão DCD (%s)"
 
-#, python-format
-msgid "Failed to execute the test %s: %s"
+#, fuzzy, python-format
+msgid "Failed to execute the test %s: See web.log for further details"
 msgstr "Falha na execução do teste %s: %s"
 
 #, python-format
@@ -56641,6 +56641,9 @@ msgstr "Pesquisa de padrões recursiva"
 msgid "Red"
 msgstr "Vermelho"
 
+msgid "Red Hat Enterprise Linux (RHEL) 10"
+msgstr ""
+
 msgid "Redacted secrets changed."
 msgstr "Segredos redigidos alterados."
 
@@ -57798,6 +57801,10 @@ msgid "Replica lag"
 msgstr "Réplica do atraso"
 
 msgid "Replica ready state"
+msgstr "Estado de prontidão da réplica"
+
+#, fuzzy
+msgid "Replica terminating state"
 msgstr "Estado de prontidão da réplica"
 
 msgid "Replica update state"
@@ -68154,6 +68161,14 @@ msgstr "Contentores encerrados"
 msgid "Terminated pod resources"
 msgstr "Recursos de pod terminados"
 
+#, fuzzy
+msgid "Terminating duration (Deployment only)"
+msgstr "Duração não programada (apenas DaemonSet)"
+
+#, fuzzy
+msgid "Terminating replicas"
+msgstr "Leituras remanescentes"
+
 msgid "Terse"
 msgstr "Terse"
 
@@ -70538,6 +70553,32 @@ msgid ""
 msgstr ""
 "Os seguintes conjuntos de regras contêm regras que não correspondem a nenhum "
 "dos anfitriões existentes."
+
+msgid ""
+"The following sections utilize this setting:<ul><li>Appliance uplink "
+"statuses</li><li>Appliance uplink VPN statuses</li></ul>"
+msgstr ""
+
+msgid ""
+"The following sections utilize this setting:<ul><li>Device statuses</"
+"li><li>Device uplinks</li></ul>"
+msgstr ""
+
+msgid ""
+"The following sections utilize this setting:<ul><li>Licenses overview</li></"
+"ul>"
+msgstr ""
+
+msgid ""
+"The following sections utilize this setting:<ul><li>Networks</li></ul>This "
+"setting also indirectly affects the piggyback headings when the 'Use Network-"
+"ID as host prefix' setting is applied."
+msgstr ""
+
+msgid ""
+"The following sections utilize this setting:<ul><li>Wireless device "
+"statuses</li><li>Wireless ethernet statuses</li></ul>"
+msgstr ""
 
 msgid "The following users"
 msgstr "Os seguintes usuários"
@@ -83082,6 +83123,9 @@ msgstr "UUID e ponto de montagem"
 msgid "UUID links for TLS-encrypting agent communication"
 msgstr "Ligações UUID para comunicação de agentes com encriptação TLS"
 
+msgid "Ubuntu 22.04 LTS"
+msgstr ""
+
 msgid "Umlauts in User-IDs (deprecated)"
 msgstr "Umlauts em User-IDs (depreciado)"
 
@@ -89400,6 +89444,9 @@ msgstr "Correspondência de agentes Windows, Linux, Solaris, AIX: %s"
 msgid "Windows: MSI (.msi)"
 msgstr "Windows: MSI (.msi)"
 
+msgid "Wireless"
+msgstr ""
+
 #, fuzzy
 msgid "Wireless device statuses"
 msgstr "ignorar o Estado"
@@ -89418,6 +89465,15 @@ msgstr ""
 #, python-format
 msgid ""
 "With authentication type set to 'OAuth2' the option '%s' must be specified."
+msgstr ""
+
+msgid ""
+"With the <b>OpenTelemetry data - metric backend</b> connector type, hosts "
+"will be dynamically created using the data collected from the "
+"<b>OpenTelemetry Collector</b> or the <b>Prometheus scraper</b>. You must "
+"also enable the metric backend under <a href='wato.py?"
+"folder=&mode=edit_configvar&site=&varname=metric_backend'>Global Settings > "
+"Site Management.</a>"
 msgstr ""
 
 msgid ""
@@ -95917,6 +95973,14 @@ msgid "Show in dashboard name dropdown"
 msgstr "Da loja de senhas"
 
 #, fuzzy
+msgid "Select at least one contact group."
+msgstr "Por favor, acrescente pelo menos um nó de criança."
+
+#, fuzzy
+msgid "Select at least one site."
+msgstr "Por favor, selecione pelo menos um elemento"
+
+#, fuzzy
 msgid "Dashboard settings of %{name}"
 msgstr "Propriedades do painel de controlo"
 
@@ -96094,12 +96158,12 @@ msgid "Loading widget visualization settings..."
 msgstr "Configurações padrão de visualização do BI"
 
 #, fuzzy
-msgid "Metric selection"
-msgstr "Seleção de Pasta"
+msgid "HW/SW Inventory (value) selection"
+msgstr "Plugins de inventário HW/SW obsoletos"
 
 #, fuzzy
-msgid "HW/SW inventory property"
-msgstr "Inventário HW/SW"
+msgid "HW/SW Inventory single value"
+msgstr "Regras de inventário HW/SW"
 
 #, fuzzy
 msgid "Select inventory path"
@@ -96144,6 +96208,10 @@ msgstr ""
 #, fuzzy
 msgid "Service graph"
 msgstr "Gráficos de serviços"
+
+#, fuzzy
+msgid "Metric selection"
+msgstr "Seleção de Pasta"
 
 msgid "Data range"
 msgstr "Intervalo de dados"
@@ -96950,18 +97018,16 @@ msgstr "Use o status do serviço..."
 
 msgid ""
 "When you run the command in the terminal, you will be prompted for the "
-"password of the"
+"password of the\n"
+"                agent_registration user. Copy the 'Automation secret for "
+"machine accounts' from the "
 msgstr ""
 
 #, fuzzy
 msgid "agent_registration user"
 msgstr "Utilizador de registo de agente"
 
-msgid ""
-"Copy the 'Automation secret for machine accounts' from the "
-"agent_registration\n"
-"                   user and paste it into the terminal to continue the "
-"registration."
+msgid "and paste it into the terminal to continue the registration."
 msgstr ""
 
 msgid ""
@@ -97176,28 +97242,23 @@ msgstr ""
 "Especificar o período de tempo em que um novo arquivo para o histórico do "
 "evento será criado."
 
-#, fuzzy
-msgid "Download and register the Relay with your Checkmk site"
-msgstr "Visualizar o estado dos sítios Checkmk\n"
+msgid "Run the installation script"
+msgstr ""
 
 msgid ""
-"The script will automatically download, register, and run the Relay with "
-"your Checkmk site."
+"On the machine on which the Relay will be running, run the command below to "
+"execute "
 msgstr ""
-
-msgid "Before executing the script, visit "
-msgstr ""
-
-#, fuzzy
-msgid "this page"
-msgstr "Primeira página"
 
 msgid ""
-" to get an automation secret. You will be prompted for it when running the "
-"script."
+"If you do not want to run the script as the specified user — or 2FA is "
+"active for that user —, "
 msgstr ""
 
-msgid "You will be prompted for your user password when running the script."
+msgid "You can only execute the following command as rootless."
+msgstr ""
+
+msgid "If you are logged in as root make sure to change the user using "
 msgstr ""
 
 #, fuzzy
@@ -97205,19 +97266,17 @@ msgid "Install Podman"
 msgstr "Data de Instalação"
 
 msgid ""
-"Before deploying the Relay, ensure that Podman is installed on the host "
-"operating system.\n"
-"            The Relay is distributed as a container image and requires a "
-"functional Podman environment."
+"Before deploying the Relay, ensure that Podman is installed on the machine "
+"on which the Relay will be running. "
 msgstr ""
 
 #, fuzzy
-msgid "Download the Relay installation script to your environment"
+msgid "Download the Relay installation script"
 msgstr "Implantar o plugin do container portuário"
 
 msgid ""
-"Download the Relay installation script. The script orchestrates downloading "
-"the Relay and registering it with your Checkmk site."
+"Run the command below to make the Relay installation script available to the "
+"machine on which the Relay will be running."
 msgstr ""
 
 #, fuzzy
@@ -97225,21 +97284,29 @@ msgid "Name the relay"
 msgstr "Nome do Proxy"
 
 #, fuzzy
-msgid "Provide a display alias for your Relay."
+msgid ""
+"Provide a display alias for your Relay. This alias can be changed later."
 msgstr "Nome alternativo de exibição para Serviços"
 
 msgid ""
-"The alias you enter here will be automatically inserted into the terminal "
-"code in the next step."
+"This alias will be used to identify your Relay. It will automatically be "
+"inserted into the command shown in the next step."
 msgstr ""
 
 #, fuzzy
-msgid "Verify registration"
-msgstr "Hora do registo"
+msgid "Registration results"
+msgstr "Registo bem sucedido"
 
 msgid ""
-"After the registration is triggered, verify the registration between the "
-"Relay and Checkmk site."
+"The Registration of the Relay to the Checkmk site has been checked. Results "
+"are displayed here."
+msgstr ""
+
+#, fuzzy
+msgid "In case of problems, read the "
+msgstr "Apenas no caso de um problema"
+
+msgid " for help with troubleshooting."
 msgstr ""
 
 #, fuzzy
@@ -97260,6 +97327,10 @@ msgstr "Contagem de hospedeiros degradados"
 #, fuzzy
 msgid "Go to relay overview"
 msgstr "Visão geral do anfitrião"
+
+msgid ""
+"The Relay is officially supported to run on the following operating systems:"
+msgstr ""
 
 msgid "Help us improve Checkmk with product usage analytics"
 msgstr ""
@@ -98149,6 +98220,30 @@ msgstr ""
 msgid ""
 "You can still access it later via Help > Learning Checkmk > Welcome page"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Cache per section"
+#~ msgstr "desactivar esta secção"
+
+#, fuzzy
+#~ msgid "Device statuses"
+#~ msgstr "Status do serviço"
+
+#, fuzzy
+#~ msgid "HW/SW inventory property"
+#~ msgstr "Inventário HW/SW"
+
+#, fuzzy
+#~ msgid "Download and register the Relay with your Checkmk site"
+#~ msgstr "Visualizar o estado dos sítios Checkmk\n"
+
+#, fuzzy
+#~ msgid "this page"
+#~ msgstr "Primeira página"
+
+#, fuzzy
+#~ msgid "Verify registration"
+#~ msgstr "Hora do registo"
 
 #, fuzzy
 #~ msgid "Application Monitoring"
@@ -100526,10 +100621,6 @@ msgstr ""
 #, python-format
 #~ msgid "Failed to process your MIB file (%s): %s"
 #~ msgstr "Falha no processamento do seu ficheiro MIB (%s): %s"
-
-#, fuzzy
-#~ msgid "HW/SW Inventory housekeeping"
-#~ msgstr "Plugins de inventário HW/SW obsoletos"
 
 #~ msgid "foo.bar"
 #~ msgstr "Joerg's test string"

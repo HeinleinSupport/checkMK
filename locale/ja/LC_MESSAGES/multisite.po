@@ -6940,6 +6940,10 @@ msgstr "Oracleパフォーマンス"
 msgid "Appliance uplink statuses"
 msgstr "Apacheのステータス"
 
+#, fuzzy
+msgid "Appliances"
+msgstr "アプライアンス"
+
 msgid "Appliances, other dedicated hardware"
 msgstr "アプライアンス、その他の専用ハードウェア"
 
@@ -11465,8 +11469,8 @@ msgid "Cache misses per second"
 msgstr "1秒あたりのキャッシュミス"
 
 #, fuzzy
-msgid "Cache per section"
-msgstr "このセクションのキャッシュ"
+msgid "Cache per resource"
+msgstr "開発者向けリソース"
 
 #, fuzzy
 msgid "Cache read throughput (/sec)"
@@ -20030,10 +20034,6 @@ msgid "Device state not available"
 msgstr "デバイスの状態は利用できません"
 
 #, fuzzy
-msgid "Device statuses"
-msgstr "サービスステータス"
-
-#, fuzzy
 msgid "Device statuses <b>[deprecated]</b>"
 msgstr "サービスステータス"
 
@@ -25267,8 +25267,8 @@ msgstr "Apacheプロセスサイズの見積もりに失敗しました"
 msgid "Failed to execute DCD connection (%s)"
 msgstr "DCD接続の実行に失敗しました(%s)"
 
-#, python-format
-msgid "Failed to execute the test %s: %s"
+#, fuzzy, python-format
+msgid "Failed to execute the test %s: See web.log for further details"
 msgstr "テスト %s の実行に失敗しました: %s"
 
 #, python-format
@@ -53339,6 +53339,9 @@ msgstr "再帰的パターン検索"
 msgid "Red"
 msgstr "赤"
 
+msgid "Red Hat Enterprise Linux (RHEL) 10"
+msgstr ""
+
 msgid "Redacted secrets changed."
 msgstr "編集済みの秘密が変更されました。"
 
@@ -54433,6 +54436,10 @@ msgid "Replica lag"
 msgstr "レプリカラグ"
 
 msgid "Replica ready state"
+msgstr "レプリカ準備完了状態"
+
+#, fuzzy
+msgid "Replica terminating state"
 msgstr "レプリカ準備完了状態"
 
 msgid "Replica update state"
@@ -64261,6 +64268,14 @@ msgstr "終了したコンテナの数"
 msgid "Terminated pod resources"
 msgstr "Terminated pod リソース"
 
+#, fuzzy
+msgid "Terminating duration (Deployment only)"
+msgstr "ミススケジュールされた期間（DaemonSetのみ）"
+
+#, fuzzy
+msgid "Terminating replicas"
+msgstr "読み残し"
+
 msgid "Terse"
 msgstr "簡潔"
 
@@ -66580,6 +66595,32 @@ msgid ""
 "existing hosts."
 msgstr ""
 "次のルールセットには、既存のどのホストにもマッチしないルールが含まれている。"
+
+msgid ""
+"The following sections utilize this setting:<ul><li>Appliance uplink "
+"statuses</li><li>Appliance uplink VPN statuses</li></ul>"
+msgstr ""
+
+msgid ""
+"The following sections utilize this setting:<ul><li>Device statuses</"
+"li><li>Device uplinks</li></ul>"
+msgstr ""
+
+msgid ""
+"The following sections utilize this setting:<ul><li>Licenses overview</li></"
+"ul>"
+msgstr ""
+
+msgid ""
+"The following sections utilize this setting:<ul><li>Networks</li></ul>This "
+"setting also indirectly affects the piggyback headings when the 'Use Network-"
+"ID as host prefix' setting is applied."
+msgstr ""
+
+msgid ""
+"The following sections utilize this setting:<ul><li>Wireless device "
+"statuses</li><li>Wireless ethernet statuses</li></ul>"
+msgstr ""
 
 msgid "The following users"
 msgstr "次のユーザー"
@@ -78290,6 +78331,9 @@ msgstr "UUIDとマウントポイント"
 msgid "UUID links for TLS-encrypting agent communication"
 msgstr "TLS暗号化エージェント通信用UUIDリンク"
 
+msgid "Ubuntu 22.04 LTS"
+msgstr ""
+
 msgid "Umlauts in User-IDs (deprecated)"
 msgstr "ユーザーIDのウムラウト(非推奨)"
 
@@ -84171,6 +84215,9 @@ msgstr "一致するWindows、Linux、Solaris、AIXエージェント: %s"
 msgid "Windows: MSI (.msi)"
 msgstr "Windows: MSI (.msi)"
 
+msgid "Wireless"
+msgstr ""
+
 #, fuzzy
 msgid "Wireless device statuses"
 msgstr "状態を無視する"
@@ -84192,6 +84239,15 @@ msgid ""
 msgstr ""
 "認証タイプを「OAuth2」に設定した場合、オプション「%s」を指定する必要がありま"
 "す。"
+
+msgid ""
+"With the <b>OpenTelemetry data - metric backend</b> connector type, hosts "
+"will be dynamically created using the data collected from the "
+"<b>OpenTelemetry Collector</b> or the <b>Prometheus scraper</b>. You must "
+"also enable the metric backend under <a href='wato.py?"
+"folder=&mode=edit_configvar&site=&varname=metric_backend'>Global Settings > "
+"Site Management.</a>"
+msgstr ""
 
 msgid ""
 "With the help of the <a href=\"https://github.com/robocorp/rcc\" "
@@ -90486,6 +90542,14 @@ msgid "Show in dashboard name dropdown"
 msgstr "パスワードが提供されていません"
 
 #, fuzzy
+msgid "Select at least one contact group."
+msgstr "少なくとも1つの連絡先グループを追加してください。"
+
+#, fuzzy
+msgid "Select at least one site."
+msgstr "少なくとも1つの要素を選択してください"
+
+#, fuzzy
 msgid "Dashboard settings of %{name}"
 msgstr "ダッシュボードのプロパティ"
 
@@ -90661,12 +90725,12 @@ msgid "Loading widget visualization settings..."
 msgstr "デフォルトのBI視覚化設定"
 
 #, fuzzy
-msgid "Metric selection"
-msgstr "ファイル選択"
+msgid "HW/SW Inventory (value) selection"
+msgstr "HW/SWインベントリ ハウスキーピング"
 
 #, fuzzy
-msgid "HW/SW inventory property"
-msgstr "HW/SWインベントリ"
+msgid "HW/SW Inventory single value"
+msgstr "HW/SWインベントリルール"
 
 #, fuzzy
 msgid "Select inventory path"
@@ -90711,6 +90775,10 @@ msgstr ""
 #, fuzzy
 msgid "Service graph"
 msgstr "サービスグラフ"
+
+#, fuzzy
+msgid "Metric selection"
+msgstr "ファイル選択"
 
 msgid "Data range"
 msgstr "データ範囲"
@@ -91491,18 +91559,16 @@ msgstr "サービスのステータスを使用します..."
 
 msgid ""
 "When you run the command in the terminal, you will be prompted for the "
-"password of the"
+"password of the\n"
+"                agent_registration user. Copy the 'Automation secret for "
+"machine accounts' from the "
 msgstr ""
 
 #, fuzzy
 msgid "agent_registration user"
 msgstr "エージェント登録ユーザー"
 
-msgid ""
-"Copy the 'Automation secret for machine accounts' from the "
-"agent_registration\n"
-"                   user and paste it into the terminal to continue the "
-"registration."
+msgid "and paste it into the terminal to continue the registration."
 msgstr ""
 
 msgid ""
@@ -91715,28 +91781,23 @@ msgstr "統合 OpenTelemetry コレクタのすべての関連構成。"
 msgid "Select the folder your host(s) will be created in."
 msgstr "ホストが作成される場所を指定してください。"
 
-#, fuzzy
-msgid "Download and register the Relay with your Checkmk site"
-msgstr "Checkmkサイトにリレーを登録する"
+msgid "Run the installation script"
+msgstr ""
 
 msgid ""
-"The script will automatically download, register, and run the Relay with "
-"your Checkmk site."
+"On the machine on which the Relay will be running, run the command below to "
+"execute "
 msgstr ""
-
-msgid "Before executing the script, visit "
-msgstr ""
-
-#, fuzzy
-msgid "this page"
-msgstr "1ページ目"
 
 msgid ""
-" to get an automation secret. You will be prompted for it when running the "
-"script."
+"If you do not want to run the script as the specified user — or 2FA is "
+"active for that user —, "
 msgstr ""
 
-msgid "You will be prompted for your user password when running the script."
+msgid "You can only execute the following command as rootless."
+msgstr ""
+
+msgid "If you are logged in as root make sure to change the user using "
 msgstr ""
 
 #, fuzzy
@@ -91744,19 +91805,17 @@ msgid "Install Podman"
 msgstr "インストール日"
 
 msgid ""
-"Before deploying the Relay, ensure that Podman is installed on the host "
-"operating system.\n"
-"            The Relay is distributed as a container image and requires a "
-"functional Podman environment."
+"Before deploying the Relay, ensure that Podman is installed on the machine "
+"on which the Relay will be running. "
 msgstr ""
 
 #, fuzzy
-msgid "Download the Relay installation script to your environment"
+msgid "Download the Relay installation script"
 msgstr "Dockerコンテナプラグインをデプロイする"
 
 msgid ""
-"Download the Relay installation script. The script orchestrates downloading "
-"the Relay and registering it with your Checkmk site."
+"Run the command below to make the Relay installation script available to the "
+"machine on which the Relay will be running."
 msgstr ""
 
 #, fuzzy
@@ -91764,21 +91823,29 @@ msgid "Name the relay"
 msgstr "プロキシの名前"
 
 #, fuzzy
-msgid "Provide a display alias for your Relay."
+msgid ""
+"Provide a display alias for your Relay. This alias can be changed later."
 msgstr "リレーの表示名を入力してください。"
 
 msgid ""
-"The alias you enter here will be automatically inserted into the terminal "
-"code in the next step."
+"This alias will be used to identify your Relay. It will automatically be "
+"inserted into the command shown in the next step."
 msgstr ""
 
 #, fuzzy
-msgid "Verify registration"
-msgstr "登録時刻"
+msgid "Registration results"
+msgstr "登録完了"
 
 msgid ""
-"After the registration is triggered, verify the registration between the "
-"Relay and Checkmk site."
+"The Registration of the Relay to the Checkmk site has been checked. Results "
+"are displayed here."
+msgstr ""
+
+#, fuzzy
+msgid "In case of problems, read the "
+msgstr "問題が発生した場合のみ"
+
+msgid " for help with troubleshooting."
 msgstr ""
 
 msgid "Verifying the registration..."
@@ -91797,6 +91864,10 @@ msgstr "デグレードしたホストの数"
 #, fuzzy
 msgid "Go to relay overview"
 msgstr "%s概要へ"
+
+msgid ""
+"The Relay is officially supported to run on the following operating systems:"
+msgstr ""
 
 msgid "Help us improve Checkmk with product usage analytics"
 msgstr ""
@@ -92676,6 +92747,30 @@ msgstr ""
 msgid ""
 "You can still access it later via Help > Learning Checkmk > Welcome page"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Cache per section"
+#~ msgstr "このセクションのキャッシュ"
+
+#, fuzzy
+#~ msgid "Device statuses"
+#~ msgstr "サービスステータス"
+
+#, fuzzy
+#~ msgid "HW/SW inventory property"
+#~ msgstr "HW/SWインベントリ"
+
+#, fuzzy
+#~ msgid "Download and register the Relay with your Checkmk site"
+#~ msgstr "Checkmkサイトにリレーを登録する"
+
+#, fuzzy
+#~ msgid "this page"
+#~ msgstr "1ページ目"
+
+#, fuzzy
+#~ msgid "Verify registration"
+#~ msgstr "登録時刻"
 
 #~ msgid "Application Monitoring"
 #~ msgstr "アプリケーション監視"
@@ -95086,9 +95181,6 @@ msgstr ""
 #, python-format
 #~ msgid "Failed to process your MIB file (%s): %s"
 #~ msgstr "MIBファイル( %s ) : %s の処理に失敗しました"
-
-#~ msgid "HW/SW Inventory housekeeping"
-#~ msgstr "HW/SWインベントリ ハウスキーピング"
 
 #~ msgid "foo.bar"
 #~ msgstr "Joerg's test string"

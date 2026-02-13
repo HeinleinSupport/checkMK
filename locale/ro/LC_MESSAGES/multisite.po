@@ -7330,6 +7330,10 @@ msgstr "Performanța Oracle"
 msgid "Appliance uplink statuses"
 msgstr "Starea Apache"
 
+#, fuzzy
+msgid "Appliances"
+msgstr "Aparatură"
+
 msgid "Appliances, other dedicated hardware"
 msgstr "Aparate, alte echipamente hardware dedicate"
 
@@ -12211,8 +12215,8 @@ msgid "Cache misses per second"
 msgstr "Ratarea memoriei cache pe secundă"
 
 #, fuzzy
-msgid "Cache per section"
-msgstr "dezactivați această secțiune"
+msgid "Cache per resource"
+msgstr "Resurse pentru dezvoltatori"
 
 #, fuzzy
 msgid "Cache read throughput (/sec)"
@@ -21189,10 +21193,6 @@ msgid "Device state not available"
 msgstr "Starea dispozitivului nu este disponibilă"
 
 #, fuzzy
-msgid "Device statuses"
-msgstr "Starea serviciului"
-
-#, fuzzy
 msgid "Device statuses <b>[deprecated]</b>"
 msgstr "Starea serviciului"
 
@@ -26746,8 +26746,8 @@ msgstr "Nu a reușit să estimeze dimensiunea procesului Apache"
 msgid "Failed to execute DCD connection (%s)"
 msgstr "Nu s-a reușit executarea conexiunii DCD (%s)"
 
-#, python-format
-msgid "Failed to execute the test %s: %s"
+#, fuzzy, python-format
+msgid "Failed to execute the test %s: See web.log for further details"
 msgstr "Nu a reușit să execute testul %s: %s."
 
 #, python-format
@@ -56800,6 +56800,9 @@ msgstr "Căutarea recurentă de modele"
 msgid "Red"
 msgstr "Roșu"
 
+msgid "Red Hat Enterprise Linux (RHEL) 10"
+msgstr ""
+
 msgid "Redacted secrets changed."
 msgstr "Secretele redactate au fost schimbate."
 
@@ -57942,6 +57945,10 @@ msgid "Replica lag"
 msgstr "Replica lag"
 
 msgid "Replica ready state"
+msgstr "Starea de pregătire a replicilor"
+
+#, fuzzy
+msgid "Replica terminating state"
 msgstr "Starea de pregătire a replicilor"
 
 msgid "Replica update state"
@@ -68380,6 +68387,14 @@ msgstr "Containere terminate"
 msgid "Terminated pod resources"
 msgstr "Resursele de poduri terminate"
 
+#, fuzzy
+msgid "Terminating duration (Deployment only)"
+msgstr "Durată neprogramată (numai pentru DaemonSet)"
+
+#, fuzzy
+msgid "Terminating replicas"
+msgstr "Lecturi rămase"
+
 msgid "Terse"
 msgstr "Tern"
 
@@ -70784,6 +70799,32 @@ msgid ""
 msgstr ""
 "Următoarele seturi de reguli conțin reguli care nu se potrivesc cu niciuna "
 "dintre gazdele existente."
+
+msgid ""
+"The following sections utilize this setting:<ul><li>Appliance uplink "
+"statuses</li><li>Appliance uplink VPN statuses</li></ul>"
+msgstr ""
+
+msgid ""
+"The following sections utilize this setting:<ul><li>Device statuses</"
+"li><li>Device uplinks</li></ul>"
+msgstr ""
+
+msgid ""
+"The following sections utilize this setting:<ul><li>Licenses overview</li></"
+"ul>"
+msgstr ""
+
+msgid ""
+"The following sections utilize this setting:<ul><li>Networks</li></ul>This "
+"setting also indirectly affects the piggyback headings when the 'Use Network-"
+"ID as host prefix' setting is applied."
+msgstr ""
+
+msgid ""
+"The following sections utilize this setting:<ul><li>Wireless device "
+"statuses</li><li>Wireless ethernet statuses</li></ul>"
+msgstr ""
 
 msgid "The following users"
 msgstr "Următorii utilizatori"
@@ -83391,6 +83432,9 @@ msgstr "UUID și punctul de montare"
 msgid "UUID links for TLS-encrypting agent communication"
 msgstr "Legături UUID pentru comunicarea agentului cu criptare TLS"
 
+msgid "Ubuntu 22.04 LTS"
+msgstr ""
+
 msgid "Umlauts in User-IDs (deprecated)"
 msgstr "Umlauts în ID-urile de utilizator (depreciat)"
 
@@ -89746,6 +89790,9 @@ msgstr "Agenții Windows, Linux, Solaris, AIX se potrivesc: %s"
 msgid "Windows: MSI (.msi)"
 msgstr "Ferestre: MSI (.msi)"
 
+msgid "Wireless"
+msgstr ""
+
 #, fuzzy
 msgid "Wireless device statuses"
 msgstr "ignorați statul"
@@ -89764,6 +89811,15 @@ msgstr ""
 #, python-format
 msgid ""
 "With authentication type set to 'OAuth2' the option '%s' must be specified."
+msgstr ""
+
+msgid ""
+"With the <b>OpenTelemetry data - metric backend</b> connector type, hosts "
+"will be dynamically created using the data collected from the "
+"<b>OpenTelemetry Collector</b> or the <b>Prometheus scraper</b>. You must "
+"also enable the metric backend under <a href='wato.py?"
+"folder=&mode=edit_configvar&site=&varname=metric_backend'>Global Settings > "
+"Site Management.</a>"
 msgstr ""
 
 #, fuzzy
@@ -96310,6 +96366,14 @@ msgid "Show in dashboard name dropdown"
 msgstr "Din magazinul de parole"
 
 #, fuzzy
+msgid "Select at least one contact group."
+msgstr "Vă rugăm să adăugați cel puțin un nod copil."
+
+#, fuzzy
+msgid "Select at least one site."
+msgstr "Vă rugăm să selectați cel puțin un element"
+
+#, fuzzy
 msgid "Dashboard settings of %{name}"
 msgstr "Proprietățile tabloului de bord"
 
@@ -96488,12 +96552,12 @@ msgid "Loading widget visualization settings..."
 msgstr "Setări implicite de vizualizare BI"
 
 #, fuzzy
-msgid "Metric selection"
-msgstr "Selecția fișierelor"
+msgid "HW/SW Inventory (value) selection"
+msgstr "Plugin-uri de inventar HW/SW depășite"
 
 #, fuzzy
-msgid "HW/SW inventory property"
-msgstr "Inventarul HW/SW"
+msgid "HW/SW Inventory single value"
+msgstr "Reguli de inventariere HW/SW"
 
 #, fuzzy
 msgid "Select inventory path"
@@ -96540,6 +96604,10 @@ msgstr ""
 #, fuzzy
 msgid "Service graph"
 msgstr "Grafice de servicii"
+
+#, fuzzy
+msgid "Metric selection"
+msgstr "Selecția fișierelor"
 
 msgid "Data range"
 msgstr "Intervalul de date"
@@ -97346,18 +97414,16 @@ msgstr "Utilizați starea serviciului..."
 
 msgid ""
 "When you run the command in the terminal, you will be prompted for the "
-"password of the"
+"password of the\n"
+"                agent_registration user. Copy the 'Automation secret for "
+"machine accounts' from the "
 msgstr ""
 
 #, fuzzy
 msgid "agent_registration user"
 msgstr "Utilizator de înregistrare agent"
 
-msgid ""
-"Copy the 'Automation secret for machine accounts' from the "
-"agent_registration\n"
-"                   user and paste it into the terminal to continue the "
-"registration."
+msgid "and paste it into the terminal to continue the registration."
 msgstr ""
 
 msgid ""
@@ -97574,28 +97640,23 @@ msgstr ""
 "Specificați la ce perioadă de timp va fi creat un nou fișier pentru "
 "istoricul evenimentelor."
 
-#, fuzzy
-msgid "Download and register the Relay with your Checkmk site"
-msgstr "Afișarea stării site-urilor Checkmk\n"
+msgid "Run the installation script"
+msgstr ""
 
 msgid ""
-"The script will automatically download, register, and run the Relay with "
-"your Checkmk site."
+"On the machine on which the Relay will be running, run the command below to "
+"execute "
 msgstr ""
-
-msgid "Before executing the script, visit "
-msgstr ""
-
-#, fuzzy
-msgid "this page"
-msgstr "Prima pagină"
 
 msgid ""
-" to get an automation secret. You will be prompted for it when running the "
-"script."
+"If you do not want to run the script as the specified user — or 2FA is "
+"active for that user —, "
 msgstr ""
 
-msgid "You will be prompted for your user password when running the script."
+msgid "You can only execute the following command as rootless."
+msgstr ""
+
+msgid "If you are logged in as root make sure to change the user using "
 msgstr ""
 
 #, fuzzy
@@ -97603,19 +97664,17 @@ msgid "Install Podman"
 msgstr "Data instalării"
 
 msgid ""
-"Before deploying the Relay, ensure that Podman is installed on the host "
-"operating system.\n"
-"            The Relay is distributed as a container image and requires a "
-"functional Podman environment."
+"Before deploying the Relay, ensure that Podman is installed on the machine "
+"on which the Relay will be running. "
 msgstr ""
 
 #, fuzzy
-msgid "Download the Relay installation script to your environment"
+msgid "Download the Relay installation script"
 msgstr "Implementați plugin-ul containerului docker"
 
 msgid ""
-"Download the Relay installation script. The script orchestrates downloading "
-"the Relay and registering it with your Checkmk site."
+"Run the command below to make the Relay installation script available to the "
+"machine on which the Relay will be running."
 msgstr ""
 
 #, fuzzy
@@ -97623,21 +97682,29 @@ msgid "Name the relay"
 msgstr "Numele reprezentantului"
 
 #, fuzzy
-msgid "Provide a display alias for your Relay."
+msgid ""
+"Provide a display alias for your Relay. This alias can be changed later."
 msgstr "Denumire alternativă de afișare pentru servicii"
 
 msgid ""
-"The alias you enter here will be automatically inserted into the terminal "
-"code in the next step."
+"This alias will be used to identify your Relay. It will automatically be "
+"inserted into the command shown in the next step."
 msgstr ""
 
 #, fuzzy
-msgid "Verify registration"
-msgstr "Ora de înregistrare"
+msgid "Registration results"
+msgstr "Înregistrare reușită"
 
 msgid ""
-"After the registration is triggered, verify the registration between the "
-"Relay and Checkmk site."
+"The Registration of the Relay to the Checkmk site has been checked. Results "
+"are displayed here."
+msgstr ""
+
+#, fuzzy
+msgid "In case of problems, read the "
+msgstr "Numai în cazul unei probleme"
+
+msgid " for help with troubleshooting."
 msgstr ""
 
 #, fuzzy
@@ -97658,6 +97725,10 @@ msgstr "Numărul de gazde degradate"
 #, fuzzy
 msgid "Go to relay overview"
 msgstr "Prezentare generală a gazdei"
+
+msgid ""
+"The Relay is officially supported to run on the following operating systems:"
+msgstr ""
 
 msgid "Help us improve Checkmk with product usage analytics"
 msgstr ""
@@ -98552,6 +98623,30 @@ msgstr ""
 msgid ""
 "You can still access it later via Help > Learning Checkmk > Welcome page"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Cache per section"
+#~ msgstr "dezactivați această secțiune"
+
+#, fuzzy
+#~ msgid "Device statuses"
+#~ msgstr "Starea serviciului"
+
+#, fuzzy
+#~ msgid "HW/SW inventory property"
+#~ msgstr "Inventarul HW/SW"
+
+#, fuzzy
+#~ msgid "Download and register the Relay with your Checkmk site"
+#~ msgstr "Afișarea stării site-urilor Checkmk\n"
+
+#, fuzzy
+#~ msgid "this page"
+#~ msgstr "Prima pagină"
+
+#, fuzzy
+#~ msgid "Verify registration"
+#~ msgstr "Ora de înregistrare"
 
 #, fuzzy
 #~ msgid "Application Monitoring"
@@ -100930,10 +101025,6 @@ msgstr ""
 #, python-format
 #~ msgid "Failed to process your MIB file (%s): %s"
 #~ msgstr "Nu a reușit să proceseze fișierul MIB (%s): %s."
-
-#, fuzzy
-#~ msgid "HW/SW Inventory housekeeping"
-#~ msgstr "Plugin-uri de inventar HW/SW depășite"
 
 #~ msgid "foo.bar"
 #~ msgstr "Joerg's test string"
