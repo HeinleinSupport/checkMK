@@ -4,7 +4,6 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 # mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
 
 
 from cmk.agent_based.v2 import (
@@ -21,7 +20,7 @@ from cmk.agent_based.v2 import (
 from cmk.plugins.brocade.lib import DETECT_MLX
 
 
-def brocade_mlx_fan_combine_item(id_, descr):
+def brocade_mlx_fan_combine_item(id_: str, descr: str) -> str:
     if descr == "" or "(RPM " in descr:
         return id_
     return f"{id_} {descr}"
