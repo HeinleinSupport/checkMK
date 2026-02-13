@@ -10,6 +10,7 @@ load("@cmk_requirements//:requirements.bzl", "requirement")
 load("@cmk_types//:types.bzl", "types")
 load("@rules_mypy//mypy:mypy.bzl", "mypy")
 load("//bazel/tools:lint_astrein.bzl", "lint_astrein_aspect")
+load("//bazel/tools:lint_py_import_cycles.bzl", "lint_py_import_cycles_aspect")
 
 clippy = lint_clippy_aspect(
     config = Label("//:.clippy.toml"),
@@ -60,6 +61,11 @@ clang_tidy = lint_clang_tidy_aspect(
 
 astrein = lint_astrein_aspect(
     binary = Label("//packages/cmk-astrein:astrein"),
+)
+
+py_import_cycles = lint_py_import_cycles_aspect(
+    binary = Label("//bazel/tools:py-import-cycles"),
+    options = ["--strategy", "johnson", "--threshold", "0"],
 )
 
 groovy = lint_groovy_aspect(

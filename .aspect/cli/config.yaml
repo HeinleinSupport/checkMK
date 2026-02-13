@@ -6,5 +6,6 @@ lint:
     - //bazel/tools:aspects.bzl%clang_tidy
     - //bazel/tools:aspects.bzl%groovy
     - //bazel/tools:aspects.bzl%clippy
+    - //bazel/tools:aspects.bzl%py_import_cycles
     - //bazel/tools:aspects.bzl%ruff
     - //bazel/tools:aspects.bzl%shellcheck
