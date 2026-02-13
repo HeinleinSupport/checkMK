@@ -47,15 +47,6 @@ if [ "$CMK_EDITION" != "ultimatemt" ]; then
     fi
 fi
 
-# Restore site version after .f12
-# sed -i "s|^__version__.*$|__version__ = \"$CMK_VERSION\"|g" "$ROOT"/lib/python3/cmk/ccc/version.py
-
-# Make the target a ultimatemt again if it was before after replacing the version.py from the git
-if [ "$CMK_EDITION" = "ultimatemt" ]; then
-    echo "Make the target ultimatemt..."
-    sed -i "/^def edition() -> Edition:/{n;n;s/.*/        return Edition.ULTIMATEMT/}" "$ROOT/lib/python3/cmk/ccc/version.py"
-fi
-
 if [ -z "${ONLY_COPY}" ]; then
     (
         cd "$ROOT"/lib/python3/cmk
