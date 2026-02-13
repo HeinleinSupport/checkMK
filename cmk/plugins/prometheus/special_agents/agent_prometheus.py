@@ -13,7 +13,6 @@ Checkmk special agent for monitoring Prometheus.
 # mypy: disable-error-code="type-arg"
 # mypy: disable-error-code="unreachable"
 # mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
 
 import argparse
 import ast
@@ -74,20 +73,20 @@ def parse_pod_name(labels: dict[str, str], prepend_namespace: bool = False) -> s
 
 
 class CAdvisorExporter:
-    def __init__(self, api_client: "PrometheusAPI", options: dict) -> None:
+    def __init__(self, api_client: "PrometheusAPI", options: Mapping[str, Any]) -> None:
         self.api_client = api_client
         self.container_name_option = options.get("container_id", "short")
-        self.pod_containers: dict = {}
-        self.container_ids: dict = {}
+        self.pod_containers: dict[str, list[str]] = {}
+        self.container_ids: dict[str, dict[str, str]] = {}
         self.prepend_namespaces = options.get("prepend_namespaces", True)
         self.namespace_include_patterns = options.get("namespace_include_patterns", [])
 
-    def _pod_name(self, labels):
+    def _pod_name(self, labels: dict[str, str]) -> str:
         return parse_pod_name(labels, self.prepend_namespaces)
 
-    def update_pod_containers(self):
+    def update_pod_containers(self) -> None:
         result: dict[str, list[str]] = {}
-        container_ids = {}
+        container_ids: dict[str, dict[str, str]] = {}
         temp_result = self.api_client.query_promql('container_last_seen{container!="", pod!=""}')
         for container_info in temp_result:
             container_name = container_info.label_value("name")
@@ -202,7 +201,9 @@ class CAdvisorExporter:
 
         return result, associations
 
-    def _format_for_service(self, pods: dict) -> list[dict[str, dict[str, Any]]]:
+    def _format_for_service(
+        self, pods: dict[str, dict[str, Any]]
+    ) -> list[dict[str, dict[str, Any]]]:
         result = []
         for pod_name, pod_info in pods.items():
             pod_formatted = {
@@ -230,7 +231,7 @@ class CAdvisorExporter:
             pods_missing_limit[pod_name] = {stat: pod_info[stat] for stat in required_stats}
         return pods_complete, pods_missing_limit
 
-    def _verify_valid_memory_limit(self, pod_info):
+    def _verify_valid_memory_limit(self, pod_info: dict[str, Any]) -> bool:
         if "memory_limit" not in pod_info:
             return False
 
@@ -334,20 +335,22 @@ class CAdvisorExporter:
             result.append(piggybacked_services)
         return result
 
-    def _prepare_query(self, entity_promql, group_element):
+    def _prepare_query(self, entity_promql: str, group_element: str) -> str:
         if "{group_element}" in entity_promql:
             promql_query = entity_promql.format(group_element=group_element)
         else:
             promql_query = entity_promql
         return promql_query
 
-    def _namespace_query_part(self):
+    def _namespace_query_part(self) -> str:
         if not self.namespace_include_patterns:
             return ""
         return f", namespace=~'{'|'.join(self.namespace_include_patterns)}'"
 
-    def _apply_container_name_option(self, promql_result):
-        promql_result_new = {}
+    def _apply_container_name_option(
+        self, promql_result: dict[str, dict[str, list[dict[str, Any]]]]
+    ) -> dict[str, dict[str, list[dict[str, Any]]]]:
+        promql_result_new: dict[str, dict[str, list[dict[str, Any]]]] = {}
         for piggyback_host_name, piggyback_data in promql_result.items():
             promql_result_new[
                 self.container_ids[piggyback_host_name][self.container_name_option]
@@ -486,7 +489,7 @@ class PrometheusServer:
     def __init__(self, api_client: "PrometheusAPI") -> None:
         self.api_client = api_client
 
-    def build_info(self):
+    def build_info(self) -> dict[str, Any]:
         result: dict[str, Any] = {}
         result.update({"scrape_target": self._scrape_targets()})
 
@@ -866,7 +869,7 @@ class ApiData:
                     yield f"{section_str}\n"
 
     @staticmethod
-    def _get_node_piggyback_host_name(node_name):
+    def _get_node_piggyback_host_name(node_name: str) -> str:
         return node_name.split(":")[0]
 
 
@@ -911,7 +914,7 @@ class ApiError(Exception):
     pass
 
 
-def process_config_and_args(argv: list[str]) -> argparse.Namespace:
+def process_config_and_args(argv: list[str] | None) -> argparse.Namespace:
     if argv is None:
         argv = sys.argv[1:]
 
@@ -926,7 +929,7 @@ def process_config_and_args(argv: list[str]) -> argparse.Namespace:
     return parse_arguments(argv)
 
 
-def main(argv=None):
+def main(argv: list[str] | None = None) -> int:
     args = process_config_and_args(argv)
     try:
         config = ast.literal_eval(args.config)
