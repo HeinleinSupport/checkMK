@@ -4,7 +4,6 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 # mypy: disable-error-code="no-untyped-call"
-# mypy: disable-error-code="no-untyped-def"
 
 from collections.abc import Mapping
 from typing import Any, NamedTuple
@@ -73,7 +72,7 @@ agent_section_sap_hana_license = AgentSection(
 )
 
 
-def _parse_maybe_bool(value):
+def _parse_maybe_bool(value: str) -> bool | None:
     if value.lower() == "true":
         return True
     if value.lower() == "false":
@@ -116,7 +115,7 @@ def check_sap_hana_license(
         yield Result(state=State.WARN, summary="Expiration date: %s" % expiration_date)
 
 
-def _check_product_usage(size, limit, params):
+def _check_product_usage(size: int, limit: int, params: Mapping[str, Any]) -> CheckResult:
     yield from check_levels_v1(
         size,
         metric_name="license_size",
