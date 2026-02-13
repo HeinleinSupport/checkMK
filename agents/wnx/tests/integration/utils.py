@@ -14,7 +14,7 @@ from contextlib import contextmanager
 from pathlib import Path
 from typing import Any, Final, NamedTuple
 
-import telnetlib3  # type: ignore[import-untyped]
+import telnetlib3
 import yaml
 
 # check_mk section, example of output
@@ -91,7 +91,7 @@ _result = ""
 async def _telnet_shell(reader: telnetlib3.TelnetReader, _: telnetlib3.TelnetWriter) -> None:
     global _result
     while True:
-        data = await reader.read(1024)
+        data = await reader.read(1024)  # type: ignore[no-untyped-call]
         if not data:
             break
         _result += data
@@ -99,7 +99,7 @@ async def _telnet_shell(reader: telnetlib3.TelnetReader, _: telnetlib3.TelnetWri
 
 def _read_client_data(host: str, port: int) -> None:
     loop = asyncio.get_event_loop()
-    coro = telnetlib3.open_connection(host, port, shell=_telnet_shell)
+    coro = telnetlib3.open_connection(host, port, shell=_telnet_shell)  # type: ignore[no-untyped-call]
     _, writer = loop.run_until_complete(coro)
     loop.run_until_complete(writer.protocol.waiter_closed)
 
