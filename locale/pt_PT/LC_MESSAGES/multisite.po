@@ -1507,6 +1507,15 @@ msgstr ""
 msgid "<b>Beware:</b> This will leave your environment in an undefined state."
 msgstr "<b>Cuidado:</b> Isso deixará seu ambiente em um estado indefinido."
 
+#, python-format
+msgid ""
+"<b>Consent Requirement: </b>You must request and receive permission from "
+"each customer before enabling the collection of product analytics data. Do "
+"not activate data collection for any site unless the customer has agreed to "
+"data transmission. For configuration options specifically for multi-tenant "
+"sites, please visit the %s."
+msgstr ""
+
 msgid ""
 "<b>Gather all service instances and restrict by overall tags:</b><br>If "
 "overall tags are specified above, then all service instances will be "
@@ -14224,6 +14233,9 @@ msgstr "Seleccionar as seguintes teclas"
 msgid "Choose the logic with which the value is to be interpreted."
 msgstr "Escolha a lógica com a qual o valor deve ser interpretado."
 
+msgid "Choose the maximum time to allow between last-update checks"
+msgstr ""
+
 msgid ""
 "Choose the monitoring core to run for monitoring. You can also decide to run "
 "no monitoring core in this site. This can be useful for instances running "
@@ -15143,6 +15155,10 @@ msgstr ""
 
 msgid "Command"
 msgstr "Comando"
+
+#, fuzzy, python-format
+msgid "Command %s"
+msgstr "Comandos"
 
 #, python-format
 msgid "Command %s/%d not found"
@@ -37844,6 +37860,10 @@ msgstr "Conexão de usuário inválida: %s"
 msgid "Invalid user input"
 msgstr "Entrada de usuário inválida"
 
+#, fuzzy
+msgid "Invalid value for 'owned_by'."
+msgstr "Valor inválido para o parâmetro ack."
+
 msgid "Invalid value for ack parameter."
 msgstr "Valor inválido para o parâmetro ack."
 
@@ -43609,6 +43629,10 @@ msgid "Maximum time since last start of job execution"
 msgstr "Tempo máximo desde o último início da execução do trabalho"
 
 #, fuzzy
+msgid "Maximum time since last update check"
+msgstr "Tempo decorrido desde o último programa bem sucedido"
+
+#, fuzzy
 msgid "Maximum time since the last successful sync"
 msgstr "Tempo decorrido desde o último programa bem sucedido"
 
@@ -43763,6 +43787,10 @@ msgstr "Membros"
 
 msgid "Members of contact groups"
 msgstr "Membros de grupos de contato"
+
+#, fuzzy
+msgid "Members of the contact group"
+msgstr "Membros do grupo de contato:"
 
 msgid "Members of the contact group:"
 msgstr "Membros do grupo de contato:"
@@ -49978,6 +50006,11 @@ msgstr "Use apenas os níveis do dispositivo, ignore os seus"
 msgid "Only user sockets"
 msgstr "Tomadas de rede abertas"
 
+msgid ""
+"Only users with the permission 'Write access to all passwords' can assign "
+"ownership to 'Administrators'."
+msgstr ""
+
 msgid "Only valid in Jenkins versions <= 1.622."
 msgstr ""
 
@@ -51595,6 +51628,10 @@ msgstr "Saída de pacotes não unicastos"
 #, fuzzy
 msgid "Output octets"
 msgstr "Octetos de saída"
+
+#, fuzzy, python-format
+msgid "Output of %s"
+msgstr "Saídas"
 
 #, fuzzy
 msgid ""
@@ -60930,6 +60967,10 @@ msgid ""
 "connecting in plain text.Proxy connections allow to connect via a proxy "
 "server, only global and manual proxy configurations are supported."
 msgstr ""
+
+#, fuzzy
+msgid "Select the contact group that can edit this OAuth2 connection."
+msgstr "Adicionar conexão"
 
 msgid ""
 "Select the graph to be displayed by this element. In case the current "
@@ -81227,11 +81268,31 @@ msgid "Total running on-demand instances of type r5n"
 msgstr "Total de Instâncias a Pedido"
 
 #, fuzzy
+msgid "Total running on-demand instances of type r6a"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
 msgid "Total running on-demand instances of type r6g"
 msgstr "Total de Instâncias a Pedido"
 
 #, fuzzy
 msgid "Total running on-demand instances of type r6gd"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand instances of type r6i"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand instances of type r6id"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand instances of type r8g"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand instances of type r8gd"
 msgstr "Total de Instâncias a Pedido"
 
 #, fuzzy
@@ -82027,6 +82088,50 @@ msgid "Total running on-demand r5n.xlarge instances"
 msgstr "Total de Instâncias a Pedido"
 
 #, fuzzy
+msgid "Total running on-demand r6a.12xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r6a.16xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r6a.24xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r6a.2xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r6a.32xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r6a.48xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r6a.4xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r6a.8xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r6a.large instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r6a.metal instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r6a.xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
 msgid "Total running on-demand r6g.12xlarge instances"
 msgstr "Total de Instâncias a Pedido"
 
@@ -82096,6 +82201,182 @@ msgstr "Total de Instâncias a Pedido"
 
 #, fuzzy
 msgid "Total running on-demand r6gd.xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r6i.12xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r6i.16xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r6i.24xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r6i.2xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r6i.32xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r6i.4xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r6i.8xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r6i.large instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r6i.metal instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r6i.xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r6id.12xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r6id.16xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r6id.24xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r6id.2xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r6id.32xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r6id.4xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r6id.8xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r6id.large instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r6id.metal instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r6id.xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r8g.12xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r8g.16xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r8g.24xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r8g.2xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r8g.48xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r8g.4xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r8g.8xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r8g.large instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r8g.medium instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r8g.metal-24xl instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r8g.metal-48xl instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r8g.xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r8gd.12xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r8gd.16xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r8gd.24xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r8gd.2xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r8gd.48xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r8gd.4xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r8gd.8xlarge instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r8gd.large instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r8gd.medium instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r8gd.metal-24xl instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r8gd.metal-48xl instances"
+msgstr "Total de Instâncias a Pedido"
+
+#, fuzzy
+msgid "Total running on-demand r8gd.xlarge instances"
 msgstr "Total de Instâncias a Pedido"
 
 #, fuzzy
@@ -90743,6 +91024,9 @@ msgstr ""
 msgid "You can only archive the current audit log"
 msgstr ""
 
+msgid "You can only assign ownership to contact groups you are a member of."
+msgstr ""
+
 #, python-format
 msgid ""
 "You can only configure a local site connection for the local site. The site "
@@ -91855,6 +92139,12 @@ msgstr ""
 "de hosts, selecione aqui o sub relatório de sua escolha e configure seu "
 "contexto para usar um único contexto de host. Em seguida, configure os "
 "filtros para selecionar os hosts de sua escolha."
+
+#, fuzzy, python-format
+msgid "You need to be a member of at least one contact group to create a %s."
+msgstr ""
+"Você precisa ser membro de pelo menos um grupo de contato para poder criar "
+"uma senha."
 
 msgid ""
 "You need to be member of at least one contact group to be able to create a "
@@ -96166,8 +96456,8 @@ msgid "HW/SW Inventory single value"
 msgstr "Regras de inventário HW/SW"
 
 #, fuzzy
-msgid "Select inventory path"
-msgstr "Detectar os pais da rede"
+msgid "Select single value"
+msgstr "Restringir valores individuais"
 
 #, fuzzy
 msgid "Inventory path"
@@ -96662,6 +96952,10 @@ msgid "Loading content..."
 msgstr "A carregar..."
 
 #, fuzzy
+msgid "Quick activation of pending changes"
+msgstr "Ativar mudanças pendentes"
+
+#, fuzzy
 msgid "Open full view"
 msgstr "Arquivos abertos"
 
@@ -96718,12 +97012,19 @@ msgid "You haven't selected any sites"
 msgstr "É necessário seleccionar pelo menos um utilizador."
 
 #, fuzzy
-msgid "Changes:"
-msgstr "Mudanças"
+msgid "Activation issues encountered"
+msgstr "Ativação necessária"
+
+msgid "Activation blocked by missing permissions for foreign changes"
+msgstr ""
 
 #, fuzzy
-msgid "No changes"
-msgstr "%d modificações"
+msgid "Activation blocked by site problems"
+msgstr "Ativar em locais selecionados"
+
+#, fuzzy
+msgid "Site(s) with changes"
+msgstr "Começou a ativar as alterações: %s"
 
 #, fuzzy
 msgid "Sites with changes: %{n}"
@@ -97049,6 +97350,9 @@ msgstr ""
 msgid "Unknown status code received from server."
 msgstr ""
 
+msgid "Please fix the validation errors and try again."
+msgstr ""
+
 #, fuzzy
 msgid "Failed to save OAuth2 connection"
 msgstr "Adicionar conexão"
@@ -97185,8 +97489,8 @@ msgid "Title is required."
 msgstr "é necessário"
 
 #, fuzzy
-msgid "Set connection title"
-msgstr "Definir o tempo limite de conexão"
+msgid "Set connection information"
+msgstr "Informações de contacto do anfitrião"
 
 #, fuzzy
 msgid "seconds remaining"
@@ -97400,15 +97704,16 @@ msgid "Manage in global settings"
 msgstr "Editar cenário global"
 
 #, fuzzy
-msgid "Already installed the Checkmk agent?"
-msgstr "Sempre instalar o Python com o agente"
+msgid "Agent communication failed during service discovery"
+msgstr "Pendente de descoberta de serviços"
 
-#, fuzzy
 msgid ""
-"This problem might be caused by a missing agent or the firewall settings."
+"This can have different reasons. The Checkmk agent might not be installed, "
+"or communication may be blocked by firewall or network settings.\n"
+"If this host should be monitored via an agent, check the installation and "
+"connectivity.\n"
+"If not, you can ignore this message."
 msgstr ""
-"Os problemas acima podem ser causados por caches em falta. Por favor, active "
-"uma nova verificação."
 
 #, fuzzy
 msgid "Already registered the Checkmk agent?"
@@ -97421,8 +97726,12 @@ msgstr ""
 "uma nova verificação."
 
 #, fuzzy
-msgid "Read Checkmk user guide"
-msgstr "O guia oficial do usuário Checkmk"
+msgid "Ignore for this host"
+msgstr "Parâmetros para este anfitrião"
+
+#, fuzzy
+msgid "Close for now"
+msgstr "Níveis para Inodes"
 
 #, fuzzy
 msgid "Close & run service discovery"
@@ -98220,6 +98529,37 @@ msgstr ""
 msgid ""
 "You can still access it later via Help > Learning Checkmk > Welcome page"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Select inventory path"
+#~ msgstr "Detectar os pais da rede"
+
+#, fuzzy
+#~ msgid "Changes:"
+#~ msgstr "Mudanças"
+
+#, fuzzy
+#~ msgid "No changes"
+#~ msgstr "%d modificações"
+
+#, fuzzy
+#~ msgid "Set connection title"
+#~ msgstr "Definir o tempo limite de conexão"
+
+#, fuzzy
+#~ msgid "Already installed the Checkmk agent?"
+#~ msgstr "Sempre instalar o Python com o agente"
+
+#, fuzzy
+#~ msgid ""
+#~ "This problem might be caused by a missing agent or the firewall settings."
+#~ msgstr ""
+#~ "Os problemas acima podem ser causados por caches em falta. Por favor, "
+#~ "active uma nova verificação."
+
+#, fuzzy
+#~ msgid "Read Checkmk user guide"
+#~ msgstr "O guia oficial do usuário Checkmk"
 
 #, fuzzy
 #~ msgid "Cache per section"
@@ -101816,10 +102156,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Invalid optional choice"
 #~ msgstr "Tópico inválido"
-
-#, fuzzy
-#~ msgid "Invalid value for valuespec"
-#~ msgstr "Valor inválido para o parâmetro ack."
 
 #, fuzzy
 #~ msgid "Complete variable list"
