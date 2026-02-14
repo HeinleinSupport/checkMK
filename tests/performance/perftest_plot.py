@@ -1623,19 +1623,28 @@ class PerftestPlot:
         baseline_name = {0: "weekly", 30: "monthly", 365: "yearly"}.get(
             baseline_offset, f"{baseline_offset}d"
         )
+        ignored_scenarios = {"test_performance_piggyback": "CMK-27171"}
+
         alerts = []
         for scenario_name in self.scenario_names:
+            if not scenario_name.startswith("test_"):
+                continue
+            for scenario_ignored_pattern, scenario_ignored_reason in ignored_scenarios.items():
+                if re.fullmatch(scenario_ignored_pattern, scenario_name):
+                    logger.info(
+                        "Ignoring baseline %s scenario %s due to %s.",
+                        baseline_name,
+                        scenario_name,
+                        scenario_ignored_reason,
+                    )
+                    continue
+
             msg_prefix = f"Scenario {scenario_name}: "
             msg_suffix = (
                 f"; tolerance: +{cpu_tolerance}% CPU"
                 f", +{mem_tolerance}% memory"
                 f", +{runtime_tolerance}% time)"
             )
-            if scenario_name == "test_performance_piggyback":
-                # ignore dcd piggyback test for now
-                continue
-            if not scenario_name.startswith("test_"):
-                continue
             averages = self._current_averages(scenario_name)
             if not averages:
                 alerts.append(f"{msg_prefix}Missing data! Test aborted or skipped?")
