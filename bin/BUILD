@@ -111,11 +111,11 @@ pkg_tar(
 
 pkg_files(
     name = "cmk-pwstore",
-    srcs = ["//cmk:utils/password_store/cli.py"],
+    srcs = ["//cmk/utils:password_store/cli.py"],
     attributes = pkg_attributes(
         mode = "0755",
     ),
-    renames = {"//cmk:utils/password_store/cli.py": "bin/cmk-pwstore"},
+    renames = {"//cmk/utils:password_store/cli.py": "bin/cmk-pwstore"},
 )
 
 sh_library(

@@ -7,7 +7,6 @@ load("//bazel/rules:package_wheel.bzl", "package_wheel")
 
 exports_files([
     "requirements.in",
-    "utils/password_store/cli.py",
     "gui/openapi/spec/spec_generator/generate_api_spec.py",
 ])
 
@@ -171,8 +170,7 @@ filegroup(
     name = "miscellaneous",
     srcs = [
         "gui/wsgi/applications/index.wsgi",
-        "utils/werks/announce/templates/announce.md.jinja2",
-        "utils/werks/announce/templates/announce.txt.jinja2",
+        "//cmk/utils/werks/announce/templates:j2_templates",
     ],
 )
 
@@ -256,6 +254,7 @@ py_library(
     imports = [".."],
     visibility = ["//:__subpackages__"],
     deps = [
+        "//cmk/utils:cmk_utils",
         "@rrdtool_native//:rrdtool_python_lib",
         # `cmk.special_agent.agent_jolokia` imports `mk_jolokia`
         "//agents/plugins:mk_jolokia",
@@ -293,6 +292,7 @@ py_library(
     deps = [
         ":cmk_cmk",
         ":cmk_community",
+        "//cmk/utils:cmk_utils_pro",
     ] + select({
         "@//:gpl+nonfree_repo": [
             "//non-free/packages/cmc-protocols:py_config_proto",
@@ -320,6 +320,7 @@ py_library(
         ":cmk_cmk",
         ":cmk_community",
         ":cmk_pro",
+        "//cmk/utils:cmk_utils_ultimate",
     ] + select({
         "@//:gpl+nonfree_repo": [
             "//non-free/packages/cmc-protocols:py_config_proto",
@@ -343,6 +344,7 @@ py_library(
         ":cmk_community",
         ":cmk_pro",
         ":cmk_ultimate",
+        "//cmk/utils:cmk_utils_cloud",
     ] + select({
         "@//:gpl+nonfree_repo": [
             "//non-free/packages/cmc-protocols:py_config_proto",
@@ -371,6 +373,7 @@ py_library(
         ":cmk_community",
         ":cmk_pro",
         ":cmk_ultimate",
+        "//cmk/utils:cmk_utils_ultimatemt",
     ] + select({
         "@//:gpl+nonfree_repo": [
             "//non-free/packages/cmc-protocols:py_config_proto",
@@ -405,16 +408,20 @@ py_wheel(
             ":cmk_community",
             ":cmk_pro",
             ":cmk_ultimate",
+            "//cmk/utils:cmk_utils_cloud",
+            "//cmk/utils:cmk_utils_pro",
             "//non-free/packages/cmc-protocols:py_config_proto",
             "//non-free/packages/cmc-protocols:py_cycletime_proto",
             "//non-free/packages/cmc-protocols:py_state_proto",
         ],
         "@cmk//edition:community": [
             ":cmk_community",
+            "//cmk/utils:cmk_utils_community",
         ],
         "@cmk//edition:pro": [
             ":cmk_community",
             ":cmk_pro",
+            "//cmk/utils:cmk_utils_pro",
             "//non-free/packages/cmc-protocols:py_config_proto",
             "//non-free/packages/cmc-protocols:py_cycletime_proto",
             "//non-free/packages/cmc-protocols:py_state_proto",
@@ -423,6 +430,8 @@ py_wheel(
             ":cmk_community",
             ":cmk_pro",
             ":cmk_ultimate",
+            "//cmk/utils:cmk_utils_pro",
+            "//cmk/utils:cmk_utils_ultimate",
             "//non-free/packages/cmc-protocols:py_config_proto",
             "//non-free/packages/cmc-protocols:py_cycletime_proto",
             "//non-free/packages/cmc-protocols:py_state_proto",
@@ -432,6 +441,9 @@ py_wheel(
             ":cmk_pro",
             ":cmk_ultimate",
             ":cmk_ultimatemt",
+            "//cmk/utils:cmk_utils_pro",
+            "//cmk/utils:cmk_utils_ultimate",
+            "//cmk/utils:cmk_utils_ultimatemt",
             "//non-free/packages/cmc-protocols:py_config_proto",
             "//non-free/packages/cmc-protocols:py_cycletime_proto",
             "//non-free/packages/cmc-protocols:py_state_proto",
@@ -442,6 +454,7 @@ py_wheel(
         ":checkman_free",
         ":cmk_cmk",
         ":miscellaneous",
+        "//cmk/utils:cmk_utils",
     ],
 )
 
@@ -566,7 +579,7 @@ sh_library(
             "gui/nonfree/pro/dcd/.f12",
             "nonfree/pro/dcd/.f12",
             "nonfree/pro/robotmk/.f12",
-            "utils/nonfree/pro/dcd/.f12",
+            "//cmk/utils:nonfree/pro/dcd/.f12",
         ],
         "@//:gpl_repo": [],
     }),
