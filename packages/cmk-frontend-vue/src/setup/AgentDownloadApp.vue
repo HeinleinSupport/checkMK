@@ -15,10 +15,10 @@ import AgentDownloadDialog from '@/setup/AgentDownloadDialog.vue'
 const { _t } = usei18n()
 
 const props = defineProps<{
-  user_id: string
   output: string
   site: string
   server_per_site: Array<AgentDownloadServerPerSite>
+  docs_url: string
   agent_slideout: AgentSlideout
 }>()
 
@@ -47,19 +47,18 @@ if (props.output.includes(noTlsSearchTerm)) {
   slideInButtonTitle.value = _t('Provide TLS connection')
 }
 
-const hideButtonTitle = _t('Ignore for this host')
+const docsButtonTitle = _t('Read Checkmk user guide')
 const siteServer = props.server_per_site.find((item) => item.site_id === props.site)?.server ?? ''
 </script>
 
 <template>
   <AgentDownloadDialog
-    :user-id="props.user_id"
     :dialog-title="dialogTitle"
     :dialog-message="dialogMessage"
-    :dialog-close-icon-title="_t('Close for now')"
     :slide-in-title="slideInTitle"
     :slide-in-button-title="slideInButtonTitle"
-    :hide-button-title="hideButtonTitle"
+    :docs-button-title="docsButtonTitle"
+    :docs-url="docs_url"
     :close-button-title="_t('Close & run service discovery')"
     :agent-slideout="agent_slideout"
     :is-not-registered="output.includes(notRegisteredSearchTerm)"
