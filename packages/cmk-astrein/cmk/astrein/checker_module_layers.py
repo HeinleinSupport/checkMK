@@ -12,10 +12,10 @@ from pathlib import Path
 
 from cmk.astrein.framework import ASTVisitorChecker
 from cmk.astrein.module_layers_config import (
-    _EXPLICIT_FILE_TO_COMPONENT,
-    _EXPLICIT_FILE_TO_DEPENDENCIES,
     Component,
     COMPONENTS,
+    EXPLICIT_FILE_TO_COMPONENT,
+    EXPLICIT_FILE_TO_DEPENDENCIES,
     get_absolute_importee,
     ModuleName,
     ModulePath,
@@ -157,7 +157,7 @@ class ModuleLayersChecker(ASTVisitorChecker):
             return COMPONENTS[component](imported=imported, component=component)
 
         try:
-            file_specific_checker = _EXPLICIT_FILE_TO_DEPENDENCIES[importing_path]
+            file_specific_checker = EXPLICIT_FILE_TO_DEPENDENCIES[importing_path]
         except KeyError:
             # This file does not belong to any component, and is not listed in
             # _EXPLICIT_FILE_TO_DEPENDENCIES. We don't allow any cmk imports.
@@ -173,6 +173,6 @@ class ModuleLayersChecker(ASTVisitorChecker):
             if importing.in_component(component):
                 return component
         try:
-            return _EXPLICIT_FILE_TO_COMPONENT[importing_path]
+            return EXPLICIT_FILE_TO_COMPONENT[importing_path]
         except KeyError:
             return None

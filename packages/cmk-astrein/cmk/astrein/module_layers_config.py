@@ -1461,7 +1461,7 @@ COMPONENTS: Mapping[Component, ImportCheckerProtocol] = {
     ),
 }
 
-_EXPLICIT_FILE_TO_COMPONENT = {
+EXPLICIT_FILE_TO_COMPONENT = {
     ModulePath("bin/check_mk"): Component("cmk.base"),
     ModulePath("bin/cmk-automation-helper"): Component("cmk.base"),
     ModulePath("bin/cmk-cert"): Component("cmk.gui.cmkcert"),
@@ -1507,7 +1507,7 @@ _EXPLICIT_FILE_TO_COMPONENT = {
     ModulePath("notifications/jira_issues"): Component("cmk.nonfree.pro.notification_plugins"),
 }
 
-_EXPLICIT_FILE_TO_DEPENDENCIES = {
+EXPLICIT_FILE_TO_DEPENDENCIES = {
     # We have files that depend on more than one component, yet we do not want to
     # add all those dependencies to one of those components.
     ModulePath("bin/cmk-broker-test"): _allow(
