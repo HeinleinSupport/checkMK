@@ -25,7 +25,6 @@ interface TooltipContentProps {
   align?: 'center' | 'end' | 'start'
   class?: string
   avoidCollisions?: boolean
-  usePortal?: boolean
 }
 
 const props = withDefaults(
@@ -34,13 +33,13 @@ const props = withDefaults(
     sideOffset: 4,
     class: '',
     side: 'top',
-    align: 'center',
-    usePortal: false
+    align: 'center'
   }
 )
 
 const delegatedProps = computed(() => {
-  const { class: _className, usePortal: _usePortal, ...delegated } = props
+  const delegated = { ...props }
+  delete delegated.class
 
   return delegated
 })
@@ -49,7 +48,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 </script>
 
 <template>
-  <TooltipPortal :disabled="!usePortal">
+  <TooltipPortal disabled>
     <TooltipContent
       v-bind="{ ...forwarded, avoidCollisions: avoidCollisions!! }"
       :class="props.class"
