@@ -25,7 +25,7 @@ def load_all(root_dir: Path) -> SarifFileSet:
             with file_path.open("rt") as fd:
                 sarif_fd = SarifFile(file_path, json.load(fd))
                 try:
-                    sarif_results = sarif_fd.runs[0].get_results()
+                    sarif_fd.runs[0].get_results()
                 except KeyError as exc:
                     sys.stderr.write(f"No results found:\n\t{file_path!s}: {exc!s}\n")
                     continue
