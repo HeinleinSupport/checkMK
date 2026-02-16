@@ -8,6 +8,7 @@ from typing import Final, override
 
 from cmk.gui.htmllib.generator import HTMLWriter
 from cmk.gui.i18n import _, _l
+from cmk.gui.logged_in import user
 from cmk.gui.type_defs import GlobalSettings
 from cmk.gui.utils.html import HTML
 from cmk.gui.valuespec import (
@@ -99,7 +100,7 @@ ConfigVariableProductUsageAnalytics = ConfigVariable(
         )
         % HTMLWriter.render_a(
             content=_("User Guide"),
-            href="https://docs-internal.lan.checkmk.net/master/de/product_usage_analytics.html#distributed",
+            href=f"{user.get_docs_base_url()}/product_usage_analytics.html#distributed",
             target="_blank",
         )
     ),
