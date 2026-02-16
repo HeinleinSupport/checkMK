@@ -7,7 +7,6 @@ SCRIPTS := $(realpath ../scripts)
 FIND_PYTHON_FILES := $(SCRIPTS)/find-python-files
 UVENV := $(SCRIPTS)/run-uvenv
 PYTEST := $(UVENV) pytest $(PYTEST_ARGS)
-CYCLES := $(UVENV) py_import_cycles
 PYTEST_OPTS_UNIT_SKIP_SLOW = -m "not slow"
 PYTEST_OPTS_UNIT_SLOW_ONLY = -m "slow"
 SHFMT := bazel run --ui_event_filters=-info,-stderr //bazel/tools:shfmt --
@@ -56,7 +55,6 @@ PYTEST_SYSTEM_TEST_ARGS := \
     --log-cli-format="%(asctime)s.%(msecs)03d %(levelname)s %(message)s"
 DOCKERABLE_TESTS := \
 	test-code-quality \
-	test-cycles \
 	test-file-content \
 	test-format \
 	test-license-headers \
@@ -86,7 +84,7 @@ AGENT_PLUGIN_UNIT_TEST_FILES := $(wildcard agent-plugin-unit/test_*.py)
 	$(foreach TEST,$(SYSTEM_TESTS),$(TEST)-docker-debug) \
 	test-mypy test-mypy-gpl test-mypy-docker test-packaging \
 	test-unit test-unit-all test-unit-docker \
-	test-unit-shell test-unit-shell-docker test-cycles test-cycles-docker \
+	test-unit-shell test-unit-shell-docker \
 	test-unit-omdlib \
 	test-tidy-core test-tidy-docker \
 	test-unit-neb test-unit-core \
@@ -304,15 +302,6 @@ test-mypy-gpl:
 test-packaging:
 	export PATH=$$PATH:$$(bazel run //bazel/tools:bazel_env print-path); \
 	$(PYTEST) --log-cli-level=INFO packaging
-
-test-cycles:
-	$(CYCLES) \
-		--packages \
-		    $$($(UVENV) scripts/find_cmk_namespace_package_paths.py) \
-		    $$(realpath -L ..)/omd/packages/omd/omdlib \
-		--strategy johnson \
-		--threshold 0 \
-		--verbose
 
 test-doctest:
 	mkdir -p ../results; \

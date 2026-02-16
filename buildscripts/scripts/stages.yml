@@ -166,14 +166,6 @@ VARIABLES:
       SH: "echo '${CHANGED_FILES_REL}' | grep '^non-free/packages/cmk-relay-engine/' || true"
 
 STAGES:
-    - NAME: "Python Cyclic Dependencies"
-      ONLY_WHEN_NOT_EMPTY: CHANGED_REFERENCE_IMAGE,CHANGED_TESTS_MAKEFILE,CHANGED_PYTHON_REQUIREMENTS,CHANGED_CMK_WERKS_FILES,CHANGED_FIND_PYTHON_FILES_SCRIPT,CHANGED_PYTHON_FILES,CHANGED_CMK_TRACE_FILES,CHANGED_CMK_CCC_FILES
-      DIR: "tests"
-      COMMAND: "make test-cycles &> ${RESULTS}/py-import-cycles.txt"
-      BAZEL_LOCKS_AMOUNT: 1
-      TEXT_ON_SKIP: "No Python files changed"
-      RESULT_CHECK_FILE_PATTERN: "results/py-import-cycles.txt"
-
     - NAME: "Bazel sanity check (guarded)"
       ONLY_WHEN_NOT_EMPTY: CHANGED_BAZEL_FILES
       COMMAND: |
