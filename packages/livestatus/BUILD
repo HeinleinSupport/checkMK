@@ -1,6 +1,7 @@
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_files", "pkg_mklink")
 load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
+load("//bazel/rules:patchelf.bzl", "set_runpath")
 load("//bazel/rules:xcomp/cc.bzl", "cc_library", "cc_test")
 
 cc_library(
@@ -78,11 +79,18 @@ cc_shared_library(
     ],
 )
 
+set_runpath(
+    name = "livestatus_shared_runpath",
+    srcs = [":livestatus_shared"],
+    rpaths = ["$ORIGIN"],
+    tags = ["manual"],
+)
+
 pkg_files(
     name = "livestatus_shared_files",
-    srcs = [":livestatus_shared"],
+    srcs = [":livestatus_shared_runpath"],
     prefix = "lib",
-    renames = {":livestatus_shared": "liblivestatus.so.0.1"},
+    renames = {":livestatus_shared_runpath": "liblivestatus.so.0.1"},
 )
 
 pkg_mklink(
