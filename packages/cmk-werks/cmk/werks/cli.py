@@ -201,6 +201,11 @@ def parse_arguments(argv: Sequence[str]) -> argparse.Namespace:
         type=Path,
         help="Read description from file. Provide absolute path",
     )
+    parser_new.add_argument(
+        "--non-interactive",
+        action="store_true",
+        help="Run in non-interactive mode. Will fail if required information is missing.",
+    )
     parser_new.set_defaults(func=main_new)
 
     # PICK
@@ -651,7 +656,24 @@ WERK_NOTES = """
 
 
 def main_new(args: argparse.Namespace) -> None:
-    sys.stdout.write(TTY_GREEN + WERK_NOTES + TTY_NORMAL)
+    if args.non_interactive:
+        if not all(
+            [
+                args.title,
+                args.class_,
+                args.edition,
+                args.component,
+                args.level,
+                args.compatible,
+                args.description_file,
+            ]
+        ):
+            bail_out(
+                "In non-interactive mode, all of the following arguments are required: "
+                "--title, --class, --edition, --component, --level, --compatible, and --description-file.\n"
+            )
+    else:
+        sys.stdout.write(TTY_GREEN + WERK_NOTES + TTY_NORMAL)
 
     stash = Stash.load_from_file()
     werk_id = stash.pick_id(project=get_config().project)
@@ -693,9 +715,16 @@ def main_new(args: argparse.Namespace) -> None:
         ),
     )
     save_werk(werk, get_werk_file_version())
-    werk = meisterwerk_for_new_werk(werk_path, args.custom_files, werk_id, metadata)
-    save_werk(werk, get_werk_file_version())
-    git_add(werk)
+
+    if args.non_interactive:
+        sys.stdout.write("Skipping MeisterWerk in non-interactive mode.\n")
+        if not args.no_commit and get_config().create_commit:
+            git_commit(werk, args.custom_files)
+    else:
+        werk = meisterwerk_for_new_werk(werk_path, args.custom_files, werk_id, metadata)
+        save_werk(werk, get_werk_file_version())
+        git_add(werk)
+
     stash.free_id(werk_id)
     stash.dump_to_file()
 
