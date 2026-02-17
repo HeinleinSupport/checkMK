@@ -6,14 +6,21 @@
 # mypy: disable-error-code="no-untyped-def"
 
 
-from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
-from cmk.agent_based.v2 import DiscoveryResult, Service, SNMPTree, StringTable
+from cmk.agent_based.v2 import (
+    CheckPlugin,
+    CheckResult,
+    DiscoveryResult,
+    Result,
+    Service,
+    SimpleSNMPSection,
+    SNMPTree,
+    State,
+    StringTable,
+)
 from cmk.plugins.viprinet.lib import DETECT_VIPRINET
 
-check_info = {}
 
-
-def check_viprinet_firmware(_no_item, _no_params, info):
+def check_viprinet_firmware(section: StringTable) -> CheckResult:
     fw_status_map = {
         "0": "No new firmware available",
         "1": "Update Available",
@@ -21,10 +28,12 @@ def check_viprinet_firmware(_no_item, _no_params, info):
         "3": "Downloading Update",
         "4": "Installing Update",
     }
-    fw_status = fw_status_map.get(info[0][1])
+    fw_status = fw_status_map.get(section[0][1])
     if fw_status:
-        return (0, f"{info[0][0]}, {fw_status}")
-    return (3, "%s, no firmware status available")
+        yield Result(state=State.OK, summary=f"{section[0][0]}, {fw_status}")
+        return
+    yield Result(state=State.UNKNOWN, summary="%s, no firmware status available")
+    return
 
 
 def parse_viprinet_firmware(string_table: StringTable) -> StringTable:
@@ -36,14 +45,19 @@ def discover_viprinet_firmware(section: StringTable) -> DiscoveryResult:
         yield Service()
 
 
-check_info["viprinet_firmware"] = LegacyCheckDefinition(
+snmp_section_viprinet_firmware = SimpleSNMPSection(
     name="viprinet_firmware",
-    parse_function=parse_viprinet_firmware,
     detect=DETECT_VIPRINET,
     fetch=SNMPTree(
         base=".1.3.6.1.4.1.35424.1.1",
         oids=["4", "7"],
     ),
+    parse_function=parse_viprinet_firmware,
+)
+
+
+check_plugin_viprinet_firmware = CheckPlugin(
+    name="viprinet_firmware",
     service_name="Firmware Version",
     discovery_function=discover_viprinet_firmware,
     check_function=check_viprinet_firmware,
