@@ -56,11 +56,13 @@ Component interaction
 Implementation Constraints
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The relay system operates under three fundamental constraints.
+The relay system operates under four fundamental constraints.
 First, the relay and CMC must maintain version synchronization, a fundamental limitation of the fetcher/checker split architecture.
 The fetcher and checker components are not independently versioned and assume code consistency across the site, as they are usually updated together.
 Second, the relay must initiate all communication with the central site, as the architecture cannot assume the site can directly reach the relay in segregated networks.
-Third, all communication with the relay must be treated as asynchronous with no guarantee of relay availability. 
+Third, all communication with the relay must be treated as asynchronous with no guarantee of relay availability.
+Fourth, the relay can only be registered with a central site, not with remote sites in a distributed setup.
+The agent receiver rejects relay registration on remote sites with HTTP 403.
 
 Relay Engine architecture
 --------------------------
