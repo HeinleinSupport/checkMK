@@ -4,11 +4,11 @@ This file is part of Checkmk (https://checkmk.com). It is subject to the terms a
 conditions defined in the file COPYING, which is part of this source code package.
 -->
 <script setup lang="ts">
-import CtaBanner from './DemoCtaBanner.vue'
-import DemoHeroBanner from './DemoHeroBanner.vue'
-import HomeLayout from './DemoHomeLayout.vue'
-import DemoInfoCard from './DemoInfoCard.vue'
-import demoLayoutImage from './assets/images/demo-layout.png'
+import demoLayoutImage from '../assets/images/demo-layout.png'
+import CtaBanner from '../components/DemoCtaBanner.vue'
+import DemoHeroBanner from '../components/DemoHeroBanner.vue'
+import HomeLayout from '../components/DemoHomeLayout.vue'
+import DemoInfoCard from '../components/DemoInfoCard.vue'
 
 defineProps<{ screenshotMode: boolean }>()
 </script>

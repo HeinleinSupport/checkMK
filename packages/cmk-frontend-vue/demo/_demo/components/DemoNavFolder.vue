@@ -9,8 +9,8 @@ import { computed } from 'vue'
 
 import CmkIcon from '@/components/CmkIcon'
 
+import type { NavFolder } from '../composables/useNavigation'
 import DemoNavPage from './DemoNavPage.vue'
-import type { NavFolder } from './useNavigation'
 
 const { folder, isRoot = false } = defineProps<{
   folder: NavFolder

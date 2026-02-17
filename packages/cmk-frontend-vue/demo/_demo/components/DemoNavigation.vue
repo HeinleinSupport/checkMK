@@ -8,9 +8,9 @@ conditions defined in the file COPYING, which is part of this source code packag
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
 
+import { useNavigation } from '../composables/useNavigation'
 import DemoNavFolder from './DemoNavFolder.vue'
 import DemoSearch from './DemoSearch.vue'
-import { useNavigation } from './useNavigation'
 
 const { navTrees } = useNavigation()
 const isSearching = ref(false)

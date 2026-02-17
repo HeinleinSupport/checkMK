@@ -6,7 +6,7 @@
 import { roots } from '@demo/components/'
 import { type Component, type Ref, ref } from 'vue'
 
-import { type Folder, Page } from './page'
+import { type Folder, Page } from '../types/page'
 
 export interface NavPage {
   type: 'page'

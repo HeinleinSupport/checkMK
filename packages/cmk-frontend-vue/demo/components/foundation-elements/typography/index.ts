@@ -3,7 +3,7 @@
  * This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
  * conditions defined in the file COPYING, which is part of this source code package.
  */
-import { type Folder, Page } from '@demo/_demo/page'
+import { type Folder, Page } from '@demo/_demo/types/page'
 
 import DemoI18n from './DemoI18n.vue'
 import DemoTypography from './DemoTypography.vue'

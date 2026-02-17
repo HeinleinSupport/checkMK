@@ -3,7 +3,7 @@
  * This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
  * conditions defined in the file COPYING, which is part of this source code package.
  */
-import { Folder, Page } from '@demo/_demo/page'
+import { Folder, Page } from '@demo/_demo/types/page'
 
 import DemoCmkBadge from './basic-elements/DemoCmkBadge.vue'
 import DemoCmkButton from './basic-elements/DemoCmkButton.vue'

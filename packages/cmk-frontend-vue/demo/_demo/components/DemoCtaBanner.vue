@@ -8,9 +8,9 @@ import { computed } from 'vue'
 
 import CmkButton from '@/components/CmkButton.vue'
 
-import ctaBackgroundImageModernDark from './assets/images/cta-banner-bg-dark.png'
-import ctaBackgroundImageFacelift from './assets/images/cta-banner-bg-light.png'
-import { useTheme } from './useTheme'
+import ctaBackgroundImageModernDark from '../assets/images/cta-banner-bg-dark.png'
+import ctaBackgroundImageFacelift from '../assets/images/cta-banner-bg-light.png'
+import { useTheme } from '../composables/useTheme'
 
 const props = defineProps<{
   title: string

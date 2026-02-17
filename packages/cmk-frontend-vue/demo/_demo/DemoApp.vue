@@ -9,8 +9,8 @@ import { ref, watch } from 'vue'
 import { RouterView } from 'vue-router'
 import { useRoute } from 'vue-router'
 
-import DemoHeader from './DemoHeader.vue'
-import DemoNavigation from './DemoNavigation.vue'
+import DemoHeader from './components/DemoHeader.vue'
+import DemoNavigation from './components/DemoNavigation.vue'
 
 const currentRoute = useRoute()
 const screenshotMode = ref(currentRoute.query.screenshot === 'true')

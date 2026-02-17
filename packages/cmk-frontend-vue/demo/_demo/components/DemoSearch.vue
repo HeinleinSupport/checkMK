@@ -9,8 +9,8 @@ import { computed, ref, watch } from 'vue'
 
 import CmkIcon from '@/components/CmkIcon'
 
+import { type NavItem, type NavPage, useNavigation } from '../composables/useNavigation'
 import DemoNavPage from './DemoNavPage.vue'
-import { type NavItem, type NavPage, useNavigation } from './useNavigation'
 
 const { navTrees } = useNavigation()
 

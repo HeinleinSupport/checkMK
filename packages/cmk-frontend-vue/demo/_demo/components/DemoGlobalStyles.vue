@@ -10,7 +10,7 @@ import { immediateWatch } from '@/lib/watch'
 
 import CmkDropdown from '@/components/CmkDropdown'
 
-import { type Theme, useTheme } from './useTheme'
+import { type Theme, useTheme } from '../composables/useTheme'
 
 const props = defineProps<{
   theme?: Theme

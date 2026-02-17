@@ -7,7 +7,7 @@ conditions defined in the file COPYING, which is part of this source code packag
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
 
-import type { NavPage } from './useNavigation'
+import type { NavPage } from '../composables/useNavigation'
 
 const { page } = defineProps<{
   page: NavPage

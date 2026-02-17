@@ -6,10 +6,10 @@
 import { roots } from '@demo/components/'
 import { type RouteLocation, type RouteRecordRaw, createRouter, createWebHistory } from 'vue-router'
 
-import DemoEmpty from './DemoEmpty.vue'
-import DemoHome from './DemoHome.vue'
-import { type Folder, Page } from './page'
-import { useNavigation } from './useNavigation'
+import { useNavigation } from '../composables/useNavigation'
+import { type Folder, Page } from '../types/page'
+import DemoEmpty from '../views/DemoEmpty.vue'
+import DemoHome from '../views/DemoHome.vue'
 
 const { openPathToRoute } = useNavigation()
 
