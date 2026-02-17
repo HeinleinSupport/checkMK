@@ -39,12 +39,13 @@ def _make_diagnostics_dump() -> diagnostics.DiagnosticsDump:
     return diagnostics.DiagnosticsDump(
         EMPTY_CONFIG,
         core_performance_settings=lambda x: {},
+        omd_config={},
     )
 
 
 @pytest.fixture(autouse=True)
 def reset_collector_caches():
-    diagnostics.get_omd_config.cache_clear()
+    # diagnostics.get_omd_config.cache_clear()
     diagnostics.verify_checkmk_server_host.cache_clear()
 
 
@@ -468,7 +469,7 @@ tzdata;2023c;1.el9;noarch"
 
 
 def test_diagnostics_element_omd_config() -> None:
-    diagnostics_element = diagnostics.OMDConfigDiagnosticsElement()
+    diagnostics_element = diagnostics.OMDConfigDiagnosticsElement(omd_config={})
     assert diagnostics_element.ident == "omd_config"
     assert diagnostics_element.title == "OMD Config"
     assert diagnostics_element.description == (
@@ -482,35 +483,31 @@ def test_diagnostics_element_omd_config() -> None:
 def test_diagnostics_element_omd_config_content(
     tmp_path: PurePath,
 ) -> None:
-    diagnostics_element = diagnostics.OMDConfigDiagnosticsElement()
+    omd_config = {
+        "CONFIG_ADMIN_MAIL": "",
+        "CONFIG_APACHE_MODE": "own",
+        "CONFIG_APACHE_TCP_ADDR": "127.0.0.1",
+        "CONFIG_APACHE_TCP_PORT": "5000",
+        "CONFIG_AUTOSTART": "off",
+        "CONFIG_CORE": "cmc",
+        "CONFIG_LIVEPROXYD": "on",
+        "CONFIG_LIVESTATUS_TCP": "off",
+        "CONFIG_LIVESTATUS_TCP_ONLY_FROM": "0.0.0.0 ::/0",
+        "CONFIG_LIVESTATUS_TCP_PORT": "6557",
+        "CONFIG_LIVESTATUS_TCP_TLS": "on",
+        "CONFIG_MKEVENTD": "on",
+        "CONFIG_MKEVENTD_SNMPTRAP": "off",
+        "CONFIG_MKEVENTD_SYSLOG": "on",
+        "CONFIG_MKEVENTD_SYSLOG_TCP": "off",
+        "CONFIG_MULTISITE_AUTHORISATION": "on",
+        "CONFIG_MULTISITE_COOKIE_AUTH": "on",
+        "CONFIG_NSCA": "off",
+        "CONFIG_NSCA_TCP_PORT": "5667",
+        "CONFIG_PNP4NAGIOS": "on",
+        "CONFIG_TMPFS": "on",
+    }
 
-    # Fake raw output of site.conf
-    etc_omd_dir = cmk.utils.paths.omd_root / "etc" / "omd"
-    etc_omd_dir.mkdir(parents=True, exist_ok=True)
-    with etc_omd_dir.joinpath("site.conf").open("w") as f:
-        f.write(
-            """CONFIG_ADMIN_MAIL=''
-CONFIG_APACHE_MODE='own'
-CONFIG_APACHE_TCP_ADDR='127.0.0.1'
-CONFIG_APACHE_TCP_PORT='5000'
-CONFIG_AUTOSTART='off'
-CONFIG_CORE='cmc'
-CONFIG_LIVEPROXYD='on'
-CONFIG_LIVESTATUS_TCP='off'
-CONFIG_LIVESTATUS_TCP_ONLY_FROM='0.0.0.0 ::/0'
-CONFIG_LIVESTATUS_TCP_PORT='6557'
-CONFIG_LIVESTATUS_TCP_TLS='on'
-CONFIG_MKEVENTD='on'
-CONFIG_MKEVENTD_SNMPTRAP='off'
-CONFIG_MKEVENTD_SYSLOG='on'
-CONFIG_MKEVENTD_SYSLOG_TCP='off'
-CONFIG_MULTISITE_AUTHORISATION='on'
-CONFIG_MULTISITE_COOKIE_AUTH='on'
-CONFIG_NSCA='off'
-CONFIG_NSCA_TCP_PORT='5667'
-CONFIG_PNP4NAGIOS='on'
-CONFIG_TMPFS='on'"""
-        )
+    diagnostics_element = diagnostics.OMDConfigDiagnosticsElement(omd_config=omd_config)
 
     tmppath = Path(tmp_path).joinpath("tmp")
     filepath = next(diagnostics_element.add_or_get_files(tmppath))
@@ -571,8 +568,6 @@ CONFIG_TMPFS='on'"""
         ],
     ):
         assert content[key] == value
-
-    shutil.rmtree(str(etc_omd_dir))
 
 
 @pytest.mark.parametrize(
@@ -800,7 +795,7 @@ def test_diagnostics_element_checkmk_files_content(
 
 
 def test_diagnostics_element_performance_graphs() -> None:
-    diagnostics_element = diagnostics.PerformanceGraphsDiagnosticsElement("")
+    diagnostics_element = diagnostics.PerformanceGraphsDiagnosticsElement("", omd_config={})
     assert diagnostics_element.ident == "performance_graphs"
     assert diagnostics_element.title == "Time series graphs of Checkmk server"
     assert diagnostics_element.description == (
@@ -840,7 +835,11 @@ def test_diagnostics_element_performance_graphs_error(
     content,
     error,
 ):
-    diagnostics_element = diagnostics.PerformanceGraphsDiagnosticsElement("")
+    omd_config = {
+        "CONFIG_APACHE_TCP_ADDR": "127.0.0.1",
+        "CONFIG_APACHE_TCP_PORT": "5000",
+    }
+    diagnostics_element = diagnostics.PerformanceGraphsDiagnosticsElement("", omd_config=omd_config)
 
     monkeypatch.setattr(livestatus, "LocalConnection", _fake_local_connection(host_list))
 
@@ -858,14 +857,6 @@ def test_diagnostics_element_performance_graphs_error(
     with automation_dir.joinpath("automation.secret").open("w") as f:
         f.write("my-123-password")
 
-    etc_omd_dir = cmk.utils.paths.omd_root / "etc" / "omd"
-    etc_omd_dir.mkdir(parents=True, exist_ok=True)
-    with etc_omd_dir.joinpath("site.conf").open("w") as f:
-        f.write(
-            """CONFIG_APACHE_TCP_ADDR='127.0.0.1'
-CONFIG_APACHE_TCP_PORT='5000'"""
-        )
-
     tmppath = Path(tmp_path).joinpath("tmp")
     tmppath.mkdir(parents=True, exist_ok=True)
 
@@ -874,7 +865,6 @@ CONFIG_APACHE_TCP_PORT='5000'"""
         assert error == str(e)
 
     shutil.rmtree(str(automation_dir))
-    shutil.rmtree(str(etc_omd_dir))
 
 
 @pytest.mark.parametrize(
@@ -892,7 +882,11 @@ def test_diagnostics_element_performance_graphs_content(
     text,
     content,
 ):
-    diagnostics_element = diagnostics.PerformanceGraphsDiagnosticsElement("")
+    omd_config = {
+        "CONFIG_APACHE_TCP_ADDR": "127.0.0.1",
+        "CONFIG_APACHE_TCP_PORT": "5000",
+    }
+    diagnostics_element = diagnostics.PerformanceGraphsDiagnosticsElement("", omd_config=omd_config)
 
     monkeypatch.setattr(livestatus, "LocalConnection", _fake_local_connection(host_list))
 
@@ -910,14 +904,6 @@ def test_diagnostics_element_performance_graphs_content(
     with automation_dir.joinpath("automation.secret").open("w") as f:
         f.write("my-123-password")
 
-    etc_omd_dir = cmk.utils.paths.omd_root / "etc" / "omd"
-    etc_omd_dir.mkdir(parents=True, exist_ok=True)
-    with etc_omd_dir.joinpath("site.conf").open("w") as f:
-        f.write(
-            """CONFIG_APACHE_TCP_ADDR='127.0.0.1'
-CONFIG_APACHE_TCP_PORT='5000'"""
-        )
-
     tmppath = Path(tmp_path).joinpath("tmp")
     tmppath.mkdir(parents=True, exist_ok=True)
     filepath = next(diagnostics_element.add_or_get_files(tmppath))
@@ -926,7 +912,6 @@ CONFIG_APACHE_TCP_PORT='5000'"""
     assert filepath == tmppath.joinpath("performance_graphs.pdf")
 
     shutil.rmtree(str(automation_dir))
-    shutil.rmtree(str(etc_omd_dir))
 
 
 def test_diagnostics_element_se_linux():

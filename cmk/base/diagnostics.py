@@ -134,7 +134,7 @@ def _make_mode_create_diagnostics_dump(
     def handler(app: CheckmkBaseApp, options: DiagnosticsModesParameters) -> None:
         # NOTE: All the stuff is logged on this level only, which is below the default WARNING level.
         log.logger.setLevel(logging.INFO)
-
+        omd_config = site.get_omd_config(cmk.utils.paths.omd_root)
         create_diagnostics_dump(
             load_config(
                 discovery_rulesets=(),
@@ -142,6 +142,7 @@ def _make_mode_create_diagnostics_dump(
             ).loaded_config,
             deserialize_modes_parameters(options),
             core_performance_settings,
+            omd_config,
         )
 
     return handler
@@ -234,9 +235,11 @@ def _make_automation_create_diagnostics_dump(
             log.setup_console_logging()
             # NOTE: All the stuff is logged on this level only, which is below the default WARNING level.
             log.logger.setLevel(logging.INFO)
+            omd_config = site.get_omd_config(cmk.utils.paths.omd_root)
             dump = DiagnosticsDump(
                 loading_result.loaded_config,
                 core_performance_settings,
+                omd_config,
                 deserialize_cl_parameters(args),
             )
             dump.create()
@@ -253,8 +256,9 @@ def create_diagnostics_dump(
     loaded_config: LoadedConfigFragment,
     parameters: DiagnosticsOptionalParameters | None,
     core_performance_settings: Callable[[LoadedConfigFragment], dict[str, int]],
+    omd_config: site.OMDConfig,
 ) -> None:
-    dump = DiagnosticsDump(loaded_config, core_performance_settings, parameters)
+    dump = DiagnosticsDump(loaded_config, core_performance_settings, omd_config, parameters)
     dump.create()
 
     section.section_step("Creating diagnostics dump", verbose=False)
@@ -321,9 +325,11 @@ class DiagnosticsDump:
         self,
         loaded_config: LoadedConfigFragment,
         core_performance_settings: Callable[[LoadedConfigFragment], dict[str, int]],
+        omd_config: site.OMDConfig,
         parameters: DiagnosticsOptionalParameters | None = None,
     ) -> None:
         self.fixed_elements = self._get_fixed_elements(loaded_config, core_performance_settings)
+        self.omd_config = omd_config
         self.optional_elements = self._get_optional_elements(parameters)
         self.elements = self.fixed_elements + self.optional_elements
 
@@ -373,7 +379,7 @@ class DiagnosticsDump:
             optional_elements.append(MKPListTextDiagnosticsElement())
 
         if parameters.get(OPT_OMD_CONFIG):
-            optional_elements.append(OMDConfigDiagnosticsElement())
+            optional_elements.append(OMDConfigDiagnosticsElement(self.omd_config))
 
         if OPT_CHECKMK_OVERVIEW in parameters:
             content = ""
@@ -438,7 +444,9 @@ class DiagnosticsDump:
 
             if OPT_PERFORMANCE_GRAPHS in parameters:
                 optional_elements.append(
-                    PerformanceGraphsDiagnosticsElement(parameters.get(OPT_PERFORMANCE_GRAPHS, ""))
+                    PerformanceGraphsDiagnosticsElement(
+                        parameters.get(OPT_PERFORMANCE_GRAPHS, ""), self.omd_config
+                    )
                 )
 
             rel_checkmk_licensing_files = parameters.get(OPT_CHECKMK_LICENSING_FILES)
@@ -523,11 +531,11 @@ class DiagnosticsDump:
 #   '----------------------------------------------------------------------
 
 
-@cache
-def get_omd_config() -> site.OMDConfig:
-    # Useless function, useless cache.  See comment
-    # in cmk.ccc.site
-    return site.get_omd_config(cmk.utils.paths.omd_root)
+# @cache
+# def get_omd_config() -> site.OMDConfig:
+#    # Useless function, useless cache.  See comment
+#    # in cmk.ccc.site
+#    return site.get_omd_config(cmk.utils.paths.omd_root)
 
 
 @cache
@@ -1190,6 +1198,9 @@ class CMAJSONDiagnosticsElement(ABCDiagnosticsElementJSONDump):
 
 
 class OMDConfigDiagnosticsElement(ABCDiagnosticsElementJSONDump):
+    def __init__(self, omd_config: site.OMDConfig) -> None:
+        self._omd_config = omd_config
+
     @override
     @property
     def ident(self) -> str:
@@ -1208,7 +1219,7 @@ class OMDConfigDiagnosticsElement(ABCDiagnosticsElementJSONDump):
         )
 
     def _collect_infos(self) -> DiagnosticsElementJSONResult:
-        return get_omd_config()
+        return self._omd_config
 
 
 # TODO: some of this should go to the inventory component
@@ -1525,8 +1536,9 @@ class CheckmkLicensingFilesDiagnosticsElement(ABCCheckmkFilesDiagnosticsElement)
 
 
 class PerformanceGraphsDiagnosticsElement(ABCDiagnosticsElement):
-    def __init__(self, checkmk_server_host: str) -> None:
+    def __init__(self, checkmk_server_host: str, omd_config: site.OMDConfig) -> None:
         self.checkmk_server_host = checkmk_server_host
+        self.omd_config = omd_config
 
     @override
     @property
@@ -1548,7 +1560,7 @@ class PerformanceGraphsDiagnosticsElement(ABCDiagnosticsElement):
     @override
     def add_or_get_files(self, tmp_dump_folder: Path) -> DiagnosticsElementFilepaths:
         checkmk_server_host = verify_checkmk_server_host(self.checkmk_server_host)
-        response = self._get_response(checkmk_server_host, get_omd_config())
+        response = self._get_response(checkmk_server_host)
 
         if response.status_code != 200:
             raise DiagnosticsElementError(
@@ -1568,13 +1580,11 @@ class PerformanceGraphsDiagnosticsElement(ABCDiagnosticsElement):
 
         yield filepath
 
-    def _get_response(
-        self, checkmk_server_host: str, omd_config: site.OMDConfig
-    ) -> requests.Response:
+    def _get_response(self, checkmk_server_host: str) -> requests.Response:
         internal_secret = "InternalToken %s" % (SiteInternalSecret().secret.b64_str)
         url = "http://{}:{}/{}/check_mk/report.py?".format(
-            omd_config["CONFIG_APACHE_TCP_ADDR"],
-            omd_config["CONFIG_APACHE_TCP_PORT"],
+            self.omd_config["CONFIG_APACHE_TCP_ADDR"],
+            self.omd_config["CONFIG_APACHE_TCP_PORT"],
             omd_site(),
         ) + urllib.parse.urlencode(
             [
