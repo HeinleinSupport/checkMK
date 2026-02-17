@@ -91,15 +91,15 @@ _result = ""
 async def _telnet_shell(reader: telnetlib3.TelnetReader, _: telnetlib3.TelnetWriter) -> None:
     global _result
     while True:
-        data = await reader.read(1024)  # type: ignore[no-untyped-call]
+        data = await reader.read(1024)
         if not data:
             break
-        _result += data
+        _result += data.decode("utf-8", errors="replace")
 
 
 def _read_client_data(host: str, port: int) -> None:
     loop = asyncio.get_event_loop()
-    coro = telnetlib3.open_connection(host, port, shell=_telnet_shell)  # type: ignore[no-untyped-call]
+    coro = telnetlib3.open_connection(host, port, shell=_telnet_shell)
     _, writer = loop.run_until_complete(coro)
     loop.run_until_complete(writer.protocol.waiter_closed)
 
