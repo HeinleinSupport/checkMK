@@ -51,7 +51,7 @@ function toggle(f: NavFolder) {
   width: 100%;
   background: none;
   border: none;
-  padding: 4px 0 4px 25px;
+  padding: 4px 0 4px 15px;
   font-size: 12px;
   text-decoration: none;
   cursor: pointer;
