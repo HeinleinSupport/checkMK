@@ -3027,7 +3027,6 @@ netapp-ontap==9.17.1.0 \
     --hash=sha256:6f30c6b0a0841f7a2cceecf838a9ce83b5933104e72401a1ecf3a61a1442cb37 \
     --hash=sha256:d80ace80f2e54f68e2fafffae580a9923393bac4a472ff50da6c84ca4c78d9cd
     # via
-    #   -c constraints.txt
     #   -c requirements.txt
     #   -r packages/cmk-plugins/requirements.in
 networkx==3.6.1 \
