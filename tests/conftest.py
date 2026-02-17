@@ -22,7 +22,7 @@ from pytest_metadata.plugin import metadata_key  # type: ignore[import-untyped,u
 # Needs to be executed before the import of those modules
 pytest.register_assert_rewrite(
     "tests.testlib",
-    "tests.unit.cmk.base.legacy_checks.checktestlib",
+    "tests.unit.cmk.legacy_checks.checktestlib",
     "tests.unit.checks.generictests.run",
 )
 

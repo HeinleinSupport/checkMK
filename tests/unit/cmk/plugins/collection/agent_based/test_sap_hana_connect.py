@@ -7,7 +7,7 @@
 import pytest
 
 from cmk.agent_based.v2 import StringTable
-from cmk.base.legacy_checks.sap_hana_connect import parse_sap_hana_connect
+from cmk.legacy_checks.sap_hana_connect import parse_sap_hana_connect
 
 INFO_0 = [
     ["[[YYY 11]]"],

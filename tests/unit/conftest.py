@@ -46,7 +46,7 @@ from tests.unit.mocks_and_helpers import DummyLicensingHandler, FixPluginLegacy
 # Needs to be executed before the import of those modules
 pytest.register_assert_rewrite(
     "tests.testlib",
-    "tests.unit.cmk.base.legacy_checks.checktestlib",
+    "tests.unit.cmk.legacy_checks.checktestlib",
     "tests.unit.checks.generictests.run",
 )
 
@@ -436,7 +436,7 @@ def agent_based_plugins(tmp_path_factory: pytest.TempPathFactory) -> Generator[A
         "cmk.base.config.cmk.utils.paths.precompiled_checks_dir",
         new=tmp_path_factory.mktemp("precompiled_legacy_checks"),
     ):
-        plugins = config.load_all_pluginX(repo_path() / "cmk/base/legacy_checks")
+        plugins = config.load_all_pluginX(repo_path() / "cmk/legacy_checks")
         assert not plugins.errors
         yield plugins
 

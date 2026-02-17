@@ -5,7 +5,7 @@
 
 # mypy: disable-error-code="no-untyped-call"
 
-from cmk.base.legacy_checks.ucs_c_rack_server_psu import (
+from cmk.legacy_checks.ucs_c_rack_server_psu import (
     discover_ucs_c_rack_server_psu_voltage,
     parse_ucs_c_rack_server_psu,
 )

@@ -7,7 +7,7 @@
 
 import pytest
 
-from cmk.base.legacy_checks.fireeye_mailq import (
+from cmk.legacy_checks.fireeye_mailq import (
     check_fireeye_mailq,
     dicsover_fireeye_mailq,
     parse_fireeye_mailq,

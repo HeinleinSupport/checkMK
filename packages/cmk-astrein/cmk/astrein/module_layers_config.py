@@ -477,14 +477,14 @@ COMPONENTS: Mapping[Component, ImportCheckerProtocol] = {
         "cmk.snmplib",
         "cmk.utils",
     ),
-    Component("cmk.base.check_legacy_includes"): _allow(
+    Component("cmk.legacy_includes"): _allow(
         *PACKAGE_PLUGIN_APIS,
         "cmk.plugins",
     ),
-    Component("cmk.base.legacy_checks"): _allow(
+    Component("cmk.legacy_checks"): _allow(
         *PACKAGE_PLUGIN_APIS,
         "cmk.plugins",
-        "cmk.base.check_legacy_includes",
+        "cmk.legacy_includes",
     ),
     Component("cmk.base.plugins.bakery.bakery_api"): _allow(
         "cmk.bakery",
@@ -1365,14 +1365,19 @@ COMPONENTS: Mapping[Component, ImportCheckerProtocol] = {
         "cmk.nonfree.pro.dcd",
         "cmk.utils.paths",
     ),
-    Component("tests.unit.cmk.base.legacy_checks"): _allow(
+    Component("tests.unit.cmk.legacy_checks"): _allow(
         *PACKAGE_PLUGIN_APIS,
-        "cmk.base.check_legacy_includes",
-        "cmk.base.legacy_checks",
+        "cmk.legacy_includes",
+        "cmk.legacy_checks",
         "cmk.checkengine.plugins",
         "cmk.discover_plugins",
         "cmk.plugins",
         "cmk.utils.paths",
+    ),
+    Component("tests.unit.cmk.legacy_includes"): _allow(
+        *PACKAGE_PLUGIN_APIS,
+        "cmk.legacy_includes",
+        "cmk.plugins",
     ),
     Component("tests.unit.cmk.fetchers"): _allow(
         *PACKAGE_CCC,
@@ -1422,6 +1427,8 @@ COMPONENTS: Mapping[Component, ImportCheckerProtocol] = {
         "cmk.helper_interface",
         "cmk.inventory",
         "cmk.livestatus_client",
+        "cmk.legacy_checks",
+        "cmk.legacy_includes",
         "cmk.message_broker_certs",
         "cmk.metric_backend",
         "cmk.nonfree.pro.bakery",

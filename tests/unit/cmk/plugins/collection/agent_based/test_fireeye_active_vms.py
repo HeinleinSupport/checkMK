@@ -4,7 +4,7 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 
-from cmk.base.legacy_checks.fireeye_active_vms import (
+from cmk.legacy_checks.fireeye_active_vms import (
     check_fireeye_active_vms,
     discover_fireeye_active_vms,
 )

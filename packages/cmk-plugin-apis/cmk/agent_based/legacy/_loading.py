@@ -11,7 +11,7 @@ from collections.abc import Iterable, Mapping, Sequence
 
 from .v0_unstable import LegacyCheckDefinition
 
-_LEGACY_CHECKS_NAMESPACE = "cmk.base.legacy_checks"
+_LEGACY_CHECKS_NAMESPACE = "cmk.legacy_checks"
 
 
 def find_legacy_check_modules() -> tuple[str, ...]:

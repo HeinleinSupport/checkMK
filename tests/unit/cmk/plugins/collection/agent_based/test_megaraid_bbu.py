@@ -10,7 +10,7 @@
 
 import pytest
 
-from cmk.base.legacy_checks.megaraid_bbu import (
+from cmk.legacy_checks.megaraid_bbu import (
     check_megaraid_bbu,
     discover_megaraid_bbu,
     megaraid_bbu_parse,

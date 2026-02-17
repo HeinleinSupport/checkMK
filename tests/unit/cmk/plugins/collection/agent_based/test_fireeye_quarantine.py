@@ -4,7 +4,7 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 
-from cmk.base.legacy_checks.fireeye_quarantine import (
+from cmk.legacy_checks.fireeye_quarantine import (
     check_fireeye_quarantine,
     discover_fireeye_quarantine,
 )

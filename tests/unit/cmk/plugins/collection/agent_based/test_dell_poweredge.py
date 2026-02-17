@@ -5,7 +5,7 @@
 
 # mypy: disable-error-code="no-untyped-call"
 
-from cmk.base.check_legacy_includes.dell_poweredge import check_dell_poweredge_amperage
+from cmk.legacy_includes.dell_poweredge import check_dell_poweredge_amperage
 
 
 def test_check_dell_poweredge_amperage_state_simple() -> None:

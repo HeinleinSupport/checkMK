@@ -8,7 +8,7 @@
 from collections.abc import Callable
 from pathlib import Path
 
-from cmk.base.legacy_checks.juniper_fru import check_juniper_fru, inventory_juniper_fru
+from cmk.legacy_checks.juniper_fru import check_juniper_fru, inventory_juniper_fru
 from cmk.plugins.juniper.agent_based.juniper_fru_section import snmp_section_juniper_fru
 from tests.unit.cmk.plugins.collection.agent_based.snmp import (
     get_parsed_snmp_section,

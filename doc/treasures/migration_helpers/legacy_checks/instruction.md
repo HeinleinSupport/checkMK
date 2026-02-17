@@ -16,7 +16,7 @@ You are a experienced python developer. You are methodical and patient.
 
 **Two-Commit Process**: Migration always happens in two separate commits to facilitate code review:
 
-1. **Commit 1 - Migrate in place**: Convert code to new API while keeping the file in `cmk/base/legacy_checks/`
+1. **Commit 1 - Migrate in place**: Convert code to new API while keeping the file in `cmk/legacy_checks/`
 2. **Commit 2 - Move to final location**: Move file to `cmk/plugins/<family>/agent_based/` and update all references
 
 **Reference commits**: `d366886d8ec` (migrate in place) and `f8d882421bb` (move to final location) demonstrate this process for `appdynamics_memory`.
@@ -41,7 +41,7 @@ Legacy check plugins use an older, less type-safe API. The migration:
 1. **Run automated migration script**:
 
    ```bash
-   scripts/run-uvenv doc/treasures/migration_helpers/legacy_checks/to_v2.py cmk/base/legacy_checks/<plugin_name>.py
+   scripts/run-uvenv doc/treasures/migration_helpers/legacy_checks/to_v2.py cmk/legacy_checks/<plugin_name>.py
    ```
 
    This handles most boilerplate conversions but **manual fixes are always required**.
@@ -52,7 +52,7 @@ Legacy check plugins use an older, less type-safe API. The migration:
    - **Adjust calls to check_levels**: The new check_levels function is a generator. Its calls must become `yield from check_levels(...)` but otherwise remain unchanged.
    - **Run mypy and fix errors**:
      ```bash
-     scripts/run-uvenv mypy cmk/base/legacy_checks/<plugin_name>.py tests/unit/cmk/base/legacy_checks/
+     scripts/run-uvenv mypy cmk/legacy_checks/<plugin_name>.py tests/unit/cmk/legacy_checks/
      ```
    - **Check default parameters**: Include them if and only if there's a ruleset for the plugin
    - **Modernize discovery function**:
@@ -99,7 +99,7 @@ Legacy check plugins use an older, less type-safe API. The migration:
    - To: `cmk/plugins/<family>/checkman/<plugin_name>`
 
 3. **Move the unit tests** (if there are any):
-   - From: `tests/unit/cmk/base/legacy_checks/test_<derived from plugin_name>`
+   - From: `tests/unit/cmk/legacy_checks/test_<derived from plugin_name>`
    - To: `tests/unit/cmk/plugins/<family>/agent_based/` (keep the base name)
 
 4. **Validate changes**:

@@ -7,7 +7,7 @@
 
 import pytest
 
-from cmk.base.legacy_checks.docker_node_disk_usage import (
+from cmk.legacy_checks.docker_node_disk_usage import (
     check_docker_node_disk_usage,
     parse_docker_node_disk_usage,
 )

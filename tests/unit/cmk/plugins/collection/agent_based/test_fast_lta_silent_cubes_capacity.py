@@ -11,8 +11,8 @@ from collections.abc import Callable
 import pytest
 
 from cmk.agent_based.v2 import DiscoveryResult, Metric, Result, Service, State
-from cmk.base.check_legacy_includes import size_trend
 from cmk.checkengine.plugins import CheckFunction, CheckPluginName
+from cmk.legacy_includes import size_trend
 from cmk.plugins.lib.df import FILESYSTEM_DEFAULT_PARAMS
 
 type DiscoveryFunction = Callable[..., DiscoveryResult]
