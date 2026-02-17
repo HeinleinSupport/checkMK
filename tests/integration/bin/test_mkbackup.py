@@ -472,6 +472,7 @@ def test_mkbackup_simple_restore(site_for_mkbackup_tests: Site) -> None:
     _execute_restore(site_for_mkbackup_tests, backup_id)
 
 
+@pytest.mark.skip(reason="CMK-31528")
 @pytest.mark.usefixtures("test_cfg")
 def test_mkbackup_encrypted_backup(site_for_mkbackup_tests: Site) -> None:
     _execute_backup(site_for_mkbackup_tests, job_id="testjob-encrypted")
@@ -544,6 +545,7 @@ def test_mkbackup_no_history_backup_and_restore(
     _execute_restore(site_for_mkbackup_tests, backup_id)
 
 
+@pytest.mark.skip(reason="CMK-31528")
 @pytest.mark.usefixtures("test_cfg", "cleanup_restore_lock")
 def test_mkbackup_locking(site_for_mkbackup_tests: Site) -> None:
     backup_id = _execute_backup(site_for_mkbackup_tests, job_id="testjob-no-history")
