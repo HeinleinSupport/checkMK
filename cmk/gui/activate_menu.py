@@ -91,6 +91,7 @@ def get_activate_changes_nav_item_instance(
         shortcut=item.shortcut,
         badge=item.badge,
         hint=item.hint,
+        hide=_hide_menu,
         get_vue_app=_get_changes_app,
     )
 
