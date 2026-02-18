@@ -11,7 +11,6 @@ from typing import Any
 from cmk.gui.config import Config
 from cmk.gui.htmllib.foldable_container import foldable_container
 from cmk.gui.htmllib.html import html
-from cmk.gui.http import request
 from cmk.gui.i18n import _
 from cmk.gui.pages import PageContext
 from cmk.gui.sidebar import footnotelinks, PageHandlers, SidebarSnapin
@@ -44,7 +43,7 @@ class NagVisMaps(SidebarSnapin):
         }
 
     def _ajax_show_nagvis_maps_snapin(self, ctx: PageContext) -> None:
-        api_request = request.get_request()
+        api_request = ctx.request.get_request()
         if api_request["type"] == "table":
             self._show_table(api_request)
         elif api_request["type"] == "tree":
