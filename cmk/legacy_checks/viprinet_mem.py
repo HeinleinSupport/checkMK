@@ -3,14 +3,19 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-# mypy: disable-error-code="no-untyped-def"
-
-
-from cmk.agent_based.legacy.v0_unstable import LegacyCheckDefinition
-from cmk.agent_based.v2 import DiscoveryResult, render, Service, SNMPTree, StringTable
+from cmk.agent_based.v2 import (
+    CheckPlugin,
+    CheckResult,
+    DiscoveryResult,
+    render,
+    Result,
+    Service,
+    SimpleSNMPSection,
+    SNMPTree,
+    State,
+    StringTable,
+)
 from cmk.plugins.viprinet.lib import DETECT_VIPRINET
-
-check_info = {}
 
 
 def saveint(i: str) -> int:
@@ -35,21 +40,23 @@ def discover_viprinet_mem(section: StringTable) -> DiscoveryResult:
         yield Service()
 
 
-def check_viprinet_mem(_no_item, _no_params, info):
-    return (
-        0,
-        "Memory used: %s" % render.bytes(saveint(info[0][0])),
-    )
+def check_viprinet_mem(section: StringTable) -> CheckResult:
+    yield Result(state=State.OK, summary=f"Memory used: {render.bytes(saveint(section[0][0]))}")
 
 
-check_info["viprinet_mem"] = LegacyCheckDefinition(
+snmp_section_viprinet_mem = SimpleSNMPSection(
     name="viprinet_mem",
-    parse_function=parse_viprinet_mem,
     detect=DETECT_VIPRINET,
     fetch=SNMPTree(
         base=".1.3.6.1.4.1.35424.1.2",
         oids=["2"],
     ),
+    parse_function=parse_viprinet_mem,
+)
+
+
+check_plugin_viprinet_mem = CheckPlugin(
+    name="viprinet_mem",
     service_name="Memory",
     discovery_function=discover_viprinet_mem,
     check_function=check_viprinet_mem,
