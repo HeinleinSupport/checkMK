@@ -1399,8 +1399,11 @@ match_plugin_registry.register(MonitorMenuMatchPlugin())
 
 # TODO: rework monitoring search façade to return correct payload for unified search.
 class MonitoringSearchEngine:
-    def __init__(self, user_permissions: UserPermissions) -> None:
-        self._legacy_engine = QuicksearchManager(raise_too_many_rows_error=False)
+    def __init__(self, *, user_permissions: UserPermissions, row_limit: int) -> None:
+        self._legacy_engine = QuicksearchManager(
+            raise_too_many_rows_error=False,
+            row_limit=row_limit,
+        )
         self._user_permissions = user_permissions
 
     def search(self, query: str) -> Iterable[UnifiedSearchResultItem]:
