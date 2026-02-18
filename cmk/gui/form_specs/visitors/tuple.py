@@ -3,8 +3,9 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 from collections.abc import Sequence
-from typing import assert_never, override
+from typing import assert_never, cast, override
 
+from cmk.ccc.exceptions import MKGeneralException
 from cmk.gui.form_specs.unstable.legacy_converter import Tuple
 from cmk.gui.i18n import _
 from cmk.shared_typing import vue_formspec_components as shared_type_defs
@@ -24,6 +25,23 @@ from .validators import build_vue_validators
 
 _ParsedValueModel = tuple[IncomingData, ...]
 _FallbackModel = list[IncomingData]
+
+
+def _ensure_component(form_spec: shared_type_defs.FormSpec) -> shared_type_defs.Components:
+    """Runtime check to ensure FormSpec is a concrete Component type.
+
+    Validates that the form spec returned by to_vue() is one of the concrete
+    component types (Integer, Float, Tuple, etc.) and not just the base FormSpec.
+    This narrows the type from FormSpec to Components for type safety.
+    """
+    # Check if it's an instance of any dataclass that has a 'type' field
+    # All Components have a 'type' field with a literal value
+    if not hasattr(form_spec, "type"):
+        raise MKGeneralException(
+            f"Expected a concrete Component type, but got {type(form_spec).__name__}. "
+            "This is a bug, please report it to the developers."
+        )
+    return cast(shared_type_defs.Components, form_spec)
 
 
 class TupleVisitor(FormSpecVisitor[Tuple, _ParsedValueModel, _FallbackModel]):
@@ -65,7 +83,7 @@ class TupleVisitor(FormSpecVisitor[Tuple, _ParsedValueModel, _FallbackModel]):
         self, parsed_value: _ParsedValueModel | InvalidValue[_FallbackModel]
     ) -> tuple[shared_type_defs.Tuple, object]:
         title, help_text = get_title_and_help(self.form_spec)
-        vue_specs = []
+        vue_specs: list[shared_type_defs.Components] = []
         vue_elements: list[object] = []
 
         tuple_values: Sequence[IncomingData]
@@ -75,10 +93,10 @@ class TupleVisitor(FormSpecVisitor[Tuple, _ParsedValueModel, _FallbackModel]):
             tuple_values = parsed_value
 
         for element_spec, value in zip(self.form_spec.elements, tuple_values):
-            element_vue, element_value = get_visitor(element_spec, self.visitor_options).to_vue(
+            raw_element_vue, element_value = get_visitor(element_spec, self.visitor_options).to_vue(
                 value
             )
-            vue_specs.append(element_vue)
+            vue_specs.append(_ensure_component(raw_element_vue))
             vue_elements.append(element_value)
 
         return (

@@ -89,14 +89,14 @@ const CLASS_LOOKUP: Record<FormSpec.Tuple['layout'], string> = {
           <CmkSpace size="small" />
           <FormEditDispatcher
             v-model:data="data[index]"
-            :spec="element as FormSpec.Components"
+            :spec="element"
             :backend-validation="elementValidation[index]!"
           />
         </div>
         <FormEditDispatcher
           v-else
           v-model:data="data[index]"
-          :spec="element as FormSpec.Components"
+          :spec="element"
           :backend-validation="elementValidation[index]!"
         />
       </div>

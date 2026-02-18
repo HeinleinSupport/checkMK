@@ -1354,7 +1354,7 @@
             "elements": {
               "type": "array",
               "items": {
-                "$ref": "#/$defs/form_spec"
+                "$ref": "#/$defs/components"
               }
             },
             "layout": {
