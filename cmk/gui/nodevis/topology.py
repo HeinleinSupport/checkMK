@@ -8,6 +8,7 @@
 # mypy: disable-error-code="type-arg"
 
 import abc
+import dataclasses
 import glob
 import json
 import os
@@ -17,7 +18,7 @@ from collections.abc import Mapping, Sequence
 from dataclasses import asdict, dataclass, field
 from datetime import timedelta
 from pathlib import Path
-from typing import Any, Literal, override
+from typing import Any, Literal, override, Self
 
 import livestatus
 
@@ -37,7 +38,7 @@ from cmk.gui.dashboard import get_topology_context_and_filters
 from cmk.gui.hooks import request_memoize
 from cmk.gui.htmllib.header import make_header
 from cmk.gui.htmllib.html import html
-from cmk.gui.http import request
+from cmk.gui.http import Request, request
 from cmk.gui.i18n import _, _l
 from cmk.gui.log import logger
 from cmk.gui.logged_in import user
@@ -148,6 +149,7 @@ def _render_network_topology_icon(
     if not files:
         return None
 
+    # TODO: not sure how to avoid using the global request in this case.
     url = makeuri_contextless(
         request,
         [("host_regex", f"{row['host_name']}$")],
@@ -223,6 +225,33 @@ def _save_topology_configuration(topology_configuration: TopologyConfiguration) 
     store.save_text_to_file(_layout_path(topology_hash), json.dumps(config))
 
 
+@dataclasses.dataclass(frozen=True, kw_only=True)
+class _RequestVars:
+    site_id: SiteId | None
+    layout: str
+    query_hash: str | None
+    topology_type: str
+    topology_frontend_configuration: str | None
+    delete_topology_configuration: bool
+    save_topology_configuration: bool
+
+    @classmethod
+    def from_request(cls, request: Request) -> Self:
+        return cls(
+            site_id=SiteId(request.get_str_input_mandatory("site"))
+            if request.get_str_input("site")
+            else None,
+            layout=request.get_str_input_mandatory("layout"),
+            query_hash=request.get_str_input("query_hash"),
+            topology_type=request.get_str_input_mandatory("topology_type"),
+            topology_frontend_configuration=request.get_str_input(
+                "topology_frontend_configuration"
+            ),
+            delete_topology_configuration=request.has_var("delete_topology_configuration"),
+            save_topology_configuration=request.has_var("save_topology_configuration"),
+        )
+
+
 class ABCTopologyPage(Page):
     _instance_name = "node_instance"
 
@@ -235,9 +264,25 @@ class ABCTopologyPage(Page):
     def page(self, ctx: PageContext) -> None:
         """Determines the hosts to be shown"""
         user.need_permission("general.parent_child_topology")
-        self.show_topology(UserPermissions.from_config(ctx.config, permission_registry))
+        reqvars = _RequestVars.from_request(ctx.request)
 
-    def show_topology(self, user_permissions: UserPermissions) -> None:
+        self.show_topology(
+            UserPermissions.from_config(ctx.config, permission_registry),
+            site_id=reqvars.site_id,
+            layout=reqvars.layout,
+            query_hash=reqvars.query_hash,
+            topology_frontend_configuration=reqvars.topology_frontend_configuration,
+        )
+
+    def show_topology(
+        self,
+        user_permissions: UserPermissions,
+        *,
+        site_id: SiteId | None,
+        layout: str,
+        query_hash: str | None,
+        topology_frontend_configuration: str | None,
+    ) -> None:
         visual_spec = self.visual_spec()
         breadcrumb = make_topic_breadcrumb(
             main_menu_registry.menu_monitoring(),
@@ -247,15 +292,28 @@ class ABCTopologyPage(Page):
         page_menu = PageMenu(breadcrumb=breadcrumb)
         self._extend_display_dropdown(page_menu, visual_spec["name"])
         make_header(html, str(visual_spec["title"]), breadcrumb, page_menu)
-        self.show_topology_content()
+        self.show_topology_content(site_id, layout, query_hash, topology_frontend_configuration)
 
-    def show_topology_content(self) -> None:
+    def show_topology_content(
+        self,
+        site_id: SiteId | None,
+        layout: str,
+        query_hash: str | None,
+        topology_frontend_configuration: str | None,
+    ) -> None:
         div_id = "node_visualization"
         html.div("", id_=div_id)
         topology_configuration = get_topology_configuration(
-            self.visual_spec()["name"], self.get_default_overlays_config()
+            topology_type=self.visual_spec()["name"],
+            topology_frontend_configuration=topology_frontend_configuration,
+            layout=layout,
+            default_overlays=self.get_default_overlays_config(),
         )
-        result = _compute_topology_response(topology_configuration)
+        result = _compute_topology_response(
+            topology_configuration,
+            site_id=site_id,
+            query_hash=query_hash,
+        )
         html.javascript(
             f"{self._instance_name} = new cmk.nodevis.TopologyVisualization({json.dumps(div_id)},"
             f"{json.dumps(topology_configuration.type)},"
@@ -394,20 +452,32 @@ class AjaxInitialTopologyFilters(ABCAjaxInitialFilters):
 class AjaxFetchTopology(AjaxPage):
     @override
     def page(self, ctx: PageContext) -> PageResult:
-        topology_type = request.get_str_input_mandatory("topology_type")
-        if topology_type == "network_topology":
+        reqvars = _RequestVars.from_request(ctx.request)
+
+        if reqvars.topology_type == "network_topology":
             default_overlays = NetworkTopologyPage.get_default_overlays_config()
         else:
             default_overlays = ParentChildTopologyPage.get_default_overlays_config()
-        topology_configuration = get_topology_configuration(topology_type, default_overlays)
-        if request.has_var("delete_topology_configuration"):
+
+        topology_configuration = get_topology_configuration(
+            topology_type=reqvars.topology_type,
+            topology_frontend_configuration=reqvars.topology_frontend_configuration,
+            layout=reqvars.layout,
+            default_overlays=default_overlays,
+        )
+
+        if reqvars.delete_topology_configuration:
             _delete_topology_configuration(topology_configuration)
             topology_configuration.layout = _get_default_layout()
-        if request.has_var("save_topology_configuration"):
+        if reqvars.save_topology_configuration:
             _save_topology_configuration(topology_configuration)
 
         try:
-            return _compute_topology_response(topology_configuration)
+            return _compute_topology_response(
+                topology_configuration,
+                site_id=reqvars.site_id,
+                query_hash=reqvars.query_hash,
+            )
         except Exception as e:
             logger.warning("".join(traceback.format_exception(e)))
         return None
@@ -1049,10 +1119,15 @@ class Topology:
     def __init__(
         self,
         topology_configuration: TopologyConfiguration,
+        *,
+        site_id: SiteId | None,
         enforce_datasource: str | None = None,
     ) -> None:
         self._topology_configuration = topology_configuration
-        self._root_hostnames_from_core = _get_hostnames_from_core(self._topology_configuration)
+        self._root_hostnames_from_core = _get_hostnames_from_core(
+            self._topology_configuration,
+            site_id=site_id,
+        )
         self._growth_root_nodes = self._topology_configuration.frontend.growth_root_nodes_set.union(
             self._root_hostnames_from_core
         )
@@ -1623,9 +1698,12 @@ def _create_filter_configuration_from_hash(
 
 
 def get_topology_configuration(
-    topology_type: str, default_overlays: OverlaysConfig
+    *,
+    topology_type: str,
+    topology_frontend_configuration: str | None,
+    layout: str,
+    default_overlays: OverlaysConfig,
 ) -> TopologyConfiguration:
-    # Get parameters from request
     topology_filters = _get_topology_settings_from_filters()
     mesh_depth = int(topology_filters["topology_mesh_depth"])
     max_nodes = int(topology_filters["topology_max_nodes"])
@@ -1634,18 +1712,17 @@ def get_topology_configuration(
     )
     # Check if the request includes a frontend_configuration -> AJAX request
     frontend_configuration = (
-        FrontendConfiguration.parse(json.loads(frontend_config))
-        if (frontend_config := request.get_str_input("topology_frontend_configuration"))
+        FrontendConfiguration.parse(json.loads(topology_frontend_configuration))
+        if topology_frontend_configuration
         else None
     )
 
     if frontend_configuration:
-        layout = Layout(**json.loads(request.get_str_input_mandatory("layout")))
         return TopologyConfiguration(
             type=topology_type,
             frontend=frontend_configuration,
             filter=filter_configuration,
-            layout=layout,
+            layout=Layout(**json.loads(layout)),
         )
 
     # Check if there is a saved topology for this filter
@@ -1793,25 +1870,33 @@ def _get_dynamic_layer_ids(
 
 
 def _get_hostnames_from_core(
-    topology_configuration: TopologyConfiguration,
+    topology_configuration: TopologyConfiguration, *, site_id: SiteId | None
 ) -> set[HostName]:
-    site_id = (
-        SiteId(request.get_str_input_mandatory("site")) if request.get_str_input("site") else None
-    )
     with sites.only_sites(site_id), sites.set_limit(topology_configuration.filter.max_nodes):
         return {x[0] for x in sites.live().query(topology_configuration.filter.query)}
 
 
 def _compute_topology_response(
     topology_configuration: TopologyConfiguration,
+    *,
+    site_id: SiteId | None,
+    query_hash: str | None,
 ) -> dict[str, Any]:
     # logger.warning(f"Initial topology {pprint.pformat(topology_configuration.frontend)}")
     ds_config = topology_configuration.frontend.datasource_configuration
-    reference = Topology(topology_configuration, ds_config.reference)
+    reference = Topology(
+        topology_configuration,
+        site_id=site_id,
+        enforce_datasource=ds_config.reference,
+    )
 
     link_config_comparison: dict[TopologyLink, dict[str, Any]] = {}
     if ds_config.reference != ds_config.compare_to:
-        compare_to = Topology(topology_configuration, ds_config.compare_to)
+        compare_to = Topology(
+            topology_configuration,
+            site_id=site_id,
+            enforce_datasource=ds_config.compare_to,
+        )
         # Compute link_config, will be used later on
         ref_mesh_links = _compute_mesh_links(reference)
         compare_mesh_links = _compute_mesh_links(compare_to)
@@ -1829,8 +1914,9 @@ def _compute_topology_response(
 
     result = _compute_topology_result(
         topology_configuration,
-        reference,
-        link_config_comparison,
+        topology=reference,
+        link_config_comparison=link_config_comparison,
+        query_hash=query_hash,
     )
 
     # import pprint
@@ -1858,8 +1944,10 @@ def _compute_link_config_for_comparison(
 
 def _compute_topology_result(
     topology_configuration: TopologyConfiguration,
+    *,
     topology: Topology,
     link_config_comparison: dict[TopologyLink, dict[str, Any]],
+    query_hash: str | None,
 ) -> TopologyResponse:
     active_layers: dict[str, ABCTopologyNodeDataGenerator] = topology.computed_layers
     merged_results: TopologyNodes = topology.merged_results
@@ -1902,7 +1990,7 @@ def _compute_topology_result(
         topology_configuration.layout,
         headline,
         [],
-        query_hash=request.get_str_input("query_hash"),
+        query_hash=query_hash,
     )
 
 
