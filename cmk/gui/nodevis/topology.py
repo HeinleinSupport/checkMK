@@ -1633,7 +1633,12 @@ def get_topology_configuration(
         mesh_depth=mesh_depth, max_nodes=max_nodes, query=_get_query_string()
     )
     # Check if the request includes a frontend_configuration -> AJAX request
-    frontend_configuration = _get_frontend_configuration_from_request()
+    frontend_configuration = (
+        FrontendConfiguration.parse(json.loads(frontend_config))
+        if (frontend_config := request.get_str_input("topology_frontend_configuration"))
+        else None
+    )
+
     if frontend_configuration:
         layout = Layout(**json.loads(request.get_str_input_mandatory("layout")))
         return TopologyConfiguration(
@@ -1763,12 +1768,6 @@ def _all_settings() -> dict[tuple[str, ...], str]:
         temp_dir=cmk.utils.paths.tmp_dir,
         root_dir=cmk.utils.paths.omd_root,
     )
-
-
-def _get_frontend_configuration_from_request() -> None | FrontendConfiguration:
-    if frontend_config := request.get_str_input("topology_frontend_configuration"):
-        return FrontendConfiguration.parse(json.loads(frontend_config))
-    return None
 
 
 def _dynamic_network_data_id(layer_id: str) -> str:
