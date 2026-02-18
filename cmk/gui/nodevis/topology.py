@@ -276,14 +276,15 @@ class ABCTopologyPage(Page):
 
     def make_ui_components(self, user_permissions: UserPermissions) -> None:
         visual_spec = self.visual_spec()
+        title = str(visual_spec["title"])
         breadcrumb = make_topic_breadcrumb(
-            main_menu_registry.menu_monitoring(),
-            PagetypeTopics.get_topic(visual_spec["topic"], user_permissions).title(),
+            menu=main_menu_registry.menu_monitoring(),
+            topic_title=PagetypeTopics.get_topic(visual_spec["topic"], user_permissions).title(),
         )
         breadcrumb.append(make_current_page_breadcrumb_item(str(visual_spec["title"])))
         page_menu = PageMenu(breadcrumb=breadcrumb)
-        self._extend_display_dropdown(page_menu, visual_spec["name"])
-        make_header(html, str(visual_spec["title"]), breadcrumb, page_menu)
+        self._extend_display_dropdown(menu=page_menu, page_name=visual_spec["name"])
+        make_header(html, title, breadcrumb, page_menu)
 
     def show_topology(
         self,
@@ -1974,14 +1975,14 @@ def _compute_topology_result(
             }
         link.config.update(comparison_config)
 
-    frontend_config = NodeConfig(topology_center, shown_mesh_links)
+    frontend_config = NodeConfig(hierarchy=topology_center, links=shown_mesh_links)
 
     return TopologyResponse(
-        frontend_config,
-        topology_configuration.frontend,
-        topology_configuration.layout,
-        headline,
-        [],
+        node_config=frontend_config,
+        frontend_configuration=topology_configuration.frontend,
+        layout=topology_configuration.layout,
+        headline=headline,
+        errors=[],
         query_hash=query_hash,
     )
 
