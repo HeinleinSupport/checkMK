@@ -2263,6 +2263,12 @@ msgstr ""
 "que una condición esté en un estado fallido antes de que se activen las "
 "alertas de verificación."
 
+msgid ""
+"A TNS alias as defined in the <tt>tnsnames.ora</tt> file. Requires a "
+"properly configured <tt>tnsnames.ora</tt> file accessible via the TNS_ADMIN "
+"directory path."
+msgstr ""
+
 #, fuzzy
 msgid ""
 "A cache age limit on plug-ins and local checks. If set, the output of plug-"
@@ -4052,10 +4058,6 @@ msgstr "Elementos activos"
 msgid "Active jobs"
 msgstr "Trabajos activos"
 
-#, fuzzy
-msgid "Active metrics series"
-msgstr "Sesiones activas"
-
 msgid "Active modems"
 msgstr "Módems activos"
 
@@ -4525,7 +4527,7 @@ msgid "Add new credentials"
 msgstr "Utilizar las credenciales"
 
 #, fuzzy
-msgid "Add new database instance"
+msgid "Add new database"
 msgstr "Añadir instancia remota"
 
 msgid "Add new element"
@@ -8416,7 +8418,7 @@ msgid "Automatically create monitoring agents"
 msgstr "Crear automáticamente agentes de vigilancia"
 
 #, fuzzy
-msgid "Automatically delete hosts without OpenTelemetry data"
+msgid "Automatically delete hosts with no recent OpenTelemetry data"
 msgstr "Borrar automáticamente los hosts sin datos piggyback"
 
 msgid "Automatically delete hosts without piggyback data"
@@ -13900,6 +13902,16 @@ msgstr ""
 "compatibilidad, pero se aconseja utilizar la opción \"mantener\" para las "
 "nuevas instalaciones."
 
+msgid ""
+"Checkmk will regularly report your current license usage. Following each "
+"successful transfer, you will see a confirmation as well as a summary of the "
+"information transferred. As a part of this process, Checkmk will also "
+"automatically fetch new license information from the Checkmk customer portal "
+"if you have extended or renewed your license in the meantime. Offline "
+"verification exists as a fallback for setups without internet access, "
+"requiring manual verification and reporting."
+msgstr ""
+
 #, fuzzy
 msgid "Checkmk with times metrics"
 msgstr "Checkmk con datos de rendimiento de tiempos"
@@ -18551,6 +18563,10 @@ msgstr "Macros de clientes"
 msgid "Custom macros"
 msgstr "Macros de clientes"
 
+#, fuzzy
+msgid "Custom metrics"
+msgstr "Clientes"
+
 #, python-format
 msgid "Custom notification table for user %s"
 msgstr "Tabla de notificaciones personalizada para el usuario %s"
@@ -19323,14 +19339,6 @@ msgstr "Base de datos para MySQL"
 msgid "Database identifier"
 msgstr "Identificador de la base de datos"
 
-#, fuzzy
-msgid "Database instance"
-msgstr "Nombre de la base de datos"
-
-#, fuzzy
-msgid "Database instances"
-msgstr "Nombre de la base de datos"
-
 msgid "Database is being recovered"
 msgstr "La base de datos se está recuperando"
 
@@ -19391,6 +19399,10 @@ msgstr "Nombre de la base de datos/colección ('[DB_NAME] [COLLECTION_NAME]')"
 
 msgid "Databases"
 msgstr "Bases de datos"
+
+#, fuzzy
+msgid "Databases to monitor"
+msgstr "Instancias a vigilar"
 
 msgid "Datadog"
 msgstr "Datadog"
@@ -19737,6 +19749,10 @@ msgid "Default rule pack"
 msgstr "Paquete de reglas por defecto"
 
 #, fuzzy
+msgid "Default settings"
+msgstr "Propiedades del cuadro de mandos"
+
+#, fuzzy
 msgid "Default start URL"
 msgstr "Estado por defecto"
 
@@ -19804,10 +19820,6 @@ msgstr "Archivos diferidos en Spool"
 #, fuzzy
 msgid "Define OAuth parameters"
 msgstr "Parámetros del modelo"
-
-msgid ""
-"Define Oracle database instances to monitor to overwrite default settings."
-msgstr ""
 
 msgid ""
 "Define a direct translation of the possible states of the HAProxy frontend "
@@ -19919,6 +19931,13 @@ msgid ""
 msgstr ""
 "Definir patrones para incluir los parámetros de configuración del kernel en "
 "el inventario."
+
+msgid ""
+"Define the Oracle databases you want to monitor. Each entry must include an "
+"Oracle database identifier (service name, instance name, SID, or TNS alias). "
+"Authentication and connection options from the default settings are used "
+"automatically, but can be overridden per database if needed."
+msgstr ""
 
 msgid ""
 "Define the host to assign the discovered CloudFront services. You can assign "
@@ -24240,7 +24259,7 @@ msgstr ""
 "Desactive las conexiones persistentes o revise cuidadosamente el número "
 "máximo de procesos Apache y las posibles conexiones livestatus."
 
-msgid "Either increase the dashlet height or disable the graph legend."
+msgid "Either increase the widget height or disable the graph legend."
 msgstr ""
 
 msgid ""
@@ -29696,9 +29715,6 @@ msgstr ""
 #, fuzzy
 msgid "HEAD requests"
 msgstr "solicita"
-
-msgid "HELP"
-msgstr "AYUDA"
 
 msgid "HH:MM:SS"
 msgstr "HH:MM:SS"
@@ -35556,11 +35572,16 @@ msgstr ""
 msgid ""
 "If you plan to monitor Azure resources via Azure Resource Manager, assign "
 "the built-in Reader role to the app at the subscription (or appropriate "
-"resource group) level in Access control (IAM). Additionally, if resources "
-"available through the Graph API will be monitored, add the Microsoft Graph "
-"application permissions \"Directory.Read.All\" and \"User.Read.All\" and "
-"grant admin consent. These resources include \"Users in Entra ID\", \"Entra "
-"Connect Sync\", and \"App Registrations\"."
+"resource group) level in Access control (IAM) and ensure that the required "
+"Azure Resource Providers are registered in the subscription. The exact set "
+"of providers depends on the Azure resource types you intend to monitor and "
+"may include, but is not limited to, \"Microsoft.Compute\", "
+"\"Microsoft.Network\", \"Microsoft.Storage\", \"Microsoft.ResourceHealth\" "
+"and \"Microsoft.Insights\". If resources available through the Microsoft "
+"Graph API will be monitored, add the Microsoft Graph application permissions "
+"\"Directory.Read.All\" and \"User.Read.All\" and grant admin consent. These "
+"resources include \"Users in Entra ID\", \"Entra Connect Sync\", and \"App "
+"Registrations\"."
 msgstr ""
 
 #, python-format
@@ -36140,6 +36161,10 @@ msgstr "En"
 msgid "In / Out"
 msgstr "Entrada / Salida"
 
+msgid ""
+"In Checkmk Community, dashboard tokens can only be valid for up to one month."
+msgstr ""
+
 msgid "In Downtime"
 msgstr "En inactividad"
 
@@ -36568,11 +36593,6 @@ msgstr ""
 #, fuzzy
 msgid "In termination"
 msgstr "Intermedio"
-
-msgid ""
-"In the Checkmk Community Edition, dashboard tokens can only be valid for up "
-"to one month."
-msgstr ""
 
 msgid ""
 "In the change log of the Checkmk software version the administrator can "
@@ -37329,7 +37349,7 @@ msgid "Instance ID"
 msgstr "ID de la instancia"
 
 #, fuzzy
-msgid "Instance Name(SID)"
+msgid "Instance Name"
 msgstr "Nombre de la instancia"
 
 #, fuzzy
@@ -40602,7 +40622,7 @@ msgid "Licensed"
 msgstr "Licencia"
 
 #, fuzzy
-msgid "Licensed active metric series"
+msgid "Licensed custom metrics"
 msgstr "Servicios con licencia: %s"
 
 #, fuzzy
@@ -44494,6 +44514,10 @@ msgstr "Método de sondeo"
 
 msgid "Metric"
 msgstr "Métrica"
+
+#, fuzzy
+msgid "Metric Backend"
+msgstr "Instancias de Oracle"
 
 msgid "Metric Forecast"
 msgstr "Previsión de la métrica"
@@ -50928,14 +50952,6 @@ msgid "Oracle IOSTAT write bytes"
 msgstr "ORACLE IOSTAT Bytes"
 
 #, fuzzy
-msgid "Oracle Instance Name of the database instance. May be the same as SID."
-msgstr "El identificador del sensor."
-
-#, fuzzy
-msgid "Oracle Instance Name, may be the same as SID."
-msgstr "El identificador del sensor."
-
-#, fuzzy
 msgid "Oracle Instant Client options"
 msgstr "Tasa de éxito de la caché"
 
@@ -50982,14 +50998,6 @@ msgstr "Estadísticas de memoria de ORACLE SGA"
 #, fuzzy
 msgid "Oracle SID of the remote database"
 msgstr "SID de ORACLE de la base de datos remota"
-
-#, fuzzy
-msgid "Oracle Service Name"
-msgstr "Nombre del servicio"
-
-#, fuzzy
-msgid "Oracle Service Name of the database instance."
-msgstr "El identificador del sensor."
 
 #, fuzzy
 msgid "Oracle Wait Class (FG lines are downside)"
@@ -51426,10 +51434,6 @@ msgstr "ORACLE %s clase de espera (FG)"
 
 #, fuzzy
 msgid "Oracle instance"
-msgstr "Instancias de Oracle"
-
-#, fuzzy
-msgid "Oracle instance name"
 msgstr "Instancias de Oracle"
 
 msgid "Oracle instances"
@@ -54501,6 +54505,10 @@ msgid ""
 msgstr ""
 
 #, fuzzy
+msgid "Please provide a path with at least one segment"
+msgstr "Seleccione al menos un elemento"
+
+#, fuzzy
 msgid "Please provide a relative Windows path"
 msgstr "Por favor, indique un nombre válido"
 
@@ -55000,7 +55008,7 @@ msgid "Podman disk usage"
 msgstr "Uso del disco"
 
 #, fuzzy
-msgid "Podman node and containers"
+msgid "Podman hosts and containers (Linux)"
 msgstr "Nodo Docker y contenedores"
 
 #, fuzzy
@@ -68248,6 +68256,10 @@ msgstr "Desactivar TLS/SSL"
 msgid "TLS/SSL/Https disabled"
 msgstr "TLS/SSL/Https desactivado"
 
+#, fuzzy
+msgid "TNS Alias"
+msgstr "TNS Alias %s"
+
 #, python-format
 msgid "TNS Alias %s"
 msgstr "TNS Alias %s"
@@ -69639,6 +69651,27 @@ msgid ""
 "hosts\" to add a network prefix to the hosts from the Cisco Meraki cloud to "
 "avoid conflicting hostnames. You can also use this option along with the "
 "\"Dynamic host management\" to sort the host in location specific folders."
+msgstr ""
+
+msgid ""
+"The Oracle System Identifier (SID) that identifies a specific database "
+"instance on the host. Use SID-based connections for older Oracle "
+"configurations or when connecting to a database that does not use service "
+"names. If both a service name and SID are specified, the service name takes "
+"precedence."
+msgstr ""
+
+msgid ""
+"The Oracle instance name (ORACLE_SID running instance) to connect to. Use "
+"this to target a specific instance when multiple instances serve the same "
+"service name, e.g. in Oracle RAC configurations. If not set, the connection "
+"is made to the service name without specifying a particular instance."
+msgstr ""
+
+msgid ""
+"The Oracle service name used to connect to the database. A service name "
+"typically represents a database and can map to one or more instances in a "
+"RAC environment."
 msgstr ""
 
 msgid ""
@@ -71395,6 +71428,10 @@ msgid ""
 "customization."
 msgstr ""
 
+#, fuzzy, python-format
+msgid "The host '%s' could not be found on any active site."
+msgstr "No se ha podido encontrar el host en ningún sitio activo."
+
 #, python-format
 msgid "The host '%s' does not exist"
 msgstr "El host '%s' no existe"
@@ -71410,9 +71447,6 @@ msgstr ""
 #, fuzzy
 msgid "The host address of the ntopng instance."
 msgstr "La dirección del host de la instancia de ntopng."
-
-msgid "The host could not be found on any active site."
-msgstr "No se ha podido encontrar el host en ningún sitio activo."
 
 msgid ""
 "The host is (partially) managed by an automatic data source like the dynamic "
@@ -73909,6 +73943,12 @@ msgstr ""
 msgid "The title is used to label this attribute."
 msgstr "El título se utiliza para etiquetar este atributo."
 
+#, fuzzy, python-format
+msgid ""
+"The title must be unique. The title '%s' is already used by the OAuth2 "
+"connection with ID %s."
+msgstr "Este identificador ya está siendo utilizado por otra conexión."
+
 msgid "The title of an exported rule pack cannot be modified."
 msgstr "El título de un paquete de reglas exportado no puede ser modificado."
 
@@ -74703,6 +74743,12 @@ msgstr ""
 "Estos servicios no han sido encontrados por la detección, sino que han sido "
 "añadidos manualmente por una regla de configuración <i>Servicios forzados</"
 "i>."
+
+msgid ""
+"These settings apply to all monitored Oracle databases by default. They "
+"define the authentication, connection, and data collection options used "
+"unless overridden for a specific database in the instance list below."
+msgstr ""
 
 msgid ""
 "These settings control how the <i>initial</i> scheduling of new active "
@@ -80045,6 +80091,14 @@ msgid "Time until alert, if REPLICAFAILURE condition is true"
 msgstr "Tiempo hasta la alerta, si la condición REPLICAFAILURE es verdadera"
 
 #, fuzzy
+msgid "Time until alert, if RESIZEINPROGRESS condition is true"
+msgstr "Tiempo hasta la alerta, si la condición REPLICAFAILURE es verdadera"
+
+#, fuzzy
+msgid "Time until alert, if RESIZEPENDING condition is true"
+msgstr "Tiempo hasta la alerta, si la condición REPLICAFAILURE es verdadera"
+
+#, fuzzy
 msgid "Time until alert, if latest cronjob job is in pending state"
 msgstr ""
 "Tiempo hasta la alerta, si el último trabajo CronJob está en estado pendiente"
@@ -80083,6 +80137,10 @@ msgstr "Time warp - muestra el agregado de BI durante este periodo de tiempo"
 
 msgid "Time when downtime was created"
 msgstr "Momento en que se creó el tiempo de inactividad"
+
+#, fuzzy
+msgid "Time without data before host deletion"
+msgstr "Prueba de nombre de host antes de la activación"
 
 #, fuzzy
 msgid "Time zone"
@@ -87028,6 +87086,10 @@ msgstr "Atributo User-ID"
 
 msgid "User:"
 msgstr "Usuario:"
+
+#, fuzzy
+msgid "UserId cannot be empty"
+msgstr "Clave secreta"
 
 msgid "Username"
 msgstr "Nombre de usuario"
@@ -96337,9 +96399,8 @@ msgstr "Ampliar"
 msgid "Collapse all"
 msgstr "Elige todo"
 
-#, fuzzy
-msgid "of"
-msgstr "off"
+msgid "%{selected} of %{total} selected"
+msgstr ""
 
 #, fuzzy
 msgid "No filter category available"
@@ -97085,6 +97146,10 @@ msgid "Only me (private)"
 msgstr ""
 
 #, fuzzy
+msgid "No contact groups found"
+msgstr "No se han asignado grupos de contacto."
+
+#, fuzzy
 msgid "Users of site"
 msgstr "Servicios del sitio"
 
@@ -97180,7 +97245,7 @@ msgid "Navigation and menus are hidden."
 msgstr "Iconos de la barra de navegación"
 
 msgid ""
-"Runtime filtering isn’t available. Set default filter values before sharing."
+"Runtime filtering isn't available. Set default filter values before sharing."
 msgstr ""
 
 #, fuzzy
@@ -97246,6 +97311,12 @@ msgstr "Mostrar resumen para estados no %s"
 msgid "Selected state"
 msgstr "Estado seleccionado"
 
+msgid ""
+"When many hexagons are displayed, they scale to fit into the widget.\n"
+"   Differences between \"Small\" and \"Large\" may not be visible in the "
+"preview."
+msgstr ""
+
 #, fuzzy
 msgid "Show state of"
 msgstr "Mostrar título"
@@ -97257,12 +97328,6 @@ msgstr "Hosts o sites, según el contexto"
 #, fuzzy
 msgid "Hexagon size"
 msgstr "Tamaño máximo"
-
-msgid ""
-"When many hexagons are displayed, they scale to fit into the widget.\n"
-"                 Differences between &quot;Small&quot; and &quot;Large&quot; "
-"may not be visible in the preview."
-msgstr ""
 
 msgid "Small"
 msgstr ""
@@ -97647,6 +97712,10 @@ msgstr "Opciones de gráficos"
 
 msgid "Graph lines (OpenTelemetry)"
 msgstr ""
+
+#, fuzzy
+msgid "of"
+msgstr "off"
 
 msgid "Cannot change rule value for rules managed by custom graph editor."
 msgstr ""
@@ -98288,6 +98357,11 @@ msgid ""
 "register the following Web redirect URI"
 msgstr ""
 
+msgid ""
+"Only valid redirect URIs starting with https:// or http://localhost can be "
+"used. Please check if either of these two options can be applied."
+msgstr ""
+
 #, fuzzy
 msgid "Verifying the authorization..."
 msgstr "Registro de agentes"
@@ -98345,9 +98419,21 @@ msgstr "Créditos restantes"
 msgid "OAuth2 connection parameters requested successfully!"
 msgstr "Agente %s exitoso"
 
-msgid ""
-"Enter the Checkmk display title for this connection. You can then save and "
-"use the connection."
+#, fuzzy
+msgid "Enter the Checkmk display title for this connection."
+msgstr "Modo de conexión del agente Checkmk"
+
+msgid "You can then"
+msgstr ""
+
+msgid "save"
+msgstr ""
+
+#, fuzzy
+msgid "and use the connection."
+msgstr "Añadir conexión al sitio"
+
+msgid "Saving this connection will create three entries in the password store."
 msgstr ""
 
 #, fuzzy
@@ -98439,7 +98525,7 @@ msgstr "Nombre alternativo para mostrar los servicios"
 
 msgid ""
 "This alias will be used to identify your Relay. It will automatically be "
-"inserted into the command shown in the next step."
+"inserted into the command shown in the next steps."
 msgstr ""
 
 #, fuzzy
@@ -98476,6 +98562,10 @@ msgstr "Recuento de hosts degradados"
 #, fuzzy
 msgid "Go to relay overview"
 msgstr "Resumen del host"
+
+#, fuzzy
+msgid "Relay configuration wizard"
+msgstr "configuración"
 
 msgid ""
 "The Relay is officially supported to run on the following operating systems:"
@@ -98549,16 +98639,15 @@ msgid "Manage in global settings"
 msgstr "Editar la configuración global"
 
 #, fuzzy
-msgid "Agent communication failed during service discovery"
-msgstr "Descubrimiento de servicios pendientes"
+msgid "Already installed the Checkmk agent?"
+msgstr "Instalar siempre Python con el agente"
 
+#, fuzzy
 msgid ""
-"This can have different reasons. The Checkmk agent might not be installed, "
-"or communication may be blocked by firewall or network settings.\n"
-"If this host should be monitored via an agent, check the installation and "
-"connectivity.\n"
-"If not, you can ignore this message."
+"This problem might be caused by a missing agent or the firewall settings."
 msgstr ""
+"Los problemas anteriores pueden deberse a la falta de cachés. Por favor, "
+"vuelva a escanear."
 
 #, fuzzy
 msgid "Already registered the Checkmk agent?"
@@ -98571,12 +98660,8 @@ msgstr ""
 "vuelva a escanear."
 
 #, fuzzy
-msgid "Ignore for this host"
-msgstr "Parámetros para este host"
-
-#, fuzzy
-msgid "Close for now"
-msgstr "Niveles para Inodes"
+msgid "Read Checkmk user guide"
+msgstr "La guía oficial del usuario de Checkmk"
 
 #, fuzzy
 msgid "Close & run service discovery"
@@ -99375,6 +99460,62 @@ msgid ""
 msgstr ""
 
 #, fuzzy
+#~ msgid "Active metrics series"
+#~ msgstr "Sesiones activas"
+
+#, fuzzy
+#~ msgid "Licensed active metric series"
+#~ msgstr "Servicios con licencia: %s"
+
+#, fuzzy
+#~ msgid "Database instance"
+#~ msgstr "Nombre de la base de datos"
+
+#, fuzzy
+#~ msgid "Database instances"
+#~ msgstr "Nombre de la base de datos"
+
+#~ msgid "HELP"
+#~ msgstr "AYUDA"
+
+#, fuzzy
+#~ msgid "Instance Name(SID)"
+#~ msgstr "Nombre de la instancia"
+
+#, fuzzy
+#~ msgid ""
+#~ "Oracle Instance Name of the database instance. May be the same as SID."
+#~ msgstr "El identificador del sensor."
+
+#, fuzzy
+#~ msgid "Oracle Instance Name, may be the same as SID."
+#~ msgstr "El identificador del sensor."
+
+#, fuzzy
+#~ msgid "Oracle Service Name"
+#~ msgstr "Nombre del servicio"
+
+#, fuzzy
+#~ msgid "Oracle Service Name of the database instance."
+#~ msgstr "El identificador del sensor."
+
+#, fuzzy
+#~ msgid "Oracle instance name"
+#~ msgstr "Instancias de Oracle"
+
+#, fuzzy
+#~ msgid "Agent communication failed during service discovery"
+#~ msgstr "Descubrimiento de servicios pendientes"
+
+#, fuzzy
+#~ msgid "Ignore for this host"
+#~ msgstr "Parámetros para este host"
+
+#, fuzzy
+#~ msgid "Close for now"
+#~ msgstr "Niveles para Inodes"
+
+#, fuzzy
 #~ msgid "Select inventory path"
 #~ msgstr "Detectar los padres de la red"
 
@@ -99389,21 +99530,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Set connection title"
 #~ msgstr "Establecer el tiempo de espera de la conexión"
-
-#, fuzzy
-#~ msgid "Already installed the Checkmk agent?"
-#~ msgstr "Instalar siempre Python con el agente"
-
-#, fuzzy
-#~ msgid ""
-#~ "This problem might be caused by a missing agent or the firewall settings."
-#~ msgstr ""
-#~ "Los problemas anteriores pueden deberse a la falta de cachés. Por favor, "
-#~ "vuelva a escanear."
-
-#, fuzzy
-#~ msgid "Read Checkmk user guide"
-#~ msgstr "La guía oficial del usuario de Checkmk"
 
 #, fuzzy
 #~ msgid "Cache per section"

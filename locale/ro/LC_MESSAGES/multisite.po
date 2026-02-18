@@ -2283,6 +2283,12 @@ msgstr ""
 "nu a trecut încă. Puteți seta un timp pentru cât timp este permis ca o "
 "condiție să fie într-o stare de eșec înainte ca verificarea să fie alertată."
 
+msgid ""
+"A TNS alias as defined in the <tt>tnsnames.ora</tt> file. Requires a "
+"properly configured <tt>tnsnames.ora</tt> file accessible via the TNS_ADMIN "
+"directory path."
+msgstr ""
+
 #, fuzzy
 msgid ""
 "A cache age limit on plug-ins and local checks. If set, the output of plug-"
@@ -4052,10 +4058,6 @@ msgstr "Elemente active"
 msgid "Active jobs"
 msgstr "Locuri de muncă active"
 
-#, fuzzy
-msgid "Active metrics series"
-msgstr "Sesiuni active"
-
 msgid "Active modems"
 msgstr "Modemuri active"
 
@@ -4519,7 +4521,7 @@ msgid "Add new credentials"
 msgstr "Utilizați acreditările"
 
 #, fuzzy
-msgid "Add new database instance"
+msgid "Add new database"
 msgstr "Adăugați o instanță la distanță"
 
 msgid "Add new element"
@@ -8355,7 +8357,7 @@ msgid "Automatically create monitoring agents"
 msgstr "Crearea automată a agenților de monitorizare"
 
 #, fuzzy
-msgid "Automatically delete hosts without OpenTelemetry data"
+msgid "Automatically delete hosts with no recent OpenTelemetry data"
 msgstr "Ștergeți automat gazdele fără date piggyback"
 
 msgid "Automatically delete hosts without piggyback data"
@@ -13844,6 +13846,16 @@ msgstr ""
 "compatibilitate, dar vă sfătuim să folosiți opțiunea \"keep\" pentru noile "
 "instalări."
 
+msgid ""
+"Checkmk will regularly report your current license usage. Following each "
+"successful transfer, you will see a confirmation as well as a summary of the "
+"information transferred. As a part of this process, Checkmk will also "
+"automatically fetch new license information from the Checkmk customer portal "
+"if you have extended or renewed your license in the meantime. Offline "
+"verification exists as a fallback for setups without internet access, "
+"requiring manual verification and reporting."
+msgstr ""
+
 #, fuzzy
 msgid "Checkmk with times metrics"
 msgstr "Checkmk cu date de performanță ori"
@@ -18478,6 +18490,10 @@ msgstr "Macros pentru clienți"
 msgid "Custom macros"
 msgstr "Macros pentru clienți"
 
+#, fuzzy
+msgid "Custom metrics"
+msgstr "Clienți"
+
 #, python-format
 msgid "Custom notification table for user %s"
 msgstr "Tabel de notificare personalizat pentru utilizatorul %s"
@@ -19240,14 +19256,6 @@ msgstr "Baza de date pentru MySQL"
 msgid "Database identifier"
 msgstr "Identificatorul bazei de date"
 
-#, fuzzy
-msgid "Database instance"
-msgstr "Numele bazei de date"
-
-#, fuzzy
-msgid "Database instances"
-msgstr "Numele bazei de date"
-
 msgid "Database is being recovered"
 msgstr "Baza de date este în curs de recuperare"
 
@@ -19308,6 +19316,10 @@ msgstr "Numele bazei de date/colecției ('[DB_NAME] [COLLECTION_NAME]')"
 
 msgid "Databases"
 msgstr "Baze de date"
+
+#, fuzzy
+msgid "Databases to monitor"
+msgstr "Instanțe de monitorizat"
 
 msgid "Datadog"
 msgstr "Datadog"
@@ -19649,6 +19661,10 @@ msgid "Default rule pack"
 msgstr "Pachet de reguli implicite"
 
 #, fuzzy
+msgid "Default settings"
+msgstr "Proprietățile tabloului de bord"
+
+#, fuzzy
 msgid "Default start URL"
 msgstr "Stare implicită"
 
@@ -19715,10 +19731,6 @@ msgstr "Fișiere amânate în Spool"
 #, fuzzy
 msgid "Define OAuth parameters"
 msgstr "Parametrii impliciți"
-
-msgid ""
-"Define Oracle database instances to monitor to overwrite default settings."
-msgstr ""
 
 msgid ""
 "Define a direct translation of the possible states of the HAProxy frontend "
@@ -19834,6 +19846,13 @@ msgid ""
 msgstr ""
 "Definiți modelele de includere a parametrilor de configurare a kernelului în "
 "inventar."
+
+msgid ""
+"Define the Oracle databases you want to monitor. Each entry must include an "
+"Oracle database identifier (service name, instance name, SID, or TNS alias). "
+"Authentication and connection options from the default settings are used "
+"automatically, but can be overridden per database if needed."
+msgstr ""
 
 msgid ""
 "Define the host to assign the discovered CloudFront services. You can assign "
@@ -24141,7 +24160,7 @@ msgstr ""
 "Fie dezactivați conexiunile persistente, fie analizați cu atenție numărul "
 "maxim de procese Apache și conexiunile livestatus posibile."
 
-msgid "Either increase the dashlet height or disable the graph legend."
+msgid "Either increase the widget height or disable the graph legend."
 msgstr ""
 
 msgid ""
@@ -29576,9 +29595,6 @@ msgstr "HEAD"
 #, fuzzy
 msgid "HEAD requests"
 msgstr "cereri"
-
-msgid "HELP"
-msgstr "AJUTOR"
 
 msgid "HH:MM:SS"
 msgstr "HH:MM:SS"
@@ -35416,11 +35432,16 @@ msgstr ""
 msgid ""
 "If you plan to monitor Azure resources via Azure Resource Manager, assign "
 "the built-in Reader role to the app at the subscription (or appropriate "
-"resource group) level in Access control (IAM). Additionally, if resources "
-"available through the Graph API will be monitored, add the Microsoft Graph "
-"application permissions \"Directory.Read.All\" and \"User.Read.All\" and "
-"grant admin consent. These resources include \"Users in Entra ID\", \"Entra "
-"Connect Sync\", and \"App Registrations\"."
+"resource group) level in Access control (IAM) and ensure that the required "
+"Azure Resource Providers are registered in the subscription. The exact set "
+"of providers depends on the Azure resource types you intend to monitor and "
+"may include, but is not limited to, \"Microsoft.Compute\", "
+"\"Microsoft.Network\", \"Microsoft.Storage\", \"Microsoft.ResourceHealth\" "
+"and \"Microsoft.Insights\". If resources available through the Microsoft "
+"Graph API will be monitored, add the Microsoft Graph application permissions "
+"\"Directory.Read.All\" and \"User.Read.All\" and grant admin consent. These "
+"resources include \"Users in Entra ID\", \"Entra Connect Sync\", and \"App "
+"Registrations\"."
 msgstr ""
 
 #, python-format
@@ -36000,6 +36021,10 @@ msgstr "În"
 msgid "In / Out"
 msgstr "Intrare / Ieșire"
 
+msgid ""
+"In Checkmk Community, dashboard tokens can only be valid for up to one month."
+msgstr ""
+
 msgid "In Downtime"
 msgstr "În timp de indisponibilitate"
 
@@ -36440,11 +36465,6 @@ msgstr ""
 #, fuzzy
 msgid "In termination"
 msgstr "Pauză"
-
-msgid ""
-"In the Checkmk Community Edition, dashboard tokens can only be valid for up "
-"to one month."
-msgstr ""
 
 msgid ""
 "In the change log of the Checkmk software version the administrator can "
@@ -37200,7 +37220,7 @@ msgid "Instance ID"
 msgstr "ID-ul instanței"
 
 #, fuzzy
-msgid "Instance Name(SID)"
+msgid "Instance Name"
 msgstr "Numele instanței"
 
 #, fuzzy
@@ -40440,7 +40460,7 @@ msgid "Licensed"
 msgstr "Licențiat"
 
 #, fuzzy
-msgid "Licensed active metric series"
+msgid "Licensed custom metrics"
 msgstr "Servicii licențiate"
 
 #, fuzzy
@@ -44281,6 +44301,10 @@ msgstr "Metoda de sondare"
 
 msgid "Metric"
 msgstr "Metric"
+
+#, fuzzy
+msgid "Metric Backend"
+msgstr "Instanțe Oracle"
 
 msgid "Metric Forecast"
 msgstr "Prognoză metrică"
@@ -50679,14 +50703,6 @@ msgid "Oracle IOSTAT write bytes"
 msgstr "ORACLE IOSTAT Bytes"
 
 #, fuzzy
-msgid "Oracle Instance Name of the database instance. May be the same as SID."
-msgstr "Identificatorul senzorului."
-
-#, fuzzy
-msgid "Oracle Instance Name, may be the same as SID."
-msgstr "Identificatorul senzorului."
-
-#, fuzzy
 msgid "Oracle Instant Client options"
 msgstr "Rata de accesare a memoriei cache"
 
@@ -50733,14 +50749,6 @@ msgstr "Statistici de memorie ORACLE SGA"
 #, fuzzy
 msgid "Oracle SID of the remote database"
 msgstr "ORACLE SID al bazei de date la distanță"
-
-#, fuzzy
-msgid "Oracle Service Name"
-msgstr "Denumirea serviciului"
-
-#, fuzzy
-msgid "Oracle Service Name of the database instance."
-msgstr "Identificatorul senzorului."
 
 #, fuzzy
 msgid "Oracle Wait Class (FG lines are downside)"
@@ -51177,10 +51185,6 @@ msgstr "ORACLE %s clasa de așteptare (FG)"
 
 #, fuzzy
 msgid "Oracle instance"
-msgstr "Instanțe Oracle"
-
-#, fuzzy
-msgid "Oracle instance name"
 msgstr "Instanțe Oracle"
 
 msgid "Oracle instances"
@@ -54226,6 +54230,10 @@ msgid ""
 "In particular, avoid backslashes. You can use slashes on both platforms."
 msgstr ""
 
+#, fuzzy
+msgid "Please provide a path with at least one segment"
+msgstr "Vă rugăm să selectați cel puțin un element"
+
 msgid "Please provide a relative Windows path"
 msgstr "Vă rugăm să furnizați o cale relativă Windows"
 
@@ -54721,7 +54729,7 @@ msgid "Podman disk usage"
 msgstr "Utilizarea discului"
 
 #, fuzzy
-msgid "Podman node and containers"
+msgid "Podman hosts and containers (Linux)"
 msgstr "Nodul Docker și containere"
 
 #, fuzzy
@@ -67916,6 +67924,10 @@ msgstr "Dezactivați TLS/SSL"
 msgid "TLS/SSL/Https disabled"
 msgstr "TLS/SSL/Https dezactivat"
 
+#, fuzzy
+msgid "TNS Alias"
+msgstr "Alias TNS %s"
+
 #, python-format
 msgid "TNS Alias %s"
 msgstr "Alias TNS %s"
@@ -69289,6 +69301,27 @@ msgid ""
 "hosts\" to add a network prefix to the hosts from the Cisco Meraki cloud to "
 "avoid conflicting hostnames. You can also use this option along with the "
 "\"Dynamic host management\" to sort the host in location specific folders."
+msgstr ""
+
+msgid ""
+"The Oracle System Identifier (SID) that identifies a specific database "
+"instance on the host. Use SID-based connections for older Oracle "
+"configurations or when connecting to a database that does not use service "
+"names. If both a service name and SID are specified, the service name takes "
+"precedence."
+msgstr ""
+
+msgid ""
+"The Oracle instance name (ORACLE_SID running instance) to connect to. Use "
+"this to target a specific instance when multiple instances serve the same "
+"service name, e.g. in Oracle RAC configurations. If not set, the connection "
+"is made to the service name without specifying a particular instance."
+msgstr ""
+
+msgid ""
+"The Oracle service name used to connect to the database. A service name "
+"typically represents a database and can map to one or more instances in a "
+"RAC environment."
 msgstr ""
 
 msgid ""
@@ -71046,6 +71079,10 @@ msgid ""
 "customization."
 msgstr ""
 
+#, fuzzy, python-format
+msgid "The host '%s' could not be found on any active site."
+msgstr "Gazda nu a putut fi găsită pe niciun site activ."
+
 #, python-format
 msgid "The host '%s' does not exist"
 msgstr "Gazda \"%s\" nu există"
@@ -71061,9 +71098,6 @@ msgstr ""
 #, fuzzy
 msgid "The host address of the ntopng instance."
 msgstr "Adresa hostaddress a instanței ntopng."
-
-msgid "The host could not be found on any active site."
-msgstr "Gazda nu a putut fi găsită pe niciun site activ."
 
 msgid ""
 "The host is (partially) managed by an automatic data source like the dynamic "
@@ -73575,6 +73609,12 @@ msgstr ""
 msgid "The title is used to label this attribute."
 msgstr "Titlul este utilizat pentru a eticheta acest atribut."
 
+#, fuzzy, python-format
+msgid ""
+"The title must be unique. The title '%s' is already used by the OAuth2 "
+"connection with ID %s."
+msgstr "Acest id este deja utilizat de o altă conexiune."
+
 msgid "The title of an exported rule pack cannot be modified."
 msgstr "Titlul unui pachet de reguli exportat nu poate fi modificat."
 
@@ -74377,6 +74417,12 @@ msgid ""
 msgstr ""
 "Aceste servicii nu au fost găsite prin descoperire, dar au fost adăugate "
 "manual printr-o regulă de configurare <i>Servicii forțate</i>."
+
+msgid ""
+"These settings apply to all monitored Oracle databases by default. They "
+"define the authentication, connection, and data collection options used "
+"unless overridden for a specific database in the instance list below."
+msgstr ""
 
 msgid ""
 "These settings control how the <i>initial</i> scheduling of new active "
@@ -79730,6 +79776,18 @@ msgstr ""
 "adevărată"
 
 #, fuzzy
+msgid "Time until alert, if RESIZEINPROGRESS condition is true"
+msgstr ""
+"Timpul până la alertă, în cazul în care condiția REPLICAFAILURE este "
+"adevărată"
+
+#, fuzzy
+msgid "Time until alert, if RESIZEPENDING condition is true"
+msgstr ""
+"Timpul până la alertă, în cazul în care condiția REPLICAFAILURE este "
+"adevărată"
+
+#, fuzzy
 msgid "Time until alert, if latest cronjob job is in pending state"
 msgstr ""
 "Timpul până la alertă, dacă ultima sarcină CronJob este în stare de așteptare"
@@ -79768,6 +79826,10 @@ msgstr "Time warp - arată agregatul BI în această perioadă de timp"
 
 msgid "Time when downtime was created"
 msgstr "Ora la care a fost creat timpul de nefuncționare"
+
+#, fuzzy
+msgid "Time without data before host deletion"
+msgstr "Testați numele de gazdă înainte de activare"
 
 #, fuzzy
 msgid "Time zone"
@@ -86604,6 +86666,10 @@ msgstr "Atributul User-ID"
 
 msgid "User:"
 msgstr "Utilizator:"
+
+#, fuzzy
+msgid "UserId cannot be empty"
+msgstr "Cheia secretă"
 
 msgid "Username"
 msgstr "Nume utilizator"
@@ -95888,9 +95954,8 @@ msgstr "Extindeți"
 msgid "Collapse all"
 msgstr "Alegeți toate"
 
-#, fuzzy
-msgid "of"
-msgstr "off"
+msgid "%{selected} of %{total} selected"
+msgstr ""
 
 #, fuzzy
 msgid "No filter category available"
@@ -96638,6 +96703,10 @@ msgstr "Clonarea graficului personalizat"
 msgid "Only me (private)"
 msgstr ""
 
+#, fuzzy
+msgid "No contact groups found"
+msgstr "Nu sunt alocate grupuri de contact."
+
 # georgem ##############
 #, fuzzy
 msgid "Users of site"
@@ -96734,7 +96803,7 @@ msgid "Navigation and menus are hidden."
 msgstr "Pictogramele barei de navigare"
 
 msgid ""
-"Runtime filtering isn’t available. Set default filter values before sharing."
+"Runtime filtering isn't available. Set default filter values before sharing."
 msgstr ""
 
 #, fuzzy
@@ -96800,6 +96869,12 @@ msgstr "Afișați rezumatul pentru statele care nu sunt %s"
 msgid "Selected state"
 msgstr "Statul selectat"
 
+msgid ""
+"When many hexagons are displayed, they scale to fit into the widget.\n"
+"   Differences between \"Small\" and \"Large\" may not be visible in the "
+"preview."
+msgstr ""
+
 #, fuzzy
 msgid "Show state of"
 msgstr "Arată starea de"
@@ -96811,12 +96886,6 @@ msgstr "Gazde sau site-uri, în funcție de context"
 #, fuzzy
 msgid "Hexagon size"
 msgstr "Dimensiunea maximă"
-
-msgid ""
-"When many hexagons are displayed, they scale to fit into the widget.\n"
-"                 Differences between &quot;Small&quot; and &quot;Large&quot; "
-"may not be visible in the preview."
-msgstr ""
 
 msgid "Small"
 msgstr ""
@@ -97201,6 +97270,10 @@ msgstr "Opțiuni grafice"
 
 msgid "Graph lines (OpenTelemetry)"
 msgstr ""
+
+#, fuzzy
+msgid "of"
+msgstr "off"
 
 msgid "Cannot change rule value for rules managed by custom graph editor."
 msgstr ""
@@ -97841,6 +97914,11 @@ msgid ""
 "register the following Web redirect URI"
 msgstr ""
 
+msgid ""
+"Only valid redirect URIs starting with https:// or http://localhost can be "
+"used. Please check if either of these two options can be applied."
+msgstr ""
+
 #, fuzzy
 msgid "Verifying the authorization..."
 msgstr "Înregistrarea agentului"
@@ -97898,9 +97976,21 @@ msgstr "Credite rămase"
 msgid "OAuth2 connection parameters requested successfully!"
 msgstr "Agent %s a reușit"
 
-msgid ""
-"Enter the Checkmk display title for this connection. You can then save and "
-"use the connection."
+#, fuzzy
+msgid "Enter the Checkmk display title for this connection."
+msgstr "Modul de conectare a agentului Checkmk"
+
+msgid "You can then"
+msgstr ""
+
+msgid "save"
+msgstr ""
+
+#, fuzzy
+msgid "and use the connection."
+msgstr "Adăugați o conexiune de site"
+
+msgid "Saving this connection will create three entries in the password store."
 msgstr ""
 
 #, fuzzy
@@ -97992,7 +98082,7 @@ msgstr "Denumire alternativă de afișare pentru servicii"
 
 msgid ""
 "This alias will be used to identify your Relay. It will automatically be "
-"inserted into the command shown in the next step."
+"inserted into the command shown in the next steps."
 msgstr ""
 
 #, fuzzy
@@ -98029,6 +98119,10 @@ msgstr "Numărul de gazde degradate"
 #, fuzzy
 msgid "Go to relay overview"
 msgstr "Prezentare generală a gazdei"
+
+#, fuzzy
+msgid "Relay configuration wizard"
+msgstr "configurare"
 
 msgid ""
 "The Relay is officially supported to run on the following operating systems:"
@@ -98102,16 +98196,15 @@ msgid "Manage in global settings"
 msgstr "Editarea setării globale"
 
 #, fuzzy
-msgid "Agent communication failed during service discovery"
-msgstr "Descoperirea serviciilor în așteptare"
+msgid "Already installed the Checkmk agent?"
+msgstr "Instalați întotdeauna Python cu agentul"
 
+#, fuzzy
 msgid ""
-"This can have different reasons. The Checkmk agent might not be installed, "
-"or communication may be blocked by firewall or network settings.\n"
-"If this host should be monitored via an agent, check the installation and "
-"connectivity.\n"
-"If not, you can ignore this message."
+"This problem might be caused by a missing agent or the firewall settings."
 msgstr ""
+"Problemele de mai sus pot fi cauzate de lipsa memoriei cache. Vă rugăm să "
+"declanșați o rescanare."
 
 #, fuzzy
 msgid "Already registered the Checkmk agent?"
@@ -98124,12 +98217,8 @@ msgstr ""
 "declanșați o rescanare."
 
 #, fuzzy
-msgid "Ignore for this host"
-msgstr "Parametrii pentru această gazdă"
-
-#, fuzzy
-msgid "Close for now"
-msgstr "Niveluri pentru Inodes"
+msgid "Read Checkmk user guide"
+msgstr "Ghidul oficial al utilizatorului Checkmk"
 
 #, fuzzy
 msgid "Close & run service discovery"
@@ -98934,6 +99023,62 @@ msgid ""
 msgstr ""
 
 #, fuzzy
+#~ msgid "Active metrics series"
+#~ msgstr "Sesiuni active"
+
+#, fuzzy
+#~ msgid "Licensed active metric series"
+#~ msgstr "Servicii licențiate"
+
+#, fuzzy
+#~ msgid "Database instance"
+#~ msgstr "Numele bazei de date"
+
+#, fuzzy
+#~ msgid "Database instances"
+#~ msgstr "Numele bazei de date"
+
+#~ msgid "HELP"
+#~ msgstr "AJUTOR"
+
+#, fuzzy
+#~ msgid "Instance Name(SID)"
+#~ msgstr "Numele instanței"
+
+#, fuzzy
+#~ msgid ""
+#~ "Oracle Instance Name of the database instance. May be the same as SID."
+#~ msgstr "Identificatorul senzorului."
+
+#, fuzzy
+#~ msgid "Oracle Instance Name, may be the same as SID."
+#~ msgstr "Identificatorul senzorului."
+
+#, fuzzy
+#~ msgid "Oracle Service Name"
+#~ msgstr "Denumirea serviciului"
+
+#, fuzzy
+#~ msgid "Oracle Service Name of the database instance."
+#~ msgstr "Identificatorul senzorului."
+
+#, fuzzy
+#~ msgid "Oracle instance name"
+#~ msgstr "Instanțe Oracle"
+
+#, fuzzy
+#~ msgid "Agent communication failed during service discovery"
+#~ msgstr "Descoperirea serviciilor în așteptare"
+
+#, fuzzy
+#~ msgid "Ignore for this host"
+#~ msgstr "Parametrii pentru această gazdă"
+
+#, fuzzy
+#~ msgid "Close for now"
+#~ msgstr "Niveluri pentru Inodes"
+
+#, fuzzy
 #~ msgid "Select inventory path"
 #~ msgstr "Detectarea părinților rețelei"
 
@@ -98948,21 +99093,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Set connection title"
 #~ msgstr "Setați timeout-ul conexiunii"
-
-#, fuzzy
-#~ msgid "Already installed the Checkmk agent?"
-#~ msgstr "Instalați întotdeauna Python cu agentul"
-
-#, fuzzy
-#~ msgid ""
-#~ "This problem might be caused by a missing agent or the firewall settings."
-#~ msgstr ""
-#~ "Problemele de mai sus pot fi cauzate de lipsa memoriei cache. Vă rugăm să "
-#~ "declanșați o rescanare."
-
-#, fuzzy
-#~ msgid "Read Checkmk user guide"
-#~ msgstr "Ghidul oficial al utilizatorului Checkmk"
 
 #, fuzzy
 #~ msgid "Cache per section"
