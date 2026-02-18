@@ -21,7 +21,6 @@ from cmk.gui.breadcrumb import make_simple_page_breadcrumb
 from cmk.gui.config import Config
 from cmk.gui.htmllib.header import make_header
 from cmk.gui.htmllib.html import html
-from cmk.gui.http import request
 from cmk.gui.i18n import _, _l
 from cmk.gui.main_menu import main_menu_registry
 from cmk.gui.nodevis.filters import FilterTopologyMaxNodes, FilterTopologyMeshDepth
@@ -60,7 +59,7 @@ def register(
 class AjaxFetchAggregationData(AjaxPage):
     @override
     def page(self, ctx: PageContext) -> PageResult:
-        aggregations_var = request.get_str_input_mandatory("aggregations", "[]")
+        aggregations_var = ctx.request.get_str_input_mandatory("aggregations", "[]")
         filter_names = json.loads(aggregations_var)
 
         bi_aggregation_filter = BIAggregationFilter([], [], [], filter_names, [], [])
@@ -281,7 +280,7 @@ class AjaxSaveBIAggregationLayout(AjaxPage):
     @override
     def page(self, ctx: PageContext) -> PageResult:
         check_csrf_token()
-        layout_var = request.get_str_input_mandatory("layout", "{}")
+        layout_var = ctx.request.get_str_input_mandatory("layout", "{}")
         layout_config = json.loads(layout_var)
         ctx.config.bi_layouts["aggregations"].update(layout_config)
         BILayoutManagement.save_layouts()
@@ -292,7 +291,7 @@ class AjaxDeleteBIAggregationLayout(AjaxPage):
     @override
     def page(self, ctx: PageContext) -> PageResult:
         check_csrf_token()
-        for_aggregation = request.var("aggregation_name")
+        for_aggregation = ctx.request.var("aggregation_name")
         ctx.config.bi_layouts["aggregations"].pop(for_aggregation)
         BILayoutManagement.save_layouts()
         return {}
@@ -301,13 +300,13 @@ class AjaxDeleteBIAggregationLayout(AjaxPage):
 class AjaxLoadBIAggregationLayout(AjaxPage):
     @override
     def page(self, ctx: PageContext) -> PageResult:
-        aggregation_name = request.var("aggregation_name")
+        aggregation_name = ctx.request.var("aggregation_name")
         return BILayoutManagement.load_bi_aggregation_layout(aggregation_name)
 
 
 def _bi_map(ctx: PageContext) -> None:
-    aggr_name = request.var("aggr_name")
-    layout_id = request.var("layout_id")
+    aggr_name = ctx.request.var("aggr_name")
+    layout_id = ctx.request.var("layout_id")
     title = _("BI visualization")
     breadcrumb = make_simple_page_breadcrumb(main_menu_registry.menu_monitoring(), title)
     page_menu = PageMenu(breadcrumb=breadcrumb)
