@@ -14,7 +14,7 @@ from cmk.gui.display_options import display_options
 from cmk.gui.exceptions import MKUserError
 from cmk.gui.htmllib.generator import HTMLWriter
 from cmk.gui.htmllib.html import html
-from cmk.gui.http import request
+from cmk.gui.http import Request, request
 from cmk.gui.i18n import _
 from cmk.gui.log import logger
 from cmk.gui.logged_in import user
@@ -238,11 +238,11 @@ def page_login(config: Config) -> None:
 class PageMobileIndex(Page):
     @override
     def page(self, ctx: PageContext) -> PageResult:
-        _page_index(ctx.config)
+        _page_index(ctx.request, ctx.config)
         return None
 
 
-def _page_index(config: Config) -> None:
+def _page_index(request: Request, config: Config) -> None:
     user_permissions = UserPermissions.from_config(config, permission_registry)
     title = _("Checkmk Mobile")
     mobile_html_head(title)
@@ -308,14 +308,14 @@ def _page_index(config: Config) -> None:
 class PageMobileView(Page):
     @override
     def page(self, ctx: PageContext) -> PageResult:
-        _page_view(ctx.config, debug=ctx.config.debug)
+        _page_view(ctx.request, ctx.config, debug=ctx.config.debug)
         return None
 
 
-def _page_view(config: Config, *, debug: bool) -> None:
+def _page_view(request: Request, config: Config, *, debug: bool) -> None:
     view_name = request.var("view_name")
     if not view_name:
-        return _page_index(config)
+        return _page_index(request, config)
 
     view_spec = get_permitted_views().get(view_name)
     if not view_spec:
