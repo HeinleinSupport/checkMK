@@ -266,23 +266,15 @@ class ABCTopologyPage(Page):
         user.need_permission("general.parent_child_topology")
         reqvars = _RequestVars.from_request(ctx.request)
 
+        self.make_ui_components(UserPermissions.from_config(ctx.config, permission_registry))
         self.show_topology(
-            UserPermissions.from_config(ctx.config, permission_registry),
             site_id=reqvars.site_id,
             layout=reqvars.layout,
             query_hash=reqvars.query_hash,
             topology_frontend_configuration=reqvars.topology_frontend_configuration,
         )
 
-    def show_topology(
-        self,
-        user_permissions: UserPermissions,
-        *,
-        site_id: SiteId | None,
-        layout: str,
-        query_hash: str | None,
-        topology_frontend_configuration: str | None,
-    ) -> None:
+    def make_ui_components(self, user_permissions: UserPermissions) -> None:
         visual_spec = self.visual_spec()
         breadcrumb = make_topic_breadcrumb(
             main_menu_registry.menu_monitoring(),
@@ -292,10 +284,10 @@ class ABCTopologyPage(Page):
         page_menu = PageMenu(breadcrumb=breadcrumb)
         self._extend_display_dropdown(page_menu, visual_spec["name"])
         make_header(html, str(visual_spec["title"]), breadcrumb, page_menu)
-        self.show_topology_content(site_id, layout, query_hash, topology_frontend_configuration)
 
-    def show_topology_content(
+    def show_topology(
         self,
+        *,
         site_id: SiteId | None,
         layout: str,
         query_hash: str | None,
