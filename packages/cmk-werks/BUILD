@@ -52,7 +52,7 @@ py_library(
     data = ["cmk/werks/py.typed"],
     imports = ["."],
     visibility = [
-        "//cmk:__subpackages__",
+        "//cmk:__pkg__",
         "//omd:__subpackages__",
     ],
     deps = [

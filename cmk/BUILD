@@ -7,6 +7,7 @@ load("//bazel/rules:package_wheel.bzl", "package_wheel")
 
 exports_files([
     "requirements.in",
+    "utils/password_store/cli.py",
     "gui/openapi/spec/spec_generator/generate_api_spec.py",
 ])
 
@@ -170,8 +171,8 @@ filegroup(
     name = "miscellaneous",
     srcs = [
         "gui/wsgi/applications/index.wsgi",
-        "//cmk/utils:werks/announce/templates/announce.md.jinja2",
-        "//cmk/utils:werks/announce/templates/announce.txt.jinja2",
+        "utils/werks/announce/templates/announce.md.jinja2",
+        "utils/werks/announce/templates/announce.txt.jinja2",
     ],
 )
 
@@ -249,14 +250,12 @@ py_library(
         exclude = [
             "**/community/**",
             "**/nonfree/**",
-            "utils/**/*.py",
         ],
     ),
     data = ["gui/wsgi/applications/index.wsgi"],
     imports = [".."],
     visibility = ["//:__subpackages__"],
     deps = [
-        "//cmk/utils:cmk_utils",
         "@rrdtool_native//:rrdtool_python_lib",
         # `cmk.special_agent.agent_jolokia` imports `mk_jolokia`
         "//agents/plugins:mk_jolokia",
@@ -287,7 +286,6 @@ py_library(
             "**/nonfree/**/cloud/**",
             "**/nonfree/**/ultimate/**",
             "**/nonfree/**/ultimatemt/**",
-            "utils/**",
         ],
     ),
     imports = [".."],
@@ -295,7 +293,6 @@ py_library(
     deps = [
         ":cmk_cmk",
         ":cmk_community",
-        "//cmk/utils:cmk_utils_pro",
     ] + select({
         "@//:gpl+nonfree_repo": [
             "//non-free/packages/cmc-protocols:py_config_proto",
@@ -316,7 +313,6 @@ py_library(
     srcs = glob(
         include = ["**/nonfree/**/ultimate/**/*.py"],
         allow_empty = True,
-        exclude = ["utils/**"],
     ),
     imports = [".."],
     visibility = ["//:__subpackages__"],
@@ -324,7 +320,6 @@ py_library(
         ":cmk_cmk",
         ":cmk_community",
         ":cmk_pro",
-        "//cmk/utils:cmk_utils_ultimate",
     ] + select({
         "@//:gpl+nonfree_repo": [
             "//non-free/packages/cmc-protocols:py_config_proto",
@@ -340,7 +335,6 @@ py_library(
     srcs = glob(
         include = ["**/nonfree/**/cloud/**/*.py"],
         allow_empty = True,
-        exclude = ["utils/**"],
     ),
     imports = [".."],
     visibility = ["//:__subpackages__"],
@@ -349,7 +343,6 @@ py_library(
         ":cmk_community",
         ":cmk_pro",
         ":cmk_ultimate",
-        "//cmk/utils:cmk_utils_cloud",
     ] + select({
         "@//:gpl+nonfree_repo": [
             "//non-free/packages/cmc-protocols:py_config_proto",
@@ -370,7 +363,6 @@ py_library(
     srcs = glob(
         include = ["**/nonfree/**/ultimatemt/**/*.py"],
         allow_empty = True,
-        exclude = ["utils/**"],
     ),
     imports = [".."],
     visibility = ["//:__subpackages__"],
@@ -379,7 +371,6 @@ py_library(
         ":cmk_community",
         ":cmk_pro",
         ":cmk_ultimate",
-        "//cmk/utils:cmk_utils_ultimatemt",
     ] + select({
         "@//:gpl+nonfree_repo": [
             "//non-free/packages/cmc-protocols:py_config_proto",
@@ -575,7 +566,7 @@ sh_library(
             "gui/nonfree/pro/dcd/.f12",
             "nonfree/pro/dcd/.f12",
             "nonfree/pro/robotmk/.f12",
-            "//cmk/utils:nonfree/pro/dcd/.f12",
+            "utils/nonfree/pro/dcd/.f12",
         ],
         "@//:gpl_repo": [],
     }),
