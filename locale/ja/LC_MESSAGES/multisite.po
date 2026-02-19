@@ -3436,6 +3436,10 @@ msgstr "アイコンのみのセットアップメニューへのアクセス(�
 msgid "Access token"
 msgstr "アクセストークン"
 
+#, fuzzy
+msgid "Access token is required"
+msgstr "ホスト作成に成功しました"
+
 msgid "Access via TCP"
 msgstr "TCP経由のアクセス"
 
@@ -15939,8 +15943,11 @@ msgid "Core files"
 msgstr "コアファイル"
 
 #, python-format
-msgid "Core files (config, state and history) from var/check_mk/core.%s"
-msgstr "var/check_mk/core.%s にあるコア・ファイル（設定、状態、履歴）"
+msgid ""
+"Core files (config, state and history) from var/check_mk/core.%s<br> When "
+"this component is selected, a cmcdump will be included in the dump, that is "
+"also considered highly sensitive."
+msgstr ""
 
 #, python-format
 msgid "Core files (config, state and history) from var/check_mk/core: %s"
@@ -32134,13 +32141,6 @@ msgstr ""
 "的なサービス検出</a>に置き換えられました。これにより、ホストごとの構成や、次"
 "のような追加機能が可能になります。自動再検出。そのルールセットのルールは、こ"
 "こで行われたグローバル設定を上書きします。"
-
-msgid ""
-"If enabled, the agent on the monitored host will be automatically updated "
-"whenever a new version is available on the monitoring server. This will only "
-"work if the agent updater is deployed in the agent package. To do so, "
-"please, configure <i>Automatic agent updates</i>."
-msgstr ""
 
 msgid ""
 "If enabled, the instance name will be queried from the database instead of "
@@ -53436,6 +53436,10 @@ msgstr "サービスステータス"
 msgid "Refresh token"
 msgstr "リフレッシュ"
 
+#, fuzzy
+msgid "Refresh token is required"
+msgstr "リフレッシュ"
+
 #, python-format
 msgid "Refreshed check configuration of host '%s'"
 msgstr "ホスト '%s' の確認設定を更新しました"
@@ -53526,6 +53530,10 @@ msgstr "リージョン名"
 msgid "Regions to monitor"
 msgstr "監視対象領域"
 
+#, fuzzy
+msgid "Register agent updater, if automatic updates are enabled"
+msgstr "自動エージェント更新のアクティブ化"
+
 msgid "Register all hosts & download all monitoring agents"
 msgstr "すべてのホストの登録とすべての監視エージェントのダウンロード"
 
@@ -53567,10 +53575,6 @@ msgstr "新規ホストの登録"
 
 msgid "Register authenticator app"
 msgstr "認証アプリの登録"
-
-#, fuzzy
-msgid "Register for automatic agent updates"
-msgstr "自動エージェント更新のアクティブ化"
 
 msgid "Register host & download monitoring agents of your hosts"
 msgstr "ホストの登録と監視エージェントのダウンロード"
@@ -83621,6 +83625,16 @@ msgstr ""
 "こともできます。"
 
 msgid ""
+"When selected, and the <i>Automatic agent updates</i> rule is enabled for "
+"the agent package installed on the host, the necessary agent updater "
+"registration will be performed automatically after succeeded agent "
+"controller registration and automatic host creation.<br><b>Note</b>: If no "
+"agent updater is found on the host, the additional registration will be "
+"skipped without an error (but with a warning in  the log), and automatic "
+"updates will not be performed."
+msgstr ""
+
+msgid ""
 "When selecting <i>The found hosts' children</i>, the conditions (tags and "
 "host name) are used to match a host, but you will get one node created for "
 "each child of the matched host. The place holder <tt>$HOSTNAME$</tt> "
@@ -86414,6 +86428,10 @@ msgstr "予測モデルを変更する権限がありません。"
 
 msgid "You do not have write permission for this folder."
 msgstr "このフォルダへの書き込み権限がありません。"
+
+#, fuzzy, python-format
+msgid "You don't have permission to edit this %s."
+msgstr "この %sを編集する権限がありません"
 
 msgid "You don't have the right to rename hosts"
 msgstr "ホストの名前を変更する権利がありません"
@@ -92985,6 +93003,10 @@ msgid ""
 "You can still access it later via Help > Learning Checkmk > Welcome page"
 msgstr ""
 
+#, python-format
+#~ msgid "Core files (config, state and history) from var/check_mk/core.%s"
+#~ msgstr "var/check_mk/core.%s にあるコア・ファイル（設定、状態、履歴）"
+
 #~ msgid "Active metrics series"
 #~ msgstr "アクティブメトリックセッション"
 
@@ -93165,10 +93187,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Application successfully authorized!"
 #~ msgstr "通知ルールが正常に修正されました！"
-
-#, fuzzy
-#~ msgid "Access token successfully requested!"
-#~ msgstr "ホスト作成に成功しました"
 
 #, fuzzy
 #~ msgid "Search operators"

@@ -3596,6 +3596,10 @@ msgstr ""
 msgid "Access token"
 msgstr "Token de acces la API"
 
+#, fuzzy
+msgid "Access token is required"
+msgstr "Gazdă creată cu succes"
+
 msgid "Access via TCP"
 msgstr "Acces prin TCP"
 
@@ -16934,8 +16938,11 @@ msgid "Core files"
 msgstr "Fișiere de bază"
 
 #, python-format
-msgid "Core files (config, state and history) from var/check_mk/core.%s"
-msgstr "Fișiere de bază (config, state și history) din var/check_mk/core.%s"
+msgid ""
+"Core files (config, state and history) from var/check_mk/core.%s<br> When "
+"this component is selected, a cmcdump will be included in the dump, that is "
+"also considered highly sensitive."
+msgstr ""
 
 #, python-format
 msgid "Core files (config, state and history) from var/check_mk/core: %s"
@@ -34261,13 +34268,6 @@ msgstr ""
 "configurare per gazdă și caracteristici suplimentare, cum ar fi "
 "redescoperirea automată. Regulile din acel set de reguli vor înlocui "
 "setările globale efectuate aici."
-
-msgid ""
-"If enabled, the agent on the monitored host will be automatically updated "
-"whenever a new version is available on the monitoring server. This will only "
-"work if the agent updater is deployed in the agent package. To do so, "
-"please, configure <i>Automatic agent updates</i>."
-msgstr ""
 
 msgid ""
 "If enabled, the instance name will be queried from the database instead of "
@@ -56974,6 +56974,10 @@ msgstr "Starea serviciului"
 msgid "Refresh token"
 msgstr "Reîmprospătare"
 
+#, fuzzy
+msgid "Refresh token is required"
+msgstr "Reîmprospătare"
+
 #, python-format
 msgid "Refreshed check configuration of host '%s'"
 msgstr "A reactualizat configurația de verificare a gazdei '%s'"
@@ -57068,6 +57072,10 @@ msgstr "Numele regiunii"
 msgid "Regions to monitor"
 msgstr "Regiuni de monitorizat"
 
+#, fuzzy
+msgid "Register agent updater, if automatic updates are enabled"
+msgstr "Activarea actualizărilor automate ale agentului"
+
 msgid "Register all hosts & download all monitoring agents"
 msgstr "Înregistrați toate gazdele & descărcați toți agenții de monitorizare"
 
@@ -57107,10 +57115,6 @@ msgstr "Înregistrați orice gazdă nouă"
 
 msgid "Register authenticator app"
 msgstr "Înregistrați aplicația Authenticator App"
-
-#, fuzzy
-msgid "Register for automatic agent updates"
-msgstr "Activarea actualizărilor automate ale agentului"
 
 msgid "Register host & download monitoring agents of your hosts"
 msgstr ""
@@ -89252,6 +89256,16 @@ msgstr ""
 "pentru care să se afișeze evenimentele."
 
 msgid ""
+"When selected, and the <i>Automatic agent updates</i> rule is enabled for "
+"the agent package installed on the host, the necessary agent updater "
+"registration will be performed automatically after succeeded agent "
+"controller registration and automatic host creation.<br><b>Note</b>: If no "
+"agent updater is found on the host, the additional registration will be "
+"skipped without an error (but with a warning in  the log), and automatic "
+"updates will not be performed."
+msgstr ""
+
+msgid ""
 "When selecting <i>The found hosts' children</i>, the conditions (tags and "
 "host name) are used to match a host, but you will get one node created for "
 "each child of the matched host. The place holder <tt>$HOSTNAME$</tt> "
@@ -92213,6 +92227,10 @@ msgstr "Nu aveți permisiunea de a modifica modelul de prognoză."
 
 #, fuzzy
 msgid "You do not have write permission for this folder."
+msgstr "Nu aveți permisiunile necesare pentru a edita acest %s"
+
+#, fuzzy, python-format
+msgid "You don't have permission to edit this %s."
 msgstr "Nu aveți permisiunile necesare pentru a edita acest %s"
 
 msgid "You don't have the right to rename hosts"
@@ -99022,6 +99040,10 @@ msgid ""
 "You can still access it later via Help > Learning Checkmk > Welcome page"
 msgstr ""
 
+#, python-format
+#~ msgid "Core files (config, state and history) from var/check_mk/core.%s"
+#~ msgstr "Fișiere de bază (config, state și history) din var/check_mk/core.%s"
+
 #, fuzzy
 #~ msgid "Active metrics series"
 #~ msgstr "Sesiuni active"
@@ -99197,10 +99219,6 @@ msgstr ""
 
 #, fuzzy
 #~ msgid "Application successfully authorized!"
-#~ msgstr "Gazdă creată cu succes"
-
-#, fuzzy
-#~ msgid "Access token successfully requested!"
 #~ msgstr "Gazdă creată cu succes"
 
 #, fuzzy

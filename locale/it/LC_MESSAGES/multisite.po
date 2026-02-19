@@ -3554,6 +3554,10 @@ msgstr "Accesso al menu di setup con solo icone (risparmia spazio)"
 msgid "Access token"
 msgstr "Token di accesso API"
 
+#, fuzzy
+msgid "Access token is required"
+msgstr "Host creato con successo"
+
 msgid "Access via TCP"
 msgstr "Accesso via TCP"
 
@@ -16728,9 +16732,11 @@ msgid "Core files"
 msgstr "File di base"
 
 #, python-format
-msgid "Core files (config, state and history) from var/check_mk/core.%s"
+msgid ""
+"Core files (config, state and history) from var/check_mk/core.%s<br> When "
+"this component is selected, a cmcdump will be included in the dump, that is "
+"also considered highly sensitive."
 msgstr ""
-"File del nucleo (configurazione, stato e cronologia) da var/check_mk/core.%s"
 
 #, python-format
 msgid "Core files (config, state and history) from var/check_mk/core: %s"
@@ -33960,13 +33966,6 @@ msgstr ""
 "Discovery</a>, che consente una configurazione per host e funzioni "
 "aggiuntive come la riscoperta automatica. Le regole di questo set di regole "
 "sovrascrivono le impostazioni globali effettuate qui."
-
-msgid ""
-"If enabled, the agent on the monitored host will be automatically updated "
-"whenever a new version is available on the monitoring server. This will only "
-"work if the agent updater is deployed in the agent package. To do so, "
-"please, configure <i>Automatic agent updates</i>."
-msgstr ""
 
 msgid ""
 "If enabled, the instance name will be queried from the database instead of "
@@ -56582,6 +56581,10 @@ msgstr "Stato del servizio"
 msgid "Refresh token"
 msgstr "Aggiornare"
 
+#, fuzzy
+msgid "Refresh token is required"
+msgstr "Aggiornare"
+
 #, python-format
 msgid "Refreshed check configuration of host '%s'"
 msgstr "Aggiornata la configurazione di controllo dell'host '%s'"
@@ -56676,6 +56679,10 @@ msgstr "Nome della regione"
 msgid "Regions to monitor"
 msgstr "Regioni da monitorare"
 
+#, fuzzy
+msgid "Register agent updater, if automatic updates are enabled"
+msgstr "Attivazione degli aggiornamenti automatici dell'agente"
+
 msgid "Register all hosts & download all monitoring agents"
 msgstr "Registrare tutti gli host & scaricare tutti gli agenti di monitoraggio"
 
@@ -56714,10 +56721,6 @@ msgstr "Registrazione di un nuovo host"
 
 msgid "Register authenticator app"
 msgstr "Registrare l'app Authenticator"
-
-#, fuzzy
-msgid "Register for automatic agent updates"
-msgstr "Attivazione degli aggiornamenti automatici dell'agente"
 
 msgid "Register host & download monitoring agents of your hosts"
 msgstr "Registrare Host & scaricare gli agenti di monitoraggio dei propri host"
@@ -88683,6 +88686,16 @@ msgstr ""
 "per il quale mostrare gli eventi."
 
 msgid ""
+"When selected, and the <i>Automatic agent updates</i> rule is enabled for "
+"the agent package installed on the host, the necessary agent updater "
+"registration will be performed automatically after succeeded agent "
+"controller registration and automatic host creation.<br><b>Note</b>: If no "
+"agent updater is found on the host, the additional registration will be "
+"skipped without an error (but with a warning in  the log), and automatic "
+"updates will not be performed."
+msgstr ""
+
+msgid ""
 "When selecting <i>The found hosts' children</i>, the conditions (tags and "
 "host name) are used to match a host, but you will get one node created for "
 "each child of the matched host. The place holder <tt>$HOSTNAME$</tt> "
@@ -91642,6 +91655,10 @@ msgstr "Non hai i permessi per modificare il modello di previsione."
 
 #, fuzzy
 msgid "You do not have write permission for this folder."
+msgstr "Non hai i permessi per modificare questo %s"
+
+#, fuzzy, python-format
+msgid "You don't have permission to edit this %s."
 msgstr "Non hai i permessi per modificare questo %s"
 
 msgid "You don't have the right to rename hosts"
@@ -98414,6 +98431,12 @@ msgid ""
 "You can still access it later via Help > Learning Checkmk > Welcome page"
 msgstr ""
 
+#, python-format
+#~ msgid "Core files (config, state and history) from var/check_mk/core.%s"
+#~ msgstr ""
+#~ "File del nucleo (configurazione, stato e cronologia) da var/check_mk/core."
+#~ "%s"
+
 #, fuzzy
 #~ msgid "Active metrics series"
 #~ msgstr "Sessioni attive"
@@ -98589,10 +98612,6 @@ msgstr ""
 
 #, fuzzy
 #~ msgid "Application successfully authorized!"
-#~ msgstr "Host creato con successo"
-
-#, fuzzy
-#~ msgid "Access token successfully requested!"
 #~ msgstr "Host creato con successo"
 
 #, fuzzy

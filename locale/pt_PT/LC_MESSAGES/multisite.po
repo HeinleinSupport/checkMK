@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Checkmk user interface translation 0.1\n"
-"Report-Msgid-Bugs-To: martin.hirschvogel@checkmk.com\n"
+"Report-Msgid-Bugs-To: feedback@checkmk.com\n"
 "POT-Creation-Date: 2011-05-13 09:42+0200\n"
 "PO-Revision-Date: 2026-02-18 10:24+0000\n"
 "Language-Team: Portuguese (Portugal) <https://translate.checkmk.com/projects/"
@@ -3575,6 +3575,10 @@ msgstr "Acesso ao menu de configuração apenas com ícones (poupa espaço)"
 #, fuzzy
 msgid "Access token"
 msgstr "Token de Acesso API"
+
+#, fuzzy
+msgid "Access token is required"
+msgstr "Anfitrião criado com sucesso"
 
 msgid "Access via TCP"
 msgstr "Acesso via TCP"
@@ -16898,10 +16902,11 @@ msgid "Core files"
 msgstr "Ficheiros principais"
 
 #, python-format
-msgid "Core files (config, state and history) from var/check_mk/core.%s"
+msgid ""
+"Core files (config, state and history) from var/check_mk/core.%s<br> When "
+"this component is selected, a cmcdump will be included in the dump, that is "
+"also considered highly sensitive."
 msgstr ""
-"Ficheiros principais (configuração, estado e histórico) de var/check_mk/core."
-"%s"
 
 #, python-format
 msgid "Core files (config, state and history) from var/check_mk/core: %s"
@@ -34170,13 +34175,6 @@ msgstr ""
 "serviços</a>, que permite uma configuração por host e recursos adicionais, "
 "como a redescoberta automática. As regras desse conjunto de regras "
 "substituirão as configurações globais feitas aqui."
-
-msgid ""
-"If enabled, the agent on the monitored host will be automatically updated "
-"whenever a new version is available on the monitoring server. This will only "
-"work if the agent updater is deployed in the agent package. To do so, "
-"please, configure <i>Automatic agent updates</i>."
-msgstr ""
 
 msgid ""
 "If enabled, the instance name will be queried from the database instead of "
@@ -56815,6 +56813,10 @@ msgstr "Status do serviço"
 msgid "Refresh token"
 msgstr "Actualizar"
 
+#, fuzzy
+msgid "Refresh token is required"
+msgstr "Actualizar"
+
 #, python-format
 msgid "Refreshed check configuration of host '%s'"
 msgstr "Configuração de verificação renovada de \"%s\" do host"
@@ -56912,6 +56914,10 @@ msgstr "Nome da região"
 msgid "Regions to monitor"
 msgstr "Regiões a monitorizar"
 
+#, fuzzy
+msgid "Register agent updater, if automatic updates are enabled"
+msgstr "Ativação de atualizações automáticas de agentes"
+
 msgid "Register all hosts & download all monitoring agents"
 msgstr ""
 "Registar todos os anfitriões & descarregar todos os agentes de monitorização"
@@ -56952,10 +56958,6 @@ msgstr "Registar qualquer novo anfitrião"
 #, fuzzy
 msgid "Register authenticator app"
 msgstr "Registar a aplicação Authenticator"
-
-#, fuzzy
-msgid "Register for automatic agent updates"
-msgstr "Ativação de atualizações automáticas de agentes"
 
 #, fuzzy
 msgid "Register host & download monitoring agents of your hosts"
@@ -88911,6 +88913,16 @@ msgstr ""
 "para o qual mostrar os eventos."
 
 msgid ""
+"When selected, and the <i>Automatic agent updates</i> rule is enabled for "
+"the agent package installed on the host, the necessary agent updater "
+"registration will be performed automatically after succeeded agent "
+"controller registration and automatic host creation.<br><b>Note</b>: If no "
+"agent updater is found on the host, the additional registration will be "
+"skipped without an error (but with a warning in  the log), and automatic "
+"updates will not be performed."
+msgstr ""
+
+msgid ""
 "When selecting <i>The found hosts' children</i>, the conditions (tags and "
 "host name) are used to match a host, but you will get one node created for "
 "each child of the matched host. The place holder <tt>$HOSTNAME$</tt> "
@@ -91851,6 +91863,10 @@ msgstr "Você não tem as permissões para modificar o modelo de previsão."
 msgid "You do not have write permission for this folder."
 msgstr "Você não tem as permissões para editar esta %s"
 
+#, fuzzy, python-format
+msgid "You don't have permission to edit this %s."
+msgstr "Você não tem as permissões para editar esta %s"
+
 msgid "You don't have the right to rename hosts"
 msgstr "Você não tem o direito de renomear os anfitriões"
 
@@ -93098,7 +93114,6 @@ msgstr "contando"
 msgid "cp437"
 msgstr "cp437"
 
-#, fuzzy
 msgid "crash report"
 msgid_plural "crash reports"
 msgstr[0] ""
@@ -93617,7 +93632,6 @@ msgstr "os anfitriões estão de pé e não têm problemas de serviço"
 msgid "hosts in total"
 msgstr "anfitriões no total"
 
-#, fuzzy
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] ""
@@ -98617,6 +98631,12 @@ msgid ""
 "You can still access it later via Help > Learning Checkmk > Welcome page"
 msgstr ""
 
+#, python-format
+#~ msgid "Core files (config, state and history) from var/check_mk/core.%s"
+#~ msgstr ""
+#~ "Ficheiros principais (configuração, estado e histórico) de var/check_mk/"
+#~ "core.%s"
+
 #, fuzzy
 #~ msgid "Active metrics series"
 #~ msgstr "Sessões Ativas"
@@ -98798,10 +98818,6 @@ msgstr ""
 
 #, fuzzy
 #~ msgid "Application successfully authorized!"
-#~ msgstr "Anfitrião criado com sucesso"
-
-#, fuzzy
-#~ msgid "Access token successfully requested!"
 #~ msgstr "Anfitrião criado com sucesso"
 
 #, fuzzy

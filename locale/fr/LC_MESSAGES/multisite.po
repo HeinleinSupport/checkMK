@@ -3607,6 +3607,10 @@ msgstr ""
 msgid "Access token"
 msgstr "Token d'accès à l'API"
 
+#, fuzzy
+msgid "Access token is required"
+msgstr "Hôte créé avec succès"
+
 msgid "Access via TCP"
 msgstr "Accès via TCP"
 
@@ -17004,10 +17008,11 @@ msgid "Core files"
 msgstr "Dossiers de base"
 
 #, python-format
-msgid "Core files (config, state and history) from var/check_mk/core.%s"
+msgid ""
+"Core files (config, state and history) from var/check_mk/core.%s<br> When "
+"this component is selected, a cmcdump will be included in the dump, that is "
+"also considered highly sensitive."
 msgstr ""
-"Fichiers de base (configuration, état et historique) provenant de var/"
-"check_mk/core.%s"
 
 #, python-format
 msgid "Core files (config, state and history) from var/check_mk/core: %s"
@@ -34425,13 +34430,6 @@ msgstr ""
 "configuration par hôte et des fonctionnalités supplémentaires telles que la "
 "redécouverte automatique. Les règles de ce jeu de règles remplaceront les "
 "paramètres globaux définis ici."
-
-msgid ""
-"If enabled, the agent on the monitored host will be automatically updated "
-"whenever a new version is available on the monitoring server. This will only "
-"work if the agent updater is deployed in the agent package. To do so, "
-"please, configure <i>Automatic agent updates</i>."
-msgstr ""
 
 msgid ""
 "If enabled, the instance name will be queried from the database instead of "
@@ -57271,6 +57269,10 @@ msgstr "État des services"
 msgid "Refresh token"
 msgstr "Rafraîchir"
 
+#, fuzzy
+msgid "Refresh token is required"
+msgstr "Rafraîchir"
+
 #, python-format
 msgid "Refreshed check configuration of host '%s'"
 msgstr "Rafraîchissement de la configuration de contrôle de l'hôte '%s'"
@@ -57368,6 +57370,10 @@ msgstr "Nom de la région"
 msgid "Regions to monitor"
 msgstr "Régions à surveiller"
 
+#, fuzzy
+msgid "Register agent updater, if automatic updates are enabled"
+msgstr "Activation des mises à jour automatiques des agents"
+
 msgid "Register all hosts & download all monitoring agents"
 msgstr ""
 "Enregistrer tous les hôtes & ; télécharger tous les agents de surveillance"
@@ -57408,10 +57414,6 @@ msgstr "Enregistrer un nouvel hôte"
 #, fuzzy
 msgid "Register authenticator app"
 msgstr "Authentification du système"
-
-#, fuzzy
-msgid "Register for automatic agent updates"
-msgstr "Activation des mises à jour automatiques des agents"
 
 #, fuzzy
 msgid "Register host & download monitoring agents of your hosts"
@@ -89751,6 +89753,16 @@ msgstr ""
 "afficher les événements."
 
 msgid ""
+"When selected, and the <i>Automatic agent updates</i> rule is enabled for "
+"the agent package installed on the host, the necessary agent updater "
+"registration will be performed automatically after succeeded agent "
+"controller registration and automatic host creation.<br><b>Note</b>: If no "
+"agent updater is found on the host, the additional registration will be "
+"skipped without an error (but with a warning in  the log), and automatic "
+"updates will not be performed."
+msgstr ""
+
+msgid ""
 "When selecting <i>The found hosts' children</i>, the conditions (tags and "
 "host name) are used to match a host, but you will get one node created for "
 "each child of the matched host. The place holder <tt>$HOSTNAME$</tt> "
@@ -92773,6 +92785,10 @@ msgstr ""
 
 #, fuzzy
 msgid "You do not have write permission for this folder."
+msgstr "Vous n'avez pas les autorisations nécessaires pour modifier ce %s"
+
+#, fuzzy, python-format
+msgid "You don't have permission to edit this %s."
 msgstr "Vous n'avez pas les autorisations nécessaires pour modifier ce %s"
 
 msgid "You don't have the right to rename hosts"
@@ -99559,6 +99575,12 @@ msgid ""
 "You can still access it later via Help > Learning Checkmk > Welcome page"
 msgstr ""
 
+#, python-format
+#~ msgid "Core files (config, state and history) from var/check_mk/core.%s"
+#~ msgstr ""
+#~ "Fichiers de base (configuration, état et historique) provenant de var/"
+#~ "check_mk/core.%s"
+
 #, fuzzy
 #~ msgid "Active metrics series"
 #~ msgstr "Sessions actives"
@@ -99737,10 +99759,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Application successfully authorized!"
 #~ msgstr "Règle de notification modifiée avec succès !"
-
-#, fuzzy
-#~ msgid "Access token successfully requested!"
-#~ msgstr "Hôte créé avec succès"
 
 #, fuzzy
 #~ msgid "Search operators"
