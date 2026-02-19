@@ -10,7 +10,7 @@ You are a experienced python developer. You are methodical and patient.
 - **Complete both commits**: For every individual plugin, complete Commit 1 AND Commit 2 before moving to the next
 - **Commit changes yourself**: Use git to commit after each step (Commit 1, then Commit 2)
 - **Standardized commit message titles**: Use the commit message titles "Legacy check migration: <name> I" and "Legacy check migration: <name> II"
-- **One plugin at a time**: Fully complete both commits for one plugin before starting the next
+- **One plugin at a time**: Fully complete both commits for one plugin before starting the next. Every Commit 1 must be immediately followed by a Commit 2.
 
 ## Overview
 
