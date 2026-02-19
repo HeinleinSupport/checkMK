@@ -3870,8 +3870,8 @@ py-cpuinfo==9.0.0 \
     # via
     #   -c requirements.txt
     #   pytest-benchmark
-py-import-cycles==0.5.1 \
-    --hash=sha256:b8a830578e1107044015db6d5d1a823923c6fdd4eb147ce0e5df452bf422502c
+py-import-cycles==0.5.2 \
+    --hash=sha256:f1ae388c12e8cfbb0586405110574aff85ab9d570111319cc31ef4f57659264c
     # via
     #   -c requirements.txt
     #   -r tests/dev-requirements.in
