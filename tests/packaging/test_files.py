@@ -659,6 +659,7 @@ AGENT_PLUGINS_PREFIX = [
     "mk_docker",
     "mk_filestats",
     "mk_inotify",
+    "mk_jolokia",
     "mk_logwatch",
     "mk_mongodb",
     "mk_postgres",
