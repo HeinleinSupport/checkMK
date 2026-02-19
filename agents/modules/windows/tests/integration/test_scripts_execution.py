@@ -47,7 +47,7 @@ def run_script(work_python: Path, *, script: Path) -> tuple[int, str, str]:
             "",
         ),
         (
-            Path("..\\..\\..\\..\\plugins\\mk_jolokia.py"),
+            Path("..\\..\\..\\..\\..\\cmk\\plugins\\jolokia\\agents\\mk_jolokia.py"),
             0,
             "<<<jolokia_info:sep(0)>>>",
             "",

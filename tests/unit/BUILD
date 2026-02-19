@@ -187,7 +187,6 @@ py_test(
         requirement("watchdog"),
         requirement("werkzeug"),
         "//agents/plugins:apache_status",
-        "//agents/plugins:mk_jolokia",
         "//agents/plugins:nginx_status",
         "//cmk:cmk_cloud",
         "//cmk:cmk_community",

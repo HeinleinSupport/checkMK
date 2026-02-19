@@ -7,10 +7,12 @@
 # mypy: disable-error-code="no-untyped-def"
 # mypy: disable-error-code="type-arg"
 
-from typing import Mapping
+from collections.abc import Mapping
+from contextlib import AbstractContextManager
 
-import mk_jolokia
 import pytest
+
+from cmk.plugins.jolokia.agents import mk_jolokia
 
 
 @pytest.mark.parametrize("removed", ["protocol", "server", "port", "suburi", "timeout"])
@@ -22,7 +24,7 @@ def test_missing_config_basic(removed: str) -> None:
 
 
 def test_missing_config_auth() -> None:
-    def missing_keys(key_string):
+    def missing_keys(key_string: str) -> AbstractContextManager[object]:
         msg_pattern = r"Missing key\(s\): %s in configuration for UnitTest" % key_string
         return pytest.raises(ValueError, match=msg_pattern)
 
