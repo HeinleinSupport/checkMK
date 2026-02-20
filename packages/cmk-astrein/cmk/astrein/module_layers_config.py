@@ -410,7 +410,7 @@ CMK_UTILS_DEPENDENCIES = {
         "cmk.utils.timeperiod",
         "cmk.events",
     ),
-    Component("cmk.utils.oauth2_connection"): _allow(),
+    Component("cmk.utils.oauth2_connection"): _allow("cmk.ccc.site"),
     Component("cmk.utils.object_diff"): _allow("cmk.ccc.i18n"),
     Component("cmk.utils.parameters"): _allow(),
     Component("cmk.utils.password_store"): _allow(
