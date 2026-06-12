@@ -37,7 +37,7 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import datetime, timedelta, UTC
 from enum import StrEnum
-from typing import Any, NamedTuple
+from typing import Any, Literal, NamedTuple
 
 import requests
 
@@ -1513,8 +1513,25 @@ class LDAPConnectionAPI(BaseAPI):
         ldap_server: str,
         bind_dn: str,
         password: str,
+        create_users: Literal["on_sync", "on_login"] = "on_sync",
+        directory_type: Literal[
+            "active_directory_manual", "open_ldap", "389_directory_server"
+        ] = "active_directory_manual",
+        sync_interval_minutes: int = 1,
     ) -> None:
-        """Create an LDAP connection via REST API."""
+        """Create an LDAP connection via REST API.
+
+        ``create_users`` maps to the underlying ``create_only_on_login``
+        connector flag: ``"on_sync"`` (default) provisions LDAP-owned users
+        on every periodic sync; ``"on_login"`` defers creation until an
+        actual LDAP login, which is the right setting when another
+        connector (e.g. SAML) should own newly authenticated users.
+
+        ``directory_type`` selects the connector flavour. ``"open_ldap"`` keys
+        users on ``uid`` (vs Active Directory's ``samaccountname``) — the right
+        choice for an ``inetOrgPerson`` directory whose users must be imported by
+        sync.
+        """
         users = {
             "user_base_dn": user_base_dn,
             "search_scope": "search_whole_subtree",
@@ -1527,7 +1544,7 @@ class LDAPConnectionAPI(BaseAPI):
             },
             "user_id_case": "dont_convert_to_lowercase",
             "umlauts_in_user_ids": "keep_umlauts",
-            "create_users": "on_sync",
+            "create_users": create_users,
         }
         if user_search_filter:
             users["search_filter"] = {
@@ -1564,9 +1581,9 @@ class LDAPConnectionAPI(BaseAPI):
                 "sync_plugins": {},
                 "other": {
                     "sync_interval": {
-                        "days": 0,
-                        "hours": 0,
-                        "minutes": 1,
+                        "days": sync_interval_minutes // (24 * 60),
+                        "hours": (sync_interval_minutes // 60) % 24,
+                        "minutes": sync_interval_minutes % 60,
                     },
                 },
                 "general_properties": {
@@ -1578,7 +1595,7 @@ class LDAPConnectionAPI(BaseAPI):
                 },
                 "ldap_connection": {
                     "directory_type": {
-                        "type": "active_directory_manual",
+                        "type": directory_type,
                         "ldap_server": ldap_server,
                     },
                     "bind_credentials": {
