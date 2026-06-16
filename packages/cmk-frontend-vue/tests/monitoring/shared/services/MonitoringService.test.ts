@@ -47,10 +47,11 @@ describe('MonitoringService', () => {
   })
 
   it('initializes with empty state before the first fetch fires', () => {
-    const fetchBatch = vi.fn().mockResolvedValue(makeResponse([], 0))
+    const fetchBatch = vi.fn().mockResolvedValue(makeResponse([], 0, 0))
     const service = new TestService(fetchBatch)
 
     expect(service.items.value).toEqual([])
+    expect(service.matched.value).toBe(0)
     expect(service.total.value).toBe(0)
     expect(service.fetchState.value).toBe('idle')
     expect(fetchBatch).not.toHaveBeenCalled()
@@ -58,22 +59,23 @@ describe('MonitoringService', () => {
     service.stopPolling()
   })
 
-  it('fetches once on construction and populates items/total', async () => {
-    const fetchBatch = vi.fn().mockResolvedValue(makeResponse([{ id: 'a', value: 1 }], 42))
+  it('fetches once on construction and populates items/counts', async () => {
+    const fetchBatch = vi.fn().mockResolvedValue(makeResponse([{ id: 'a', value: 1 }], 42, 100))
     const service = new TestService(fetchBatch)
 
     await vi.advanceTimersByTimeAsync(0)
 
     expect(fetchBatch).toHaveBeenCalledTimes(1)
     expect(service.items.value).toEqual([{ id: 'a', value: 1 }])
-    expect(service.total.value).toBe(42)
+    expect(service.matched.value).toBe(42)
+    expect(service.total.value).toBe(100)
     expect(service.fetchState.value).toBe('idle')
 
     service.stopPolling()
   })
 
   it('flips hasLoaded once the first fetch settles', async () => {
-    const fetchBatch = vi.fn().mockResolvedValue(makeResponse([{ id: 'a', value: 1 }], 1))
+    const fetchBatch = vi.fn().mockResolvedValue(makeResponse([{ id: 'a', value: 1 }], 1, 10))
     const service = new TestService(fetchBatch)
 
     expect(service.hasLoaded.value).toBe(false)
@@ -112,9 +114,9 @@ describe('MonitoringService', () => {
   it('polls at POLL_INTERVAL_MS and replaces items on each tick', async () => {
     const fetchBatch = vi
       .fn()
-      .mockResolvedValueOnce(makeResponse([{ id: 'a', value: 1 }], 1))
-      .mockResolvedValueOnce(makeResponse([{ id: 'b', value: 2 }], 1))
-      .mockResolvedValueOnce(makeResponse([{ id: 'c', value: 3 }], 1))
+      .mockResolvedValueOnce(makeResponse([{ id: 'a', value: 1 }], 1, 10))
+      .mockResolvedValueOnce(makeResponse([{ id: 'b', value: 2 }], 1, 10))
+      .mockResolvedValueOnce(makeResponse([{ id: 'c', value: 3 }], 1, 10))
     const service = new TestService(fetchBatch)
 
     await vi.advanceTimersByTimeAsync(0)
@@ -133,7 +135,7 @@ describe('MonitoringService', () => {
 
   it('honors a custom poll interval passed to the constructor', async () => {
     const customInterval = 5_000
-    const fetchBatch = vi.fn().mockResolvedValue(makeResponse([], 0))
+    const fetchBatch = vi.fn().mockResolvedValue(makeResponse([], 0, 0))
     const service = new TestService(fetchBatch, { pollIntervalMs: customInterval })
 
     await vi.advanceTimersByTimeAsync(0)
@@ -146,7 +148,7 @@ describe('MonitoringService', () => {
   })
 
   it('cancels the initial fetch when stopPolling() runs before it fires', async () => {
-    const fetchBatch = vi.fn().mockResolvedValue(makeResponse([], 0))
+    const fetchBatch = vi.fn().mockResolvedValue(makeResponse([], 0, 0))
     const service = new TestService(fetchBatch)
 
     service.stopPolling()
@@ -157,7 +159,7 @@ describe('MonitoringService', () => {
   })
 
   it('stops polling after stopPolling()', async () => {
-    const fetchBatch = vi.fn().mockResolvedValue(makeResponse([], 0))
+    const fetchBatch = vi.fn().mockResolvedValue(makeResponse([], 0, 0))
     const service = new TestService(fetchBatch)
 
     await vi.advanceTimersByTimeAsync(0)
@@ -177,7 +179,7 @@ describe('MonitoringService', () => {
     const fetchBatch = vi
       .fn()
       .mockReturnValueOnce(firstFetch)
-      .mockResolvedValue(makeResponse([{ id: 'b', value: 2 }], 1))
+      .mockResolvedValue(makeResponse([{ id: 'b', value: 2 }], 1, 10))
 
     const service = new TestService(fetchBatch)
 
@@ -191,7 +193,7 @@ describe('MonitoringService', () => {
     expect(fetchBatch).toHaveBeenCalledTimes(1)
 
     // Resolve the in-flight fetch; the fetch state returns to idle.
-    resolveFirst(makeResponse([{ id: 'a', value: 1 }], 1))
+    resolveFirst(makeResponse([{ id: 'a', value: 1 }], 1, 10))
     await vi.advanceTimersByTimeAsync(0)
     expect(service.items.value).toEqual([{ id: 'a', value: 1 }])
     expect(service.fetchState.value).toBe('idle')
@@ -214,6 +216,7 @@ describe('MonitoringService', () => {
     expect(service.fetchState.value).toBe('idle')
     expect(service.items.value).toEqual([])
     expect(service.total.value).toBe(0)
+    expect(service.matched.value).toBe(0)
     expect(consoleErrorSpy).toHaveBeenCalled()
 
     service.stopPolling()
@@ -221,7 +224,7 @@ describe('MonitoringService', () => {
   })
 
   it('updateSort triggers an immediate refresh', async () => {
-    const fetchBatch = vi.fn().mockResolvedValue(makeResponse([], 0))
+    const fetchBatch = vi.fn().mockResolvedValue(makeResponse([], 0, 0))
     const service = new TestService(fetchBatch)
 
     await vi.advanceTimersByTimeAsync(0)
@@ -236,7 +239,7 @@ describe('MonitoringService', () => {
   })
 
   it('updateSearch stores the query and triggers an immediate refresh', async () => {
-    const fetchBatch = vi.fn().mockResolvedValue(makeResponse([], 0))
+    const fetchBatch = vi.fn().mockResolvedValue(makeResponse([], 0, 0))
     const service = new TestService(fetchBatch)
 
     await vi.advanceTimersByTimeAsync(0)
@@ -259,7 +262,7 @@ describe('MonitoringService', () => {
     })
     const fetchBatch = vi
       .fn()
-      .mockResolvedValueOnce(makeResponse([], 0))
+      .mockResolvedValueOnce(makeResponse([], 0, 0))
       .mockReturnValueOnce(reloadFetch)
     const service = new TestService(fetchBatch)
 
@@ -272,7 +275,7 @@ describe('MonitoringService', () => {
     await vi.advanceTimersByTimeAsync(0)
     expect(service.fetchState.value).toBe('foreground')
 
-    resolveReload(makeResponse([{ id: 'a', value: 1 }], 1))
+    resolveReload(makeResponse([{ id: 'a', value: 1 }], 1, 1))
     await vi.advanceTimersByTimeAsync(0)
     expect(service.fetchState.value).toBe('idle')
 
@@ -286,7 +289,7 @@ describe('MonitoringService', () => {
     })
     const fetchBatch = vi
       .fn()
-      .mockResolvedValueOnce(makeResponse([], 0))
+      .mockResolvedValueOnce(makeResponse([], 0, 0))
       .mockReturnValueOnce(pollFetch)
     const service = new TestService(fetchBatch)
 
@@ -298,7 +301,7 @@ describe('MonitoringService', () => {
     expect(fetchBatch).toHaveBeenCalledTimes(2)
     expect(service.fetchState.value).toBe('background')
 
-    resolvePoll(makeResponse([{ id: 'b', value: 2 }], 1))
+    resolvePoll(makeResponse([{ id: 'b', value: 2 }], 1, 1))
     await vi.advanceTimersByTimeAsync(0)
     expect(service.fetchState.value).toBe('idle')
 
@@ -314,7 +317,7 @@ describe('MonitoringService', () => {
       }),
       remove: vi.fn()
     } as unknown as KeyShortcutService
-    const fetchBatch = vi.fn().mockResolvedValue(makeResponse([], 0))
+    const fetchBatch = vi.fn().mockResolvedValue(makeResponse([], 0, 0))
     const service = new TestService(fetchBatch, undefined, shortCutService, 'focus-dispatch')
 
     const onFocus = vi.fn()
@@ -327,7 +330,7 @@ describe('MonitoringService', () => {
   })
 
   it('activating a chip updates filterState and triggers a refresh', async () => {
-    const fetchBatch = vi.fn().mockResolvedValue(makeResponse([], 0))
+    const fetchBatch = vi.fn().mockResolvedValue(makeResponse([], 0, 0))
     const service = new TestService(fetchBatch, {
       quickFilters: [
         {
@@ -358,7 +361,7 @@ describe('MonitoringService', () => {
   })
 
   it('a chip with an empty filter and search query shows all results', async () => {
-    const fetchBatch = vi.fn().mockResolvedValue(makeResponse([], 0))
+    const fetchBatch = vi.fn().mockResolvedValue(makeResponse([], 0, 0))
     const service = new TestService(fetchBatch, {
       quickFilters: [
         { label: 'All', searchQuery: '' },
@@ -397,7 +400,7 @@ describe('MonitoringService', () => {
   })
 
   it('a chip leaves the search query untouched when it declares no searchQuery', async () => {
-    const fetchBatch = vi.fn().mockResolvedValue(makeResponse([], 0))
+    const fetchBatch = vi.fn().mockResolvedValue(makeResponse([], 0, 0))
     const service = new TestService(fetchBatch, {
       quickFilters: [
         {
@@ -427,7 +430,7 @@ describe('MonitoringService', () => {
       }),
       remove: vi.fn()
     } as unknown as KeyShortcutService
-    const fetchBatch = vi.fn().mockResolvedValue(makeResponse([], 0))
+    const fetchBatch = vi.fn().mockResolvedValue(makeResponse([], 0, 0))
     const service = new TestService(fetchBatch, undefined, shortCutService, 'focus-destruct')
 
     const onFocus = vi.fn()
@@ -439,7 +442,7 @@ describe('MonitoringService', () => {
   })
 
   it('re-activates a chip when the filter is rebuilt to a structurally equal value', async () => {
-    const fetchBatch = vi.fn().mockResolvedValue(makeResponse([], 0))
+    const fetchBatch = vi.fn().mockResolvedValue(makeResponse([], 0, 0))
     const service = new TestService(fetchBatch, {
       quickFilters: [
         {
@@ -476,7 +479,7 @@ describe('MonitoringService', () => {
   })
 
   it('stops reacting to filter changes after stopPolling()', async () => {
-    const fetchBatch = vi.fn().mockResolvedValue(makeResponse([], 0))
+    const fetchBatch = vi.fn().mockResolvedValue(makeResponse([], 0, 0))
     const service = new TestService(fetchBatch, {
       quickFilters: [
         {

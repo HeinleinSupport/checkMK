@@ -9,8 +9,8 @@ import type { KeyShortcutService } from '@/lib/keyShortcuts'
 
 import type { PagedResponse } from '@/monitoring/shared/services/MonitoringService'
 
-export function makeResponse<T>(items: T[], total: number): PagedResponse<T> {
-  return { items, meta: { total } }
+export function makeResponse<T>(items: T[], matched: number, total: number): PagedResponse<T> {
+  return { items, meta: { matched, total } }
 }
 
 export function makeKeyShortcutService(): KeyShortcutService {

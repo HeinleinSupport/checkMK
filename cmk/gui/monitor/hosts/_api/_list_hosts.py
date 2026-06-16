@@ -84,6 +84,7 @@ class HostEntry:
 @api_model
 class HostsPageMeta:
     limit: int = api_field(description="Requested page size", example=1000)
+    matched: int = api_field(description="Total matched hosts", example=42)
     total: int = api_field(description="Total number of hosts", example=1234)
 
 
@@ -163,11 +164,20 @@ def _handle_list_hosts(
         sorters=sorters,
         filters=filters,
     )
-    host_total = host_repo.count(query=query, filters=filters)
+    total_host_count = host_repo.count_total()
+    matched_host_count = (
+        host_repo.count_matched(query=query, filters=filters)
+        if query or filters
+        else total_host_count
+    )
 
     return HostsResponse(
         hosts=[HostEntry.from_domain(host) for host in hosts],
-        meta=HostsPageMeta(limit=limit, total=host_total),
+        meta=HostsPageMeta(
+            limit=limit,
+            matched=matched_host_count,
+            total=total_host_count,
+        ),
     )
 
 

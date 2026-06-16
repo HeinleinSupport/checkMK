@@ -31,8 +31,12 @@ def get_fake_host_repository(*, n_hosts: int) -> HostRepository:
         ) -> Sequence[Host]:
             return self._hosts[:limit]
 
-        def count(self, *, query: str, filters: HostFilter) -> int:
+        def count_total(self) -> int:
             return len(self._hosts)
+
+        def count_matched(self, *, query: str, filters: HostFilter) -> int:
+            # Not implementing this as we don't need to test a fake implementation of this.
+            return self.count_total()
 
     return HostFakeRepository()
 
@@ -44,6 +48,7 @@ def test_handle_list_hosts_limit_handling() -> None:
     assert len(response.hosts) == 7
     assert response.meta.limit == 7
     assert response.meta.total == 10
+    assert response.meta.matched == 10
 
 
 def test_handle_list_hosts_state_label_conversion() -> None:

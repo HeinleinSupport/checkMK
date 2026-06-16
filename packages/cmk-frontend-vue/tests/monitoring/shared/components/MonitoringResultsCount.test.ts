@@ -10,8 +10,8 @@ import MonitoringResultsCount from '@/monitoring/shared/components/MonitoringRes
 import { MONITORING_SERVICE } from '@/monitoring/shared/components/MonitoringTableContext'
 import type { MonitoringService } from '@/monitoring/shared/services/MonitoringService'
 
-function makeServiceStub(total = 0, searchQuery = '') {
-  return { total: ref(total), searchQuery: ref(searchQuery) }
+function makeServiceStub(matched = 0, total = 0, searchQuery = '') {
+  return { matched: ref(matched), total: ref(total), searchQuery: ref(searchQuery) }
 }
 
 function renderCount(
@@ -45,7 +45,7 @@ test('shows no count text when there are no matches', () => {
 })
 
 test('shows no count text when a search yields no matches', () => {
-  renderCount(makeServiceStub(0, 'web'))
+  renderCount(makeServiceStub(0, 0, 'web'))
 
   expect(screen.queryByText('Rows matching your search: 0')).not.toBeInTheDocument()
 })
@@ -62,12 +62,12 @@ test('reacts to the total changing', async () => {
 
   expect(screen.getByText('Rows found: 2')).toBeInTheDocument()
 
-  stub.total.value = 5
+  stub.matched.value = 5
   await screen.findByText('Rows found: 5')
 })
 
 test('names the search when only a search is active', () => {
-  renderCount(makeServiceStub(3, 'web'))
+  renderCount(makeServiceStub(3, 10, 'web'))
 
   expect(screen.getByText('Rows matching your search: 3')).toBeInTheDocument()
 })
@@ -85,13 +85,13 @@ test('pluralizes the filter wording for multiple active filters', () => {
 })
 
 test('names both when a single filter and a search are active', () => {
-  renderCount(makeServiceStub(2, 'web'), { activeFilterCount: 1 })
+  renderCount(makeServiceStub(2, 10, 'web'), { activeFilterCount: 1 })
 
   expect(screen.getByText('Rows matching your filter and search: 2')).toBeInTheDocument()
 })
 
 test('pluralizes filters when multiple filters and a search are active', () => {
-  renderCount(makeServiceStub(2, 'web'), { activeFilterCount: 3 })
+  renderCount(makeServiceStub(2, 10, 'web'), { activeFilterCount: 3 })
 
   expect(screen.getByText('Rows matching your filters and search: 2')).toBeInTheDocument()
 })

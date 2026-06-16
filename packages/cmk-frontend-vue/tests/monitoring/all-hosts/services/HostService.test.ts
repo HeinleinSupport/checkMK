@@ -10,8 +10,8 @@ import type { HostEntry, HostsResponse } from '@/monitoring/shared/api/types'
 
 import { makeKeyShortcutService } from '../../shared/services/testHelpers'
 
-function makeHostsResponse(hosts: HostEntry[], total: number): HostsResponse {
-  return { hosts, meta: { limit: 1000, total } }
+function makeHostsResponse(hosts: HostEntry[], matched: number, total: number): HostsResponse {
+  return { hosts, meta: { limit: 1000, matched, total } }
 }
 
 function makeHost(overrides: Partial<HostEntry> = {}): HostEntry {
@@ -44,21 +44,22 @@ describe('HostService', () => {
     vi.useRealTimers()
   })
 
-  it('calls api.fetchHosts on construction and populates items/total', async () => {
+  it('calls api.fetchHosts on construction and populates items/counts', async () => {
     const host = makeHost()
-    const fetchHosts = vi.fn().mockResolvedValue(makeHostsResponse([host], 1))
+    const fetchHosts = vi.fn().mockResolvedValue(makeHostsResponse([host], 1, 10))
     service = new HostService({ fetchHosts }, makeKeyShortcutService())
 
     await vi.advanceTimersByTimeAsync(0)
 
     expect(fetchHosts).toHaveBeenCalledTimes(1)
     expect(service.items.value).toEqual([host])
-    expect(service.total.value).toBe(1)
+    expect(service.matched.value).toBe(1)
+    expect(service.total.value).toBe(10)
     expect(service.fetchState.value).toBe('idle')
   })
 
   it('passes sort state to api.fetchHosts after updateSort is called', async () => {
-    const fetchHosts = vi.fn().mockResolvedValue(makeHostsResponse([], 0))
+    const fetchHosts = vi.fn().mockResolvedValue(makeHostsResponse([], 0, 0))
     service = new HostService({ fetchHosts }, makeKeyShortcutService())
 
     await vi.advanceTimersByTimeAsync(0)
@@ -73,7 +74,7 @@ describe('HostService', () => {
   })
 
   it('passes the search query to api.fetchHosts after updateSearch is called', async () => {
-    const fetchHosts = vi.fn().mockResolvedValue(makeHostsResponse([], 0))
+    const fetchHosts = vi.fn().mockResolvedValue(makeHostsResponse([], 0, 0))
     service = new HostService({ fetchHosts }, makeKeyShortcutService())
 
     await vi.advanceTimersByTimeAsync(0)

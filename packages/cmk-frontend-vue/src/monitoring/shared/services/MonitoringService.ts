@@ -26,6 +26,7 @@ import { useColumnFilterBridge } from './useColumnFilterBridge'
 export interface PagedResponse<T> {
   items: T[]
   meta: {
+    matched: number
     total: number
   }
 }
@@ -51,6 +52,7 @@ export interface MonitoringServiceOptions<T> {
 
 export abstract class MonitoringService<T> extends ServiceBase {
   readonly items: Ref<T[]> = shallowRef<T[]>([])
+  readonly matched: Ref<number> = ref(0)
   readonly total: Ref<number> = ref(0)
   /** The kind of fetch currently in flight, or `'idle'`. */
   readonly fetchState: Ref<FetchState> = ref('idle')
@@ -211,6 +213,7 @@ export abstract class MonitoringService<T> extends ServiceBase {
     try {
       const response = await this.fetchBatch()
       this.items.value = response.items
+      this.matched.value = response.meta.matched
       this.total.value = response.meta.total
     } catch (error: unknown) {
       console.error('MonitoringService: fetchBatch failed', error)

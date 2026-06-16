@@ -28,6 +28,10 @@ class HostRepository(Protocol):
         """Fetch hosts based on filter criteria."""
         ...
 
-    def count(self, *, query: str, filters: HostFilter) -> int:
+    def count_total(self) -> int:
+        """Count the total hosts in your environment."""
+        ...
+
+    def count_matched(self, *, query: str, filters: HostFilter) -> int:
         """Count the hosts matching the given criteria."""
         ...

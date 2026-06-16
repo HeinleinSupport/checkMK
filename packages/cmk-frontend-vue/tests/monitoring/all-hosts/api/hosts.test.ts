@@ -29,7 +29,10 @@ function makeHost(overrides: Partial<HostEntry> = {}): HostEntry {
 }
 
 function makeHostsResponse(hosts: HostEntry[], meta: Partial<HostsPageMeta> = {}): HostsResponse {
-  return { hosts, meta: { limit: DEFAULT_BATCH_SIZE, total: hosts.length, ...meta } }
+  return {
+    hosts,
+    meta: { limit: DEFAULT_BATCH_SIZE, matched: hosts.length, total: hosts.length, ...meta }
+  }
 }
 
 const CONTENT_TYPE = { params: { header: { 'Content-Type': 'application/json' } } }

@@ -83,12 +83,12 @@ class LiveStatusHostRepository:
                 key=host_sorter(sorters),
             )
 
-    def count(self, *, query: str, filters: HostFilter) -> int:
-        if not query and not filters:
-            q = Query([Status.num_hosts])
-            with detailed_connection(self._connection) as conn:
-                return sum(row["num_hosts"] for row in q.iterate(conn))
+    def count_total(self) -> int:
+        q = Query([Status.num_hosts])
+        with detailed_connection(self._connection) as conn:
+            return sum(row["num_hosts"] for row in q.iterate(conn))
 
+    def count_matched(self, *, query: str, filters: HostFilter) -> int:
         # A filtered total can't be read from the ``status`` table. Count the matches server-side
         # via ``Stats`` instead of transferring and counting every matching row. The ``Query`` class
         # can't emit ``Stats`` headers yet, so the query is assembled by hand from the shared filter.

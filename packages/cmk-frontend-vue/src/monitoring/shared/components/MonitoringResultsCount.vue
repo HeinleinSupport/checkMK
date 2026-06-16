@@ -18,10 +18,10 @@ const props = defineProps<{
 
 const monitoringService = inject(MONITORING_SERVICE)
 
-const visible = computed(() => (monitoringService?.total.value ?? 0) > 0)
+const visible = computed(() => (monitoringService?.matched.value ?? 0) > 0)
 
 const label = computed(() => {
-  const count = monitoringService?.total.value ?? 0
+  const count = monitoringService?.matched.value ?? 0
   const hasSearch = (monitoringService?.searchQuery.value ?? '') !== ''
   const filterCount = props.activeFilterCount ?? 0
   if (filterCount > 0 && hasSearch) {

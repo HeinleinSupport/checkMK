@@ -164,6 +164,7 @@ class TestMonitorHostsQuery:
                 f"Limit: {_LIMIT}",
             ]
         )
+        mock_livestatus.expect_query(["GET status", "Columns: num_hosts"])
         mock_livestatus.expect_query(
             [
                 "GET hosts",
@@ -200,6 +201,7 @@ class TestMonitorHostsFilters:
                 f"Limit: {_LIMIT}",
             ]
         )
+        mock_livestatus.expect_query(["GET status", "Columns: num_hosts"])
         mock_livestatus.expect_query(
             [
                 "GET hosts",
