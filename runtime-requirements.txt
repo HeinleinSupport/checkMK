@@ -2657,6 +2657,7 @@ pydantic==2.12.5 \
     #   -r non-free/packages/cmk-dcd/requirements.in
     #   -r non-free/packages/cmk-liveproxyd/requirements.in
     #   -r non-free/packages/cmk-metric-backend/requirements.in
+    #   -r non-free/packages/cmk-network-flow/requirements.in
     #   -r non-free/packages/cmk-otel-collector/requirements.in
     #   -r non-free/packages/cmk-plugins-nonfree/requirements.in
     #   -r non-free/packages/cmk-relay-engine/requirements.in
