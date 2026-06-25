@@ -59,6 +59,9 @@ export abstract class MonitoringService<T> extends ServiceBase {
   readonly hasLoaded: Ref<boolean> = ref(false)
   readonly sortState: Ref<SortingState> = ref<SortingState>([])
   readonly searchQuery: Ref<string> = ref('')
+  /** The `searchQuery` updates on every key stroke, but we will also want information on the
+   *  committed (or sent) query, which only changes on submit. */
+  readonly committedSearchQuery: Ref<string> = ref('')
   readonly filterState: Ref<FilterNode | undefined> = ref(undefined)
 
   /** Owns all filter state: quick-filters and active conditions. */
@@ -210,11 +213,13 @@ export abstract class MonitoringService<T> extends ServiceBase {
     }
     this.secondsRemaining.value = this.pollIntervalSeconds
     this.fetchState.value = kind
+    const searchQueryForFetch = this.searchQuery.value
     try {
       const response = await this.fetchBatch()
       this.items.value = response.items
       this.matched.value = response.meta.matched
       this.total.value = response.meta.total
+      this.committedSearchQuery.value = searchQueryForFetch
     } catch (error: unknown) {
       console.error('MonitoringService: fetchBatch failed', error)
     } finally {

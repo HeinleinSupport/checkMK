@@ -10,11 +10,7 @@ import usei18n from '@/lib/i18n'
 
 import { MONITORING_SERVICE } from './MonitoringTableContext'
 
-const { _t, _tn } = usei18n()
-
-const props = defineProps<{
-  activeFilterCount?: number
-}>()
+const { _t } = usei18n()
 
 const monitoringService = inject(MONITORING_SERVICE)
 
@@ -22,28 +18,13 @@ const visible = computed(() => (monitoringService?.matched.value ?? 0) > 0)
 
 const label = computed(() => {
   const count = monitoringService?.matched.value ?? 0
-  const hasSearch = (monitoringService?.searchQuery.value ?? '') !== ''
-  const filterCount = props.activeFilterCount ?? 0
-  if (filterCount > 0 && hasSearch) {
-    return _tn(
-      'Rows matching your filter and search: %{count}',
-      'Rows matching your filters and search: %{count}',
-      filterCount,
-      { count }
-    )
+  const total = monitoringService?.total.value ?? 0
+  const hasSearch = (monitoringService?.committedSearchQuery.value ?? '') !== ''
+  const filterCount = monitoringService?.filters.activeFilterCount ?? 0
+  if (filterCount > 0 || hasSearch) {
+    return _t('Rows matching your criteria: %{count} | Total rows: %{total}', { count, total })
   }
-  if (filterCount > 0) {
-    return _tn(
-      'Rows matching your filter: %{count}',
-      'Rows matching your filters: %{count}',
-      filterCount,
-      { count }
-    )
-  }
-  if (hasSearch) {
-    return _t('Rows matching your search: %{count}', { count })
-  }
-  return _t('Rows found: %{count}', { count })
+  return _t('Total rows: %{total}', { total })
 })
 </script>
 

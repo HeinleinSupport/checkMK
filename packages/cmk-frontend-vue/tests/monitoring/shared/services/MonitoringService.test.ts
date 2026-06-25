@@ -255,6 +255,35 @@ describe('MonitoringService', () => {
     service.stopPolling()
   })
 
+  it('only updates committedSearchQuery once the triggered fetch resolves', async () => {
+    let resolveFetch: (value: PagedResponse<TestItem>) => void = () => {}
+    const fetchBatch = vi
+      .fn()
+      .mockResolvedValueOnce(makeResponse([], 0, 0))
+      .mockImplementationOnce(
+        () =>
+          new Promise<PagedResponse<TestItem>>((resolve) => {
+            resolveFetch = resolve
+          })
+      )
+    const service = new TestService(fetchBatch)
+
+    await vi.advanceTimersByTimeAsync(0)
+    expect(service.committedSearchQuery.value).toBe('')
+
+    // Mirrors the live v-model binding: typing updates searchQuery before the fetch settles.
+    service.updateSearch('db')
+    expect(service.searchQuery.value).toBe('db')
+    expect(service.committedSearchQuery.value).toBe('')
+
+    resolveFetch(makeResponse([], 3, 10))
+    await vi.advanceTimersByTimeAsync(0)
+
+    expect(service.committedSearchQuery.value).toBe('db')
+
+    service.stopPolling()
+  })
+
   it('enters the foreground fetch state for a search/sort/filter fetch and returns to idle after', async () => {
     let resolveReload: (value: PagedResponse<TestItem>) => void = () => {}
     const reloadFetch = new Promise<PagedResponse<TestItem>>((resolve) => {
