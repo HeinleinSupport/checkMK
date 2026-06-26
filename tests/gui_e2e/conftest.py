@@ -22,6 +22,15 @@ from tests.gui_e2e.testlib.api_helpers import LOCALHOST_IPV4
 from tests.gui_e2e.testlib.host_details import HostDetails
 from tests.gui_e2e.testlib.playwright.helpers import CmkCredentials
 from tests.gui_e2e.testlib.playwright.plugin import PageGetter
+from tests.gui_e2e.testlib.playwright.pom.graphing.fixtures import (
+    fixture_forecast_graph,
+    fixture_graph_collection,
+    fixture_graph_hosts_high_density,
+    fixture_graph_hosts_with_varying_data,
+    fixture_graph_rrd_dst_boundary,
+    fixture_graph_rrd_with_gaps,
+    fixture_saved_custom_graph,
+)
 from tests.gui_e2e.testlib.playwright.pom.login import LoginPage
 from tests.gui_e2e.testlib.playwright.pom.monitor.dashboard import DashboardMobile, MainDashboard
 from tests.gui_e2e.testlib.playwright.pom.page import CmkPage
@@ -42,8 +51,18 @@ from tests.testlib.site import (
 logger = logging.getLogger(__name__)
 
 
-# loading pom fixtures
+# Importing the fixtures into this conftest is what registers them with pytest;
+# these lists only keep the imports from being flagged as unused.
 setup_fixtures = [notification_user]
+graphing_fixtures = [
+    fixture_forecast_graph,
+    fixture_graph_collection,
+    fixture_graph_hosts_high_density,
+    fixture_graph_hosts_with_varying_data,
+    fixture_graph_rrd_dst_boundary,
+    fixture_graph_rrd_with_gaps,
+    fixture_saved_custom_graph,
+]
 
 
 @pytest.fixture(name="site_factory", scope="session")
