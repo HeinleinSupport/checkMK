@@ -235,15 +235,17 @@ def configure_attributes(
 
             # first handle mandatory cases
             if (
-                for_what == "folder"
+                (
+                    for_what == "folder"
+                    and attr.is_mandatory()
+                    and myself
+                    and _some_host_hasnt_set(myself, attrname)
+                    and not has_inherited
+                )
+                or for_what in ["host", "cluster"]
                 and attr.is_mandatory()
-                and myself
-                and _some_host_hasnt_set(myself, attrname)
                 and not has_inherited
             ):
-                force_entry = True
-                active = True
-            elif for_what in ["host", "cluster"] and attr.is_mandatory() and not has_inherited:
                 force_entry = True
                 active = True
             elif cb is not None:

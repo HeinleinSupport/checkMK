@@ -224,10 +224,7 @@ def get_change(commit: Commit) -> WerkCommit | None:
             elif diff.deleted_file:
                 if a_is_werk:
                     yield WerkRemoved(File.new(diff.a_path, diff.a_blob))
-            elif diff.new_file:
-                if b_is_werk:
-                    yield WerkAdded(File.new(diff.b_path, diff.b_blob))
-            elif diff.copied_file:
+            elif diff.new_file or diff.copied_file:
                 if b_is_werk:
                     yield WerkAdded(File.new(diff.b_path, diff.b_blob))
             else:

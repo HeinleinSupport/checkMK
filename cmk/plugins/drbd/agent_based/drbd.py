@@ -238,11 +238,14 @@ def drbd_parse_block(block: StringTable, checktype: str) -> dict[str, Any]:
                         parsed[parts[0]] = parts[1].split("/")
                     else:
                         parsed[parts[0]] = parts[1]
-                elif checktype == "drbd.net" and parts[0] in drbd_net_map:
-                    parsed[parts[0]] = parts[1]
-                elif checktype == "drbd.disk" and parts[0] in drbd_disk_map:
-                    parsed[parts[0]] = parts[1]
-                elif checktype == "drbd.stats" and parts[0] in drbd_stats_map:
+                elif (
+                    checktype == "drbd.net"
+                    and parts[0] in drbd_net_map
+                    or checktype == "drbd.disk"
+                    and parts[0] in drbd_disk_map
+                    or checktype == "drbd.stats"
+                    and parts[0] in drbd_stats_map
+                ):
                     parsed[parts[0]] = parts[1]
 
     return parsed

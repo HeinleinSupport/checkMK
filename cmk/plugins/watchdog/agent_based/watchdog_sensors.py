@@ -230,13 +230,9 @@ def check_watchdog_sensors_humidity(
     warn, crit = params["levels"]
     warn_lower, crit_lower = params["levels_lower"]
 
-    if humidity >= crit:
+    if not (crit_lower < humidity < crit):
         state = State.CRIT
-    elif humidity <= crit_lower:
-        state = State.CRIT
-    elif humidity >= warn:
-        state = State.WARN
-    elif humidity <= warn_lower:
+    elif not (warn_lower < humidity < warn):
         state = State.WARN
     else:
         state = State.OK

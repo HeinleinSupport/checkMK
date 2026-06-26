@@ -361,10 +361,7 @@ def calculate_view_grouping_of_services(
                 group_id = rid
                 last_row_group = this_row_group
 
-        if current_group is None:
-            group_id = rid
-
-        elif current_group != group_spec:
+        if current_group is None or current_group != group_spec:
             group_id = rid
 
         groups.setdefault(group_id, (group_spec, []))

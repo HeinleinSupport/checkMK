@@ -33,6 +33,7 @@ select = [
   "PL",     # pylint
   "RET",    # flake8: return
   "RUF100", # ruff: unused noqa
+  "SIM114", # flake8-simplify: if-with-same-arms
   "SIM202", # flake8-simplify: negate-not-equal-op
   "SIM210", # flake8-simplify: if-expr-with-true-false
   "SIM211", # flake8-simplify: if-expr-with-false-true

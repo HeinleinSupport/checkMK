@@ -306,8 +306,6 @@ def _ec_filter_host_information_of_not_permitted_hosts(rows: Rows) -> None:
                 row[key] = 0.0
             elif isinstance(row[key], str):
                 row[key] = ""
-            elif isinstance(row[key], str):
-                row[key] = ""
 
 
 PermissionECSeeAll = Permission(

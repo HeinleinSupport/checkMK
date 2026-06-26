@@ -55,9 +55,7 @@ def discover_netapp_ontap_environment(
 ) -> Callable[[Section], DiscoveryResult]:
     def _discover(section: Section) -> DiscoveryResult:
         for item_name, values in section.items():
-            if predicate is None:
-                yield Service(item=item_name)
-            elif predicate(values):
+            if predicate is None or predicate(values):
                 yield Service(item=item_name)
             else:
                 continue

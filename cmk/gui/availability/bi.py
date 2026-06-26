@@ -279,9 +279,7 @@ def get_bi_merged_rows_by_id(rows: list[Row]) -> dict[tuple[HostName, ServiceNam
     merged_rows_by_id: dict[tuple[HostName, ServiceName], list[Row]] = {id_: [] for id_ in by_id}
     for id_, service_rows in by_id.items():
         for service_row in service_rows:
-            if not merged_rows_by_id[id_]:
-                merged_rows_by_id[id_].append(service_row)
-            elif (
+            if not merged_rows_by_id[id_] or (
                 merged_rows_by_id[id_][-1]["state"] != service_row["state"]
                 or merged_rows_by_id[id_][-1]["in_downtime"] != service_row["in_downtime"]
                 or merged_rows_by_id[id_][-1]["in_service_period"]

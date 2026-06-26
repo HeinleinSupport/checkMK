@@ -1321,9 +1321,7 @@ class LDAPUserConnector(UserConnector[LDAPUserConnectionConfig]):
             member_attr = self._member_attr()
             is_member = False
             for member in self._get_filter_group_members(filter_group_dn):
-                if member_attr == "memberuid" and raw_user_id == member:
-                    is_member = True
-                elif dn == member:
+                if member_attr == "memberuid" and raw_user_id == member or dn == member:
                     is_member = True
 
             if not is_member:

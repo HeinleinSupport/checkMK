@@ -795,11 +795,7 @@ def parse_file(
                 line_display = line[2:]
 
                 # Classify the line for styling
-                if line[0] == "W":
-                    line_level = 1
-                    line_class = "WARN"
-
-                elif line[0] == "u":
+                if line[0] == "W" or line[0] == "u":
                     line_level = 1
                     line_class = "WARN"
 

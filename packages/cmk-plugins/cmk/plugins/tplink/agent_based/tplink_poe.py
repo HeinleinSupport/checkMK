@@ -65,9 +65,7 @@ def parse_tplink_poe(string_table: Sequence[StringTable]) -> Section:
 
             if poe_port_status == "1":
                 # poe feature enabled for port
-                if poe_power_status == "0":  # status: off
-                    poe_status = PoeStatus.OFF
-                elif poe_power_status == "1":  # status: turning-on
+                if poe_power_status in {"0", "1"}:  # status: off or turning-on
                     poe_status = PoeStatus.OFF
                 elif poe_power_status == "2":  # status: on
                     poe_status = PoeStatus.ON

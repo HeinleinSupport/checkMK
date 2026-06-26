@@ -255,9 +255,7 @@ def _run_deploy_cycle(
         diff_base = site.build_commit
 
     if diff_base is not None:
-        if state is not None and state.diff_base_commit:
-            _source = "state"
-        elif state is not None and state.deployers:
+        if state is not None and state.diff_base_commit or state is not None and state.deployers:
             _source = "state"
         else:
             _source = "site_build"

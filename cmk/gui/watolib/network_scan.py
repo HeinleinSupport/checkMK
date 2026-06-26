@@ -156,9 +156,11 @@ def _find_folder_to_scan(tree: FolderTree) -> Folder | None:
     for folder in tree.all_folders().values():
         scheduled_time = folder.next_network_scan_at()
         if scheduled_time is not None and scheduled_time < time.time():
-            if folder_to_scan is None:
-                folder_to_scan = folder
-            elif (at := folder_to_scan.next_network_scan_at()) is not None and at > scheduled_time:
+            if (
+                folder_to_scan is None
+                or (at := folder_to_scan.next_network_scan_at()) is not None
+                and at > scheduled_time
+            ):
                 folder_to_scan = folder
     return folder_to_scan
 

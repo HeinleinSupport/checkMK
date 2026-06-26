@@ -38,9 +38,7 @@ def load_precompiled_werks_file(path: Path) -> dict[int, WerkV3]:
 
         def generator() -> Iterator[tuple[int, WerkV3]]:
             for werk_id, werk in adapter.validate_json(f.read()).items():
-                if isinstance(werk, WerkV1):
-                    yield werk_id, werk.to_werk()
-                elif isinstance(werk, WerkV2):
+                if isinstance(werk, (WerkV1, WerkV2)):
                     yield werk_id, werk.to_werk()
                 else:
                     yield werk_id, werk

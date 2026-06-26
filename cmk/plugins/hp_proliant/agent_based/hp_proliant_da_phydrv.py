@@ -154,9 +154,7 @@ def check_hp_proliant_da_phydrv(item: str, section: Section) -> CheckResult:
         state = State.UNKNOWN
     elif physical_drive.condition == "ok":
         state = State.OK
-    elif physical_drive.condition == "degraded":
-        state = State.CRIT
-    elif physical_drive.condition == "failed":
+    elif physical_drive.condition in {"degraded", "failed"}:
         state = State.CRIT
     else:
         state = State.UNKNOWN

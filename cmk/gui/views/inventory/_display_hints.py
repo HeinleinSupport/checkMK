@@ -1304,9 +1304,9 @@ def _parse_legacy_display_hints(
 
         node_or_table_hints = InventoryHintSpec()
         for key in _ALLOWED_KEYS:
-            if (value := related_legacy_hints.for_table.get(key)) is not None:
-                node_or_table_hints[key] = value
-            elif (value := related_legacy_hints.for_node.get(key)) is not None:
+            if (value := related_legacy_hints.for_table.get(key)) is not None or (
+                value := related_legacy_hints.for_node.get(key)
+            ) is not None:
                 node_or_table_hints[key] = value
 
         # Some fields like 'title' or 'keyorder' of legacy display hints are declared

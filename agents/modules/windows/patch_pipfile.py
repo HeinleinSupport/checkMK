@@ -35,9 +35,7 @@ try:
         for l in lines:
             if l.find("psycopg2 = ") == 0:
                 f.write('psycopg2 = "*" # windows need new version \n')
-            elif l.find("pymssql = ") == 0:
-                f.write("# " + l)
-            elif l.find("mysqlclient = ") == 0:
+            elif l.find("pymssql = ") == 0 or l.find("mysqlclient = ") == 0:
                 f.write("# " + l)
             else:
                 f.write(l)
