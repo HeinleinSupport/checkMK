@@ -6,6 +6,7 @@
 from __future__ import annotations
 
 import ast
+import re
 from pathlib import Path, PurePosixPath
 
 from cmk.astrein.framework import ASTVisitorChecker
@@ -55,6 +56,120 @@ class HTMLDebugChecker(ASTVisitorChecker):
         ):
             self.add_error("Found html.debug call", node)
         self.generic_visit(node)
+
+
+_LOGGING_METHODS = frozenset({"log", "debug", "info", "warning", "error", "exception", "critical"})
+
+#: A single printf-style conversion specifier, per the Python spec:
+#: https://docs.python.org/3/library/stdtypes.html#printf-style-string-formatting
+#: The mapping key is captured to tell ``%(name)s`` from ``%s``.
+_PRINTF_SPEC = re.compile(
+    r"%"
+    r"(?:\((?P<key>[^)]*)\))?"  # optional mapping key
+    r"[#0\- +]*"  # conversion flags
+    r"(?:\*|\d+)?"  # minimum field width
+    r"(?:\.(?:\*|\d+))?"  # precision
+    r"[hlL]?"  # length modifier (accepted but ignored by Python)
+    r"(?P<type>[diouxXeEfFgGcrsa%])"  # conversion type
+)
+
+
+def _has_positional_placeholder(format_string: str) -> bool:
+    """Return True if ``format_string`` has a positional ``%s`` rather than ``%(name)s``.
+
+    The literal ``%%`` is ignored.
+    """
+    return any(
+        match.group("type") != "%" and match.group("key") is None
+        for match in _PRINTF_SPEC.finditer(format_string)
+    )
+
+
+#: Repo-relative path prefixes not yet migrated; the checker skips files below them.
+#: Transitional: shrink until empty, then remove this exclusion.
+_EXCLUDED_PREFIXES = (
+    "agents",
+    "bin",
+    "buildscripts",
+    "cmk",
+    "doc",
+    "non-free",
+    "omd",
+    "scripts",
+    "tests",
+    "packages/cmk-agent-receiver",
+    "packages/cmk-ccc",
+    "packages/cmk-check-engine",
+    "packages/cmk-crash",
+    "packages/cmk-dev-deploy",
+    "packages/cmk-ec",
+    "packages/cmk-events",
+    "packages/cmk-licensing",
+    "packages/cmk-mkp-tool",
+    "packages/cmk-plugins",
+    "packages/cmk-werks",
+)
+
+#: Repo-relative paths force-checked even when they sit below an ``_EXCLUDED_PREFIXES``
+#: entry, so individual files can be migrated ahead of their surrounding tree.
+_INCLUDED_PATHS = ("cmk/update_config/plugins/actions/validate_mk_files.py",)
+
+
+class LoggingNamedPlaceholderChecker(ASTVisitorChecker):
+    """Requires logging calls to use named ``%(name)s`` placeholders.
+
+    Positional ``logger.info("%s unknown to %s", a, b)`` is forbidden in favour of
+    ``logger.info("%(thing)s unknown to %(target)s", {"thing": a, "target": b})``.
+
+    ruff's ``G``/``LOG`` rules already ensure logging uses lazy ``%``-style formatting with
+    a literal template (rejecting f-strings, ``str.format`` and string concatenation), but
+    they do not distinguish positional from named placeholders. This checker adds that
+    distinction; because ruff guarantees the literal template, only ``ast.Constant`` string
+    messages need to be inspected here.
+    """
+
+    def checker_id(self) -> str:
+        return "logging-named-placeholder"
+
+    def visit_Call(self, node: ast.Call) -> None:
+        if not self._is_excluded():
+            self._check(node)
+        self.generic_visit(node)
+
+    def _is_excluded(self) -> bool:
+        try:
+            relative_path = PurePosixPath(self.file_path.relative_to(self.repo_root))
+        except ValueError:
+            return False
+        if any(relative_path.is_relative_to(path) for path in _INCLUDED_PATHS):
+            return False
+        return any(relative_path.is_relative_to(prefix) for prefix in _EXCLUDED_PREFIXES)
+
+    def _check(self, node: ast.Call) -> None:
+        func = node.func
+        if not isinstance(func, ast.Attribute) or func.attr not in _LOGGING_METHODS:
+            return
+
+        # `.log(level, msg, *args)` shifts the message one slot to the right.
+        message_index = 1 if func.attr == "log" else 0
+        # No format args -> "%s" is literal text, not a placeholder.
+        if len(node.args) <= message_index + 1:
+            return
+
+        message = node.args[message_index]
+        if not isinstance(message, ast.Constant) or not isinstance(message.value, str):
+            return
+
+        if _has_positional_placeholder(message.value):
+            self.add_error(
+                "Logging calls must use named `%(name)s` placeholders with a mapping argument, "
+                "so each value is labelled in the template. Positional placeholders render as "
+                'e.g. "denied 10.0.2.15 to 93.184.216.34 via 10.0.2.1", leaving it unclear which '
+                'value is which. Use logger.info("denied %(client_ip)s to %(dest_ip)s via '
+                '%(gateway_ip)s", {"client_ip": ..., "dest_ip": ..., "gateway_ip": ...}) instead '
+                'of logger.info("denied %s to %s via %s", ...).',
+                node,
+            )
 
 
 class PillowImportChecker(ASTVisitorChecker):

@@ -62,12 +62,14 @@ def main() -> int:
     repo_root_override = None
     if args.repo_root is not None:
         repo_root_override = args.repo_root.resolve()
-        logger.info("Using repo root override from CLI: %s", repo_root_override)
+        logger.info(
+            "Using repo root override from CLI: %(repo_root)s", {"repo_root": repo_root_override}
+        )
 
     server = create_server(repo_root_override)
 
     def shutdown_handler(signum: int, _frame: object) -> None:
-        logger.info("Received signal %s, shutting down", signum)
+        logger.info("Received signal %(signum)s, shutting down", {"signum": signum})
         raise SystemExit(0)
 
     signal.signal(signal.SIGINT, shutdown_handler)
@@ -88,30 +90,33 @@ def create_server(repo_root_override: Path | None) -> AstreinLanguageServer:
             workspace_root = _get_workspace_root(server)
             if workspace_root is not None:
                 server.repo_root = workspace_root
-                logger.info("Using workspace root from client: %s", server.repo_root)
+                logger.info(
+                    "Using workspace root from client: %(repo_root)s",
+                    {"repo_root": server.repo_root},
+                )
             else:
                 logger.warning("No workspace root available, module-layers checker may not work")
 
     @server.feature(lsp.TEXT_DOCUMENT_DID_OPEN)
     def did_open(params: lsp.DidOpenTextDocumentParams) -> None:
-        logger.info("Document opened: %s", params.text_document.uri)
+        logger.info("Document opened: %(uri)s", {"uri": params.text_document.uri})
         _validate_document(server, params.text_document.uri)
 
     @server.feature(lsp.TEXT_DOCUMENT_DID_SAVE)
     def did_save(params: lsp.DidSaveTextDocumentParams) -> None:
-        logger.info("Document saved: %s", params.text_document.uri)
+        logger.info("Document saved: %(uri)s", {"uri": params.text_document.uri})
         _validate_document(server, params.text_document.uri)
 
     @server.feature(lsp.TEXT_DOCUMENT_DID_CLOSE)
     def did_close(params: lsp.DidCloseTextDocumentParams) -> None:
-        logger.info("Document closed: %s", params.text_document.uri)
+        logger.info("Document closed: %(uri)s", {"uri": params.text_document.uri})
         server.text_document_publish_diagnostics(
             lsp.PublishDiagnosticsParams(uri=params.text_document.uri, diagnostics=[])
         )
 
     @server.feature(lsp.TEXT_DOCUMENT_DID_CHANGE)
     def did_change(params: lsp.DidChangeTextDocumentParams) -> None:
-        logger.debug("Document changed: %s", params.text_document.uri)
+        logger.debug("Document changed: %(uri)s", {"uri": params.text_document.uri})
         # Get the full content from the last change (assuming full sync)
         if params.content_changes:
             source = params.content_changes[-1].text
@@ -146,7 +151,10 @@ def _validate_document(ls: AstreinLanguageServer, uri: str, *, source: str | Non
     ls.text_document_publish_diagnostics(
         lsp.PublishDiagnosticsParams(uri=uri, diagnostics=diagnostics)
     )
-    logger.info("Published %d diagnostic(s) for %s", len(diagnostics), uri)
+    logger.info(
+        "Published %(count)d diagnostic(s) for %(uri)s",
+        {"count": len(diagnostics), "uri": uri},
+    )
 
 
 def _bind_configs(
@@ -161,7 +169,8 @@ def _bind_configs(
     config_path = repo_root / CONFIG_FILENAME
     if not config_path.exists():
         logger.warning(
-            "module_layers.toml not found at %s, skipping module-layers checker", repo_root
+            "module_layers.toml not found at %(repo_root)s, skipping module-layers checker",
+            {"repo_root": repo_root},
         )
         return [cls for cls in checker_classes if cls is not ModuleLayersChecker]
 
@@ -195,7 +204,7 @@ def get_diagnostics(
                 errors.extend(run_checkers(Path(tmp.name), repo_root, factories))
         else:
             if not file_path.exists():
-                logger.warning("File does not exist: %s", file_path)
+                logger.warning("File does not exist: %(file_path)s", {"file_path": file_path})
                 return None
 
             errors.extend(run_checkers(file_path, repo_root, factories))
@@ -203,7 +212,7 @@ def get_diagnostics(
         return [_checker_error_to_diagnostic(e) for e in errors]
 
     except Exception as e:
-        logger.exception("Error validating document %s: %s", uri, e)
+        logger.exception("Error validating document %(uri)s: %(error)s", {"uri": uri, "error": e})
         return []
 
 
