@@ -65,7 +65,7 @@ class QuickSetupPage(CmkPage):
     @property
     def index_of_active_stage(self) -> int:
         """Return the index of the currently active stage in the Quick Setup."""
-        stages = self.main_area.locator(".qs-stage")
+        stages = self.main_area.locator(".cmk-wizard-step__row")
         for index, stage in enumerate(stages.all()):
             if stage.get_attribute("aria-current") == "step":
                 return index
