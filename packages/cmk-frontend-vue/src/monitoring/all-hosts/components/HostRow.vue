@@ -57,7 +57,6 @@ function toggleSelected(selected: boolean): void {
   />
   <StateCell v-if="hasColumn('state')" column-id="state" :state="row.state" />
   <StringCell v-if="hasColumn('name')" column-id="name" :value="row.name" />
-  <StringCell v-if="hasColumn('alias')" column-id="alias" :value="row.alias" />
   <StringCell v-if="hasColumn('address')" column-id="address" :value="row.address" />
   <NumberCell
     v-if="hasColumn('num_services')"

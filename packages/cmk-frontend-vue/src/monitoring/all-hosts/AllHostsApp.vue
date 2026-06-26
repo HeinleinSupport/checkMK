@@ -72,11 +72,6 @@ const nameFilter: StringInputFilter<'name'> = {
   field: 'name'
 }
 
-const aliasFilter: StringInputFilter<'alias'> = {
-  type: 'string-input',
-  field: 'alias'
-}
-
 const addressFilter: StringInputFilter<'address'> = {
   type: 'string-input',
   field: 'address'
@@ -135,13 +130,6 @@ const columns: ColumnDef<HostEntry>[] = [
     sortDescFirst: false,
     minSize: 150,
     meta: { filter: nameFilter }
-  },
-  {
-    accessorKey: 'alias',
-    header: _t('Alias'),
-    sortDescFirst: false,
-    minSize: 150,
-    meta: { filter: aliasFilter }
   },
   {
     accessorKey: 'address',
