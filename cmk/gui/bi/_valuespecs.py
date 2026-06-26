@@ -673,10 +673,7 @@ def is_contact_for_pack(bi_pack: BIAggregationPack) -> bool:
     if contact_groups is None:
         return True
 
-    for group in contact_groups:
-        if group in bi_pack.contact_groups:
-            return True
-    return False
+    return any(group in bi_pack.contact_groups for group in contact_groups)
 
 
 class BIConfigStateOfHostAction(BIStateOfHostAction, ABCBIConfigAction):

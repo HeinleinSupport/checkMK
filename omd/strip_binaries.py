@@ -51,10 +51,7 @@ def filter_excludes(paths: Iterator[Path], excludes: Sequence[str]) -> Iterator[
         yield from paths
 
     def exclude(p: str) -> bool:
-        for e in excludes:
-            if e in p:
-                return True
-        return False
+        return any(e in p for e in excludes)
 
     yield from (p for p in paths if not exclude(str(p)))
 

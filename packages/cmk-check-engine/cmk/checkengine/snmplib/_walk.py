@@ -11,10 +11,7 @@ SNMPWalkOptions = dict[str, list[OID]]
 
 def walk_for_export(rows: SNMPRowInfo) -> SNMPRowInfoForStoredWalk:
     def should_be_encoded(v: SNMPRawValue) -> bool:
-        for c in bytearray(v):
-            if c < 32 or c > 127:
-                return True
-        return False
+        return not all(32 <= c <= 127 for c in bytearray(v))
 
     def hex_encode_value(v: SNMPRawValue) -> str:
         encoded = ""

@@ -2903,7 +2903,4 @@ def dead_nagios_variable(value: str) -> bool:
         return False
     if value[0] != "$" or value[-1] != "$":
         return False
-    for c in value[1:-1]:
-        if not c.isupper() and c != "_":
-            return False
-    return True
+    return all(c.isupper() or c == "_" for c in value[1:-1])

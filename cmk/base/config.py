@@ -3136,10 +3136,7 @@ class ConfigCache:
             ignored = self.ruleset_matcher.get_host_values_all(
                 host_name, self._loaded_config.ignored_checks, self.label_manager.labels_of_host
             )
-            for e in ignored:
-                if check_plugin_name_str in e:
-                    return True
-            return False
+            return any(check_plugin_name_str in e for e in ignored)
 
         check_plugin_name_str = str(check_plugin_name)
 

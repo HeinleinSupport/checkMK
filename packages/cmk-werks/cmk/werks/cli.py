@@ -457,10 +457,7 @@ def git_top_level() -> str:
 
 
 def something_in_git_index() -> bool:
-    for line in os.popen("git status --porcelain"):
-        if line[0] == "M":
-            return True
-    return False
+    return any(line[0] == "M" for line in os.popen("git status --porcelain"))
 
 
 def add_comment(werk: Werk, title: str, comment: str) -> None:

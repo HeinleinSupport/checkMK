@@ -302,7 +302,4 @@ def _sanitize_snmp_table_columns(columns: _ResultColumnsUnsanitized) -> _ResultC
 
 
 def _are_ascending_oids(oid_list: list[OID]) -> bool:
-    for a in range(len(oid_list) - 1):
-        if _cmp_oids(oid_list[a], oid_list[a + 1]) > 0:  # == 0 should never happen
-            return False
-    return True
+    return all(_cmp_oids(oid_list[a], oid_list[a + 1]) <= 0 for a in range(len(oid_list) - 1))

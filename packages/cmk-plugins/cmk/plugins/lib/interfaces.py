@@ -1189,10 +1189,7 @@ def check_regex_match_conditions(
 ) -> bool:
     if what is None:
         return True
-    for r in what:
-        if re.match(r, name):
-            return True
-    return False
+    return any(re.match(r, name) for r in what)
 
 
 def _check_single_matching_conditions(

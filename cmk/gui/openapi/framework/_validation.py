@@ -39,11 +39,7 @@ def _type_contains_api_omitted(type_: type) -> bool:
     if type_ is ApiOmitted:
         return True
 
-    for arg in get_args(type_):
-        if _type_contains_api_omitted(arg):
-            return True
-
-    return False
+    return any(_type_contains_api_omitted(arg) for arg in get_args(type_))
 
 
 def _validate_defaults_parameter(

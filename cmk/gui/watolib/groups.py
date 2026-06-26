@@ -509,10 +509,7 @@ class HostAttributeContactGroups(ABCHostAttribute):
         self, crit: HostContactGroupSpec, value: HostContactGroupSpec, hostname: HostName
     ) -> bool:
         # Just use the contact groups for searching
-        for contact_group in crit["groups"]:
-            if contact_group not in value["groups"]:
-                return False
-        return True
+        return all(contact_group in value["groups"] for contact_group in crit["groups"])
 
     def _vs_contactgroups(self) -> DualListChoice:
         if self._contactgroups is None:  # conditional caused by horrible API

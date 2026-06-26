@@ -38,10 +38,7 @@ def _contains_name(node: ast.expr, names: frozenset[str]) -> bool:
     """Check if an expression contains any of the given variable names."""
     if isinstance(node, ast.Name):
         return node.id in names
-    for child in ast.walk(node):
-        if isinstance(child, ast.Name) and child.id in names:
-            return True
-    return False
+    return any(isinstance(child, ast.Name) and child.id in names for child in ast.walk(node))
 
 
 class RequestValidatedInputChecker(ASTVisitorChecker):

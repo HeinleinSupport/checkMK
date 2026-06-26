@@ -59,11 +59,7 @@ def _is_inventory_data_needed(view: View, all_active_filters: Sequence[Filter]) 
         if cell.painter().load_inv:
             return True
 
-    for filt in all_active_filters:
-        if filt.need_inventory(view.context.get(filt.ident, {})):
-            return True
-
-    return False
+    return any(filt.need_inventory(view.context.get(filt.ident, {})) for filt in all_active_filters)
 
 
 def _get_view_macros(view_spec: ViewSpec) -> Sequence[tuple[str, str]] | None:

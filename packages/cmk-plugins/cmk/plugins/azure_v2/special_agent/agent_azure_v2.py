@@ -602,10 +602,7 @@ class TagBasedConfig:
     def is_configured(self, resource: AzureResource | AzureSubscription) -> bool:
         if not all(k in resource.tags for k in self._required):
             return False
-        for key, val in self._values:
-            if resource.tags.get(key) != val:
-                return False
-        return True
+        return all(resource.tags.get(key) == val for key, val in self._values)
 
     def __str__(self) -> str:
         lines = []

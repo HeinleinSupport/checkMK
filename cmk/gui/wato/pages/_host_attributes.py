@@ -447,8 +447,4 @@ def _some_host_hasnt_set(folder: Folder, attrname: str) -> bool:
             return True
 
     # Check hosts in this folder
-    for host in folder.hosts().values():
-        if attrname not in host.attributes:
-            return True
-
-    return False
+    return any(attrname not in host.attributes for host in folder.hosts().values())

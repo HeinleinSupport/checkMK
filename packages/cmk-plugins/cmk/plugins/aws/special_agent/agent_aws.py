@@ -2406,10 +2406,7 @@ class S3Summary(AWSSection):
             return True
         if self._tags is None:
             return True
-        for tag in tagging:
-            if tag in self._tags:
-                return True
-        return False
+        return any(tag in self._tags for tag in tagging)
 
     def _compute_content(
         self, raw_content: AWSRawContent, colleague_contents: AWSColleagueContents
@@ -2731,10 +2728,7 @@ class Glacier(AWSSection):
         if self._tags is None:
             return True
 
-        for tag in tagging:
-            if tag in self._tags:
-                return True
-        return False
+        return any(tag in self._tags for tag in tagging)
 
     def _compute_content(
         self, raw_content: AWSRawContent, colleague_contents: AWSColleagueContents
@@ -2923,10 +2917,7 @@ class ELBSummaryGeneric(AWSSection):
             return True
         if self._tags is None:
             return True
-        for tag in tagging:
-            if tag in self._tags:
-                return True
-        return False
+        return any(tag in self._tags for tag in tagging)
 
     def _compute_content(
         self, raw_content: AWSRawContent, colleague_contents: AWSColleagueContents
@@ -3823,10 +3814,7 @@ class RDSSummary(AWSSection):
             return True
         if self._tags is None:
             return True
-        for tag in tagging:
-            if tag in self._tags:
-                return True
-        return False
+        return any(tag in self._tags for tag in tagging)
 
     def _compute_content(
         self, raw_content: AWSRawContent, colleague_contents: AWSColleagueContents
@@ -4510,10 +4498,7 @@ class DynamoDBSummary(AWSSection):
             return True
         if self._tags is None:
             return True
-        for tag in tagging:
-            if tag in self._tags:
-                return True
-        return False
+        return any(tag in self._tags for tag in tagging)
 
     def _compute_content(
         self, raw_content: AWSRawContent, colleague_contents: AWSColleagueContents
@@ -4810,10 +4795,7 @@ class WAFV2Summary(AWSSection):
             return True
         if self._tags is None:
             return True
-        for tag in tagging:
-            if tag in self._tags:
-                return True
-        return False
+        return any(tag in self._tags for tag in tagging)
 
     def _compute_content(
         self, raw_content: AWSRawContent, colleague_contents: AWSColleagueContents
@@ -5031,10 +5013,7 @@ class LambdaSummary(AWSSection):
             return True
         if self._tags is None:
             return True
-        for tag in tagging:
-            if tag in self._tags:
-                return True
-        return False
+        return any(tag in self._tags for tag in tagging)
 
     def _compute_content(
         self, raw_content: AWSRawContent, colleague_contents: AWSColleagueContents

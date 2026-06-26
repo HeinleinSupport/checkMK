@@ -175,10 +175,7 @@ def _is_time_in_timeperiod(
     current_time = current_datetime.strftime("%H:%M")
     if day and day.date() != current_datetime.date():
         return False
-    for start, end in time_tuple_list:
-        if start <= current_time <= end:
-            return True
-    return False
+    return any(start <= current_time <= end for start, end in time_tuple_list)
 
 
 def is_timeperiod_active(
