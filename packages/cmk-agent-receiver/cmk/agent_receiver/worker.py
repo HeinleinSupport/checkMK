@@ -48,7 +48,7 @@ class _ClientCertProtocol(H11Protocol):
             if event is h11.NEED_DATA:
                 break
 
-            elif event is h11.PAUSED:
+            if event is h11.PAUSED:
                 # This case can occur in HTTP pipelining, so we need to
                 # stop reading any more data, and ensure that at the end
                 # of the active request/response cycle we handle any
@@ -56,7 +56,7 @@ class _ClientCertProtocol(H11Protocol):
                 self.flow.pause_reading()
                 break
 
-            elif isinstance(event, h11.Request):
+            if isinstance(event, h11.Request):
                 self.headers = [(key.lower(), value) for key, value in event.headers]
 
                 # ==================================================================================
