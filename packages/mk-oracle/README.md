@@ -15,6 +15,7 @@
   - [Sections](#sections)
   - [Custom SQL Metrics](#custom-sql-metrics)
   - [Targeting Pluggable Databases (PDBs)](#targeting-pluggable-databases-pdbs)
+  - [User Configuration File](#user-configuration-file)
 - [Complete Configuration Example](#complete-configuration-example)
 - [Oracle Wallet Authentication](#oracle-wallet-authentication)
   - [Default Configuration](#default-configuration)
@@ -588,6 +589,99 @@ details:...
 - The same PDB is only queried once even if multiple patterns match it.
 - The monitoring user must hold the `SET CONTAINER` privilege: `GRANT SET CONTAINER TO <user> CONTAINER = ALL`.
 - The connection must target the **CDB root service** (e.g. `service_name: FREE`), not a PDB service name. Connecting directly to a PDB service bypasses the container-switching mechanism.
+
+### User Configuration File
+
+The plugin merges configuration from **two** files:
+
+| File          | Path                                                       |
+| ------------- | ---------------------------------------------------------- |
+| Bakery config | `$MK_CONFDIR/mk-oracle.yml`                                |
+| User config   | `$MK_LIBDIR/plugins/packages/mk-oracle/mk-oracle.user.yml` |
+
+The user file lets an user extend or override the configuration without
+editing the bakery file, and conversely lets the bakery redeploy
+its file without clobbering the user's changes.
+The path is the same on Linux and Windows.
+
+Custom SQL files referenced by a relative `path:` are likewise searched in both
+`$MK_LIBDIR/plugins/packages/mk-oracle/orasql/` (user, searched first) and
+`$MK_CONFDIR/orasql/` (bakery), so user SQL wins on a name collision.
+
+The user file is **fully optional** and uses the **same syntax** as the bakery
+file — every key is optional. The plugin loads the bakery file first, then
+merges the user file on top:
+
+| Element                                                                    | Merge rule                                                                                   |
+| -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| Scalars (`cache_age`, `connection.hostname`, `authentication.username`, …) | the user value overrides the bakery value when set                                           |
+| `connection`, `authentication`, `options`, `discovery`, `system.logging`   | merged field by field; unset fields are inherited from the bakery file                       |
+| `instances` (and `configs`)                                                | **not** merged — if present in the user file, the whole list replaces the bakery list        |
+| `custom_metrics`, `sections` (global)                                      | merged by item/section name; the user entry wins on a name collision, new names are appended |
+
+- If the user file is missing or empty, the bakery file is used as-is.
+- If both files are missing, the plugin behaves as before (no monitoring configured).
+- A broken (unparseable) user file is ignored with a warning, so an operator
+  typo never breaks bakery-configured monitoring.
+- Every bakery value that the user file overrides is written to the plugin log.
+
+#### Examples
+
+Override the connection host and a credential, inheriting everything else:
+
+```yaml
+# mk-oracle.user.yml
+oracle:
+  main:
+    connection:
+      hostname: db-prod.example.com # overrides bakery hostname; port etc. inherited
+    authentication:
+      password: 'operator-secret' # overrides only the password
+```
+
+Enable an extra section without redefining the others (merged by name):
+
+```yaml
+# mk-oracle.user.yml
+oracle:
+  main:
+    sections:
+      - rman: # overrides the bakery `rman` entry (or adds it)
+          is_async: yes
+```
+
+Add a custom metric (merged into the global `custom_metrics` by item name):
+
+```yaml
+# mk-oracle.user.yml
+oracle:
+  main:
+    custom_metrics:
+      - my_metric:
+          sql: "select 'details:hello' from dual"
+```
+
+Replace the whole instance list (the user list wins entirely):
+
+```yaml
+# mk-oracle.user.yml
+oracle:
+  main:
+    instances:
+      - sid: PROD1
+      - sid: PROD2
+        connection:
+          hostname: another-host
+```
+
+Raise the log level for debugging without touching the bakery file:
+
+```yaml
+# mk-oracle.user.yml
+system:
+  logging:
+    level: 'debug'
+```
 
 ### Complete Configuration Example
 
