@@ -172,10 +172,9 @@ class MetricBackendFetcher(Fetcher[AgentRawData, MetricBackendFetcherParams]):
         except Exception as e:
             if not _has_cause(e, ConnectionRefusedError):
                 raise
-            else:
-                raise FetcherError(
-                    "Backend initializing, please wait for 2-3 check cycles. "
-                    "If this error persists, make sure the metric backend (Clickhouse) is running. "
-                    "If the error still persists, please contact the Checkmk support. "
-                    f"(Details: {e})\n"
-                ) from e
+            raise FetcherError(
+                "Backend initializing, please wait for 2-3 check cycles. "
+                "If this error persists, make sure the metric backend (Clickhouse) is running. "
+                "If the error still persists, please contact the Checkmk support. "
+                f"(Details: {e})\n"
+            ) from e

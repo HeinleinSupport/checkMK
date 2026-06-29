@@ -1102,8 +1102,7 @@ def test_windows_artifacts_are_signed(
             # note: we're not checking whether those files are actually signed or not,
             #       just whether we forgot to include them in this test
             raise AssertionError(f"Found {len(paths_unchecked)} unchecked files: {paths_unchecked}")
-        else:
-            LOGGER.info("PASS: No further signable files* found (excluding ignored).")
+        LOGGER.info("PASS: No further signable files* found (excluding ignored).")
 
     assert not any(signing_failures)
 

@@ -1675,15 +1675,14 @@ class UsageDetailsCache(AzureAsyncCache):
                             self._subscription,
                         )
                         raise ApiError("Rate limit exceeded for Microsoft.CostManagement API.")
-                    else:
-                        LOGGER.warning(
-                            "Rate limit exceeded for Microsoft.CostManagement API. "
-                            "Received a 'retry after' of %d seconds. Remaining requests: %s - Sub: %s",
-                            retry_after,
-                            remaining_tenant_requests,
-                            self._subscription,
-                        )
-                        await asyncio.sleep(retry_after + 1)
+                    LOGGER.warning(
+                        "Rate limit exceeded for Microsoft.CostManagement API. "
+                        "Received a 'retry after' of %d seconds. Remaining requests: %s - Sub: %s",
+                        retry_after,
+                        remaining_tenant_requests,
+                        self._subscription,
+                    )
+                    await asyncio.sleep(retry_after + 1)
 
 
 @dataclass(frozen=True, kw_only=True)

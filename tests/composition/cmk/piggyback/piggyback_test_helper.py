@@ -185,8 +185,7 @@ def piggybacked_data_gets_updated(
         except PBTimeoutError:
             if raise_timeout:
                 raise
-            else:
-                return False
+            return False
         finally:
             # terminate `cmk-piggyback track` run manually,
             # as `cmk-piggyback track` does not terminate by itself.

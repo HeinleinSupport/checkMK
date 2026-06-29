@@ -1177,8 +1177,7 @@ class _Backups:
                     "There may be too many files present at the "
                     "remote target."
                 )
-            else:
-                raise ex
+            raise ex
 
 
 class ABCBackupTargetType(abc.ABC):

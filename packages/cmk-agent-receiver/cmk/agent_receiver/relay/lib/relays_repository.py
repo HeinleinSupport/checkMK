@@ -106,9 +106,9 @@ class RelaysRepository:
         resp = self.client.get(f"/objects/relay/{relay_id}", auth=auth)
         if resp.status_code >= HTTPStatus.INTERNAL_SERVER_ERROR:
             raise CheckmkAPIError(resp.text)
-        elif resp.status_code == HTTPStatus.NOT_FOUND:
+        if resp.status_code == HTTPStatus.NOT_FOUND:
             return False
-        elif resp.status_code >= HTTPStatus.BAD_REQUEST:
+        if resp.status_code >= HTTPStatus.BAD_REQUEST:
             raise CheckmkAPIError(resp.text)
         return True
 
