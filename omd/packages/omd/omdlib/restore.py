@@ -78,12 +78,12 @@ def clear_site_home(site_home: Path) -> None:
         for entry in scaniter:
             if entry.name == restore_working_dir.name:
                 continue
-            elif entry.name == "tmp":
+            if entry.name == "tmp":
                 # tmp is excluded from backups. The content is cleared by `unmount_tmpfs_without_save`,
                 # but the directory must remain, since it may be a Docker-managed tmpfs mount point
                 # that cannot be removed (EBUSY).
                 continue
-            elif entry.is_dir(follow_symlinks=False):
+            if entry.is_dir(follow_symlinks=False):
                 shutil.rmtree(entry.path)
             else:
                 os.unlink(entry.path)

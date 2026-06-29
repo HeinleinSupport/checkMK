@@ -227,6 +227,5 @@ class DictionaryVisitor(FormSpecVisitor[DictionaryExtended, _ParsedValueModel, _
                 if isinstance(static_value, DefaultValue):
                     # This case should not happen. Static elements have no default values
                     continue
-                else:
-                    disk_values[key] = static_value.value
+                disk_values[key] = static_value.value
         return disk_values
