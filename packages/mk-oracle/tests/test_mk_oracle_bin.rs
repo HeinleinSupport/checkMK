@@ -195,6 +195,69 @@ fn test_print_info() {
     }
 }
 
+#[cfg(not(windows))]
+#[test]
+fn test_user_config_overrides_bakery() {
+    let tmp = tempfile::tempdir().unwrap();
+    let lib_dir = tmp.path();
+
+    // Bakery config under a dedicated conf dir, discovered via MK_CONFDIR.
+    let conf_dir = lib_dir.join("conf");
+    fs::create_dir(&conf_dir).unwrap();
+    fs::write(
+        conf_dir.join("mk-oracle.yml"),
+        r#"---
+oracle:
+  main:
+    connection:
+      hostname: localhost
+    authentication:
+      username: dummy
+      password: dummy
+      type: standard
+    cache_age: 600
+"#,
+    )
+    .unwrap();
+
+    // User config in the runtime dir overrides cache_age.
+    let runtime_dir = lib_dir.join("plugins/packages/mk-oracle");
+    fs::create_dir_all(&runtime_dir).unwrap();
+    fs::write(
+        runtime_dir.join("mk-oracle.user.yml"),
+        "oracle:\n  main:\n    cache_age: 123\n",
+    )
+    .unwrap();
+
+    let out = lib_dir.join("out");
+    fs::create_dir(&out).unwrap();
+
+    let output = run_bin()
+        .env("MK_LIBDIR", lib_dir)
+        .env("MK_CONFDIR", &conf_dir)
+        .args(["-g", out.to_str().unwrap(), "-l"])
+        .output()
+        .unwrap();
+    assert!(output.status.success(), "generate-plugins must succeed");
+
+    // The async plugin lands in the overridden cache_age subdir, not the default.
+    assert!(
+        out.join("123").join("oracle_unified_async").is_file(),
+        "async plugin should use the overridden cache_age (123)"
+    );
+    assert!(
+        !out.join("600").join("oracle_unified_async").exists(),
+        "async plugin must not use the default cache_age (600)"
+    );
+
+    // The override is logged (acceptance criterion).
+    let stderr = String::from_utf8(output.stderr).unwrap();
+    assert!(
+        stderr.contains("overrides bakery config at: oracle.main.cache_age"),
+        "override not logged; stderr: {stderr}"
+    );
+}
+
 fn reference_path(name: &str) -> String {
     let ext = if cfg!(windows) { "ps1" } else { "cfg" };
     let file = format!("{name}.{ext}");
