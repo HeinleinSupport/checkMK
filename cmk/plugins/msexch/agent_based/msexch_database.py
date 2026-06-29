@@ -68,11 +68,10 @@ def _normalize_decimal_positional(value: str) -> str:
         # US format: "1,234.56" - comma=thousands, dot=decimal
         pattern = _get_compiled_pattern(".")
         return pattern.sub("", value)
-    else:
-        # European format: "1.234,56" - dot=thousands, comma=decimal
-        pattern = _get_compiled_pattern(",")
-        normalized = pattern.sub("", value)
-        return normalized.replace(",", ".")
+    # European format: "1.234,56" - dot=thousands, comma=decimal
+    pattern = _get_compiled_pattern(",")
+    normalized = pattern.sub("", value)
+    return normalized.replace(",", ".")
 
 
 def _normalize_by_locale(value: str, locale: str) -> str | None:

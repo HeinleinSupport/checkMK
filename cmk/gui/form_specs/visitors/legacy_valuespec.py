@@ -167,7 +167,7 @@ class LegacyValuespecVisitor(FormSpecVisitor[LegacyValueSpec, _ParsedValueModel,
         if isinstance(parsed_value, DefaultValue):
             return self.form_spec.valuespec.default_value()
 
-        elif isinstance(parsed_value, RawDiskData):
+        if isinstance(parsed_value, RawDiskData):
             return self.form_spec.valuespec.transform_value(parsed_value.value)
 
         assert isinstance(parsed_value.value, dict)

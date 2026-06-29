@@ -266,11 +266,10 @@ def _anonymize_host_and_folder_attribute(
             attr_mode, attr_metric_assoc = attr_value
             if attr_mode == "disabled":
                 return "metrics_association", attr_value.copy()
-            else:
-                return "metrics_association", _anonymize_metrics_association(
-                    anon_interface,
-                    attr_metric_assoc,
-                )
+            return "metrics_association", _anonymize_metrics_association(
+                anon_interface,
+                attr_metric_assoc,
+            )
 
         case "meta_data":
             if (created_by := attr_value.get("created_by")) is not None:
@@ -285,10 +284,9 @@ def _anonymize_host_and_folder_attribute(
 
             if tag_key in builtin_tag_group_ids:
                 return attr_name, attr_value
-            else:
-                return anon_interface.get_id_of_tag_group(tag_key), anon_interface.get_tag_value(
-                    attr_value
-                )
+            return anon_interface.get_id_of_tag_group(tag_key), anon_interface.get_tag_value(
+                attr_value
+            )
         case "locked_attributes":
             # only built-in attributes can be locked
             return "locked_attributes", attr_value.copy()

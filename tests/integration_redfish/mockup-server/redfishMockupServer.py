@@ -193,7 +193,7 @@ class RfMockupServer(BaseHTTPRequestHandler):
             # Eventing not supported
             return 404
         # Check if all of the parameters are given
-        elif (
+        if (
             ("EventType" not in data_received)
             or ("EventId" not in data_received)
             or ("EventTimestamp" not in data_received)
@@ -204,55 +204,54 @@ class RfMockupServer(BaseHTTPRequestHandler):
             or ("OriginOfCondition" not in data_received)
         ):
             return 400
-        else:
-            # Need to reformat to make Origin Of Condition a proper link
-            origin_of_cond = data_received["OriginOfCondition"]
-            data_received["OriginOfCondition"] = {}
-            data_received["OriginOfCondition"]["@odata.id"] = origin_of_cond
-            event_payload = {}
-            event_payload["@odata.type"] = "#Event.v1_2_1.Event"
-            event_payload["Name"] = "Test Event"
-            event_payload["Id"] = str(self.event_id)
-            event_payload["Events"] = []
-            event_payload["Events"].append(data_received)
+        # Need to reformat to make Origin Of Condition a proper link
+        origin_of_cond = data_received["OriginOfCondition"]
+        data_received["OriginOfCondition"] = {}
+        data_received["OriginOfCondition"]["@odata.id"] = origin_of_cond
+        event_payload = {}
+        event_payload["@odata.type"] = "#Event.v1_2_1.Event"
+        event_payload["Name"] = "Test Event"
+        event_payload["Id"] = str(self.event_id)
+        event_payload["Events"] = []
+        event_payload["Events"].append(data_received)
 
-            # Go through each subscriber
-            events = []
-            for member in sub_payload.get("Members", []):
-                entry = member["@odata.id"]
-                entrypath = self.construct_path(entry, "index.json")
-                success, subscription = self.get_cached_link(entrypath)
-                if not success:
-                    logger.info("No such resource")
-                # Sanity check the subscription for required properties
-                elif ("Destination" in subscription) and ("EventTypes" in subscription):
-                    logger.info(("Target", subscription["Destination"]))
-                    logger.info((data_received["EventType"], subscription["EventTypes"]))
+        # Go through each subscriber
+        events = []
+        for member in sub_payload.get("Members", []):
+            entry = member["@odata.id"]
+            entrypath = self.construct_path(entry, "index.json")
+            success, subscription = self.get_cached_link(entrypath)
+            if not success:
+                logger.info("No such resource")
+            # Sanity check the subscription for required properties
+            elif ("Destination" in subscription) and ("EventTypes" in subscription):
+                logger.info(("Target", subscription["Destination"]))
+                logger.info((data_received["EventType"], subscription["EventTypes"]))
 
-                    # If the EventType in the request is one of interest to the subscriber, build an event payload
-                    if data_received["EventType"] in subscription["EventTypes"]:
-                        http_headers = {}
-                        http_headers["Content-Type"] = "application/json"
+                # If the EventType in the request is one of interest to the subscriber, build an event payload
+                if data_received["EventType"] in subscription["EventTypes"]:
+                    http_headers = {}
+                    http_headers["Content-Type"] = "application/json"
 
-                        event_payload["Context"] = subscription.get("Context", "Default Context")
+                    event_payload["Context"] = subscription.get("Context", "Default Context")
 
-                        # Send the event
-                        events.append(
-                            grequests.post(
-                                subscription["Destination"],
-                                timeout=20,
-                                data=json.dumps(event_payload),
-                                headers=http_headers,
-                            )
+                    # Send the event
+                    events.append(
+                        grequests.post(
+                            subscription["Destination"],
+                            timeout=20,
+                            data=json.dumps(event_payload),
+                            headers=http_headers,
                         )
-                    else:
-                        logger.info("event not in eventtypes")
-            try:
-                threading.Thread(target=grequests.map, args=(events,)).start()
-            except Exception as e:
-                logger.info("post error %s", str(e))
-            return 204
-            self.event_id = self.event_id + 1
+                    )
+                else:
+                    logger.info("event not in eventtypes")
+        try:
+            threading.Thread(target=grequests.map, args=(events,)).start()
+        except Exception as e:
+            logger.info("post error %s", str(e))
+        return 204
+        self.event_id = self.event_id + 1
         return None
 
     def handle_telemetry(self, data_received):
@@ -263,7 +262,7 @@ class RfMockupServer(BaseHTTPRequestHandler):
             # Eventing not supported
             return 404
         # Check if all of the parameters are given
-        elif (
+        if (
             (("MetricReportName" in data_received) and ("MetricReportValues" in data_received))
             or (
                 ("MetricReportName" in data_received)
@@ -367,8 +366,7 @@ class RfMockupServer(BaseHTTPRequestHandler):
                 logger.info("post error %s", str(e))
             self.event_id = self.event_id + 1
             return 204
-        else:
-            return 400
+        return 400
 
     server_version = "RedfishMockupHTTPD_v" + tool_version
     event_id = 1

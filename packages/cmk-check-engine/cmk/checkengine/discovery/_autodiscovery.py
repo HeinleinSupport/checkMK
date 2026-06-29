@@ -569,10 +569,7 @@ def autodiscovery(
             skipped=False,
             error=False,
         )
-    else:
-        return AutodiscoveryResult(
-            discovery_result=None, activate=False, skipped=False, error=False
-        )
+    return AutodiscoveryResult(discovery_result=None, activate=False, skipped=False, error=False)
 
 
 def _may_rediscover(

@@ -61,8 +61,7 @@ class CascadingSingleChoiceVisitor(
         assert isinstance(name, str)
         if isinstance(raw_value, RawDiskData):
             return (name, RawDiskData(raw_value.value[1]))
-        else:
-            return (name, RawFrontendData(raw_value.value[1]))
+        return (name, RawFrontendData(raw_value.value[1]))
 
     @override
     def _to_vue(

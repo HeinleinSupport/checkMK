@@ -217,13 +217,13 @@ def size_trend(
         def format_hours(hours: float) -> str:
             if hours > 365 * 24:
                 return "more than a year"
-            elif hours > 90 * 24:
+            if hours > 90 * 24:
                 return "%0d months" % (hours / (30 * 24))  # fixed: true-division
-            elif hours > 4 * 7 * 24:  # 4 weeks
+            if hours > 4 * 7 * 24:  # 4 weeks
                 return "%0d weeks" % (hours / (7 * 24))  # fixed: true-division
-            elif hours > 7 * 24:  # 1 week
+            if hours > 7 * 24:  # 1 week
                 return "%0.1f weeks" % (hours / (7 * 24))  # fixed: true-division
-            elif hours > 2 * 24:  # 2 days
+            if hours > 2 * 24:  # 2 days
                 return "%0.1f days" % (hours / 24)  # fixed: true-division
             return "%d hours" % hours
 

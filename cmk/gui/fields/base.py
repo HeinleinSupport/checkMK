@@ -841,5 +841,4 @@ Keys 'optional1', 'required1' occur more than once.
                 raise self._make_type_error(value)
 
             return result
-        else:
-            return self._load_schemas(value)
+        return self._load_schemas(value)

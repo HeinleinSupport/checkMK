@@ -355,7 +355,7 @@ def load_config(env_file_override: Path | None = None) -> Config:
             service=env.get("PERF_DB_SERVICE", "FREEPDB1"),
             tns_dir=env.get("PERF_TNS_DIR", ""),
         )
-    elif exports_file.exists():
+    if exports_file.exists():
         env = _source_env_file(exports_file)
         return Config(
             host=env.get("DB_HOST", "localhost"),
@@ -364,11 +364,8 @@ def load_config(env_file_override: Path | None = None) -> Config:
             password=env.get("DB_PASSWORD", "oracle"),
             service=env.get("DB_SID", "FREEPDB1"),
         )
-    else:
-        print(
-            "ERROR: no credentials found — run setup.py up or provide exports.sh", file=sys.stderr
-        )
-        sys.exit(1)
+    print("ERROR: no credentials found — run setup.py up or provide exports.sh", file=sys.stderr)
+    sys.exit(1)
 
 
 def resolve_bins(*, use_legacy: bool) -> Bins:

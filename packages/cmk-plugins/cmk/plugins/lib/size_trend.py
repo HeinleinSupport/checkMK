@@ -81,8 +81,7 @@ def _get_trend_average(
         # Gracefully handle time-anomaly of target systems
         if time_since_starting_averaging >= minimum_trend_minutes * 60:
             return last_average
-        else:
-            return None
+        return None
 
     if backlog_minutes * 60.0 < time_since_starting_averaging:
         backlog_count = (backlog_minutes * 60.0) / time_diff

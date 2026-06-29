@@ -160,11 +160,11 @@ def parse_args(args: Sequence[str]) -> ProductUsageRequest:
 
     if parsed_args.collection:
         return ProductUsageRequest(collect=True, store=True)
-    elif parsed_args.upload:
+    if parsed_args.upload:
         return ProductUsageRequest(upload=True)
-    elif parsed_args.dry_run:
+    if parsed_args.dry_run:
         return ProductUsageRequest(collect=True)
-    elif parsed_args.cron:
+    if parsed_args.cron:
         return ProductUsageRequest(collect=True, store=True, upload=True, schedule=True)
     return ProductUsageRequest(collect=True, store=True, upload=True)
 

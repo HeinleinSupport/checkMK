@@ -110,23 +110,22 @@ class Reachability:
                 consecutive_failures=resolve_attempts,
                 total_attempts=resolve_attempts,
             )
-        else:
-            # Given an integer representing reachability (an 8 bit shift register in NTP parlance),
-            # compute how many failures have been seen in the last 8 connection attempts, and how many
-            # have been recent, consecutive failures.
-            #
-            # There are surely faster ways to do this (with bit twiddling) than string manipulation,
-            # but the binary representation will be <= 8 digits, so this will still be fast, and it's
-            # more clear.
-            binary = bin(raw_reachability)[2:]  # cut off the "0b" prefix
-            consecutive_failures = len(binary) - len(binary.rstrip("0"))
-            total_failures = binary.count("0")
-            total_attempts = len(binary)
-            return cls(
-                total_failures=total_failures,
-                consecutive_failures=consecutive_failures,
-                total_attempts=total_attempts,
-            )
+        # Given an integer representing reachability (an 8 bit shift register in NTP parlance),
+        # compute how many failures have been seen in the last 8 connection attempts, and how many
+        # have been recent, consecutive failures.
+        #
+        # There are surely faster ways to do this (with bit twiddling) than string manipulation,
+        # but the binary representation will be <= 8 digits, so this will still be fast, and it's
+        # more clear.
+        binary = bin(raw_reachability)[2:]  # cut off the "0b" prefix
+        consecutive_failures = len(binary) - len(binary.rstrip("0"))
+        total_failures = binary.count("0")
+        total_attempts = len(binary)
+        return cls(
+            total_failures=total_failures,
+            consecutive_failures=consecutive_failures,
+            total_attempts=total_attempts,
+        )
 
 
 @dataclass(frozen=True, kw_only=True)

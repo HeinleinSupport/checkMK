@@ -65,7 +65,7 @@ class JobSchedulerExecutor(JobExecutor):
         if not response.success:
             if response.error_type == "StartupError":
                 return result.Error(StartupError(response.error_message))
-            elif response.error_type == "AlreadyRunningError":
+            if response.error_type == "AlreadyRunningError":
                 return result.Error(AlreadyRunningError(response.error_message))
             raise TypeError(f"Unhandled error: {response.error_type} - {response.error_message}")
 

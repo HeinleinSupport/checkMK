@@ -145,13 +145,12 @@ def _handle_icon(icon: StaticIcon | DynamicIcon) -> DynamicIcon:
     if isinstance(icon, (str, dict)):
         # DynamicIcon
         return icon
-    elif isinstance(icon, StaticIcon):
+    if isinstance(icon, StaticIcon):
         icon_name = DynamicIconName(str(icon.icon))
         if icon.emblem:
             return DynamicIconWithEmblem({"icon": icon_name, "emblem": icon.emblem})
         return icon_name
-    else:
-        raise RuntimeError(f"Can not handle icon: {icon}")
+    raise RuntimeError(f"Can not handle icon: {icon}")
 
 
 def _paint_icons(

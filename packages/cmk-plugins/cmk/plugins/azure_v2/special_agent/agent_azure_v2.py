@@ -202,11 +202,10 @@ class _AzureEntity(ABC):
 
         if self.unique_hostnames_config.enabled == "long":
             return f"azr_{prefix}_{self._entity_name}_{hashed}"
-        elif self.unique_hostnames_config.enabled == "short":
+        if self.unique_hostnames_config.enabled == "short":
             return f"{self._entity_name}_{hashed}"
-        else:
-            # Should hopefully never happen.
-            raise RuntimeError("_compute_unique_name() called, but safe hostnames were disabled")
+        # Should hopefully never happen.
+        raise RuntimeError("_compute_unique_name() called, but safe hostnames were disabled")
 
     @abstractmethod
     def _unique_name(self) -> str:

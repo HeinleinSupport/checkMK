@@ -694,7 +694,7 @@ def make_parameter_hashable(obj: object) -> object:
 
     if isinstance(obj, dict):
         return tuple(sorted((k, make_parameter_hashable(v)) for k, v in obj.items()))
-    elif isinstance(obj, list):
+    if isinstance(obj, list):
         return tuple(
             [
                 make_parameter_hashable(x)
@@ -707,10 +707,9 @@ def make_parameter_hashable(obj: object) -> object:
                 )
             ]
         )
-    elif isinstance(obj, tuple):
+    if isinstance(obj, tuple):
         return tuple(make_parameter_hashable(x) for x in obj)
-    else:
-        return obj
+    return obj
 
 
 def _create_parameters_for_rule(

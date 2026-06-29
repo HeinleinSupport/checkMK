@@ -63,8 +63,7 @@ def _get_valuespec(plugin_name: str) -> ValueSpec:
     plugin = notification_parameter_registry[plugin_name]
     if isinstance(plugin, NotificationParameters):
         return convert_to_legacy_valuespec(plugin.parameter_form(), _)
-    else:
-        return plugin.spec()
+    return plugin.spec()
 
 
 ConfigVariableNotificationFallbackFormat = ConfigVariable(

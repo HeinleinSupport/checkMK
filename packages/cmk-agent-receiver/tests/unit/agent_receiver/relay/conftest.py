@@ -54,14 +54,14 @@ def create_relay_mock_transport() -> httpx.MockTransport:
             return httpx.Response(HTTPStatus.OK, json={"id": relay_id})
 
         # Check relay exists
-        elif request.method == "GET" and "/objects/relay/" in request.url.path:
+        if request.method == "GET" and "/objects/relay/" in request.url.path:
             relay_id = request.url.path.split("/")[-1]
             if relay_id in registered_relays:
                 return httpx.Response(HTTPStatus.OK, json={"id": relay_id})
             return httpx.Response(HTTPStatus.NOT_FOUND, json={"error": "Relay not found"})
 
         # List relays
-        elif request.method == "GET" and request.url.path.endswith(
+        if request.method == "GET" and request.url.path.endswith(
             "/domain-types/relay/collections/all"
         ):
             items = [{"id": relay_id} for relay_id in registered_relays]

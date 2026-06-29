@@ -382,10 +382,9 @@ class PerformanceDb:
         """
         if scenario_details := self.get_scenario(scenario_name=scenario_name):
             return scenario_details[0]
-        else:
-            with self._cursor() as cursor:
-                cursor.execute(
-                    """
+        with self._cursor() as cursor:
+            cursor.execute(
+                """
                     INSERT INTO scenarios(
                         scenario_name,
                         scenario_description
@@ -393,12 +392,12 @@ class PerformanceDb:
                     VALUES(%s,%s)
                     RETURNING scenario_id
                     """,
-                    (scenario_name, scenario_description),
-                )
-                scenario_id = result_record[0] if (result_record := cursor.fetchone()) else None
-            if scenario_id is None:
-                raise ValueError(f'Error adding scenario "{scenario_name}"!')
-            return scenario_id
+                (scenario_name, scenario_description),
+            )
+            scenario_id = result_record[0] if (result_record := cursor.fetchone()) else None
+        if scenario_id is None:
+            raise ValueError(f'Error adding scenario "{scenario_name}"!')
+        return scenario_id
 
     def get_scenario(self, scenario_name: str) -> ScenarioDetails | None:
         """
@@ -464,10 +463,9 @@ class PerformanceDb:
         """
         if test_details := self.get_test(job_id=job_id, scenario_id=scenario_id):
             return test_details[0]
-        else:
-            with self._cursor() as cursor:
-                cursor.execute(
-                    """
+        with self._cursor() as cursor:
+            cursor.execute(
+                """
                     INSERT INTO tests(
                         job_id,
                         scenario_id,
@@ -477,12 +475,12 @@ class PerformanceDb:
                     VALUES(%s,%s,%s,%s)
                     RETURNING test_id
                     """,
-                    (job_id, scenario_id, start_timestamp, end_timestamp),
-                )
-                test_id = result_record[0] if (result_record := cursor.fetchone()) else None
-            if test_id is None:
-                raise ValueError(f'Error adding test "{scenario_id}" to job "{job_id}"!')
-            return test_id
+                (job_id, scenario_id, start_timestamp, end_timestamp),
+            )
+            test_id = result_record[0] if (result_record := cursor.fetchone()) else None
+        if test_id is None:
+            raise ValueError(f'Error adding test "{scenario_id}" to job "{job_id}"!')
+        return test_id
 
     def get_test(self, job_id: int, scenario_id: int) -> TestDetails | None:
         """

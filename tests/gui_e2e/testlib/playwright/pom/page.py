@@ -312,8 +312,7 @@ class MainMenu(LocatorHelper):
                 self._unique_web_element(_loc)
                 return _loc
             return self._sub_menu(sub_menu, None, show_more=False, exact=exact)
-        else:
-            return _loc
+        return _loc
 
     @property
     def _active_side_menu_popup_locator(self) -> Locator:

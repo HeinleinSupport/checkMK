@@ -609,7 +609,7 @@ def _auth_options_to_api_format(internal_attributes: UserSpec) -> APIAuthOption:
                 auth_type="automation",
                 store_automation_secret=internal_attributes.get("store_automation_secret", False),
             )
-        elif "password" in internal_attributes:
+        if "password" in internal_attributes:
             return APIAuthOption(
                 auth_type="password",
                 enforce_password_change=bool(internal_attributes.get("enforce_pw_change", False)),

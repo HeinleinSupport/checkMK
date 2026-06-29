@@ -51,7 +51,7 @@ def main(argv: Sequence[str]) -> int:
         if o == "-h":
             usage()
             return 0
-        elif o == "-r":
+        if o == "-r":
             timerange = int(a)
         elif o == "-w":
             warn = int(a)

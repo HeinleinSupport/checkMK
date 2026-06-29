@@ -85,7 +85,7 @@ def main() -> int:
         if o in ["-h", "--help"]:
             usage()
             return 0
-        elif o in ["-u", "--username"]:
+        if o in ["-u", "--username"]:
             opt_username = a
         elif o in ["-p", "--password"]:
             opt_password = a

@@ -109,8 +109,7 @@ def _check_field(
 
     if error_condition(value):
         return Result(state=State.WARN, summary=error_msg)
-    else:
-        return Result(state=State.OK, summary=success_msg_template.format(value))
+    return Result(state=State.OK, summary=success_msg_template.format(value))
 
 
 def _check_connection_state(data: Mapping[str, str], params: NicParams, item: str) -> CheckResult:

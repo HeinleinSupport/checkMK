@@ -40,8 +40,7 @@ def fmt_bytes(bytes_val: int, unit: str | None = None) -> str:
     display_unit = unit if unit is not None else power_units[power]
     if power == 0:
         return f"{int(value)} {display_unit}"
-    else:
-        return f"{value:.2f} {display_unit}"
+    return f"{value:.2f} {display_unit}"
 
 
 class NotAValidArchive(ValueError): ...
