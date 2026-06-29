@@ -2021,7 +2021,7 @@ class RuleConfigFile(WatoConfigFile[Mapping[RulesetName, Any]]):
     def _load_file(self, *, lock: bool) -> Mapping[RulesetName, Any]:
         folder = self.folder
         path = folder.rules_file_path()
-        loaded_file_config = store.load_mk_file(
+        return store.load_mk_file(
             path,
             default={
                 **RulesetCollection._context_helpers(folder),
@@ -2029,8 +2029,6 @@ class RuleConfigFile(WatoConfigFile[Mapping[RulesetName, Any]]):
             },
             lock=lock,
         )
-
-        return loaded_file_config
 
     def save_rulesets_and_unknown_rulesets(
         self,

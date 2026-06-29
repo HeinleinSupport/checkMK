@@ -305,8 +305,7 @@ class ModeBulkRenameHost(WatoMode):
             return hostname.split(".", 1)[0]
         if operation == "reverse_dns":
             try:
-                reverse_dns = socket.gethostbyaddr(hostname)[0]
-                return reverse_dns
+                return socket.gethostbyaddr(hostname)[0]
             except Exception:
                 return hostname
         if operation == ("case", "upper"):
@@ -328,8 +327,7 @@ class ModeBulkRenameHost(WatoMode):
             if match:
                 for nr, group in enumerate(match.groups()):
                     new_name = new_name.replace("\\%d" % (nr + 1), group)
-                new_name = new_name.replace("\\0", hostname)
-                return new_name
+                return new_name.replace("\\0", hostname)
             return hostname
         return None
 

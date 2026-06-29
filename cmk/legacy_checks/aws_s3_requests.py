@@ -23,7 +23,7 @@ check_info = {}
 
 
 def parse_aws_s3(string_table):
-    parsed = extract_aws_metrics_by_labels(
+    return extract_aws_metrics_by_labels(
         [
             "AllRequests",
             "GetRequests",
@@ -44,7 +44,6 @@ def parse_aws_s3(string_table):
         ],
         parse_aws(string_table),
     )
-    return parsed
 
 
 #   .--requests------------------------------------------------------------.

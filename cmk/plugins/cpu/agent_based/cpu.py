@@ -41,7 +41,7 @@ def parse_cpu(string_table: StringTable) -> Section | None:
     else:
         num_cpus = 1
 
-    section = Section(
+    return Section(
         num_cpus=num_cpus,
         load=Load(float(row[0]), float(row[1]), float(row[2])),
         threads=Threads(
@@ -49,8 +49,6 @@ def parse_cpu(string_table: StringTable) -> Section | None:
             max=int(string_table[1][0]) if len(string_table) > 1 else None,
         ),
     )
-
-    return section
 
 
 agent_section_cpu = AgentSection(

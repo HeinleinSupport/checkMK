@@ -96,8 +96,7 @@ def vnx_quotas_renaming(name: str, mappings: Sequence[tuple[str, str]]) -> str:
                 matches = [g and g or "" for g in matchobj.groups()]
                 for num, group in enumerate(matches, start=1):
                     substitution = substitution.replace("%%%d" % num, group)
-                substitution = substitution % tuple(matches[:num_perc_s])
-                return substitution
+                return substitution % tuple(matches[:num_perc_s])
 
         elif name == match:
             return substitution

@@ -311,8 +311,7 @@ def parse_arguments(args: list[str]) -> argparse.Namespace:
         help="Verify certificate for the endpoint specified by --prometheus-endpoint or "
         "--cluster-collector-endpoint.",
     )
-    arguments = p.parse_args(args)
-    return arguments
+    return p.parse_args(args)
 
 
 def setup_logging(verbosity: int) -> None:

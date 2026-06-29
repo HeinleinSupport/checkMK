@@ -44,8 +44,7 @@ def read_out_csv(text, separator):
     for row in text.split("\n"):
         columns = row.split(separator)
         data.append([re.sub(r"\s", "", re.sub(r"<[^<]*>", "", cell)) for cell in columns])
-    data = [row for row in data if not all(cell == "" for cell in row)]
-    return data
+    return [row for row in data if not all(cell == "" for cell in row)]
 
 
 @pytest.mark.usefixtures("request_context")

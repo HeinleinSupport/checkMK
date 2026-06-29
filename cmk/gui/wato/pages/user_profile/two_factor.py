@@ -863,14 +863,13 @@ class RegisterTotpSecret(Page):
         return breadcrumb
 
     def _page_menu(self, breadcrumb: Breadcrumb) -> PageMenu:
-        menu = make_simple_form_page_menu(
+        return make_simple_form_page_menu(
             _("Profile"),
             breadcrumb,
             form_name="register_totp",
             button_name="_save",
             add_cancel_link=True,
         )
-        return menu
 
     def _action(self, request: Request, config: Config) -> None:
         auth_code_vs = TextInput(allow_empty=False)
@@ -1042,14 +1041,13 @@ class EditCredentialAlias(Page):
         return breadcrumb
 
     def _page_menu(self, breadcrumb: Breadcrumb) -> PageMenu:
-        menu = make_simple_form_page_menu(
+        return make_simple_form_page_menu(
             _("Profile"),
             breadcrumb,
             form_name="profile",
             button_name="_save",
             add_cancel_link=True,
         )
-        return menu
 
     def _action(self, request: Request, config: Config) -> None:
         assert user.id is not None

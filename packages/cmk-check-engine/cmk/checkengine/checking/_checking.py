@@ -126,14 +126,13 @@ def execute_checkmk_checks(
             params=params,
             providers=providers,
         )
-    timed_results = [
+    return [
         *summarizer(host_sections),
         *itertools.chain.from_iterable(
             resolver.parsing_errors() for resolver in providers.values()
         ),
         *check_plugins_missing_data(service_results, exit_spec),
     ]
-    return timed_results
 
 
 def _do_inventory_actions_during_checking_for(

@@ -105,7 +105,7 @@ def _init_tracer_provider(
     host_name: str,
     extra_resource_attributes: Mapping[str, str],
 ) -> TracerProvider:
-    provider = TracerProvider(
+    return TracerProvider(
         resource=Resource(
             attributes={
                 "service.name": service_name,
@@ -117,4 +117,3 @@ def _init_tracer_provider(
             }
         )
     )
-    return provider

@@ -696,13 +696,12 @@ class Certificate:
                 matching URI SAN entries.
         """
         prefix = "urn:checkmk-site:"
-        checkmk_sites = [
+        return [
             SiteId(san.name.value[len(prefix) :])
             for san in self.subject_alternative_names or []
             if isinstance(san.name, pyca_x509.UniformResourceIdentifier)
             and san.name.value.startswith(prefix)
         ]
-        return checkmk_sites
 
     def get_san_customer_ids(self) -> list[str]:
         """
@@ -715,13 +714,12 @@ class Certificate:
                 the URN prefix from matching SAN entries.
         """
         prefix = "urn:customer-id:"
-        customer_ids = [
+        return [
             san.name.value[len(prefix) :]
             for san in self.subject_alternative_names or []
             if isinstance(san.name, pyca_x509.UniformResourceIdentifier)
             and san.name.value.startswith(prefix)
         ]
-        return customer_ids
 
 
 class CertificateSigningRequestPEM(_PEMData):

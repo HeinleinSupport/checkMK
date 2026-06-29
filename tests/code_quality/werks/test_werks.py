@@ -34,8 +34,7 @@ def git_dir() -> Path:
     # the `Path.resolved()` call as well.
     for parent in Path(__file__).resolve().parents:
         if (parent / ".git").exists():
-            real_git = parent / ".git"
-            return real_git
+            return parent / ".git"
     raise RuntimeError("Could not find .git directory")
 
 

@@ -45,7 +45,7 @@ def parse(string_table: StringTable) -> _Section | None:
     if not string_table:
         return None
 
-    parsed = {
+    return {
         "1": HSMBattery(
             voltage=_parse_voltage(string_table[0][0]), state_fail=bool(int(string_table[0][1]))
         ),
@@ -53,7 +53,6 @@ def parse(string_table: StringTable) -> _Section | None:
             voltage=_parse_voltage(string_table[0][2]), state_fail=bool(int(string_table[0][3]))
         ),
     }
-    return parsed
 
 
 snmp_section_primekey_hsm_battery_voltage = SimpleSNMPSection(

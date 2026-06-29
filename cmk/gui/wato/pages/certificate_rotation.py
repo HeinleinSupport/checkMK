@@ -63,13 +63,12 @@ class AutomationStageSiteCACertificateRotation(AutomationCommand[CertificateRota
 
 
 def _stage_site_ca_certificate_rotation(site_id: str, expiry: int, key_size: int) -> SiteCA:
-    site_ca = SiteCA.create(
+    return SiteCA.create(
         cert_dir=Path(SITE_CA_CERTIFICATE_TMP_PATH),
         site_id=SiteId(site_id),
         expiry=relativedelta(days=expiry),
         key_size=key_size,
     )
-    return site_ca
 
 
 class AutomationFinalizeSiteCACertificateRotation(AutomationCommand[CertificateRotationParameters]):

@@ -81,8 +81,7 @@ def _inline(text: str) -> str:
     # Strikethrough ~~text~~
     text = re.sub(r"~~(.+?)~~", r"<s>\1</s>", text)
     # Links [text](url)
-    text = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", r'<a href="\2">\1</a>', text)
-    return text
+    return re.sub(r"\[([^\]]+)\]\(([^)]+)\)", r'<a href="\2">\1</a>', text)
 
 
 def _status_macro(value: str) -> str:

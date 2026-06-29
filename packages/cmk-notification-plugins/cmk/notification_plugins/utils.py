@@ -189,8 +189,7 @@ def substitute_context(template: str, context: PluginNotificationContext) -> str
             template = template.replace("$" + varname + "$", value)
 
     # Remove the rest of the variables and make them empty
-    template = re.sub(r"\$[A-Z_][A-Z_0-9]*\$", "", template)
-    return template
+    return re.sub(r"\$[A-Z_][A-Z_0-9]*\$", "", template)
 
 
 def _event_text_template(notification_type: str) -> str:
@@ -305,8 +304,7 @@ def get_bulk_notification_subject(contexts: list[dict[str, str]], hosts: Iterabl
     if "$COUNT_HOSTS$" in subject:
         subject = subject.replace("$COUNT_HOSTS$", str(len(hosts)))
 
-    subject = substitute_context(subject, bulk_context)
-    return subject
+    return substitute_context(subject, bulk_context)
 
 
 #################################################################################################

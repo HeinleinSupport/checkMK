@@ -286,8 +286,7 @@ def load_job(local_job_id: str, config: Config) -> Job:
     if local_job_id not in config.site.jobs:
         raise MKGeneralException("This backup job does not exist.")
 
-    job = Job(config=config.site.jobs[local_job_id], local_id=local_job_id, id=g_job_id)
-    return job
+    return Job(config=config.site.jobs[local_job_id], local_id=local_job_id, id=g_job_id)
 
 
 def globalize_job_id(local_job_id: str) -> str:

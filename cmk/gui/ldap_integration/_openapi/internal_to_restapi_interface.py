@@ -1246,7 +1246,7 @@ class LDAPConnectionInterface:
         )
 
     def api_response(self) -> dict:
-        r = {
+        return {
             "general_properties": self.general_properties.api_response(),
             "ldap_connection": self.connection_config.api_response(),
             "users": self.users.api_response(),
@@ -1254,7 +1254,6 @@ class LDAPConnectionInterface:
             "sync_plugins": self.sync_plugins.api_response(),
             "other": self.other.api_response(),
         }
-        return r
 
     def to_mk_format(self) -> LDAPUserConnectionConfig:
         r: dict[str, Any] = {
@@ -1289,8 +1288,7 @@ class LDAPConnectionInterface:
             "create_only_on_login": self.users.create_only_on_login,
         }
 
-        c = cast(LDAPUserConnectionConfig, {k: v for k, v in r.items() if v is not None})
-        return c
+        return cast(LDAPUserConnectionConfig, {k: v for k, v in r.items() if v is not None})
 
 
 def request_ldap_connection(ldap_id: str) -> LDAPConnectionInterface:

@@ -960,8 +960,7 @@ class Overridable[T_OverridableConfig: OverridableConfig](Base[T_OverridableConf
     def clone(self) -> Self:
         page_config = replace(self.config)
         page_config.owner = user.id if user.id else UserId("")
-        new_page = self.__class__(page_config)
-        return new_page
+        return self.__class__(page_config)
 
     @classmethod
     def declare_permission(cls, page: Self, user_permissions: UserPermissions) -> None:

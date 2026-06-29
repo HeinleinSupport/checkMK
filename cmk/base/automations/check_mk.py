@@ -525,7 +525,7 @@ def _automation_special_agent_discovery_preview(
         cmds=cmds,
         is_cmc=env.loaded_config.monitoring_core == "cmc",
     )
-    preview = _get_discovery_preview(
+    return _get_discovery_preview(
         run_settings.host_config.host_name,
         {
             run_settings.host_config.host_name: run_settings.host_config.host_primary_family
@@ -544,8 +544,6 @@ def _automation_special_agent_discovery_preview(
         secrets_config=ad_hoc_secrets,
         for_relay=run_settings.host_config.relay_id is not None,
     )
-
-    return preview
 
 
 def _automation_discovery_preview(

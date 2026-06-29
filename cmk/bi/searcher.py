@@ -177,10 +177,7 @@ class BISearcher(ABCBISearcher):
         service_matches = self.get_service_description_matches(
             host_matches, conditions["service_regex"]
         )
-        service_matches = self.filter_service_labels(
-            service_matches, conditions["service_label_groups"]
-        )
-        return service_matches
+        return self.filter_service_labels(service_matches, conditions["service_label_groups"])
 
     @override
     def filter_host_folder(

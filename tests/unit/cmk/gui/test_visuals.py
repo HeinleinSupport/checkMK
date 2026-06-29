@@ -44,7 +44,7 @@ def test_filters_allowed_for_infos() -> None:
 
 
 def _expected_visual_types():
-    expected_visual_types = {
+    return {
         "dashboards": {
             "add_visual_handler": "popup_add_dashlet",
             "ident_attr": "name",
@@ -62,8 +62,6 @@ def _expected_visual_types():
             "title": "view",
         },
     }
-
-    return expected_visual_types
 
 
 def test_registered_visual_types() -> None:

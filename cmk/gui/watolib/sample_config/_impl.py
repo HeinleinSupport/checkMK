@@ -202,7 +202,7 @@ class ConfigGeneratorBasicWATOConfig(SampleConfigGenerator):
         NotificationRuleConfigFile().save(notification_rules, pprint_value=True)
 
     def _initial_global_settings(self) -> dict[str, Any]:
-        settings = {
+        return {
             **USE_NEW_DESCRIPTIONS_FOR_SETTING,
             "trusted_certificate_authorities": {
                 "use_system_wide_cas": True,
@@ -224,8 +224,6 @@ class ConfigGeneratorBasicWATOConfig(SampleConfigGenerator):
                 abandoned_file_age=30 * 86400,
             ),
         }
-
-        return settings
 
     def _initialize_tag_config(self) -> None:
         tag_config = TagConfig.from_config(sample_tag_config())

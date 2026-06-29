@@ -60,11 +60,10 @@ class FakeMonitoringClient:
         def _make_interval(
             end_time: datetime.datetime, start_time: datetime.datetime
         ) -> monitoring_v3.TimeInterval:
-            interval = monitoring_v3.TimeInterval(  # type: ignore[no-untyped-call,unused-ignore]
+            return monitoring_v3.TimeInterval(  # type: ignore[no-untyped-call,unused-ignore]
                 end_time=end_time,
                 start_time=start_time,
             )
-            return interval
 
         INTERVAL1 = _make_interval(TS1, TS0)
         INTERVAL2 = _make_interval(TS2, TS1)

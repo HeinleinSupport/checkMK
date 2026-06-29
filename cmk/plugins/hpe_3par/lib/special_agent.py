@@ -74,8 +74,7 @@ def parse_arguments(argv: Sequence[str]) -> argparse.Namespace:
         help=f"Comma separated list of values to fetch from 3par system. Choose from: {', '.join(VALID_VALUES)}",
     )
     parser.add_argument("host", help="Host name or IP address of 3par system")
-    args = parser.parse_args(argv)
-    return args
+    return parser.parse_args(argv)
 
 
 def main() -> int:

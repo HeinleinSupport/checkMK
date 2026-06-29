@@ -47,8 +47,7 @@ class LocatorHelper(ABC):
         has_not: Locator | None = None,
     ) -> dict[str, Any]:
         """Build kwargs for the locator method."""
-        kwargs: dict[str, Any] = {}
-        kwargs = {
+        return {
             k: v
             for k, v in {
                 "has_text": has_text,
@@ -58,7 +57,6 @@ class LocatorHelper(ABC):
             }.items()
             if v is not None
         }
-        return kwargs
 
     @property
     def _iframe_locator(self) -> Page:

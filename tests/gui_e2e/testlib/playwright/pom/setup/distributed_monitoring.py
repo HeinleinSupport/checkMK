@@ -197,9 +197,7 @@ class DistributedMonitoring(CmkPage):
         remote_site_license_info = (
             self._get_table_row(site_id).get_by_role("cell").filter(has_text="license state")
         )
-        licensed = "license state: licensed" in remote_site_license_info.inner_text().lower()
-
-        return licensed
+        return "license state: licensed" in remote_site_license_info.inner_text().lower()
 
 
 class AddSiteConnection(CmkPage):

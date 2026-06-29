@@ -171,10 +171,9 @@ def parse_timesyncd_ntpmessage(string_table: StringTable) -> NTPMessageSection |
     if len(timezone_lines) == 0:
         return None
     [timezone_line] = timezone_lines
-    section = NTPMessageSection(
+    return NTPMessageSection(
         receivetimestamp=_parse_ntp_message_timestamp(ntp_message_line, timezone_line)
     )
-    return section
 
 
 def _get_levels_seconds(params: Mapping[str, Any]) -> tuple[float, float]:

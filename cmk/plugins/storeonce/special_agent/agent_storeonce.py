@@ -4536,8 +4536,7 @@ def query(url: str, username: str, password: Secret[str], *, opt_cert: bool) -> 
     raw_xml = response.text
     # Remove namespace nonsense
     raw_xml = re.sub(' xmlns="[^"]+"', "", raw_xml, count=1)
-    xml_instance = ET.fromstring(raw_xml)
-    return xml_instance
+    return ET.fromstring(raw_xml)
 
 
 def process_cluster_info(

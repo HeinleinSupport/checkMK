@@ -21,8 +21,7 @@ from .local import DEFAULT_CONFIG, host, main_exe, port, run_agent, user_yaml_co
 
 @pytest.fixture
 def make_yaml_config():
-    yml = yaml.safe_load(DEFAULT_CONFIG.format(port))
-    return yml
+    return yaml.safe_load(DEFAULT_CONFIG.format(port))
 
 
 @pytest.fixture(name="write_config")

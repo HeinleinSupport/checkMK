@@ -377,13 +377,11 @@ def load_werk(werk_path: Path) -> Werk:
         file_content=werk_path.read_text(encoding="utf-8"), file_name=werk_path.name
     )
 
-    werk = Werk(
+    return Werk(
         path=werk_path,
         id=WerkId(int(werk_path.name.removesuffix(".md"))),
         content=parsed,
     )
-
-    return werk
 
 
 def save_werk(werk: Werk, werk_version: WerkVersion, destination: Path | None = None) -> None:

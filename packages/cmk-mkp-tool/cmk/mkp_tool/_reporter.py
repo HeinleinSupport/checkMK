@@ -61,8 +61,7 @@ def categorize_files(
 def _relative_path(
     package_part: PackagePart, resolved_full_path: Path, path_config: PathConfig
 ) -> Path:
-    rpath = resolved_full_path.relative_to(path_config.resolved_paths[package_part])
-    return rpath
+    return resolved_full_path.relative_to(path_config.resolved_paths[package_part])
 
 
 def all_rule_pack_files(ec_path: Path) -> set[Path]:

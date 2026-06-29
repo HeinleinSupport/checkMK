@@ -74,7 +74,7 @@ class ModeUserMigrate(WatoMode):
         return breadcrumb
 
     def page_menu(self, config: Config, breadcrumb: Breadcrumb) -> PageMenu:
-        menu = PageMenu(
+        return PageMenu(
             dropdowns=[
                 PageMenuDropdown(
                     name="users",
@@ -133,8 +133,6 @@ class ModeUserMigrate(WatoMode):
             ],
             breadcrumb=breadcrumb,
         )
-
-        return menu
 
     def page(self, config: Config) -> None:
         if request.var("selection"):

@@ -2062,8 +2062,7 @@ class ConfigCache:
                 attrs[key] = values[0]
 
         # Convert _keys to uppercase. Affects explicit and rule based keys
-        attrs = {key.upper() if key[0] == "_" else key: value for key, value in attrs.items()}
-        return attrs
+        return {key.upper() if key[0] == "_" else key: value for key, value in attrs.items()}
 
     def computed_datasources(self, host_name: HostName | HostAddress) -> ComputedDataSources:
         with contextlib.suppress(KeyError):
@@ -3772,7 +3771,7 @@ class FetcherFactory:
             source_type,
             backend_override=self._snmp_fetcher_config.backend_override,
         )
-        fetcher = SNMPFetcher(
+        return SNMPFetcher(
             sections=self._make_snmp_sections(
                 host_name,
                 checking_sections=self._config_cache.make_checking_sections(
@@ -3803,7 +3802,6 @@ class FetcherFactory:
             relative_walk_cache_path=self._snmp_fetcher_config.relative_walk_cache_path,
             force_stored_walks=self._snmp_fetcher_config.force_stored_walks,
         )
-        return fetcher
 
     def make_tcp_fetcher(
         self,

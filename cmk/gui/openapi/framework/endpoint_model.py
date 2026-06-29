@@ -199,10 +199,9 @@ def _make_parameter_model(
         )
         for name, parameter in parameters.items()
     ]
-    cls = dataclasses.make_dataclass(
+    return dataclasses.make_dataclass(
         class_name, fields=fields, bases=bases, frozen=True, slots=True
     )
-    return cls
 
 
 @with_config(ConfigDict(extra="forbid"))

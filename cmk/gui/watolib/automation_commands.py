@@ -58,8 +58,7 @@ class AutomationPing(AutomationCommand[None]):
         return None
 
     def _parse_omd_status(self, raw_status: str) -> OMDStatus:
-        status = {key: int(val) for key, val in (el.split(" ") for el in raw_status.splitlines())}
-        return status
+        return {key: int(val) for key, val in (el.split(" ") for el in raw_status.splitlines())}
 
     def _get_omd_status(self) -> OMDStatus:
         """Get the status of OMD services on the site

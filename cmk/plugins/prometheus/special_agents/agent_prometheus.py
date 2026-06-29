@@ -60,8 +60,7 @@ def parse_arguments(argv: Sequence[str]) -> argparse.Namespace:
         "--cert-server-name",
         help="Expect this as the server name in the TLS certificate.",
     )
-    args = parser.parse_args(argv)
-    return args
+    return parser.parse_args(argv)
 
 
 def parse_pod_name(labels: dict[str, str], prepend_namespace: bool = False) -> str:
@@ -648,8 +647,7 @@ class PrometheusAPI:
 
     def _query_json_endpoint(self, endpoint: str) -> dict[str, Any]:
         """Query the given endpoint of the Prometheus API expecting a json response"""
-        result = self._process_json_request(endpoint)
-        return result
+        return self._process_json_request(endpoint)
 
     def _process_json_request(self, api_request: str) -> dict[str, Any]:
         response = self.session.get(api_request)

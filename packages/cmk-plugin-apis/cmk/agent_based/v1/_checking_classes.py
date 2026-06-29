@@ -209,12 +209,10 @@ class State(enum.Enum):
                     return 3
 
         # we are nice and handle ints
-        best = min(
+        return min(
             (cls(int(s)) for s in args),
             key=_sort_key,
         )
-
-        return best
 
     @classmethod
     def worst(cls, *args: State | int) -> State:

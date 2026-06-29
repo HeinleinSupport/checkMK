@@ -41,14 +41,12 @@ def parse(string_table: StringTable) -> _Section | None:
     system_fans_failed = bool(int(fan_data[5]))
     cpu_fan_failed = bool(int(fan_data[4]))
 
-    parsed = {
+    return {
         "1": Fan(speed=float(fan_data[1]), state_fail=system_fans_failed),
         "2": Fan(speed=float(fan_data[2]), state_fail=system_fans_failed),
         "3": Fan(speed=float(fan_data[3]), state_fail=system_fans_failed),
         "CPU": Fan(speed=float(fan_data[0]), state_fail=cpu_fan_failed),
     }
-
-    return parsed
 
 
 snmp_section_primekey_fan = SimpleSNMPSection(

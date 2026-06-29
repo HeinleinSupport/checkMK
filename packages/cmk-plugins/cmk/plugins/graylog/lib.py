@@ -53,9 +53,7 @@ def handle_iso_utc_to_localtimestamp(iso_8601_time: str) -> int:
     else:
         time_format = "%Y-%m-%dT%H:%M:%S.%fZ"
     struc_time = time.strptime(iso_8601_time, time_format)
-    local_timestamp = calendar.timegm(struc_time)
-
-    return local_timestamp
+    return calendar.timegm(struc_time)
 
 
 def handle_graylog_messages(

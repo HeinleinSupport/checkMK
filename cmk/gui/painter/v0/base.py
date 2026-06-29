@@ -701,9 +701,7 @@ class Cell:
 
         txt = replace_anchor_tags_with_urls(txt)
         txt = replace_br_with_newlines(txt)
-        txt = escaping.strip_tags(txt)
-
-        return txt
+        return escaping.strip_tags(txt)
 
     def render_content(self, row: Row, user: LoggedInUser) -> CellSpec:
         if not row:

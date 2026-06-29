@@ -133,8 +133,7 @@ class ProfilingMiddleware(abc.ABC):
             logger.debug("Won't profile")
             if self._wsgi_app is None:
                 self._wsgi_app = self.load_app()
-            response = self._wsgi_app(environ, start_response)
-            return response
+            return self._wsgi_app(environ, start_response)
 
         with self._thread_lock:
             self._reset_profiler()

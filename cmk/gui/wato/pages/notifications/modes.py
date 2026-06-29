@@ -2892,7 +2892,7 @@ class ModeUserNotifications(ABCUserNotificationsMode):
         search_vars: HTTPVariables = (
             [("search", search)] if (search := request.get_str_input("search", "")) else []
         )
-        menu = PageMenu(
+        return PageMenu(
             dropdowns=[
                 PageMenuDropdown(
                     name="notification_rules",
@@ -2935,7 +2935,6 @@ class ModeUserNotifications(ABCUserNotificationsMode):
             breadcrumb=breadcrumb,
             inpage_search=PageMenuSearch(),
         )
-        return menu
 
     def _page_menu_entries_related(self) -> Iterator[PageMenuEntry]:
         yield PageMenuEntry(

@@ -209,8 +209,7 @@ def get_ssl_no_verify_context():
 def get_ssl_cafile_context(cafile):
     import ssl
 
-    context = ssl.create_default_context(cafile=cafile)
-    return context
+    return ssl.create_default_context(cafile=cafile)
 
 
 def get_response_body(proto, cafile, address, portspec, page):

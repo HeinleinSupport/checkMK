@@ -442,8 +442,7 @@ class PerformanceDb:
         """
         with self._cursor() as cursor:
             cursor.execute("""SELECT DISTINCT scenario_name FROM scenarios""")
-            scenario_names = [_[0] for _ in cursor.fetchall()]
-        return scenario_names
+            return [_[0] for _ in cursor.fetchall()]
 
     def _add_test(
         self, job_id: int, scenario_id: int, start_timestamp: Datetime, end_timestamp: Datetime

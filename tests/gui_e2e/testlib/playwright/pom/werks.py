@@ -43,11 +43,9 @@ class Werks(CmkPage):
         self.click_and_wait(self.apply_filter, navigate=True)
 
         links = self.main_area.locator("a").get_by_text("#").element_handles()[:count]
-        werks = {
+        return {
             int(str(link.text_content())[1:]): str(link.get_attribute("href")) for link in links
         }
-
-        return werks
 
     @property
     def apply_filter(self) -> Locator:

@@ -115,9 +115,7 @@ def get_comments(
 
     connection.prepend_site = True
 
-    results = {com["id"]: Comment(**com) for com in q.iterate(connection)}
-
-    return results
+    return {com["id"]: Comment(**com) for com in q.iterate(connection)}
 
 
 def add_host_comment_by_query(

@@ -24,7 +24,7 @@ from cmk.utils.tags import TagConfig, TagGroupID, TagID
 
 @pytest.fixture(name="tag_config")
 def fixture_tag_config():
-    tag_config = TagConfig.from_config(
+    return TagConfig.from_config(
         {
             "aux_tags": [
                 {
@@ -83,7 +83,6 @@ def fixture_tag_config():
             ],
         }
     )
-    return tag_config
 
 
 @pytest.fixture(autouse=True)

@@ -828,7 +828,7 @@ class ModeEditTimeperiod(WatoMode):
                     )
                 )
 
-        vs_spec = {
+        return {
             "name": self._name
             or (unique_default_name_suggestion("time_period", list(self._timeperiods.keys()))),
             "alias": timeperiod_spec_alias(tp_spec),
@@ -836,8 +836,6 @@ class ModeEditTimeperiod(WatoMode):
             "exclude": tp_spec.get("exclude", []),
             "exceptions": sorted(exceptions),
         }
-
-        return vs_spec
 
     def _weekdays_to_valuespec(self, tp_spec: TimeperiodSpec) -> tuple:
         if self._has_same_time_specs_during_whole_week(tp_spec):

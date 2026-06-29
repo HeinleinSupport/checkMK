@@ -888,10 +888,9 @@ class ModeEditBrokerConnection(WatoMode):
         return self.mode_url(site=self._edit_id)
 
     def page_menu(self, config: Config, breadcrumb: Breadcrumb) -> PageMenu:
-        menu = make_simple_form_page_menu(
+        return make_simple_form_page_menu(
             _("Connection"), breadcrumb, form_name="broker_connection", button_name="_save"
         )
-        return menu
 
     def _validate_connection_id(self, connection_id: str) -> None:
         if self._site_mgmt.broker_connection_id_exists(connection_id):

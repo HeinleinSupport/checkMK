@@ -1745,8 +1745,7 @@ def _check_status(
     mon_state = State.OK
     if target_states is not None and interface_status not in target_states:
         mon_state = State.CRIT
-    mon_state = states_map.get(interface_status, mon_state)
-    return mon_state
+    return states_map.get(interface_status, mon_state)
 
 
 def _check_speed(attributes: Attributes, targetspeed: int | None) -> Result:

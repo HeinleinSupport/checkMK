@@ -490,7 +490,7 @@ class RelativeGridDashboardResponse(BaseDashboardResponse):
 
     @classmethod
     def from_internal(cls, dashboard: DashboardConfig) -> Self:
-        api_dashboard = cls(
+        return cls(
             owner=dashboard["owner"],
             last_modified_at=dt.datetime.fromtimestamp(dashboard["mtime"], tz=dt.UTC),
             is_built_in=dashboard["owner"] == UserId.builtin(),
@@ -503,4 +503,3 @@ class RelativeGridDashboardResponse(BaseDashboardResponse):
             },
             layout=DashboardRelativeGridLayout(type="relative_grid"),
         )
-        return api_dashboard

@@ -439,9 +439,7 @@ class GUIViewRenderer(ABCViewRenderer):
         if should_show_command_form(self.view.datasource):
             _add_command_doc_references(menu)
 
-        menu = self._extend_dropdown_with_teleported_commands(menu, rows)
-
-        return menu
+        return self._extend_dropdown_with_teleported_commands(menu, rows)
 
     def _page_menu_dropdown_commands(self, rows: Rows) -> list[PageMenuDropdown]:
         if not display_options.enabled(display_options.C):

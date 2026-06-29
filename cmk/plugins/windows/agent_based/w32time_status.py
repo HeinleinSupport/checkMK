@@ -145,7 +145,7 @@ def parse_w32time_status(string_table: StringTable) -> QueryStatus | ErrorStatus
 
     # We expect exactly 16 lines after filtering, this is not robust still simple and clear.
     # Some of these are probably not useful and can go away.
-    query_status = QueryStatus(
+    return QueryStatus(
         leap_indicator=parse_int(before_parens(lines[0])),
         stratum=parse_int(before_parens(lines[1])),
         precision=parse_int(before_parens(lines[2])),
@@ -163,7 +163,6 @@ def parse_w32time_status(string_table: StringTable) -> QueryStatus | ErrorStatus
         last_sync_error=parse_int(before_parens(lines[14])),
         seconds_since_last_good_sync=parse_float(lines[15]),
     )
-    return query_status
 
 
 agent_section_w32time_status = AgentSection(

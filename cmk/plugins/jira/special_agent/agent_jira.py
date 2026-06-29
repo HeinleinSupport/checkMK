@@ -62,14 +62,12 @@ def main(argv: Sequence[str] | None = None) -> int:
 def _handle_jira_connection(args: argparse.Namespace) -> JIRA:
     jira_url = f"{args.proto}://{args.hostname}/"
 
-    jira = JIRA(
+    return JIRA(
         server=jira_url,
         basic_auth=(args.user, resolve_secret_option(args, PASSWORD_OPTION).reveal()),
         options={"verify": False},
         max_retries=0,
     )
-
-    return jira
 
 
 def _handle_request(args: argparse.Namespace, jira: JIRA) -> None:

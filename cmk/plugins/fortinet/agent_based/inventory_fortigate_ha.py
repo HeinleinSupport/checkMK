@@ -38,14 +38,13 @@ def parse_fortigate_ha(string_table: StringTable) -> Section | None:
     if not string_table:
         return None
     table_data = string_table[0]
-    parsed = {
+    return {
         "mode": _SYSTEM_MODES.get(table_data[0], "unknown"),
         "group_id": table_data[1],
         "prio": table_data[2],
         "sched": _LBSCHED_MODES.get(table_data[3], "unknown"),
         "group_name": table_data[4],
     }
-    return parsed
 
 
 snmp_section_fortigate_ha = SimpleSNMPSection(

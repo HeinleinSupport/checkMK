@@ -703,7 +703,7 @@ def perform_host_label_discovery(
             debug=debug,
             pending_changes=pending_changes,
         )
-        discovery_result = get_check_table(
+        return get_check_table(
             host,
             action,
             automation_config=automation_config,
@@ -713,7 +713,6 @@ def perform_host_label_discovery(
             use_git=use_git,
             pending_changes=pending_changes,
         )
-    return discovery_result
 
 
 def perform_service_discovery(
@@ -752,7 +751,7 @@ def perform_service_discovery(
             use_git=use_git,
             pending_changes=pending_changes,
         )
-        discovery_result = get_check_table(
+        return get_check_table(
             host,
             action,
             automation_config=automation_config,
@@ -762,7 +761,6 @@ def perform_service_discovery(
             use_git=use_git,
             pending_changes=pending_changes,
         )
-    return discovery_result
 
 
 def has_discovery_action_specific_permissions(

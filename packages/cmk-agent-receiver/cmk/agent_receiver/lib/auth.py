@@ -21,5 +21,4 @@ def internal_credentials() -> B64SiteInternalSecret:
 async def async_internal_credentials() -> B64SiteInternalSecret:
     # Use asyncio thread pool to avoid blocking the event loop, similar to aiofiles
     loop = asyncio.get_running_loop()
-    content = await loop.run_in_executor(None, internal_credentials)
-    return content
+    return await loop.run_in_executor(None, internal_credentials)

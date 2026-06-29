@@ -86,8 +86,7 @@ def _normalize_by_locale(value: str, locale: str) -> str | None:
         return normalized.replace(",", ".")
     if any(locale_lower.startswith(prefix) for prefix in en_prefixes):
         pattern = _get_compiled_pattern(".")
-        normalized = pattern.sub("", value)
-        return normalized
+        return pattern.sub("", value)
     return None
 
 

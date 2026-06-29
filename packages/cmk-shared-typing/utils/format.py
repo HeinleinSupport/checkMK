@@ -9,5 +9,4 @@ from .postprocess import postprocess
 
 class CodeFormatter(CustomCodeFormatter):
     def apply(self, code: str) -> str:
-        code = postprocess(code)
-        return code
+        return postprocess(code)

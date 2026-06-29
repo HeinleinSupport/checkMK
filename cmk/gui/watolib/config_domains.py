@@ -508,11 +508,10 @@ def finalize_all_settings_per_site(
     global_settings: GlobalSettings,
     site_specific_settings_per_site: Mapping[SiteId, GlobalSettings],
 ) -> Mapping[SiteId, GlobalSettings]:
-    final_settings_per_site = {
+    return {
         site_id: finalize_all_settings(default_globals, global_settings, site_conf)
         for site_id, site_conf in site_specific_settings_per_site.items()
     }
-    return final_settings_per_site
 
 
 def _all_sites(omd_path: Path) -> Iterable[str]:
@@ -811,9 +810,7 @@ class ConfigDomainOMD(ABCConfigDomain):
                 settings["TRACE_SEND"] = "no_tracing"
 
         # Convert from OMD key (to lower, add "site_" prefix)
-        settings = {"site_%s" % key.lower(): val for key, val in settings.items()}
-
-        return settings
+        return {"site_%s" % key.lower(): val for key, val in settings.items()}
 
     # Bring the Setup internal representation int OMD configuration settings.
     # Counterpart of the _from_omd_config() method.

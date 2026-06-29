@@ -56,8 +56,7 @@ def try_load_current_version_from_defines_make(defines_make: Path) -> str | None
         with defines_make.open(encoding="utf-8") as f:
             for line in f:
                 if line.startswith("VERSION"):
-                    version = line.split("=", 1)[1].strip()
-                    return version
+                    return line.split("=", 1)[1].strip()
     except FileNotFoundError:
         pass
 

@@ -96,12 +96,11 @@ def create_program_call_rule(
     ruleset_name = "datasource_programs"
     rule_value = program_call
     logger.info('Creating rule "%s"...', ruleset_name)
-    rule_id = site.openapi.rules.create(
+    return site.openapi.rules.create(
         value=rule_value,
         ruleset_name=ruleset_name,
         folder=rule_folder,
     )
-    return rule_id
 
 
 def _dumps_up_to_date(dumps_dir: Path, min_version: CMKVersion) -> None:

@@ -95,8 +95,7 @@ def _format_title(string: str) -> str:
     except Exception as e:
         raise WerkError(f"Can not parse title '{string}'") from e
 
-    markdown_converted = html.unescape(markdown_converted)
-    return markdown_converted
+    return html.unescape(markdown_converted)
 
 
 def _check_html(string: str, tags_allowed: set[str] | None = None) -> None:

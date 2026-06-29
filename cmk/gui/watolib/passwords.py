@@ -60,10 +60,7 @@ def contact_group_choices(only_own: bool = False) -> list[tuple[str, str]]:
     else:
         user_groups = []
 
-    entries = [
-        (c, g["alias"]) for c, g in contact_groups.items() if not only_own or c in user_groups
-    ]
-    return entries
+    return [(c, g["alias"]) for c, g in contact_groups.items() if not only_own or c in user_groups]
 
 
 def sorted_contact_group_choices(only_own: bool = False) -> list[tuple[str, str]]:

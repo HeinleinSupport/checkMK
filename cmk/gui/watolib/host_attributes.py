@@ -881,12 +881,11 @@ def all_host_attributes(
     host_attributes: Sequence[CustomHostAttrSpec],
     tag_groups_by_topic: Sequence[tuple[str, Sequence[TagGroup]]],
 ) -> dict[str, ABCHostAttribute]:
-    result = (
+    return (
         {ident: cls() for ident, cls in host_attribute_registry.items()}
         | config_based_tag_group_attributes(_HashableTagGroupsByTopic(tag_groups_by_topic))
         | config_based_custom_host_attribute_sync_plugins(_HashableCustomHostAttrs(host_attributes))
     )
-    return result
 
 
 # This is the counterpart of "configure_attributes". Another place which

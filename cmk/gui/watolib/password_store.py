@@ -60,7 +60,7 @@ class PasswordStore(WatoSimpleConfigFile[PasswordConfig]):
         """The actual passwords are stored in a separate file for special treatment
 
         Have a look at `cmk.utils.password_store` for further information"""
-        cfg = join_password_specs(
+        return join_password_specs(
             store.load_from_mk_file(
                 self._config_file_path,
                 key=self._config_variable,
@@ -69,7 +69,6 @@ class PasswordStore(WatoSimpleConfigFile[PasswordConfig]):
             ),
             password_store.load(password_store.password_store_path()),
         )
-        return cfg
 
     @override
     def save(self, cfg: Mapping[str, PasswordConfig], pprint_value: bool) -> None:

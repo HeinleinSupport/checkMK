@@ -344,9 +344,7 @@ def _execute_backup(site_for_mkbackup_tests: Site, job_id: str = "testjob") -> s
         p.stdout,
     )
     assert matches is not None
-    backup_id = matches.groups()[0]
-
-    return backup_id
+    return matches.groups()[0]
 
 
 def _execute_restore(

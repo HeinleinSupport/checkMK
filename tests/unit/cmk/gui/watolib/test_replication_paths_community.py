@@ -29,7 +29,7 @@ def restore_orig_replication_paths() -> Generator[None]:
 
 
 def _expected_replication_paths() -> list[ReplicationPath]:
-    expected = [
+    return [
         ReplicationPath.make(
             ty=ReplicationPathType.DIR,
             ident="check_mk",
@@ -152,8 +152,6 @@ def _expected_replication_paths() -> list[ReplicationPath]:
             site_path="etc/check_mk/diskspace.d/wato",
         ),
     ]
-
-    return expected
 
 
 def _default_site_config() -> SiteConfiguration:

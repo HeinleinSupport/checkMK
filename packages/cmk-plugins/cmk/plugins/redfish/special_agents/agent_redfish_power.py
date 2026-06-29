@@ -138,8 +138,7 @@ def fetch_data(redfishobj, url, component):
     response_url = redfishobj.get(url, None)
     if response_url.status == 200:
         try:
-            response_dict = response_url.dict
-            return response_dict
+            return response_url.dict
         except JsonDecodingError:
             return {"error": f"{component} data had a JSON decoding problem\n"}
 

@@ -1309,12 +1309,11 @@ class CheckTypeGroupSelection(ElementSelection):
 
     def get_elements(self) -> Mapping[str, str]:
         checks = get_check_information_cached(debug=active_config.debug)
-        elements = {
+        return {
             str(cn): "{} - {}".format(cn, c["title"])
             for (cn, c) in checks.items()
             if c.get("group") == self._checkgroup
         }
-        return elements
 
     def value_to_html(self, value: str | None) -> ValueSpecText:
         return HTMLWriter.render_tt(value)

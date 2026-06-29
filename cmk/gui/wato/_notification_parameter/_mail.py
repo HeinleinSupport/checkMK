@@ -75,7 +75,7 @@ def form_spec_asciimail(edition: Edition) -> DictionaryExtended:
 
 
 def _elements_ascii(is_cse: bool) -> Mapping[str, DictElement[Any]]:
-    elements = {
+    return {
         "from": _from_address_element(is_cse),
         "reply_to": _reply_to(),
         "host_subject": _host_subject(),
@@ -125,8 +125,6 @@ $LONGSERVICEOUTPUT$
         "bulk_sort_order": _bulk_sort_order(),
         "disable_multiplexing": _disable_multiplexing(is_cse),
     }
-
-    return elements
 
 
 def _header_elements(is_cse: bool) -> dict[str, DictElement[Any]]:

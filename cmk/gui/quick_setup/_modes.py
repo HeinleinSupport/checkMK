@@ -254,7 +254,7 @@ class ModeEditConfigurationBundles(WatoMode):
 
     @override
     def page_menu(self, config: Config, breadcrumb: Breadcrumb) -> PageMenu:
-        menu = PageMenu(
+        return PageMenu(
             dropdowns=[
                 PageMenuDropdown(
                     name="configurations",
@@ -282,7 +282,6 @@ class ModeEditConfigurationBundles(WatoMode):
             ],
             breadcrumb=breadcrumb,
         )
-        return menu
 
     @override
     def page(self, config: Config) -> None:

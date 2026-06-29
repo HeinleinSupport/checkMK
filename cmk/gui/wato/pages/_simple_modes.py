@@ -579,7 +579,7 @@ class SimpleEditMode[T: Mapping[str, Any]](_SimpleWatoModeBase[T]):
         else:
             disable_attr = []
 
-        elements = (
+        return (
             ident_attr
             + [
                 (
@@ -598,8 +598,6 @@ class SimpleEditMode[T: Mapping[str, Any]](_SimpleWatoModeBase[T]):
             + disable_attr
             + site_attr
         )
-
-        return elements
 
     def _fs_general_properties(self) -> dict[str, form_specs.DictElement]:
         elements: dict[str, form_specs.DictElement[Any]] = {}

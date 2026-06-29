@@ -144,9 +144,8 @@ class FilterGroupCombo(AjaxDropdownFilter):
         # TODO: This should be part of the general options query
         if current_value := value.get(self.query_filter.request_vars[0]):
             group_type = "contact" if self.group_type.endswith("_contact") else self.group_type
-            alias = sites.live().query_value(
+            return sites.live().query_value(
                 f"GET {group_type}groups\nCache: reload\nColumns: alias\nFilter: name = {livestatus.lqencode(current_value)}\n",
                 current_value,
             )
-            return alias
         return None

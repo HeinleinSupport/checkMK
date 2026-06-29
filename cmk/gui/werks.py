@@ -599,12 +599,11 @@ def get_sort_key_by_version_and_component(
     translator: werks_utils.WerkTranslator, werk: WerkV3
 ) -> tuple[str | int, ...]:
     werk_result = werks_utils.get_sort_key_by_version_and_component(translator, werk)
-    result = (
+    return (
         *werk_result[:4],
         int(is_acknowledged(werk, load_acknowledgements())),
         *werk_result[4:],
     )
-    return result
 
 
 def sort_by_version_and_component(werks: Iterable[WerkV3]) -> list[WerkV3]:

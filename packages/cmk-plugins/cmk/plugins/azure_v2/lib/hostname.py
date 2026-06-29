@@ -27,7 +27,6 @@ def compute_unique_name_hash(uniqueness_keys: Sequence[str]) -> str:
                 resource-type (not lower, wecause we have seen types with different casing)
     """
     unique_string = f"azure{''.join(uniqueness_keys)}"
-    hashed = hashlib.sha256(unique_string.encode("utf-8"), usedforsecurity=False).hexdigest()[
+    return hashlib.sha256(unique_string.encode("utf-8"), usedforsecurity=False).hexdigest()[
         -_HASH_CHARS_TO_KEEP:
     ]
-    return hashed

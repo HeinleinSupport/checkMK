@@ -52,8 +52,7 @@ class UnifiedSearchSlideout(LocatorHelper):
             has=has,
             has_not=has_not,
         )
-        _loc = _loc.filter(**kwargs) if kwargs else _loc
-        return _loc
+        return _loc.filter(**kwargs) if kwargs else _loc
 
     def validate(self) -> None:
         """Validate that the unified search slideout is open"""

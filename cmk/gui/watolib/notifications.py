@@ -808,8 +808,7 @@ class NotificationRule:
         if self.contact_selection is not None:
             r.update(self.contact_selection.to_mk_file_format())
 
-        er = cast(EventRule, r)
-        return er
+        return cast(EventRule, r)
 
 
 def find_usages_of_contact_group_in_notification_rules(

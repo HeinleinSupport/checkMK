@@ -188,8 +188,7 @@ def _migrate_services_to_monitor(values: object) -> list[str]:
         # migrate from names that contain / and . to valid formspec names
         values_migrated = [_azure_service_name_to_valid_formspec(value) for value in values]
         # silently drop values that are only valid in CCE if we're CEE now.
-        result = [value for value in valid_choices if value in values_migrated]
-        return result
+        return [value for value in valid_choices if value in values_migrated]
     raise TypeError(values)
 
 

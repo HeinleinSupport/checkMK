@@ -522,8 +522,7 @@ def parse_arguments(argv: Sequence[str]) -> argparse.Namespace:
         "executed.",
     )
 
-    args = parser.parse_args(argv)
-    return args
+    return parser.parse_args(argv)
 
 
 # The following *Config objects provide a Configuration instance as described in
@@ -1238,11 +1237,10 @@ async def get_backend_address_data(
     nic_config = await get_network_interface_config(mgmt_client, ip_config_id)
 
     if "name" in nic_config and "properties" in nic_config:
-        backend_address_data = {
+        return {
             "name": nic_config["name"],
             **filter_keys(nic_config["properties"], backend_address_keys),
         }
-        return backend_address_data
     return None
 
 
@@ -1533,8 +1531,7 @@ class AzureAsyncCache(DataCache):
 
     async def get_cached_data(self):
         async with AzureAsyncCache._open_cache_semaphore:
-            cached_data = super().get_cached_data()
-        return cached_data
+            return super().get_cached_data()
 
     async def _write_to_cache(self, data):
         async with AzureAsyncCache._open_cache_semaphore:
@@ -1645,8 +1642,7 @@ class UsageDetailsCache(AzureAsyncCache):
             rows += mgmt_client.lookup_json_data(data, "rows")
 
         common_metadata = {k: v for k, v in json_data.items() if k != "properties"}
-        processed_query = _process_query_id(columns, rows, common_metadata)
-        return processed_query
+        return _process_query_id(columns, rows, common_metadata)
 
     async def get_live_data(self, *args: Any) -> Any:
         async with UsageDetailsCache._cost_query_lock:

@@ -144,7 +144,7 @@ class ModePatternEditor(WatoMode):
         return _("Log file patterns of log file %s on host %s") % (self._item, self._hostname)
 
     def page_menu(self, config: Config, breadcrumb: Breadcrumb) -> PageMenu:
-        menu = PageMenu(
+        return PageMenu(
             dropdowns=[
                 PageMenuDropdown(
                     name="related",
@@ -159,7 +159,6 @@ class ModePatternEditor(WatoMode):
             ],
             breadcrumb=breadcrumb,
         )
-        return menu
 
     def _page_menu_entries_related(self) -> Iterable[PageMenuEntry]:
         if not self._host:

@@ -587,8 +587,7 @@ class BaseApiClient(abc.ABC):
             next_link = data.get("nextLink")
 
         common_metadata = {k: v for k, v in json_data.items() if k != "properties"}
-        processed_query = self._process_query(columns, rows, common_metadata)
-        return processed_query
+        return self._process_query(columns, rows, common_metadata)
 
     def _process_query(self, columns, rows, common_metadata):
         processed_query = []

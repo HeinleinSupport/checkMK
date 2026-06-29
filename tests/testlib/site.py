@@ -727,7 +727,7 @@ class Site:
 
         Returns the stdout of the process.
         """
-        output = check_output(
+        return check_output(
             cmd=cmd,
             input_=input_,
             encoding=encoding,
@@ -736,7 +736,6 @@ class Site:
             substitute_user=self.id,
             **kwargs,
         )
-        return output
 
     @contextmanager
     def copy_file(self, source_path: str | Path, target_path: str | Path) -> Iterator[Path]:
@@ -2839,13 +2838,12 @@ class PythonHelper:
         args: list[str] | None = None,
     ) -> str:
         with self.copy_helper():
-            output = self.site.check_output(
+            return self.site.check_output(
                 ["python3", str(self.site_path)] + (args or []),
                 input_=input_,
                 encoding=encoding,
                 stderr=subprocess.PIPE,
             )
-            return output
 
     @contextmanager
     def execute(  # type: ignore[misc]

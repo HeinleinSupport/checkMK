@@ -32,8 +32,7 @@ def parse_ucs_c_rack_server_topsystem(string_table):
         """
         # time.strptime('Jun 1 2005  1:33PM', '%b %d %Y %I:%M%p')
         struct_time = time.strptime(date_and_time[4:], "%b %d %H:%M:%S %Y")
-        formatted = time.strftime("%Y-%m-%d %H:%M:%S", struct_time)
-        return formatted
+        return time.strftime("%Y-%m-%d %H:%M:%S", struct_time)
 
     parsed = []
     # The element count of string_table lines is under our control (agent output) and

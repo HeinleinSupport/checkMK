@@ -2311,8 +2311,7 @@ class S3Limits(AWSSectionLimits):
         There's no API method for getting account limits thus we have to
         fetch all buckets.
         """
-        bucket_list = S3BucketHelper.list_buckets(self._client)
-        return bucket_list
+        return S3BucketHelper.list_buckets(self._client)
 
     def _compute_content(
         self, raw_content: AWSRawContent, colleague_contents: AWSColleagueContents
@@ -6629,8 +6628,7 @@ class AWSSections(abc.ABC):
 
     def _collect_static_host_labels(self) -> Mapping[str, str]:
         """Labels every host will be labelled with regardless of type"""
-        host_labels = {"cmk/aws/account": self.account_id}
-        return host_labels
+        return {"cmk/aws/account": self.account_id}
 
     def _is_piggyback_host_result(self, section_result: AWSSectionResult) -> bool:
         return section_result.piggyback_hostname not in {None, "", self._hostname}

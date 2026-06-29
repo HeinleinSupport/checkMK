@@ -209,8 +209,7 @@ def _get_hue_by_weight_index(weight_index: float) -> float:
     for section_end, section_weight in _hsv_color_distribution:
         if weight_index < section_weight:
             section_size = section_end - section_begin
-            hue = section_begin + int((weight_index / section_weight) * section_size)
-            return hue
+            return section_begin + int((weight_index / section_weight) * section_size)
         weight_index -= section_weight
         section_begin = section_end
     return 0.0  # Hmmm...
@@ -233,8 +232,7 @@ def parse_color_into_hexrgb(color_string: str) -> str:
             factors = (1.0, 1.0, 0.8) if cmk_color_index[0] in ["2", "3"] else (1.0, 0.6, 1.0)
             hsv = _pointwise_multiplication(hsv, factors)
 
-        color_hexrgb = _hsv_to_hexrgb(hsv)
-        return color_hexrgb
+        return _hsv_to_hexrgb(hsv)
 
     return "#808080"
 

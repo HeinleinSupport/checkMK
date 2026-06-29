@@ -395,12 +395,10 @@ def _get_paths_from_package(path_to_package: str) -> list[str]:
             )
             proc.wait()
 
-            all_paths = [
+            return [
                 "/" + path if not path.startswith("/") else path
                 for path in paths_output.decode("utf-8").splitlines()
             ]
-
-            return all_paths
 
         # source package
         return list(

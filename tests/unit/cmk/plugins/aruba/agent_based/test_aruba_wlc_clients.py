@@ -59,8 +59,7 @@ def _run_parse_and_check(
 ) -> CheckResult:
     if params is None:
         params = {}
-    result = list(check_wlc_clients(item, params, parse_aruba_wlc_clients(info)))
-    return result
+    return list(check_wlc_clients(item, params, parse_aruba_wlc_clients(info)))
 
 
 @pytest.mark.parametrize("item, result", ITEM_RESULT)

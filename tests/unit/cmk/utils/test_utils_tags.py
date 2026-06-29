@@ -14,7 +14,7 @@ from cmk.utils.tags import AuxTag, GroupedTag, TagConfig, TagGroup, TagGroupID, 
 
 @pytest.fixture(name="test_cfg")
 def fixture_test_cfg() -> TagConfig:
-    cfg = TagConfig.from_config(
+    return TagConfig.from_config(
         {
             "aux_tags": [
                 {
@@ -83,7 +83,6 @@ def fixture_test_cfg() -> TagConfig:
             ],
         }
     )
-    return cfg
 
 
 def test_tag_config() -> None:

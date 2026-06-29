@@ -169,8 +169,7 @@ def expected_output_engine():
 @pytest.fixture(name="plugin_dir", params=["plugins", "local"])
 def plugin_dir_engine(request):
     Globals.plugintype = request.param
-    target_dir = os.path.join(user_dir, request.param)
-    return target_dir
+    return os.path.join(user_dir, request.param)
 
 
 @pytest.fixture(name="manage_plugins", params=["netstat_an.bat", "wmic_if.bat"], autouse=True)

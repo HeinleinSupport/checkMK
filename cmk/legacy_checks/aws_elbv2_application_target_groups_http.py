@@ -14,7 +14,7 @@ check_info = {}
 
 
 def parse_aws_elbv2_target_groups_http(string_table):
-    metrics = extract_aws_metrics_by_labels(
+    return extract_aws_metrics_by_labels(
         [
             "RequestCount",
             "HTTPCode_Target_2XX_Count",
@@ -24,7 +24,6 @@ def parse_aws_elbv2_target_groups_http(string_table):
         ],
         parse_aws(string_table),
     )
-    return metrics
 
 
 def discover_aws_application_elb_target_groups_http(section):

@@ -584,8 +584,7 @@ def get_services_with_status(
             {0: "OK", 1: "WARN", 2: "CRIT", 3: "UNKNOWN"}.get(state, "UNDEFINED"),
             pformat(services),
         )
-    services_list = {_ for _ in services_by_state[service_status] if _ not in skipped_services}
-    return services_list
+    return {_ for _ in services_by_state[service_status] if _ not in skipped_services}
 
 
 def parse_files(

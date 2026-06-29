@@ -191,8 +191,7 @@ def parse_arguments(argv: Sequence[str]) -> argparse.Namespace:
         action="store_true",
         help="Do not verify TLS certificate.",
     )
-    args = parser.parse_args(argv)
-    return args
+    return parser.parse_args(argv)
 
 
 class IgnoreAlerts(TypedDict):

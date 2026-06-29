@@ -97,14 +97,13 @@ class Cluster:
             if pod.spec.node in aggregation_node_names or pod.spec.node is None
         ]
 
-        cluster = cls(
+        return cls(
             cluster_details=api_data.cluster_details,
             daemonsets=api_data.daemonsets,
             nodes=api_data.nodes,
             aggregation_nodes=aggregation_nodes,
             aggregation_pods=aggregation_pods,
         )
-        return cluster
 
 
 PB_KUBE_OBJECT = (

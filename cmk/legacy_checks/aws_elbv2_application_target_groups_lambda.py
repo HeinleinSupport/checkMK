@@ -19,10 +19,9 @@ check_info = {}
 
 
 def parse_aws_elbv2_target_groups_lambda(string_table):
-    metrics = extract_aws_metrics_by_labels(
+    return extract_aws_metrics_by_labels(
         ["RequestCount", "LambdaUserError"], parse_aws(string_table)
     )
-    return metrics
 
 
 def discover_aws_elbv2_target_groups_lambda(section):

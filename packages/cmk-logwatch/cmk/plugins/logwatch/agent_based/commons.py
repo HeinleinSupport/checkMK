@@ -215,13 +215,12 @@ def get_unreadable_logfiles(
     >>> list(get_unreadable_logfiles("log1", {"node": Section(errors=[], logfiles={})}))
     []
     """
-    unreadable_logfiles = [
+    return [
         (logfile, node)
         for node, node_data in section.items()
         if (logfile_data := node_data.logfiles.get(logfile))
         and logfile_data["attr"] == "cannotopen"
     ]
-    return unreadable_logfiles
 
 
 def check_unreadable_files(

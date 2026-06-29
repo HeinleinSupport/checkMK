@@ -210,8 +210,7 @@ def _grammar() -> pp.ParserElement:
         .setParseAction(lambda tokens: _Mode.EXCLUDE if tokens else _Mode.INCLUDE)
         .set_results_name("mode")
     )
-    fields = mode + field_struct
-    return fields
+    return mode + field_struct
 
 
 def _merge_fields(a: FieldsFilter, b: FieldsFilter) -> FieldsFilter:

@@ -2301,7 +2301,7 @@ class ModeEventConsoleRules(ABCEventConsoleMode):
         return _("Rule pack %s") % self._rule_pack["title"]
 
     def page_menu(self, config: Config, breadcrumb: Breadcrumb) -> PageMenu:
-        menu = PageMenu(
+        return PageMenu(
             dropdowns=[
                 PageMenuDropdown(
                     name="rules",
@@ -2322,8 +2322,6 @@ class ModeEventConsoleRules(ABCEventConsoleMode):
             breadcrumb=breadcrumb,
             inpage_search=PageMenuSearch(),
         )
-
-        return menu
 
     def _page_menu_topics_rules(self) -> Iterator[PageMenuTopic]:
         if not user.may("mkeventd.edit"):
@@ -3229,7 +3227,7 @@ class ModeEventConsoleSettings(ABCEventConsoleMode, ABCGlobalSettingsMode):
         return _("Event Console configuration")
 
     def page_menu(self, config: Config, breadcrumb: Breadcrumb) -> PageMenu:
-        menu = PageMenu(
+        return PageMenu(
             dropdowns=[
                 PageMenuDropdown(
                     name="related",
@@ -3245,8 +3243,6 @@ class ModeEventConsoleSettings(ABCEventConsoleMode, ABCGlobalSettingsMode):
             breadcrumb=breadcrumb,
             inpage_search=PageMenuSearch(),
         )
-
-        return menu
 
     # TODO: Consolidate with ModeEditGlobals.action()
     def action(self, config: Config) -> ActionResult:

@@ -242,8 +242,7 @@ class TCPFetcher(Fetcher[AgentRawData, TCPFetcherParams]):
         if sock is None:
             raise OSError(errno.ENOTCONN, os.strerror(errno.ENOTCONN))
 
-        agent_data = self._get_agent_data(sock, self._get_uuid_as_expected_server_name())
-        return agent_data
+        return self._get_agent_data(sock, self._get_uuid_as_expected_server_name())
 
     def _get_uuid_as_expected_server_name(self) -> str | None:
         try:

@@ -52,8 +52,7 @@ class ActivateChangesSlideout(LocatorHelper):
             has=has,
             has_not=has_not,
         )
-        _loc = _loc.filter(**kwargs) if kwargs else _loc
-        return _loc
+        return _loc.filter(**kwargs) if kwargs else _loc
 
     @property
     def slideout(self) -> Locator:

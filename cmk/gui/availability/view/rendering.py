@@ -418,7 +418,7 @@ def _page_menu_availability(
     time_range: AVTimeRange,
     avoptions: AVOptions,
 ) -> PageMenu:
-    menu = PageMenu(
+    return PageMenu(
         dropdowns=[
             PageMenuDropdown(
                 name="availability",
@@ -485,8 +485,6 @@ def _page_menu_availability(
         ],
         breadcrumb=breadcrumb,
     )
-
-    return menu
 
 
 def _render_avoptions_form(

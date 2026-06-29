@@ -36,9 +36,8 @@ class FakeStatusSocket(socket.socket):
         pass
 
     def get_response(self) -> Any:
-        response = ast.literal_eval(self._response.decode("utf-8"))
+        return ast.literal_eval(self._response.decode("utf-8"))
         # assert isinstance(response, list)
-        return response
 
 
 def new_event(attrs: Event) -> Event:

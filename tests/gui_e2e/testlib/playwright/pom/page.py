@@ -83,8 +83,7 @@ class CmkPage(LocatorHelper):
             has=has,
             has_not=has_not,
         )
-        _loc = _loc.filter(**kwargs) if kwargs else _loc
-        return _loc
+        return _loc.filter(**kwargs) if kwargs else _loc
 
     @property
     def session_warning_message(self) -> Locator:
@@ -497,8 +496,7 @@ class MainArea(LocatorHelper):
             has=has,
             has_not=has_not,
         )
-        _loc = _loc.filter(**kwargs) if kwargs else _loc
-        return _loc
+        return _loc.filter(**kwargs) if kwargs else _loc
 
     @property
     def page_title_locator(self) -> Locator:
@@ -634,8 +632,7 @@ class Sidebar(LocatorHelper):
             has=has,
             has_not=has_not,
         )
-        _loc = _loc.filter(**kwargs) if kwargs else _loc
-        return _loc
+        return _loc.filter(**kwargs) if kwargs else _loc
 
     @property
     def add_snapin_button(self) -> Locator:

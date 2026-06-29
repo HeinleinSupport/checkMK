@@ -23,8 +23,7 @@ Section = Mapping[str, str]
 def parse_aix_lparstat_inventory(string_table: StringTable) -> Section:
     lines = (raw[0] for raw in string_table if ":" in raw[0])
     pairs = (line.split(":", 1) for line in lines)
-    parsed = {k.strip(): v.strip() for k, v in pairs}
-    return parsed
+    return {k.strip(): v.strip() for k, v in pairs}
 
 
 agent_section_aix_lparstat_inventory = AgentSection(
