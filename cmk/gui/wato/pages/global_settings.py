@@ -626,6 +626,8 @@ class ModeEditGlobals(ABCGlobalSettingsMode):
         )
 
     def action(self, config: Config) -> ActionResult:
+        check_csrf_token()
+
         varname = request.var("_varname")
         if not varname:
             return None
