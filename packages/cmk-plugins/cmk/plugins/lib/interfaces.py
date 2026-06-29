@@ -168,10 +168,13 @@ class AugmentedIPInterface:
         >>> AugmentedIPInterface.from_ip_address("12.13.14.15/16")
         AugmentedIPv4Interface('12.13.14.15/16')
         """
-        if isinstance(ip_if := ip_interface(address), IPv4Interface):
-            return AugmentedIPv4Interface(ip_if)
-        elif isinstance(ip_if, IPv6Interface):
-            return AugmentedIPv6Interface(ip_if)
+        match ip_interface(address):
+            case IPv4Interface() as ip_if:
+                return AugmentedIPv4Interface(ip_if)
+            case IPv6Interface() as ip_if:
+                return AugmentedIPv6Interface(ip_if)
+            case _ as unexpected:
+                assert_never(unexpected)
 
     @property
     def is_broadcast(self: "AugmentedIPInterface.IPInterfaceLike") -> bool:

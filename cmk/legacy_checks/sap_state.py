@@ -29,6 +29,7 @@ def check_sap_state(item, _no_parameters, info):
         if line[0] == item:
             value = line[1]
             return value_to_status(value), "Status: %s" % value
+    return None
 
 
 def parse_sap_state(string_table: StringTable) -> StringTable:

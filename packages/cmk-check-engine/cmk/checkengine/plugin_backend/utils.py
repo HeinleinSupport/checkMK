@@ -79,6 +79,7 @@ def validate_function_arguments(
         type_label=type_label,
         has_item=has_item,
     )
+    return None
 
 
 def _raise_appropriate_type_error(

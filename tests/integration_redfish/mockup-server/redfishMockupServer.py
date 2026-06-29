@@ -253,6 +253,7 @@ class RfMockupServer(BaseHTTPRequestHandler):
                 logger.info("post error %s", str(e))
             return 204
             self.event_id = self.event_id + 1
+        return None
 
     def handle_telemetry(self, data_received):
         sub_path = self.construct_path("/redfish/v1/EventService/Subscriptions", "index.json")
@@ -876,6 +877,7 @@ class RfMockupServer(BaseHTTPRequestHandler):
         else:
             logger.info(("response time:", self.server.responseTime))
             return self.server.responseTime
+        return None
 
 
 def main():

@@ -11,3 +11,4 @@ def get_inventory_value(inventory: InventoryResult, key: str) -> Any:
     for row in inventory:
         assert isinstance(row, Attributes)
         return row.inventory_attributes[key]
+    return None

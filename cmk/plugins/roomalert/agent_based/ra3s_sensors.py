@@ -4,7 +4,7 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 from collections.abc import Mapping, MutableMapping
 from enum import StrEnum
-from typing import NamedTuple
+from typing import assert_never, NamedTuple
 
 from cmk.agent_based.v1 import get_value_store, State
 from cmk.agent_based.v2 import (
@@ -100,30 +100,35 @@ def parse_ra3s_digital(string_table: StringTable) -> DigitalSection | None:
         return None
 
     temperature = float(sensor_data[0]) / 100.0
-    if sensor_type == DigitalSensorType.TEMP:
-        return DigitalSection(sensor_type=sensor_type, temperature=temperature)
-    elif sensor_type == DigitalSensorType.TEMP_ACTIVE_POWER:
-        return DigitalSection(
-            sensor_type=sensor_type, temperature=temperature, power_detected=sensor_data[2] == "1"
-        )
-    elif sensor_type == DigitalSensorType.TEMP_ANALOG:
-        return DigitalSection(
-            sensor_type=sensor_type, temperature=temperature, voltage=int(sensor_data[2])
-        )
-    elif sensor_type == DigitalSensorType.TEMP_EXTREME:
-        return DigitalSection(
-            sensor_type=sensor_type,
-            temperature=temperature,
-            thermocouple_temperature=float(sensor_data[2]) / 100.0,
-        )
-    elif sensor_type == DigitalSensorType.TEMP_HUMIDITY:
-        _, _, humidity, _, heat_index, _ = sensor_data
-        return DigitalSection(
-            sensor_type=sensor_type,
-            temperature=temperature,
-            humidity=float(humidity) / 100.0,
-            heat_index=float(heat_index) / 100.0,
-        )
+    match sensor_type:
+        case DigitalSensorType.TEMP:
+            return DigitalSection(sensor_type=sensor_type, temperature=temperature)
+        case DigitalSensorType.TEMP_ACTIVE_POWER:
+            return DigitalSection(
+                sensor_type=sensor_type,
+                temperature=temperature,
+                power_detected=sensor_data[2] == "1",
+            )
+        case DigitalSensorType.TEMP_ANALOG:
+            return DigitalSection(
+                sensor_type=sensor_type, temperature=temperature, voltage=int(sensor_data[2])
+            )
+        case DigitalSensorType.TEMP_EXTREME:
+            return DigitalSection(
+                sensor_type=sensor_type,
+                temperature=temperature,
+                thermocouple_temperature=float(sensor_data[2]) / 100.0,
+            )
+        case DigitalSensorType.TEMP_HUMIDITY:
+            _, _, humidity, _, heat_index, _ = sensor_data
+            return DigitalSection(
+                sensor_type=sensor_type,
+                temperature=temperature,
+                humidity=float(humidity) / 100.0,
+                heat_index=float(heat_index) / 100.0,
+            )
+        case _:
+            assert_never(sensor_type)
 
 
 snmp_section_ra3s_digital_sensors = SimpleSNMPSection(

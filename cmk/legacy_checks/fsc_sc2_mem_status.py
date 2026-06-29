@@ -70,6 +70,7 @@ def check_fsc_sc2_mem_status(item, _no_params, info):
         if designation == item:
             status_state, status_txt = get_mem_status(status)
             return status_state, f"Status is {status_txt}, Size {capacity} MB"
+    return None
 
 
 check_info["fsc_sc2_mem_status"] = LegacyCheckDefinition(

@@ -139,6 +139,7 @@ def check_tinkerforge_motion(item, params, parsed):
             status = 1 if test_in_period((today.tm_hour, today.tm_min), periods) else 0
             return status, "Motion detected", [("motion", reading)]
         return 0, "No motion detected", [("motion", reading)]
+    return None
 
 
 def discover_tinkerforge(parsed):
