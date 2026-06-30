@@ -201,7 +201,7 @@ class LDAPConnectionValuespec(Dictionary):
                         "be altered."
                     ),
                     choices=[
-                        ("ad", _("Active Directory"), self._vs_directory_options("ad")),
+                        ("ad", _("Active directory"), self._vs_directory_options("ad")),
                         ("openldap", _("OpenLDAP"), self._vs_directory_options("openldap")),
                         (
                             "389directoryserver",
@@ -509,7 +509,7 @@ class LDAPConnectionValuespec(Dictionary):
                     title=_("Lower case User-IDs"),
                     help=_("Convert imported User-IDs to lower case during synchronization."),
                     value=True,
-                    totext=_("Enforce lower case User-IDs."),
+                    totext=_("Enforce lower case user IDs."),
                 ),
             ),
             (

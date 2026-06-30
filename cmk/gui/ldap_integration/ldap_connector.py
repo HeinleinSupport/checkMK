@@ -2556,7 +2556,7 @@ class LDAPAttributePluginAuthExpire(LDAPAttributePlugin):
         super().__init__(
             builtin=True,
             ident="auth_expire",
-            title=_("Authentication Expiration"),
+            title=_("Authentication expiration"),
             help_text=_(
                 "This plug-in fetches all information which is needed to check whether or not an already authenticated user should be de-authenticated, e.g. because the password has changed in LDAP or the account has been locked."
             ),

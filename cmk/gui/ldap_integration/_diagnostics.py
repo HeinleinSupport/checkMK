@@ -23,9 +23,9 @@ def diagnostic_tests() -> list[tuple[str, LDAPDiagnosticTest]]:
     return [
         (_("Connection"), _test_connect),
         (_("User Base-DN"), _test_user_base_dn),
-        (_("Count Users"), _test_user_count),
+        (_("Count users"), _test_user_count),
         (_("Group Base-DN"), _test_group_base_dn),
-        (_("Count Groups"), _test_group_count),
+        (_("Count groups"), _test_group_count),
         (_("Sync-plug-in: Roles"), _test_groups_to_roles),
     ]
 
