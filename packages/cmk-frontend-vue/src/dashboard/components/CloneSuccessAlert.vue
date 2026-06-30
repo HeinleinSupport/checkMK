@@ -43,8 +43,8 @@ watch(
       variant="success"
       :dismissible="true"
       :auto-dismiss="props?.hasFilters ? false : true"
+      :heading="_t('Dashboard cloned.')"
     >
-      <template #heading>{{ _t('Dashboard cloned.') }}</template>
       <a v-if="props?.hasFilters" href="#" @click.prevent="emits('editFilters')">{{
         _t('Review applied filters.')
       }}</a>

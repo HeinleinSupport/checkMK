@@ -132,9 +132,7 @@ const alertIconColor = computed(() => {
       <CmkMultitoneIcon v-else :name="alertIconName" :primary-color="alertIconColor" size="large" />
     </div>
     <div class="cmk-alert-box__text">
-      <CmkHeading v-if="$slots.heading || heading" type="h4">
-        <slot name="heading">{{ heading }}</slot>
-      </CmkHeading>
+      <CmkHeading v-if="heading" type="h4">{{ heading }}</CmkHeading>
       <div class="cmk-alert-box__body">
         <slot />
       </div>

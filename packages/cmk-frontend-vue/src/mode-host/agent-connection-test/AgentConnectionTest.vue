@@ -596,8 +596,13 @@ const showSettings = ref(false)
         </span>
       </CmkAlertBox>
 
-      <CmkAlertBox v-if="isError" variant="warning" size="small" class="warn-container">
-        <template #heading>{{ warnContainerValues.header }}</template>
+      <CmkAlertBox
+        v-if="isError"
+        variant="warning"
+        size="small"
+        class="warn-container"
+        :heading="warnContainerValues.header"
+      >
         <div class="warn-txt-container">
           <CmkParagraph v-if="warnContainerValues.error">
             {{ _t('Error: ') }} {{ warnContainerValues.error }}<br /><br />

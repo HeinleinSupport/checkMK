@@ -373,8 +373,8 @@ async function startTest(): Promise<void> {
       variant="warning"
       size="small"
       class="mh-snmp-connection-test__warning"
+      :heading="_t('SNMP connection failed')"
     >
-      <template #heading>{{ _t('SNMP connection failed') }}</template>
       <div class="mh-snmp-connection-test__warning-text">
         <CmkParagraph v-if="errorDetails"> {{ _t('Error: ') }} {{ errorDetails }} </CmkParagraph>
         <CmkParagraph>
