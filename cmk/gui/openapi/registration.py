@@ -14,7 +14,6 @@ from cmk.gui.openapi.endpoints import (
     configuration_entity,
     contact_group_config,
     folder_config,
-    host_config,
     host_group_config,
     host_internal,
     host_tag_group,
@@ -55,7 +54,6 @@ from .api_endpoints.user_role import registration as api_user_role
 from .framework.registry import VersionedEndpointRegistry
 from .restful_objects.endpoint_family import EndpointFamilyRegistry
 from .shared_endpoint_families.agent import AGENTS_FAMILY
-from .shared_endpoint_families.host_config import HOST_CONFIG_FAMILY
 
 
 def register(
@@ -65,7 +63,6 @@ def register(
 ) -> None:
     # TODO: once all legacy endpoints have been migrated the family registry should happen inside
     #  respective endpoint module
-    endpoint_family_registry.register(HOST_CONFIG_FAMILY)
     endpoint_family_registry.register(AGENTS_FAMILY)
 
     acknowledgement.register(endpoint_registry)
@@ -77,7 +74,6 @@ def register(
     contact_group_config.register(endpoint_registry)
     folder_config.register(endpoint_registry)
     configuration_entity.register(endpoint_registry)
-    host_config.register(endpoint_registry)
     host_group_config.register(endpoint_registry)
     host_internal.register(endpoint_registry)
     host_tag_group.register(endpoint_registry)
@@ -102,7 +98,10 @@ def register(
         versioned_endpoint_registry=versioned_endpoint_registry,
         endpoint_family_registry=endpoint_family_registry,
     )
-    api_host_config.register(versioned_endpoint_registry)
+    api_host_config.register(
+        versioned_endpoint_registry=versioned_endpoint_registry,
+        endpoint_family_registry=endpoint_family_registry,
+    )
     api_host_config_internal.register(versioned_endpoint_registry)
     api_master_control.register(
         versioned_endpoint_registry=versioned_endpoint_registry,

@@ -22,11 +22,11 @@ from cmk.gui.openapi.framework.model.common_fields import AnnotatedFolder
 from cmk.gui.openapi.framework.model.converter import HostConverter, TypedPlainValidator
 from cmk.gui.openapi.framework.model.response import ApiResponse
 from cmk.gui.openapi.restful_objects.constructors import object_action_href
-from cmk.gui.openapi.shared_endpoint_families.host_config import HOST_CONFIG_FAMILY
 from cmk.gui.openapi.utils import ProblemException
 from cmk.gui.utils import permission_verification as permissions
 from cmk.gui.watolib.hosts_and_folders import Host
 
+from ._family import HOST_CONFIG_FAMILY
 from ._utils import host_etag, make_pending_changes, rw_permissions, serialize_host
 from .models.response_models import HostConfigModel
 

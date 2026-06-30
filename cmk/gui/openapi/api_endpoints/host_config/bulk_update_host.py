@@ -20,9 +20,9 @@ from cmk.gui.openapi.framework import (
 from cmk.gui.openapi.framework.model import api_field, api_model
 from cmk.gui.openapi.framework.model.converter import HostConverter, TypedPlainValidator
 from cmk.gui.openapi.restful_objects.constructors import domain_type_action_href
-from cmk.gui.openapi.shared_endpoint_families.host_config import HOST_CONFIG_FAMILY
 from cmk.gui.watolib.hosts_and_folders import Folder, Host
 
+from ._family import HOST_CONFIG_FAMILY
 from ._utils import (
     bulk_host_action_response,
     make_pending_changes,

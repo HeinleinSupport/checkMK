@@ -13,10 +13,10 @@ from cmk.gui.openapi.api_endpoints.downtime.models.response_models import (
     FixedDowntimeModeModel,
     FlexibleDowntimeModeModel,
 )
+from cmk.gui.openapi.api_endpoints.host_config import HOST_CONFIG_FAMILY
 from cmk.gui.openapi.framework.api_config import APIVersion
 from cmk.gui.openapi.framework.endpoint_link import link_to_endpoint
 from cmk.gui.openapi.framework.model.base_models import LinkModel
-from cmk.gui.openapi.shared_endpoint_families.host_config import HOST_CONFIG_FAMILY
 from cmk.gui.utils import permission_verification as permissions
 from cmk.livestatus_client.queries import ResultRow
 

@@ -18,10 +18,10 @@ from cmk.gui.openapi.framework import (
 from cmk.gui.openapi.framework.model.converter import HostConverter, TypedPlainValidator
 from cmk.gui.openapi.framework.model.response import ApiResponse
 from cmk.gui.openapi.restful_objects.constructors import object_href
-from cmk.gui.openapi.shared_endpoint_families.host_config import HOST_CONFIG_FAMILY
 from cmk.gui.openapi.utils import ProblemException
 from cmk.gui.watolib.hosts_and_folders import Host
 
+from ._family import HOST_CONFIG_FAMILY
 from ._utils import (
     host_etag,
     make_pending_changes,

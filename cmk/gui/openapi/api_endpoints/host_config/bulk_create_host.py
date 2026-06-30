@@ -24,12 +24,12 @@ from cmk.gui.openapi.framework.model import (
 )
 from cmk.gui.openapi.framework.model.restrict_features import RestrictFeatures
 from cmk.gui.openapi.restful_objects.constructors import domain_type_action_href
-from cmk.gui.openapi.shared_endpoint_families.host_config import HOST_CONFIG_FAMILY
 from cmk.gui.utils import permission_verification as permissions
 from cmk.gui.watolib import bakery
 from cmk.gui.watolib.hosts_and_folders import Folder, folder_tree
 from cmk.licensing.basics.options import OptionName
 
+from ._family import HOST_CONFIG_FAMILY
 from ._utils import (
     bulk_host_action_response,
     make_pending_changes,

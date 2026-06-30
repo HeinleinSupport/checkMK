@@ -21,9 +21,9 @@ from cmk.gui.openapi.framework import (
 from cmk.gui.openapi.framework.model import ApiOmitted
 from cmk.gui.openapi.framework.model.common_fields import FieldsFilterType
 from cmk.gui.openapi.restful_objects.constructors import collection_href
-from cmk.gui.openapi.shared_endpoint_families.host_config import HOST_CONFIG_FAMILY
 from cmk.gui.watolib.hosts_and_folders import Folder, folder_tree, Host
 
+from ._family import HOST_CONFIG_FAMILY
 from ._utils import PERMISSIONS, serialize_host_collection
 from .models.response_models import HostConfigCollectionModel
 

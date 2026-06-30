@@ -8,6 +8,7 @@ from uuid import UUID
 
 import cmk.utils.paths
 from cmk.ccc.hostaddress import HostName
+from cmk.gui.openapi.api_endpoints.host_config import HOST_CONFIG_FAMILY
 from cmk.gui.openapi.framework import (
     ApiContext,
     APIVersion,
@@ -20,7 +21,6 @@ from cmk.gui.openapi.framework import (
 )
 from cmk.gui.openapi.framework.model.converter import TypedPlainValidator
 from cmk.gui.openapi.restful_objects.constructors import object_action_href
-from cmk.gui.openapi.shared_endpoint_families.host_config import HOST_CONFIG_FAMILY
 from cmk.gui.openapi.utils import ProblemException
 from cmk.gui.token_auth import AgentRegistrationToken, get_token_store
 from cmk.utils.agent_registration import HostAgentConnectionMode, UUIDLinkManager

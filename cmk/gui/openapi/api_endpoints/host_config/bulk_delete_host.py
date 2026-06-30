@@ -21,10 +21,10 @@ from cmk.gui.openapi.framework.model import api_field, api_model
 from cmk.gui.openapi.framework.model.converter import HostConverter, TypedPlainValidator
 from cmk.gui.openapi.framework.model.response import ApiResponse
 from cmk.gui.openapi.restful_objects.constructors import domain_type_action_href
-from cmk.gui.openapi.shared_endpoint_families.host_config import HOST_CONFIG_FAMILY
 from cmk.gui.watolib.check_mk_automations import delete_hosts
 from cmk.gui.watolib.hosts_and_folders import folder_tree
 
+from ._family import HOST_CONFIG_FAMILY
 from ._utils import make_pending_changes, PERMISSIONS_DELETE
 
 

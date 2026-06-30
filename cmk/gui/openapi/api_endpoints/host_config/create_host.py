@@ -23,11 +23,11 @@ from cmk.gui.openapi.framework.model.converter import HostConverter, TypedPlainV
 from cmk.gui.openapi.framework.model.response import ApiResponse
 from cmk.gui.openapi.framework.model.restrict_features import RestrictFeatures
 from cmk.gui.openapi.restful_objects.constructors import collection_href
-from cmk.gui.openapi.shared_endpoint_families.host_config import HOST_CONFIG_FAMILY
 from cmk.gui.watolib import bakery
 from cmk.gui.watolib.hosts_and_folders import folder_tree
 from cmk.licensing.basics.options import OptionName
 
+from ._family import HOST_CONFIG_FAMILY
 from ._utils import (
     host_etag,
     make_pending_changes,

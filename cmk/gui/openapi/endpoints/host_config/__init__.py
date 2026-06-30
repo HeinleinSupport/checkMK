@@ -2,76 +2,29 @@
 # Copyright (C) 2020 Checkmk GmbH - License: GNU General Public License v2
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
+"""Shared host serialization helpers for marshmallow endpoints.
 
-# mypy: disable-error-code="mutable-override"
+The host_config endpoints have been migrated to the new versioned framework
+(``cmk.gui.openapi.api_endpoints.host_config``). This module only retains the
+marshmallow host-serialization helpers and the host query parameter that the
+still-marshmallow ``folder_config`` family reuses for its "hosts in a folder"
+endpoint. The folder/host response schemas live in ``response_schemas.py``.
+"""
 
 # mypy: disable-error-code="no-any-return"
 
-from collections.abc import Callable, Iterable, Mapping, Sequence
+from collections.abc import Callable, Iterable
 from typing import Any
-
-from marshmallow import ValidationError
 
 from cmk import fields
 from cmk.ccc.hostaddress import HostName
-from cmk.ccc.site import SiteId
-from cmk.ccc.user import UserId
-from cmk.gui.config import Config
 from cmk.gui.fields.fields_filter import FieldsFilter, make_filter
-from cmk.gui.fields.utils import BaseSchema
 from cmk.gui.http import Response
-from cmk.gui.logged_in import user
-from cmk.gui.openapi.endpoints.host_config.response_schemas import (
-    HostConfigCollection,
-)
 from cmk.gui.openapi.endpoints.utils import folder_slug
 from cmk.gui.openapi.restful_objects import constructors
-from cmk.gui.openapi.restful_objects.api_error import ApiError
-from cmk.gui.openapi.restful_objects.registry import EndpointRegistry
 from cmk.gui.openapi.restful_objects.type_defs import DomainObject, LinkType
-from cmk.gui.openapi.utils import EXT, problem, serve_json
-from cmk.gui.user_sites import activation_sites
-from cmk.gui.utils import permission_verification as permissions
-from cmk.gui.watolib.activate_changes import ActivateChanges
-from cmk.gui.watolib.audit_log import make_audit_log_change_hook
-from cmk.gui.watolib.configuration_bundle_store import is_locked_by_quick_setup
-from cmk.gui.watolib.host_attributes import HostAttributes
-from cmk.gui.watolib.hosts_and_folders import (
-    Folder,
-    Host,
-)
-from cmk.gui.watolib.pending_changes import (
-    index_update_change_hook,
-    PendingChanges,
-    PendingChangesStore,
-)
-from cmk.licensing.basics.options import OptionName
-from cmk.licensing.registry import is_option_enabled
-from cmk.utils import paths
-
-BAKE_AGENT_PARAM_NAME = "bake_agent"
-
-
-def _validate_bake_agent_parameter(value: bool) -> bool:
-    if value and not is_option_enabled(paths.omd_root, OptionName.BAKERY):
-        raise ValidationError("The bake_agent field is not supported by this license")
-    return True
-
-
-BAKE_AGENT_PARAM = {
-    BAKE_AGENT_PARAM_NAME: fields.Boolean(
-        load_default=False,
-        required=False,
-        validate=_validate_bake_agent_parameter,
-        example=False,
-        description=(
-            "Tries to bake the agents for the just created hosts. This process is started in the "
-            "background after configuring the host. Please note that the backing may take some "
-            "time and might block subsequent API calls. "
-            "Requires the agent bakery feature to be licensed."
-        ),
-    )
-}
+from cmk.gui.openapi.utils import serve_json
+from cmk.gui.watolib.hosts_and_folders import Host
 
 EFFECTIVE_ATTRIBUTES = {
     "effective_attributes": fields.Boolean(
@@ -85,80 +38,6 @@ EFFECTIVE_ATTRIBUTES = {
         ),
     )
 }
-
-PERMISSIONS = permissions.AllPerm(
-    [
-        permissions.Perm("wato.edit"),
-        permissions.Perm("wato.manage_hosts"),
-        permissions.Optional(permissions.Perm("wato.all_folders")),
-        permissions.Undocumented(
-            permissions.AnyPerm(
-                [
-                    permissions.OkayToIgnorePerm("bi.see_all"),
-                    permissions.Perm("general.see_all"),
-                    permissions.OkayToIgnorePerm("mkeventd.seeall"),
-                ]
-            )
-        ),
-    ]
-)
-
-BULK_CREATE_PERMISSIONS = permissions.AllPerm(
-    [
-        permissions.Perm("wato.edit"),
-        permissions.Optional(permissions.Perm("wato.manage_hosts")),
-        permissions.Optional(permissions.Perm("wato.all_folders")),
-        permissions.Undocumented(
-            permissions.AnyPerm(
-                [
-                    permissions.OkayToIgnorePerm("bi.see_all"),
-                    permissions.Perm("general.see_all"),
-                    permissions.OkayToIgnorePerm("mkeventd.seeall"),
-                ]
-            )
-        ),
-    ]
-)
-
-UPDATE_PERMISSIONS = permissions.AllPerm(
-    [
-        permissions.Perm("wato.edit"),
-        permissions.Perm("wato.edit_hosts"),
-        permissions.Optional(permissions.Perm("wato.all_folders")),
-        permissions.Undocumented(
-            permissions.AnyPerm(
-                [
-                    permissions.OkayToIgnorePerm("bi.see_all"),
-                    permissions.Perm("general.see_all"),
-                    permissions.OkayToIgnorePerm("mkeventd.seeall"),
-                    # only used to check if user can see a host
-                    permissions.Perm("wato.see_all_folders"),
-                ]
-            )
-        ),
-    ]
-)
-
-
-def with_access_check_permission(perm: permissions.BasePerm) -> permissions.BasePerm:
-    """To check if a user can see a host, we currently need the 'wato.see_all_folders' permission.
-    Since this use is done internally only, we want to add it without documenting it."""
-    return permissions.AllPerm(
-        [
-            perm,
-            permissions.Undocumented(
-                permissions.AnyPerm(
-                    [
-                        permissions.OkayToIgnorePerm("bi.see_all"),
-                        permissions.Perm("general.see_all"),
-                        permissions.OkayToIgnorePerm("mkeventd.seeall"),
-                        # is only used to check if a user can see a host
-                        permissions.Perm("wato.see_all_folders"),
-                    ],
-                )
-            ),
-        ]
-    )
 
 
 def host_fields_filter(
@@ -181,110 +60,6 @@ def host_fields_filter(
         return fields_filter
 
     return make_filter(exclude={"value": fields_filter})
-
-
-def _fields_filter_from_params(params: Mapping[str, Any], *, is_collection: bool) -> FieldsFilter:
-    if "fields" in params:
-        return params["fields"]
-
-    return host_fields_filter(
-        is_collection=is_collection,
-        include_links=params.get(
-            "include_links", True
-        ),  # actual default is false, we use get in case it's not a parameter
-        effective_attributes=params.get(
-            "effective_attributes", True
-        ),  # actual default is false, we use get in case it's not a parameter
-    )
-
-
-class FailedHosts(BaseSchema):
-    succeeded_hosts = fields.Nested(
-        HostConfigCollection,
-        description="The list of succeeded host objects",
-    )
-    failed_hosts = fields.Dict(
-        keys=fields.String(description="Name of the host"),
-        values=fields.String(description="The error message"),
-        description="Detailed error messages on hosts failing the action",
-    )
-
-
-class BulkHostActionWithFailedHosts(ApiError):
-    title = fields.String(
-        description="A summary of the problem.",
-        example="Some actions failed",
-    )
-    status = fields.Integer(
-        description="The HTTP status code.",
-        example=400,
-    )
-    detail = fields.String(
-        description="Detailed information on what exactly went wrong.",
-        example="Some of the actions were performed but the following were faulty and were skipped: ['host1', 'host2'].",
-    )
-    ext = fields.Nested(
-        FailedHosts,
-        description="Details for which hosts have failed",
-    )
-
-
-def _bulk_host_action_response(
-    failed_hosts: dict[HostName, str], succeeded_hosts: Sequence[Host]
-) -> Response:
-    if failed_hosts:
-        return problem(
-            status=400,
-            title="Some actions failed",
-            detail=f"Some of the actions were performed but the following were faulty and "
-            f"were skipped: {' ,'.join(failed_hosts)}.",
-            ext=EXT(
-                {
-                    "succeeded_hosts": _host_collection(succeeded_hosts),
-                    "failed_hosts": failed_hosts,
-                }
-            ),
-        )
-
-    return serve_host_collection(succeeded_hosts)
-
-
-class SearchFilter:
-    hostnames_filter = "hostnames"
-    site_filter = "site"
-
-    @classmethod
-    def from_params(cls, params: Mapping[str, Any]) -> "SearchFilter":
-        return cls(
-            hostnames=params.get(cls.hostnames_filter, []),
-            site=params.get(cls.site_filter),
-        )
-
-    def __init__(
-        self,
-        hostnames: Sequence[str] | None,
-        site: str | None,
-    ) -> None:
-        self._hostnames = set(hostnames) if hostnames else None
-        self._site = site
-
-    def __call__(self, host: Host) -> bool:
-        return self.filter_by_hostnames(host) and self.filter_by_site(host)
-
-    def filter_by_hostnames(self, host: Host) -> bool:
-        return host.name() in self._hostnames if self._hostnames else True
-
-    def filter_by_site(self, host: Host) -> bool:
-        return host.site_id() == self._site if self._site else True
-
-
-def _iter_hosts_with_permission(folder: Folder) -> Iterable[Host]:
-    yield from (host for host in folder.hosts().values() if host.permissions.may("read", user))
-    for subfolder in folder.subfolders():
-        if not subfolder.permissions.may("read", user):
-            continue  # skip all hosts if folder isn't readable
-
-        yield from _iter_hosts_with_permission(subfolder)
 
 
 def serve_host_collection(
@@ -320,40 +95,6 @@ def _host_collection(
             "links": [constructors.link_rel("self", constructors.collection_href("host_config"))],
         }
     )
-
-
-def _validate_host_attributes_for_quick_setup(host: Host, body: dict[str, Any]) -> bool:
-    if not is_locked_by_quick_setup(host.locked_by()):
-        return True
-
-    locked_attributes: Sequence[str] = host.attributes.get("locked_attributes", [])
-    new_attributes: HostAttributes | None = body.get("attributes")
-    update_attributes: HostAttributes | None = body.get("update_attributes")
-    remove_attributes: Sequence[str] | None = body.get("remove_attributes")
-
-    if new_attributes and (
-        new_attributes.get("locked_by") != host.attributes.get("locked_by")
-        or new_attributes.get("locked_attributes") != locked_attributes
-        or any(new_attributes.get(key) != host.attributes.get(key) for key in locked_attributes)
-    ):
-        return False
-
-    if update_attributes and any(
-        key in locked_attributes and host.attributes.get(key) != attr
-        for key, attr in update_attributes.items()
-    ):
-        return False
-
-    return not (remove_attributes and any(key in locked_attributes for key in remove_attributes))
-
-
-def _has_pending_changes(sites: Sequence[SiteId]) -> bool:
-    return ActivateChanges.get_pending_changes_info(sites).has_changes()
-
-
-def _serve_host(host: Host, fields_filter: FieldsFilter) -> Response:
-    response = serve_json(serialize_host(host, fields_filter=fields_filter))
-    return constructors.response_with_etag_created_from_dict(response, _host_etag_values(host))
 
 
 agent_links_hook: Callable[[HostName], list[LinkType]] = lambda h: []
@@ -400,45 +141,4 @@ def serialize_host(
         links=links,
         extensions=extensions,
         include_links="links" in fields_filter,
-    )
-
-
-def _require_host_etag(host: Host) -> None:
-    etag_values = _host_etag_values(host)
-    constructors.require_etag(
-        constructors.hash_of_dict(etag_values),
-        error_details=EXT(etag_values),
-    )
-
-
-def _host_etag_values(host: Host) -> dict[str, Any]:
-    # FIXME: Through some not yet fully explored effect, we do not get the actual persisted
-    #        timestamp in the meta_data section but rather some other timestamp. This makes the
-    #        reported ETag a different one than the one which is accepted by the endpoint.
-    return {
-        "name": host.name(),
-        "attributes": {k: v for k, v in host.attributes.items() if k != "meta_data"},
-        "cluster_nodes": host.cluster_nodes(),
-    }
-
-
-def register(endpoint_registry: EndpointRegistry) -> None:
-    pass
-
-
-def _pending_changes(
-    *,
-    config: Config,
-    local_site: SiteId,
-    acting_user: UserId | None,
-) -> PendingChanges:
-    return PendingChanges(
-        activation_sites=activation_sites(config.sites),
-        local_site=local_site,
-        acting_user=acting_user,
-        store=PendingChangesStore(),
-        hooks=(
-            make_audit_log_change_hook(use_git=config.wato_use_git),
-            index_update_change_hook,
-        ),
     )
