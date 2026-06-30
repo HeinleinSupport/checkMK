@@ -404,7 +404,7 @@ def test_openapi_hosts(
     ).assert_status_code(400)
 
     monkeypatch.setattr(
-        "cmk.gui.openapi.endpoints.host_config.delete_hosts",
+        "cmk.gui.openapi.api_endpoints.host_config.delete_host.delete_hosts",
         lambda *args, **kwargs: DeleteHostsResult(),
     )
     clients.HostConfig.follow_link(resp.json, ".../delete").assert_status_code(204)

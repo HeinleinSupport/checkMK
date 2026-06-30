@@ -572,32 +572,6 @@ def move(params: Mapping[str, Any]) -> Response:
 
 
 @Endpoint(
-    constructors.object_href("host_config", "{host_name}"),
-    ".../delete",
-    method="delete",
-    path_params=[HOST_NAME],
-    output_empty=True,
-    permissions_required=with_access_check_permission(PERMISSIONS),
-    family_name=HOST_CONFIG_FAMILY.name,
-)
-def delete(params: Mapping[str, Any]) -> Response:
-    """Delete a host"""
-    user.need_permission("wato.edit")
-    host = folder_tree().load_host(params["host_name"])
-    host.folder().delete_hosts(
-        [host.name()],
-        automation=delete_hosts,
-        pprint_value=active_config.wato_pprint_config,
-        debug=active_config.debug,
-        pending_changes=_pending_changes(
-            config=active_config, local_site=omd_site(), acting_user=user.id
-        ),
-        acting_user=user,
-    )
-    return Response(status=204)
-
-
-@Endpoint(
     constructors.domain_type_action_href("host_config", "bulk-delete"),
     ".../delete",
     method="post",
@@ -716,7 +690,6 @@ def register(endpoint_registry: EndpointRegistry) -> None:
     endpoint_registry.register(rename_host)
     endpoint_registry.register(renaming_job_wait_for_completion)
     endpoint_registry.register(move)
-    endpoint_registry.register(delete)
     endpoint_registry.register(bulk_delete)
 
 
