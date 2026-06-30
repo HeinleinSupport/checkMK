@@ -9,7 +9,6 @@
 
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from typing import Any
-from urllib.parse import urlparse
 
 from marshmallow import ValidationError
 
@@ -17,43 +16,28 @@ from cmk import fields
 from cmk.ccc.hostaddress import HostName
 from cmk.ccc.site import SiteId
 from cmk.ccc.user import UserId
-from cmk.gui import fields as gui_fields
-from cmk.gui.background_job.job import InitialStatusArgs, JobTarget
-from cmk.gui.config import active_config, Config
+from cmk.gui.config import Config
 from cmk.gui.fields.fields_filter import FieldsFilter, make_filter
 from cmk.gui.fields.utils import BaseSchema
-from cmk.gui.http import request, Response
+from cmk.gui.http import Response
 from cmk.gui.logged_in import user
-from cmk.gui.openapi.endpoints.host_config.request_schemas import (
-    RenameHost,
-)
 from cmk.gui.openapi.endpoints.host_config.response_schemas import (
     HostConfigCollection,
-    HostConfigSchema,
 )
 from cmk.gui.openapi.endpoints.utils import folder_slug
-from cmk.gui.openapi.restful_objects import constructors, Endpoint
+from cmk.gui.openapi.restful_objects import constructors
 from cmk.gui.openapi.restful_objects.api_error import ApiError
 from cmk.gui.openapi.restful_objects.registry import EndpointRegistry
 from cmk.gui.openapi.restful_objects.type_defs import DomainObject, LinkType
-from cmk.gui.openapi.shared_endpoint_families.host_config import HOST_CONFIG_FAMILY
 from cmk.gui.openapi.utils import EXT, problem, serve_json
 from cmk.gui.user_sites import activation_sites
 from cmk.gui.utils import permission_verification as permissions
-from cmk.gui.utils.roles import UserPermissionSerializableConfig
 from cmk.gui.watolib.activate_changes import ActivateChanges
 from cmk.gui.watolib.audit_log import make_audit_log_change_hook
 from cmk.gui.watolib.configuration_bundle_store import is_locked_by_quick_setup
 from cmk.gui.watolib.host_attributes import HostAttributes
-from cmk.gui.watolib.host_rename import (
-    rename_hosts_job_entry_point,
-    RenameHostBackgroundJob,
-    RenameHostsBackgroundJob,
-    RenameHostsJobArgs,
-)
 from cmk.gui.watolib.hosts_and_folders import (
     Folder,
-    folder_tree,
     Host,
 )
 from cmk.gui.watolib.pending_changes import (
@@ -363,146 +347,8 @@ def _validate_host_attributes_for_quick_setup(host: Host, body: dict[str, Any]) 
     return not (remove_attributes and any(key in locked_attributes for key in remove_attributes))
 
 
-@Endpoint(
-    constructors.object_action_href("host_config", "{host_name}", action_name="rename"),
-    "cmk/rename",
-    method="put",
-    path_params=[
-        {
-            "host_name": gui_fields.HostField(
-                description="A host name.",
-                should_exist=True,
-                permission_type="setup_write",
-            ),
-        }
-    ],
-    etag="both",
-    additional_status_codes=[303, 409, 422],
-    status_descriptions={
-        303: "The host rename process is still running. Redirecting to the 'Wait for completion' endpoint",
-        409: "There are pending changes not yet activated or a rename background job is already running.",
-        422: "The host could not be renamed.",
-    },
-    permissions_required=permissions.AllPerm(
-        [
-            permissions.Perm("wato.all_folders"),
-            permissions.Perm("wato.edit_hosts"),
-            permissions.Perm("wato.rename_hosts"),
-            permissions.Perm("wato.see_all_folders"),
-        ]
-    ),
-    request_schema=RenameHost,
-    response_schema=HostConfigSchema,
-    family_name=HOST_CONFIG_FAMILY.name,
-)
-def rename_host(params: Mapping[str, Any]) -> Response:
-    """Rename a host
-
-    This endpoint will start a background job to rename the host. Only one rename background job
-    can run at a time.
-    """
-    user.need_permission("wato.edit_hosts")
-    user.need_permission("wato.rename_hosts")
-    if _has_pending_changes(list(active_config.sites)):
-        return problem(
-            status=409,
-            title="Pending changes are present",
-            detail="Please activate all pending changes before executing a host rename process",
-        )
-    host_name = HostName(params["host_name"])
-    host = folder_tree().load_host(host_name)
-    new_name = HostName(params["body"]["new_name"])
-
-    if is_locked_by_quick_setup(host.locked_by()):
-        return problem(
-            status=400,
-            title=f'The host "{host_name}" is locked by Quick setup.',
-            detail="Locked hosts cannot be renamed.",
-        )
-
-    background_job = RenameHostBackgroundJob(host)
-    result = background_job.start(
-        JobTarget(
-            callable=rename_hosts_job_entry_point,
-            args=RenameHostsJobArgs(
-                renamings=[(host.folder().path(), host_name, new_name)],
-                site_configs=active_config.sites,
-                pprint_value=active_config.wato_pprint_config,
-                use_git=active_config.wato_use_git,
-                debug=active_config.debug,
-                custom_user_attributes=active_config.wato_user_attrs,
-                user_connections=active_config.user_connections,
-                user_permission_config=UserPermissionSerializableConfig.from_global_config(
-                    active_config
-                ),
-            ),
-        ),
-        InitialStatusArgs(
-            title=f"Renaming of {host_name} -> {new_name}",
-            lock_wato=True,
-            stoppable=False,
-            estimated_duration=background_job.get_status().duration,
-            user=str(user.id) if user.id else None,
-        ),
-    )
-    if result.is_error():
-        return problem(status=409, title="Conflict", detail=str(result.error))
-
-    response = Response(status=303)
-    response.location = urlparse(
-        constructors.link_endpoint(
-            "cmk.gui.openapi.endpoints.host_config",
-            "cmk/wait-for-completion",
-            parameters={},
-        )["href"]
-    ).path
-    return response
-
-
 def _has_pending_changes(sites: Sequence[SiteId]) -> bool:
     return ActivateChanges.get_pending_changes_info(sites).has_changes()
-
-
-@Endpoint(
-    constructors.domain_type_action_href("host_config", "wait-for-completion"),
-    "cmk/wait-for-completion",
-    method="get",
-    status_descriptions={
-        204: "The renaming job has been completed.",
-        302: (
-            "The renaming job is still running. Redirecting to the 'Wait for completion' endpoint."
-        ),
-        404: "There is no running renaming job",
-    },
-    permissions_required=permissions.AllPerm(
-        [
-            permissions.Perm("wato.rename_hosts"),
-        ]
-    ),
-    additional_status_codes=[302, 404],
-    output_empty=True,
-    family_name=HOST_CONFIG_FAMILY.name,
-)
-def renaming_job_wait_for_completion(params: Mapping[str, Any]) -> Response:
-    """Wait for renaming process completion
-
-    This endpoint will redirect on itself to prevent timeouts.
-    """
-    user.need_permission("wato.rename_hosts")
-
-    job_exists, job_is_active = RenameHostsBackgroundJob.status_checks()
-    if not job_exists:
-        return problem(
-            status=404,
-            title="Not found",
-            detail="No running renaming job was found",
-        )
-
-    if job_is_active:
-        response = Response(status=302)
-        response.location = urlparse(request.url).path
-        return response
-    return Response(status=204)
 
 
 def _serve_host(host: Host, fields_filter: FieldsFilter) -> Response:
@@ -577,8 +423,7 @@ def _host_etag_values(host: Host) -> dict[str, Any]:
 
 
 def register(endpoint_registry: EndpointRegistry) -> None:
-    endpoint_registry.register(rename_host)
-    endpoint_registry.register(renaming_job_wait_for_completion)
+    pass
 
 
 def _pending_changes(

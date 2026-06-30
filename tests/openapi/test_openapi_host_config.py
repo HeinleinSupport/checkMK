@@ -731,7 +731,7 @@ def test_openapi_host_rename(
     mocker: MockerFixture,
 ) -> None:
     monkeypatch.setattr(
-        "cmk.gui.openapi.endpoints.host_config._has_pending_changes",
+        "cmk.gui.openapi.api_endpoints.host_config.rename_host._has_pending_changes",
         lambda x: False,
     )
     automation = mocker.patch("cmk.gui.watolib.host_rename.rename_hosts")
@@ -781,7 +781,7 @@ def test_openapi_host_rename_error_on_not_existing_host(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setattr(
-        "cmk.gui.openapi.endpoints.host_config._has_pending_changes",
+        "cmk.gui.openapi.api_endpoints.host_config.rename_host._has_pending_changes",
         lambda x: False,
     )
 
@@ -804,7 +804,7 @@ def test_openapi_host_rename_on_invalid_hostname(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setattr(
-        "cmk.gui.openapi.endpoints.host_config._has_pending_changes",
+        "cmk.gui.openapi.api_endpoints.host_config.rename_host._has_pending_changes",
         lambda x: False,
     )
 
@@ -827,7 +827,7 @@ def test_openapi_host_rename_locked_by_quick_setup(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setattr(
-        "cmk.gui.openapi.endpoints.host_config._has_pending_changes",
+        "cmk.gui.openapi.api_endpoints.host_config.rename_host._has_pending_changes",
         lambda x: False,
     )
 
