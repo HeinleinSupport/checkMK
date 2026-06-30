@@ -7,8 +7,9 @@ from typing import Annotated, NamedTuple
 
 from cmk import trace
 from cmk.gui.fields.fields_filter import FieldsFilter
-from cmk.gui.logged_in import user
+from cmk.gui.logged_in import LoggedInUser
 from cmk.gui.openapi.framework import (
+    ApiContext,
     APIVersion,
     EndpointDoc,
     EndpointHandler,
@@ -72,6 +73,7 @@ def _merge_filters(
 
 
 def list_hosts_v1(
+    api_context: ApiContext,
     fields: FieldsFilterType = ApiOmitted(),
     effective_attributes: Annotated[
         bool,
@@ -108,11 +110,11 @@ def list_hosts_v1(
         hostnames=None if isinstance(hostnames, ApiOmitted) else hostnames,
         site=None if isinstance(site, ApiOmitted) else site,
     )
-    if user.may("wato.see_all_folders"):
+    if api_context.user.may("wato.see_all_folders"):
         # allowed to see all hosts, no need for individual permission checks
         hosts: Iterable[Host] = root_folder.all_hosts_recursively().values()
     else:
-        hosts = _iter_hosts_with_permission(root_folder)
+        hosts = _iter_hosts_with_permission(root_folder, api_context.user)
 
     compute = _merge_filters(
         fields, compute_effective_attributes=effective_attributes, compute_links=include_links
@@ -120,18 +122,19 @@ def list_hosts_v1(
     with tracer.span("list-hosts-build-response"):
         return serialize_host_collection(
             list(filter(hosts_filter, hosts)),
+            api_context=api_context,
             compute_effective_attributes=compute.effective_attributes,
             compute_links=compute.links,
         )
 
 
-def _iter_hosts_with_permission(folder: Folder) -> Iterable[Host]:
+def _iter_hosts_with_permission(folder: Folder, user: LoggedInUser) -> Iterable[Host]:
     yield from (host for host in folder.hosts().values() if host.permissions.may("read", user))
     for subfolder in folder.subfolders():
         if not subfolder.permissions.may("read", user):
             continue  # skip all hosts if folder isn't readable
 
-        yield from _iter_hosts_with_permission(subfolder)
+        yield from _iter_hosts_with_permission(subfolder, user)
 
 
 ENDPOINT_LIST_HOSTS = VersionedEndpoint(
@@ -142,5 +145,5 @@ ENDPOINT_LIST_HOSTS = VersionedEndpoint(
     ),
     permissions=EndpointPermissions(required=PERMISSIONS),
     doc=EndpointDoc(family=HOST_CONFIG_FAMILY.name),
-    versions={APIVersion.UNSTABLE: EndpointHandler(handler=list_hosts_v1)},
+    versions={APIVersion.V1: EndpointHandler(handler=list_hosts_v1)},
 )

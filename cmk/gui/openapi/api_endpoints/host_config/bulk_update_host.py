@@ -8,7 +8,6 @@ from typing import Annotated
 
 from cmk.ccc.hostaddress import HostName
 from cmk.ccc.site import SiteId
-from cmk.gui.logged_in import user
 from cmk.gui.openapi.framework import (
     ApiContext,
     APIVersion,
@@ -61,8 +60,8 @@ def bulk_update_hosts_v1(
     [Updating Values]("lost update problem"), which is normally prevented by the ETag locking
     mechanism. Use at your own risk.
     """
-    user.need_permission("wato.edit")
-    user.need_permission("wato.edit_hosts")
+    api_context.user.need_permission("wato.edit")
+    api_context.user.need_permission("wato.edit_hosts")
     acting_user = api_context.user
 
     succeeded_hosts: list[Host] = []
@@ -121,7 +120,7 @@ def bulk_update_hosts_v1(
                     diff, affected_sites, pending_changes=make_pending_changes(api_context)
                 )
 
-    return bulk_host_action_response(failed_hosts, succeeded_hosts)
+    return bulk_host_action_response(failed_hosts, succeeded_hosts, api_context=api_context)
 
 
 ENDPOINT_BULK_UPDATE_HOST = VersionedEndpoint(
@@ -133,7 +132,7 @@ ENDPOINT_BULK_UPDATE_HOST = VersionedEndpoint(
     permissions=EndpointPermissions(required=PERMISSIONS_UPDATE),
     doc=EndpointDoc(family=HOST_CONFIG_FAMILY.name),
     versions={
-        APIVersion.UNSTABLE: EndpointHandler(
+        APIVersion.V1: EndpointHandler(
             handler=bulk_update_hosts_v1,
             error_schemas={400: BulkHostActionWithFailedHostsModel},
         )

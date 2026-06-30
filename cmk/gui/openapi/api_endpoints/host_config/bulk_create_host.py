@@ -7,7 +7,6 @@ from typing import Annotated
 
 from cmk.ccc.hostaddress import HostName
 from cmk.gui.exceptions import MKAuthException, MKUserError
-from cmk.gui.logged_in import user
 from cmk.gui.openapi.framework import (
     ApiContext,
     APIVersion,
@@ -26,6 +25,7 @@ from cmk.gui.openapi.framework.model import (
 from cmk.gui.openapi.framework.model.restrict_features import RestrictFeatures
 from cmk.gui.openapi.restful_objects.constructors import domain_type_action_href
 from cmk.gui.openapi.shared_endpoint_families.host_config import HOST_CONFIG_FAMILY
+from cmk.gui.utils import permission_verification as permissions
 from cmk.gui.watolib import bakery
 from cmk.gui.watolib.hosts_and_folders import Folder, folder_tree
 from cmk.licensing.basics.options import OptionName
@@ -33,10 +33,17 @@ from cmk.licensing.basics.options import OptionName
 from ._utils import (
     bulk_host_action_response,
     make_pending_changes,
-    PERMISSIONS_CREATE,
+    rw_permissions,
 )
 from .create_host import CreateHostModel
 from .models.response_models import BulkHostActionWithFailedHostsModel, HostConfigCollectionModel
+
+# Bulk create may be called with an empty entry list, in which case only ``wato.edit`` is
+# exercised. ``wato.manage_hosts`` is therefore optional.
+PERMISSIONS_BULK_CREATE = rw_permissions(
+    permissions.Perm("wato.edit"),
+    permissions.Optional(permissions.Perm("wato.manage_hosts")),
+)
 
 
 @api_model
@@ -76,7 +83,7 @@ def bulk_create_host_v1(
     ] = ApiOmitted(),
 ) -> HostConfigCollectionModel:
     """Bulk create hosts"""
-    user.need_permission("wato.edit")
+    api_context.user.need_permission("wato.edit")
     acting_user = api_context.user
     failed_hosts: dict[HostName, str] = {}
     succeeded_hosts: list[HostName] = []
@@ -112,7 +119,9 @@ def bulk_create_host_v1(
         bakery.try_bake_agents_for_hosts(succeeded_hosts, debug=api_context.config.debug)
 
     return bulk_host_action_response(
-        failed_hosts, [folder_tree().load_host(host_name) for host_name in succeeded_hosts]
+        failed_hosts,
+        [folder_tree().load_host(host_name) for host_name in succeeded_hosts],
+        api_context=api_context,
     )
 
 
@@ -122,10 +131,10 @@ ENDPOINT_BULK_CREATE_HOST = VersionedEndpoint(
         link_relation="cmk/bulk_create",
         method="post",
     ),
-    permissions=EndpointPermissions(required=PERMISSIONS_CREATE),
+    permissions=EndpointPermissions(required=PERMISSIONS_BULK_CREATE),
     doc=EndpointDoc(family=HOST_CONFIG_FAMILY.name),
     versions={
-        APIVersion.UNSTABLE: EndpointHandler(
+        APIVersion.V1: EndpointHandler(
             handler=bulk_create_host_v1,
             error_schemas={400: BulkHostActionWithFailedHostsModel},
         )

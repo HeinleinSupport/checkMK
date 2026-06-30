@@ -67,22 +67,29 @@ _PERMISSIONS_RW_UNDOCUMENTED = permissions.Undocumented(
         ]
     )
 )
+
+
+def rw_permissions(*required: permissions.BasePerm) -> permissions.BasePerm:
+    """Documented permissions shared by the host-writing endpoints: the given perms plus the
+    optional all-folders perm and the undocumented read checks."""
+    return permissions.AllPerm(
+        [
+            *required,
+            permissions.Optional(permissions.Perm("wato.all_folders")),
+            _PERMISSIONS_RW_UNDOCUMENTED,
+        ]
+    )
+
+
 PERMISSIONS = permissions.Optional(permissions.Perm("wato.see_all_folders"))
-PERMISSIONS_CREATE = permissions.AllPerm(
-    [
-        permissions.Perm("wato.edit"),
-        permissions.Perm("wato.manage_hosts"),
-        permissions.Optional(permissions.Perm("wato.all_folders")),
-        _PERMISSIONS_RW_UNDOCUMENTED,
-    ]
+PERMISSIONS_CREATE = rw_permissions(
+    permissions.Perm("wato.edit"), permissions.Perm("wato.manage_hosts")
 )
-PERMISSIONS_UPDATE = permissions.AllPerm(
-    [
-        permissions.Perm("wato.edit"),
-        permissions.Perm("wato.edit_hosts"),
-        permissions.Optional(permissions.Perm("wato.all_folders")),
-        _PERMISSIONS_RW_UNDOCUMENTED,
-    ]
+PERMISSIONS_UPDATE = rw_permissions(
+    permissions.Perm("wato.edit"), permissions.Perm("wato.edit_hosts")
+)
+PERMISSIONS_DELETE = rw_permissions(
+    permissions.Perm("wato.edit"), permissions.Perm("wato.manage_hosts")
 )
 
 _static_attribute_names = set(get_type_hints(HostAttributes))
@@ -91,16 +98,26 @@ _static_attribute_names = set(get_type_hints(HostAttributes))
 def serialize_host(
     host: Host,
     *,
+    api_context: ApiContext,
     compute_effective_attributes: bool,
     compute_links: bool,
 ) -> HostConfigModel:
-    links = []
+    links: list[LinkModel] | ApiOmitted = ApiOmitted()
     if compute_links:
-        links = generate_links("host_config", host.id())
+        links = generate_links(
+            "host_config",
+            host.id(),
+            host_url=api_context.host_url,
+            version=api_context.version,
+        )
         links.append(
             LinkModel.create(
                 rel="cmk/folder_config",
-                href=constructors.object_href("folder_config", folder_slug(host.folder())),
+                href=constructors.versioned_absolute_url(
+                    constructors.object_href("folder_config", folder_slug(host.folder())),
+                    host_url=api_context.host_url,
+                    version=api_context.version.value,
+                ),
                 method="get",
                 title="The folder config of the host.",
             )
@@ -133,6 +150,7 @@ def serialize_host(
 def serialize_host_collection(
     hosts: Iterable[Host],
     *,
+    api_context: ApiContext,
     compute_effective_attributes: bool,
     compute_links: bool,
 ) -> HostConfigCollectionModel:
@@ -143,12 +161,22 @@ def serialize_host_collection(
         value=[
             serialize_host(
                 host=host,
+                api_context=api_context,
                 compute_links=compute_links,
                 compute_effective_attributes=compute_effective_attributes,
             )
             for host in hosts
         ],
-        links=[LinkModel.create("self", constructors.collection_href("host_config"))],
+        links=[
+            LinkModel.create(
+                "self",
+                constructors.versioned_absolute_url(
+                    constructors.collection_href("host_config"),
+                    host_url=api_context.host_url,
+                    version=api_context.version.value,
+                ),
+            )
+        ],
     )
 
 
@@ -192,10 +220,16 @@ def validate_host_attributes_for_quick_setup(host: Host, body: UpdateHost) -> bo
 
 
 def bulk_host_action_response(
-    failed_hosts: dict[HostName, str], succeeded_hosts: Iterable[Host]
+    failed_hosts: dict[HostName, str],
+    succeeded_hosts: Iterable[Host],
+    *,
+    api_context: ApiContext,
 ) -> HostConfigCollectionModel:
     host_collection = serialize_host_collection(
-        succeeded_hosts, compute_effective_attributes=False, compute_links=False
+        succeeded_hosts,
+        api_context=api_context,
+        compute_effective_attributes=False,
+        compute_links=False,
     )
     if failed_hosts:
         # we neet to serialize to a (JSON-like) dict, without the omitted fields

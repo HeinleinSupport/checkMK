@@ -16,23 +16,23 @@ VALID_METRICS_ASSOCIATION_CONFIG: dict[str, Any] = {
 INVALID_METRICS_ASSOCIATION_PARAMS = [
     pytest.param(
         "not-a-list-or-tuple",
-        "Not a valid tuple.",
+        "Input should be a valid tuple",
         id="top_level_type_mismatch",
     ),
-    pytest.param(["enabled"], "Length must be 2", id="tuple_length_too_short"),
+    pytest.param(["enabled"], "Field required", id="tuple_length_too_short"),
     pytest.param(
         ["enabled", VALID_METRICS_ASSOCIATION_CONFIG, "extra-item"],
-        "Length must be 2",
+        "Tuple should have at most 2 items after validation",
         id="tuple_length_too_long",
     ),
     pytest.param(
         ["invalid_status", VALID_METRICS_ASSOCIATION_CONFIG],
-        "is not one of the enum values: ['enabled', 'disabled']",
+        "Input should be 'enabled'",
         id="status_enum_violation",
     ),
     pytest.param(
         ["enabled", "this-should-be-a-dict-or-none"],
-        "Invalid input type",
+        "Input should be a dictionary or an instance of MetricsAssociationEnabledModel",
         id="config_type_mismatch",
     ),
     pytest.param(
@@ -42,7 +42,7 @@ INVALID_METRICS_ASSOCIATION_PARAMS = [
                 # Missing 'attribute_filters'
             },
         ],
-        "Missing data for required field",
+        "Field required",
         id="missing_required_config_key",
     ),
     pytest.param(
@@ -52,7 +52,7 @@ INVALID_METRICS_ASSOCIATION_PARAMS = [
                 "attribute_filters": "not-a-dict",  # Wrong type
             },
         ],
-        "Invalid input type",
+        "Input should be a dictionary or an instance of MetricsAssociationAttributeFiltersModel",
         id="filters_type_mismatch",
     ),
     pytest.param(
@@ -66,7 +66,7 @@ INVALID_METRICS_ASSOCIATION_PARAMS = [
                 },
             },
         ],
-        "Missing data for required field",
+        "Field required",
         id="filters_missing_key",
     ),
     pytest.param(
@@ -85,7 +85,7 @@ INVALID_METRICS_ASSOCIATION_PARAMS = [
                 },
             },
         ],
-        "Missing data for required field",
+        "Field required",
         id="filter_item_missing_key",
     ),
 ]

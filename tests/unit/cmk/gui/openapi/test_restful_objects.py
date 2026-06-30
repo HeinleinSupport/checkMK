@@ -221,9 +221,11 @@ def test_no_config_generation_on_get(
         mock,
     )
 
+    # host_config has been migrated to the new framework, which does not use this hook, so
+    # we exercise a still-marshmallow endpoint (folder_config) here.
     aut_user_auth_wsgi_app.call_method(
         "get",
-        base + "/objects/host_config/heute",
+        base + "/domain-types/folder_config/collections/all",
         status=200,
         headers={"Accept": "application/json"},
     )
@@ -232,8 +234,8 @@ def test_no_config_generation_on_get(
 
     aut_user_auth_wsgi_app.call_method(
         "post",
-        base + "/domain-types/host_config/collections/all",
-        params='{"host_name": "foobar", "folder": "/"}',
+        base + "/domain-types/folder_config/collections/all",
+        params='{"name": "foobar", "title": "foobar", "parent": "/"}',
         status=200,
         content_type="application/json",
         headers={"Accept": "application/json"},

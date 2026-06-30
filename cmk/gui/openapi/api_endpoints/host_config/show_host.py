@@ -5,6 +5,7 @@
 from typing import Annotated
 
 from cmk.gui.openapi.framework import (
+    ApiContext,
     APIVersion,
     EndpointBehavior,
     EndpointDoc,
@@ -12,6 +13,7 @@ from cmk.gui.openapi.framework import (
     EndpointMetadata,
     EndpointPermissions,
     PathParam,
+    QueryParam,
     VersionedEndpoint,
 )
 from cmk.gui.openapi.framework.model.converter import HostConverter, TypedPlainValidator
@@ -25,6 +27,7 @@ from .models.response_models import HostConfigModel
 
 
 def show_host_v1(
+    api_context: ApiContext,
     host: Annotated[
         Annotated[
             Host,
@@ -32,10 +35,24 @@ def show_host_v1(
         ],
         PathParam(description="Host name", example="example.com", alias="host_name"),
     ],
+    effective_attributes: Annotated[
+        bool,
+        QueryParam(
+            description="Show all effective attributes on hosts, not just the attributes which were set on "
+            "this host specifically. This includes all attributes of all of this host's parent "
+            "folders.",
+            example="False",
+        ),
+    ] = False,
 ) -> ApiResponse[HostConfigModel]:
     """Show a host."""
     return ApiResponse(
-        body=serialize_host(host, compute_effective_attributes=False, compute_links=True),
+        body=serialize_host(
+            host,
+            api_context=api_context,
+            compute_effective_attributes=effective_attributes,
+            compute_links=True,
+        ),
         status_code=200,
         etag=host_etag(host),
     )
@@ -49,6 +66,6 @@ ENDPOINT_SHOW_HOST = VersionedEndpoint(
     ),
     permissions=EndpointPermissions(required=PERMISSIONS),
     doc=EndpointDoc(family=HOST_CONFIG_FAMILY.name),
-    versions={APIVersion.UNSTABLE: EndpointHandler(handler=show_host_v1)},
+    versions={APIVersion.V1: EndpointHandler(handler=show_host_v1)},
     behavior=EndpointBehavior(etag="output"),
 )

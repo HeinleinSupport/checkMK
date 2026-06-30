@@ -224,4 +224,4 @@ def test_openapi_host_register_wrong_site(aut_user_auth_wsgi_app: WebTestAppForC
         headers={"Accept": "application/json"},
         content_type='application/json; charset="utf-8"',
     )
-    assert "site" in resp.json["fields"]["attributes"]
+    assert any("attributes.site" in key for key in resp.json["fields"])

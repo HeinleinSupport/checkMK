@@ -6,7 +6,6 @@ from collections.abc import Sequence
 from typing import Annotated
 
 from cmk.ccc.hostaddress import HostName
-from cmk.gui.logged_in import user
 from cmk.gui.openapi.framework import (
     ApiContext,
     APIVersion,
@@ -64,8 +63,8 @@ def update_cluster_nodes_v1(
     ],
 ) -> ApiResponse[HostNodesProperty]:
     """Update the nodes of a cluster host"""
-    user.need_permission("wato.edit")
-    user.need_permission("wato.edit_hosts")
+    api_context.user.need_permission("wato.edit")
+    api_context.user.need_permission("wato.edit_hosts")
     if api_context.etag.enabled:
         api_context.etag.verify(host_etag(host))
 
@@ -107,6 +106,6 @@ ENDPOINT_UPDATE_CLUSTER_NODES = VersionedEndpoint(
     ),
     permissions=EndpointPermissions(required=PERMISSIONS_UPDATE),
     doc=EndpointDoc(family=HOST_CONFIG_FAMILY.name),
-    versions={APIVersion.UNSTABLE: EndpointHandler(handler=update_cluster_nodes_v1)},
+    versions={APIVersion.V1: EndpointHandler(handler=update_cluster_nodes_v1)},
     behavior=EndpointBehavior(etag="both"),
 )

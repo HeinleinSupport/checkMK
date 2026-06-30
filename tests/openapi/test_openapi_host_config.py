@@ -8,7 +8,7 @@
 import contextlib
 import datetime
 from collections.abc import Iterator, Sequence
-from typing import Literal
+from typing import Any, Literal
 from unittest.mock import MagicMock
 
 import pytest
@@ -59,6 +59,19 @@ EDITIONS_ULTIMATE_PLUS = {
 }
 
 
+def _field_errors(fields: dict[str, Any], field_name: str) -> list[dict[str, Any]]:
+    """Validation error details for ``field_name`` from a REST API error response.
+
+    ``fields`` is keyed by the dotted pydantic location; each value carries ``type``/``msg``/``loc``.
+    Optional fields are modelled as ``<type> | ApiOmitted`` unions, so an invalid value also yields
+    an ``is_instance_of`` error for the ``ApiOmitted`` branch - that noise is dropped here."""
+    return [
+        detail
+        for detail in fields.values()
+        if field_name in detail["loc"] and detail["type"] != "is_instance_of"
+    ]
+
+
 @pytest.fixture()
 def quick_setup_config_bundle() -> Iterator[tuple[BundleId, str]]:
     bundle_id = BundleId("bundle_id")
@@ -98,12 +111,8 @@ def quick_setup_config_bundle() -> Iterator[tuple[BundleId, str]]:
 def test_openapi_missing_host(clients: ClientRegistry) -> None:
     resp = clients.HostConfig.get("foobar", expect_ok=False)
     resp.assert_status_code(404)
-    assert resp.json == {
-        "detail": "These fields have problems: host_name",
-        "fields": {"host_name": ["Host not found or access denied: 'foobar'"]},
-        "status": 404,
-        "title": "Not Found",
-    }
+    assert resp.json["status"] == 404
+    assert "not found" in str(resp.json).lower()
 
 
 @pytest.mark.usefixtures("with_host")
@@ -689,9 +698,7 @@ def test_openapi_host_collection_effective_attributes(clients: ClientRegistry) -
 @pytest.mark.usefixtures("with_host")
 def test_host_collection_fields(clients: ClientRegistry) -> None:
     resp = clients.HostConfig.get_all(fields="(id)")
-    # TODO: update response models to not automatically add fields
-    # assert resp.json == {"id": "host"}, "Expected only the id field to be returned"
-    assert resp.json == {"id": "host", "domainType": "host_config"}
+    assert resp.json == {"id": "host"}, "Expected only the id field to be returned"
 
     resp = clients.HostConfig.get_all(fields="!(value~extensions)")
     assert "value" in resp.json, "Expected the value field to be returned"
@@ -724,7 +731,8 @@ def test_openapi_host_rename(
     mocker: MockerFixture,
 ) -> None:
     monkeypatch.setattr(
-        "cmk.gui.openapi.endpoints.host_config._has_pending_changes", lambda x: False
+        "cmk.gui.openapi.endpoints.host_config._has_pending_changes",
+        lambda x: False,
     )
     automation = mocker.patch("cmk.gui.watolib.host_rename.rename_hosts")
 
@@ -773,7 +781,8 @@ def test_openapi_host_rename_error_on_not_existing_host(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setattr(
-        "cmk.gui.openapi.endpoints.host_config._has_pending_changes", lambda x: False
+        "cmk.gui.openapi.endpoints.host_config._has_pending_changes",
+        lambda x: False,
     )
 
     clients.HostConfig.create(
@@ -795,7 +804,8 @@ def test_openapi_host_rename_on_invalid_hostname(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setattr(
-        "cmk.gui.openapi.endpoints.host_config._has_pending_changes", lambda x: False
+        "cmk.gui.openapi.endpoints.host_config._has_pending_changes",
+        lambda x: False,
     )
 
     clients.HostConfig.create(
@@ -817,7 +827,8 @@ def test_openapi_host_rename_locked_by_quick_setup(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setattr(
-        "cmk.gui.openapi.endpoints.host_config._has_pending_changes", lambda x: False
+        "cmk.gui.openapi.endpoints.host_config._has_pending_changes",
+        lambda x: False,
     )
 
     bundle_id, program_id = quick_setup_config_bundle
@@ -1106,7 +1117,9 @@ def test_openapi_host_non_existent_site(clients: ClientRegistry) -> None:
         expect_ok=False,
     )
     resp.assert_status_code(400)
-    assert "site" in resp.json["fields"]["attributes"]
+    errors = _field_errors(resp.json["fields"], "site")
+    assert [e["type"] for e in errors] == ["value_error"]
+    assert non_existing_site_name in errors[0]["msg"]
 
 
 def test_openapi_host_with_labels(clients: ClientRegistry) -> None:
@@ -1182,7 +1195,8 @@ def test_openapi_host_config_attributes_as_string_crash_regression(
     )
     resp.assert_status_code(400)
 
-    assert resp.json["fields"]["attributes"] == [f"Data type is invalid: {attributes}"]
+    errors = _field_errors(resp.json["fields"], "attributes")
+    assert any(e["type"] == "value_error" for e in errors), errors
 
 
 @pytest.mark.usefixtures("with_host")
@@ -2121,7 +2135,7 @@ def test_openapi_only_one_edit_action(clients: ClientRegistry) -> None:
         expect_ok=False,
     )
     resp1.assert_status_code(400)
-    assert expected_error_msg in resp1.json["fields"]["_schema"][0]
+    assert expected_error_msg in str(resp1.json)
 
     resp2 = clients.HostConfig.edit(
         host_name="test_host",
@@ -2131,7 +2145,7 @@ def test_openapi_only_one_edit_action(clients: ClientRegistry) -> None:
         expect_ok=False,
     )
     resp2.assert_status_code(400)
-    assert expected_error_msg in resp2.json["fields"]["_schema"][0]
+    assert expected_error_msg in str(resp2.json)
 
     resp3 = clients.HostConfig.edit(
         host_name="test_host",
@@ -2141,7 +2155,7 @@ def test_openapi_only_one_edit_action(clients: ClientRegistry) -> None:
         expect_ok=False,
     )
     resp3.assert_status_code(400)
-    assert expected_error_msg in resp3.json["fields"]["_schema"][0]
+    assert expected_error_msg in str(resp3.json)
 
     resp4 = clients.HostConfig.edit(
         host_name="test_host",
@@ -2151,7 +2165,7 @@ def test_openapi_only_one_edit_action(clients: ClientRegistry) -> None:
         expect_ok=False,
     )
     resp4.assert_status_code(400)
-    assert expected_error_msg in resp4.json["fields"]["_schema"][0]
+    assert expected_error_msg in str(resp4.json)
 
 
 invalid_host_names = (
@@ -2174,10 +2188,7 @@ def test_create_host_with_newline_in_the_name(
         expect_ok=False,
     )
     resp.assert_status_code(400)
-    assert (
-        resp.json["fields"]["host_name"][0]
-        == f"{host_name!r} does not match pattern '^[-0-9a-zA-Z_.]+\\\\Z'."
-    )
+    assert "invalid host address" in str(resp.json["fields"])
 
 
 def test_create_host_with_too_long_of_a_name(
@@ -2188,7 +2199,7 @@ def test_create_host_with_too_long_of_a_name(
         expect_ok=False,
     )
     resp.assert_status_code(400)
-    assert resp.json["fields"]["host_name"][0] == f"host address too long: {16 * 'a' + '…'!r}"
+    assert "host address too long" in str(resp.json["fields"])
 
 
 def test_bulk_delete_no_entries(clients: ClientRegistry) -> None:
@@ -2241,11 +2252,8 @@ def test_update_host_parent_must_exist(clients: ClientRegistry) -> None:
         expect_ok=False,
     )
     resp.assert_status_code(400)
-    assert resp.json["detail"] == "These fields have problems: update_attributes"
-    assert (
-        resp.json["fields"]["update_attributes"]["parents"]["0"][0]
-        == "Host not found: 'non-existent'"
-    )
+    errors = _field_errors(resp.json["fields"], "parents")
+    assert any(e["type"] == "value_error" and "Host not found" in e["msg"] for e in errors), errors
 
 
 def test_update_host_parent_must_be_list_of_strings(clients: ClientRegistry) -> None:
@@ -2256,8 +2264,8 @@ def test_update_host_parent_must_be_list_of_strings(clients: ClientRegistry) -> 
         expect_ok=False,
     )
     resp.assert_status_code(400)
-    assert resp.json["detail"] == "These fields have problems: update_attributes"
-    assert "Not a valid list." in resp.json["fields"]["update_attributes"]["parents"]
+    errors = _field_errors(resp.json["fields"], "parents")
+    assert any(e["type"] == "sequence_str" for e in errors), errors
 
 
 def test_openapi_create_host_in_folder_with_umlaut(clients: ClientRegistry) -> None:

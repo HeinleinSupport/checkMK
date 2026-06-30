@@ -4,7 +4,6 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 from typing import Annotated
 
-from cmk.gui.logged_in import user
 from cmk.gui.openapi.framework import (
     ApiContext,
     APIVersion,
@@ -46,8 +45,8 @@ def update_host_v1(
     ],
 ) -> ApiResponse[HostConfigModel]:
     """Update a host"""
-    user.need_permission("wato.edit")
-    user.need_permission("wato.edit_hosts")
+    api_context.user.need_permission("wato.edit")
+    api_context.user.need_permission("wato.edit_hosts")
     acting_user = api_context.user
     if api_context.etag.enabled:
         api_context.etag.verify(host_etag(host))
@@ -99,7 +98,9 @@ def update_host_v1(
             )
 
     return ApiResponse(
-        body=serialize_host(host, compute_effective_attributes=False, compute_links=True),
+        body=serialize_host(
+            host, api_context=api_context, compute_effective_attributes=False, compute_links=True
+        ),
         status_code=200,
         etag=host_etag(host),
     )
@@ -113,6 +114,6 @@ ENDPOINT_UPDATE_HOST = VersionedEndpoint(
     ),
     permissions=EndpointPermissions(required=PERMISSIONS_UPDATE),
     doc=EndpointDoc(family=HOST_CONFIG_FAMILY.name),
-    versions={APIVersion.UNSTABLE: EndpointHandler(handler=update_host_v1)},
+    versions={APIVersion.V1: EndpointHandler(handler=update_host_v1)},
     behavior=EndpointBehavior(etag="both"),
 )

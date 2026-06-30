@@ -112,6 +112,7 @@ def show_downtimes_v1(
     return serialize_downtimes(
         q.fetchall(sites.live(), True, [site_id] if site_id is not None else None),
         host_url=api_context.host_url,
+        version=api_context.version,
     )
 
 

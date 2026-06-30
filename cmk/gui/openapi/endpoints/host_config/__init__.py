@@ -8,7 +8,6 @@
 # mypy: disable-error-code="no-any-return"
 
 import itertools
-import operator
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from typing import Any
 from urllib.parse import urlparse
@@ -22,29 +21,22 @@ from cmk.ccc.user import UserId
 from cmk.gui import fields as gui_fields
 from cmk.gui.background_job.job import InitialStatusArgs, JobTarget
 from cmk.gui.config import active_config, Config
-from cmk.gui.exceptions import MKAuthException, MKUserError
+from cmk.gui.exceptions import MKAuthException
 from cmk.gui.fields.fields_filter import FieldsFilter, make_filter
 from cmk.gui.fields.utils import BaseSchema
 from cmk.gui.http import request, Response
 from cmk.gui.logged_in import user
-from cmk.gui.openapi.endpoints.common_fields import field_fields_filter, field_include_links
 from cmk.gui.openapi.endpoints.host_config.request_schemas import (
-    BulkCreateHost,
     BulkDeleteHost,
-    BulkUpdateHost,
-    CreateClusterHost,
-    CreateHost,
     MoveHost,
     RenameHost,
-    UpdateHost,
-    UpdateNodes,
 )
 from cmk.gui.openapi.endpoints.host_config.response_schemas import (
     HostConfigCollection,
     HostConfigSchema,
 )
 from cmk.gui.openapi.endpoints.utils import folder_slug
-from cmk.gui.openapi.restful_objects import constructors, Endpoint, response_schemas
+from cmk.gui.openapi.restful_objects import constructors, Endpoint
 from cmk.gui.openapi.restful_objects.api_error import ApiError
 from cmk.gui.openapi.restful_objects.parameters import HOST_NAME
 from cmk.gui.openapi.restful_objects.registry import EndpointRegistry
@@ -54,7 +46,6 @@ from cmk.gui.openapi.utils import EXT, problem, serve_json
 from cmk.gui.user_sites import activation_sites
 from cmk.gui.utils import permission_verification as permissions
 from cmk.gui.utils.roles import UserPermissionSerializableConfig
-from cmk.gui.watolib import bakery
 from cmk.gui.watolib.activate_changes import ActivateChanges
 from cmk.gui.watolib.audit_log import make_audit_log_change_hook
 from cmk.gui.watolib.check_mk_automations import delete_hosts
@@ -229,82 +220,6 @@ def _fields_filter_from_params(params: Mapping[str, Any], *, is_collection: bool
     )
 
 
-@Endpoint(
-    constructors.collection_href("host_config"),
-    "cmk/create",
-    method="post",
-    etag="output",
-    request_schema=CreateHost,
-    response_schema=HostConfigSchema,
-    query_params=[BAKE_AGENT_PARAM],
-    permissions_required=PERMISSIONS,
-    family_name=HOST_CONFIG_FAMILY.name,
-)
-def create_host(params: Mapping[str, Any]) -> Response:
-    """Create a host"""
-    user.need_permission("wato.edit")
-    body = params["body"]
-    host_name: HostName = body["host_name"]
-    folder: Folder = body["folder"]
-
-    # is_cluster is defined as "cluster_hosts is not None"
-    folder.create_hosts(
-        [(host_name, body["attributes"], None)],
-        pprint_value=active_config.wato_pprint_config,
-        pending_changes=_pending_changes(
-            config=active_config, local_site=omd_site(), acting_user=user.id
-        ),
-        acting_user=user,
-    )
-    if params[BAKE_AGENT_PARAM_NAME]:
-        bakery.try_bake_agents_for_hosts([host_name], debug=active_config.debug)
-
-    host = folder_tree().load_host(host_name)
-    return _serve_host(
-        host,
-        host_fields_filter(is_collection=False, include_links=True, effective_attributes=False),
-    )
-
-
-@Endpoint(
-    constructors.collection_href("host_config", "clusters"),
-    "cmk/create_cluster",
-    method="post",
-    etag="output",
-    request_schema=CreateClusterHost,
-    response_schema=HostConfigSchema,
-    permissions_required=with_access_check_permission(PERMISSIONS),
-    query_params=[BAKE_AGENT_PARAM],
-    family_name=HOST_CONFIG_FAMILY.name,
-)
-def create_cluster_host(params: Mapping[str, Any]) -> Response:
-    """Create a cluster host
-
-    A cluster host groups many hosts (called nodes in this context) into a conceptual cluster.
-    All the services of the individual nodes will be collated on the cluster host."""
-    user.need_permission("wato.edit")
-    body = params["body"]
-    host_name: HostName = body["host_name"]
-    folder: Folder = body["folder"]
-
-    folder.create_hosts(
-        [(host_name, body["attributes"], body["nodes"])],
-        pprint_value=active_config.wato_pprint_config,
-        pending_changes=_pending_changes(
-            config=active_config, local_site=omd_site(), acting_user=user.id
-        ),
-        acting_user=user,
-    )
-    if params[BAKE_AGENT_PARAM_NAME]:
-        bakery.try_bake_agents_for_hosts([host_name], debug=active_config.debug)
-
-    host = folder_tree().load_host(host_name)
-    return _serve_host(
-        host,
-        host_fields_filter(is_collection=False, include_links=True, effective_attributes=False),
-    )
-
-
 class FailedHosts(BaseSchema):
     succeeded_hosts = fields.Nested(
         HostConfigCollection,
@@ -333,65 +248,6 @@ class BulkHostActionWithFailedHosts(ApiError):
     ext = fields.Nested(
         FailedHosts,
         description="Details for which hosts have failed",
-    )
-
-
-@Endpoint(
-    constructors.domain_type_action_href("host_config", "bulk-create"),
-    "cmk/bulk_create",
-    method="post",
-    request_schema=BulkCreateHost,
-    response_schema=HostConfigCollection,
-    error_schemas={
-        400: BulkHostActionWithFailedHosts,
-    },
-    permissions_required=BULK_CREATE_PERMISSIONS,
-    query_params=[BAKE_AGENT_PARAM],
-    family_name=HOST_CONFIG_FAMILY.name,
-)
-def bulk_create_hosts(params: Mapping[str, Any]) -> Response:
-    """Bulk create hosts"""
-    user.need_permission("wato.edit")
-    body = params["body"]
-    entries = body["entries"]
-
-    failed_hosts: dict[HostName, str] = {}
-    succeeded_hosts: list[HostName] = []
-    folder: Folder
-    for folder, grouped_hosts in itertools.groupby(entries, operator.itemgetter("folder")):
-        validated_entries = []
-        folder.prepare_create_hosts(acting_user=user)
-        for host in grouped_hosts:
-            host_name = host["host_name"]
-            try:
-                validated_entries.append(
-                    (
-                        host_name,
-                        folder.verify_and_update_host_details(
-                            host_name, host["attributes"], acting_user=user
-                        ),
-                        None,
-                    )
-                )
-            except (MKUserError, MKAuthException) as e:
-                failed_hosts[host_name] = f"Validation failed: {e}"
-
-        folder.create_validated_hosts(
-            validated_entries,
-            pprint_value=active_config.wato_pprint_config,
-            pending_changes=_pending_changes(
-                config=active_config, local_site=omd_site(), acting_user=user.id
-            ),
-            acting_user=user,
-        )
-        succeeded_hosts.extend(entry[0] for entry in validated_entries)
-
-    if params[BAKE_AGENT_PARAM_NAME]:
-        bakery.try_bake_agents_for_hosts(succeeded_hosts, debug=active_config.debug)
-
-    tree = folder_tree()
-    return _bulk_host_action_response(
-        failed_hosts, [tree.load_host(host_name) for host_name in succeeded_hosts]
     )
 
 
@@ -453,55 +309,6 @@ def _iter_hosts_with_permission(folder: Folder) -> Iterable[Host]:
         yield from _iter_hosts_with_permission(subfolder)
 
 
-@Endpoint(
-    constructors.collection_href("host_config"),
-    ".../collection",
-    method="get",
-    response_schema=HostConfigCollection,
-    permissions_required=permissions.Optional(permissions.Perm("wato.see_all_folders")),
-    query_params=[
-        EFFECTIVE_ATTRIBUTES,
-        field_include_links(
-            "Flag which toggles whether the links field of the individual hosts should be populated."
-        ),
-        field_fields_filter(),
-        {
-            SearchFilter.hostnames_filter: fields.List(
-                fields.String(
-                    description="A list of host names to filter the result by.",
-                    required=False,
-                    example="host1",
-                ),
-                description="Filter the result by a list of host names.",
-                required=False,
-                example=["host1", "host2"],
-                minLength=1,
-            ),
-            SearchFilter.site_filter: fields.String(
-                description="Filter the result by a specific site.",
-                required=False,
-                example="site1",
-            ),
-        },
-    ],
-    family_name=HOST_CONFIG_FAMILY.name,
-)
-def list_hosts(params: Mapping[str, Any]) -> Response:
-    """Show all hosts"""
-    root_folder = folder_tree().root_folder()
-    hosts_filter = SearchFilter.from_params(params)
-    if user.may("wato.see_all_folders"):
-        # allowed to see all hosts, no need for individual permission checks
-        hosts: Iterable[Host] = root_folder.all_hosts_recursively().values()
-    else:
-        hosts = _iter_hosts_with_permission(root_folder)
-
-    return serve_host_collection(
-        filter(hosts_filter, hosts),
-        fields_filter=_fields_filter_from_params(params, is_collection=True),
-    )
-
-
 def serve_host_collection(
     hosts: Iterable[Host], *, fields_filter: FieldsFilter | None = None
 ) -> Response:
@@ -537,53 +344,6 @@ def _host_collection(
     )
 
 
-@Endpoint(
-    constructors.object_property_href("host_config", "{host_name}", "nodes"),
-    ".../property",
-    method="put",
-    path_params=[
-        {
-            "host_name": gui_fields.HostField(
-                description="A cluster host.",
-                should_be_cluster=True,
-            ),
-        }
-    ],
-    etag="both",
-    request_schema=UpdateNodes,
-    response_schema=response_schemas.ObjectProperty,
-    permissions_required=UPDATE_PERMISSIONS,
-    family_name=HOST_CONFIG_FAMILY.name,
-)
-def update_nodes(params: Mapping[str, Any]) -> Response:
-    """Update the nodes of a cluster host"""
-    user.need_permission("wato.edit")
-    user.need_permission("wato.edit_hosts")
-    host_name = params["host_name"]
-    body = params["body"]
-    nodes = body["nodes"]
-    host = folder_tree().load_host(host_name)
-    _require_host_etag(host)
-    host.edit(
-        host.attributes,
-        nodes,
-        pprint_value=active_config.wato_pprint_config,
-        pending_changes=_pending_changes(
-            config=active_config, local_site=omd_site(), acting_user=user.id
-        ),
-        acting_user=user,
-    )
-
-    return serve_json(
-        constructors.object_sub_property(
-            domain_type="host_config",
-            ident=host_name,
-            name="nodes",
-            value=host.cluster_nodes(),
-        )
-    )
-
-
 def _validate_host_attributes_for_quick_setup(host: Host, body: dict[str, Any]) -> bool:
     if not is_locked_by_quick_setup(host.locked_by()):
         return True
@@ -607,174 +367,6 @@ def _validate_host_attributes_for_quick_setup(host: Host, body: dict[str, Any]) 
         return False
 
     return not (remove_attributes and any(key in locked_attributes for key in remove_attributes))
-
-
-@Endpoint(
-    constructors.object_href("host_config", "{host_name}"),
-    ".../update",
-    method="put",
-    path_params=[
-        {
-            "host_name": gui_fields.HostField(
-                description="A host name.",
-                should_exist=True,
-                permission_type="setup_write",
-            )
-        }
-    ],
-    etag="both",
-    request_schema=UpdateHost,
-    response_schema=HostConfigSchema,
-    permissions_required=UPDATE_PERMISSIONS,
-    family_name=HOST_CONFIG_FAMILY.name,
-)
-def update_host(params: Mapping[str, Any]) -> Response:
-    """Update a host"""
-    user.need_permission("wato.edit")
-    user.need_permission("wato.edit_hosts")
-    host = folder_tree().load_host(params["host_name"])
-    _require_host_etag(host)
-    body = params["body"]
-
-    if not _validate_host_attributes_for_quick_setup(host, body):
-        return problem(
-            status=400,
-            title=f'The host "{host.name()}" is locked by Quick setup.',
-            detail="Cannot modify locked attributes.",
-        )
-
-    if new_attributes := body.get("attributes"):
-        new_attributes["meta_data"] = host.attributes.get("meta_data", {})
-        host.edit(
-            new_attributes,
-            host.cluster_nodes(),
-            pprint_value=active_config.wato_pprint_config,
-            pending_changes=_pending_changes(
-                config=active_config, local_site=omd_site(), acting_user=user.id
-            ),
-            acting_user=user,
-        )
-
-    if update_attributes := body.get("update_attributes"):
-        host.update_attributes(
-            update_attributes,
-            pprint_value=active_config.wato_pprint_config,
-            pending_changes=_pending_changes(
-                config=active_config, local_site=omd_site(), acting_user=user.id
-            ),
-            acting_user=user,
-        )
-
-    if remove_attributes := body.get("remove_attributes"):
-        faulty_attributes = []
-        for attribute in remove_attributes:
-            if attribute not in host.attributes:
-                faulty_attributes.append(attribute)
-
-        host.clean_attributes(
-            remove_attributes,
-            pprint_value=active_config.wato_pprint_config,
-            pending_changes=_pending_changes(
-                config=active_config, local_site=omd_site(), acting_user=user.id
-            ),
-            acting_user=user,
-        )  # silently ignores missing attributes
-
-        if faulty_attributes:
-            return problem(
-                status=400,
-                title="Some attributes were not removed",
-                detail=f"The following attributes were not removed since they didn't exist: {', '.join(faulty_attributes)}",
-            )
-
-    return _serve_host(
-        host,
-        host_fields_filter(is_collection=False, include_links=True, effective_attributes=False),
-    )
-
-
-@Endpoint(
-    constructors.domain_type_action_href("host_config", "bulk-update"),
-    "cmk/bulk_update",
-    method="put",
-    request_schema=BulkUpdateHost,
-    response_schema=HostConfigCollection,
-    error_schemas={
-        400: BulkHostActionWithFailedHosts,
-    },
-    permissions_required=UPDATE_PERMISSIONS,
-    family_name=HOST_CONFIG_FAMILY.name,
-)
-def bulk_update_hosts(params: Mapping[str, Any]) -> Response:
-    """Bulk update hosts
-
-    Please be aware that when doing bulk updates, it is not possible to prevent the
-    [Updating Values]("lost update problem"), which is normally prevented by the ETag locking
-    mechanism. Use at your own risk.
-    """
-    user.need_permission("wato.edit")
-    user.need_permission("wato.edit_hosts")
-    body = params["body"]
-
-    succeeded_hosts: list[Host] = []
-    failed_hosts: dict[HostName, str] = {}
-
-    hosts_by_folder: dict[Folder, list[Host]] = {}
-    host_name_to_updates: dict[HostName, list[dict[str, Any]]] = {}
-    for update_detail in body["entries"]:
-        host = folder_tree().load_host(update_detail["host_name"])
-        hosts_by_folder.setdefault(host.folder(), []).append(host)
-        host_name_to_updates.setdefault(host.name(), []).append(update_detail)
-
-    for folder, hosts in hosts_by_folder.items():
-        pending_changes: list[tuple[Host, str, list[SiteId]]] = []
-        for host in hosts:
-            for update_detail in host_name_to_updates[host.name()]:
-                if not _validate_host_attributes_for_quick_setup(host, update_detail):
-                    failed_hosts[host.name()] = "Host is locked by Quick setup."
-                    continue
-
-                attributes: HostAttributes = (
-                    update_detail["attributes"]
-                    if "attributes" in update_detail
-                    else host.attributes.copy()
-                )
-
-                if update_attributes := update_detail.get("update_attributes"):
-                    attributes.update(update_attributes)
-
-                faulty_attributes = []
-                if remove_attributes := update_detail.get("remove_attributes"):
-                    for attribute in remove_attributes:
-                        if attribute in attributes:
-                            # mypy expects literal keys for typed dicts
-                            del attributes[attribute]  # type: ignore[misc]
-                        else:
-                            faulty_attributes.append(attribute)
-
-                diff, affected_sites = host.apply_edit(
-                    attributes, host.cluster_nodes(), acting_user=user
-                )
-                pending_changes.append((host, diff, affected_sites))
-
-                if faulty_attributes:
-                    failed_hosts[host.name()] = f"Failed to remove {', '.join(faulty_attributes)}"
-                else:
-                    succeeded_hosts.append(host)
-
-        # skip save if no changes were made, presumably due to quick setup lock
-        if pending_changes:
-            folder.save_hosts(pprint_value=active_config.wato_pprint_config, acting_user=user)
-            for host, diff, affected_sites in pending_changes:
-                host.add_edit_host_change(
-                    diff,
-                    affected_sites,
-                    pending_changes=_pending_changes(
-                        config=active_config, local_site=omd_site(), acting_user=user.id
-                    ),
-                )
-
-    return _bulk_host_action_response(failed_hosts, succeeded_hosts)
 
 
 @Endpoint(
@@ -1049,35 +641,6 @@ def bulk_delete(params: Mapping[str, Any]) -> Response:
     return Response(status=204)
 
 
-@Endpoint(
-    constructors.object_href("host_config", "{host_name}"),
-    "cmk/show",
-    method="get",
-    path_params=[
-        {
-            "host_name": gui_fields.HostField(
-                description="A host name.",
-                should_exist=True,
-                permission_type="setup_read",
-            )
-        }
-    ],
-    query_params=[EFFECTIVE_ATTRIBUTES],
-    etag="output",
-    response_schema=HostConfigSchema,
-    permissions_required=permissions.Optional(permissions.Perm("wato.see_all_folders")),
-    family_name=HOST_CONFIG_FAMILY.name,
-)
-def show_host(params: Mapping[str, Any]) -> Response:
-    """Show a host"""
-    host_name = params["host_name"]
-    host = folder_tree().load_host(host_name)
-    return _serve_host(
-        host,
-        _fields_filter_from_params(params, is_collection=False),
-    )
-
-
 def _serve_host(host: Host, fields_filter: FieldsFilter) -> Response:
     response = serve_json(serialize_host(host, fields_filter=fields_filter))
     return constructors.response_with_etag_created_from_dict(response, _host_etag_values(host))
@@ -1150,19 +713,11 @@ def _host_etag_values(host: Host) -> dict[str, Any]:
 
 
 def register(endpoint_registry: EndpointRegistry) -> None:
-    endpoint_registry.register(create_host)
-    endpoint_registry.register(create_cluster_host)
-    endpoint_registry.register(bulk_create_hosts)
-    endpoint_registry.register(list_hosts)
-    endpoint_registry.register(update_nodes)
-    endpoint_registry.register(update_host)
-    endpoint_registry.register(bulk_update_hosts)
     endpoint_registry.register(rename_host)
     endpoint_registry.register(renaming_job_wait_for_completion)
     endpoint_registry.register(move)
     endpoint_registry.register(delete)
     endpoint_registry.register(bulk_delete)
-    endpoint_registry.register(show_host)
 
 
 def _pending_changes(

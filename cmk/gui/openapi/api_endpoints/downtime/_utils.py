@@ -45,7 +45,9 @@ def _downtime_mode(info: ResultRow) -> FixedDowntimeModeModel | FlexibleDowntime
     return FlexibleDowntimeModeModel(type="flexible", duration_minutes=info["duration"] // 60)
 
 
-def serialize_single_downtime(downtime: ResultRow, *, host_url: str) -> DowntimeObjectModel:
+def serialize_single_downtime(
+    downtime: ResultRow, *, host_url: str, version: APIVersion
+) -> DowntimeObjectModel:
     is_service = bool(downtime["is_service"])
     downtime_id = str(downtime["id"])
     host_name = downtime["host_name"]
@@ -79,7 +81,7 @@ def serialize_single_downtime(downtime: ResultRow, *, host_url: str) -> Downtime
             link_to_endpoint(
                 family=HOST_CONFIG_FAMILY.name,
                 link_relation="cmk/show",
-                version=APIVersion.UNSTABLE,
+                version=version,
                 host_url=host_url,
                 parameters={"host_name": host_name},
                 title="This host of this downtime.",
@@ -110,7 +112,7 @@ def serialize_single_downtime(downtime: ResultRow, *, host_url: str) -> Downtime
 
 
 def serialize_downtimes(
-    downtimes: Iterable[ResultRow], *, host_url: str
+    downtimes: Iterable[ResultRow], *, host_url: str, version: APIVersion
 ) -> DowntimeCollectionModel:
     return DowntimeCollectionModel(
         id="downtime",
@@ -119,11 +121,14 @@ def serialize_downtimes(
             link_to_endpoint(
                 family="Downtimes",
                 link_relation=".../collection",
-                version=APIVersion.V1,
+                version=version,
                 host_url=host_url,
                 as_self=True,
             )
         ],
-        value=[serialize_single_downtime(downtime, host_url=host_url) for downtime in downtimes],
+        value=[
+            serialize_single_downtime(downtime, host_url=host_url, version=version)
+            for downtime in downtimes
+        ],
         extensions={},
     )

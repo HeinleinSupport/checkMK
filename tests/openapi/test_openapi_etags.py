@@ -64,6 +64,7 @@ def test_openapi_etag_enabled(aut_user_auth_wsgi_app: WebTestAppForCMK) -> None:
         ".../update",
         status=412,
         headers={"If-Match": "foo", "Accept": "application/json"},
+        params="{}",
         content_type="application/json",
     )
 

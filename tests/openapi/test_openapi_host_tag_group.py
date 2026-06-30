@@ -294,7 +294,7 @@ def test_openapi_host_tag_with_only_one_option(
 
     res.assert_status_code(400)
     assert res.json["detail"].startswith("These fields have problems")
-    assert res.json["fields"]["attributes"][0].startswith("Invalid value for tag-group")
+    assert "Invalid value for tag-group" in str(res.json["fields"])
 
     clients.HostConfig.edit(
         host_name="example.com", attributes={"alias": "foobar", "tag_group_id999": None}

@@ -17,6 +17,7 @@ from cmk.gui.openapi.framework.model.base_models import (
     DomainObjectCollectionModel,
     DomainObjectModel,
     LinkableModel,
+    LinkModel,
     ObjectActionMemberModel,
     ObjectCollectionMemberModel,
 )
@@ -87,6 +88,13 @@ class HostMembersModel(DomainObjectModel):
 @api_model
 class HostConfigModel(DomainObjectModel):
     domainType: Literal["host_config"] = api_field(description="The domain type of the object.")
+    # The list endpoint omits the links entirely when they were not requested
+    # (``include_links=False``), matching the behaviour of the previous implementation.
+    links: list[LinkModel] | ApiOmitted = api_field(  # type: ignore[assignment]
+        title="Links",
+        description="List of links to other resources.",
+        default_factory=ApiOmitted,
+    )
     members: HostMembersModel | None = api_field(
         description="All the members of the host object.",
     )

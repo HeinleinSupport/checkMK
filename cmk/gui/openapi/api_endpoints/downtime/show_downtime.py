@@ -69,7 +69,9 @@ def show_downtime_v1(
             detail=f"The downtime id {downtime_id} did not match any downtime",
         )
 
-    return serialize_single_downtime(downtime, host_url=api_context.host_url)
+    return serialize_single_downtime(
+        downtime, host_url=api_context.host_url, version=api_context.version
+    )
 
 
 ENDPOINT_SHOW_DOWNTIME = VersionedEndpoint(

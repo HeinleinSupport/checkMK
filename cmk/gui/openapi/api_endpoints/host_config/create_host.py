@@ -5,7 +5,6 @@
 from typing import Annotated
 
 from cmk.ccc.hostaddress import HostName
-from cmk.gui.logged_in import user
 from cmk.gui.openapi.api_endpoints.models.host_attribute_models import HostAttributeRequestModel
 from cmk.gui.openapi.framework import (
     ApiContext,
@@ -72,7 +71,7 @@ def create_host_v1(
     ] = ApiOmitted(),
 ) -> ApiResponse[HostConfigModel]:
     """Create a hosts."""
-    user.need_permission("wato.edit")
+    api_context.user.need_permission("wato.edit")
     host_name = body.host_name
 
     # is_cluster is defined as "cluster_hosts is not None"
@@ -87,7 +86,9 @@ def create_host_v1(
 
     host = folder_tree().load_host(host_name)
     return ApiResponse(
-        body=serialize_host(host, compute_effective_attributes=False, compute_links=True),
+        body=serialize_host(
+            host, api_context=api_context, compute_effective_attributes=False, compute_links=True
+        ),
         status_code=200,
         etag=host_etag(host),
     )
@@ -101,6 +102,6 @@ ENDPOINT_CREATE_HOST = VersionedEndpoint(
     ),
     permissions=EndpointPermissions(required=PERMISSIONS_CREATE),
     doc=EndpointDoc(family=HOST_CONFIG_FAMILY.name),
-    versions={APIVersion.UNSTABLE: EndpointHandler(handler=create_host_v1)},
+    versions={APIVersion.V1: EndpointHandler(handler=create_host_v1)},
     behavior=EndpointBehavior(etag="output"),
 )
