@@ -9,8 +9,8 @@ from cmk.ccc.hostaddress import HostName
 from cmk.ccc.version import Edition
 from cmk.gui.openapi.api_endpoints.models.host_attribute_models import (
     BaseHostAttributeModel,
-    HostUpdateAttributeModel,
-    HostViewAttributeModel,
+    HostAttributeRequestModel,
+    HostAttributeResponseModel,
 )
 from cmk.gui.openapi.framework.model import ApiOmitted
 from cmk.licensing.basics.options import OptionName
@@ -70,29 +70,32 @@ def test_metrics_association_accepts_multi_rule_filter_groups(
         lambda _omd_root: Edition.ULTIMATE,
     )
     payload = {
-        "metrics_association": {
-            "attribute_filters": {
-                "resource_attributes": [{"key": "k8s.namespace.name", "value": "blog"}],
-                "scope_attributes": [],
-                "data_point_attributes": [],
+        "metrics_association": [
+            "enabled",
+            {
+                "attribute_filters": {
+                    "resource_attributes": [{"key": "k8s.namespace.name", "value": "blog"}],
+                    "scope_attributes": [],
+                    "data_point_attributes": [],
+                },
+                "attribute_filter_groups": [
+                    {
+                        "resource_attributes": [{"key": "k8s.pod.name", "value": "pod-a"}],
+                        "scope_attributes": [],
+                        "data_point_attributes": [],
+                    },
+                    {
+                        "resource_attributes": [{"key": "k8s.pod.name", "value": "pod-b"}],
+                        "scope_attributes": [],
+                        "data_point_attributes": [],
+                    },
+                ],
             },
-            "attribute_filter_groups": [
-                {
-                    "resource_attributes": [{"key": "k8s.pod.name", "value": "pod-a"}],
-                    "scope_attributes": [],
-                    "data_point_attributes": [],
-                },
-                {
-                    "resource_attributes": [{"key": "k8s.pod.name", "value": "pod-b"}],
-                    "scope_attributes": [],
-                    "data_point_attributes": [],
-                },
-            ],
-        }
+        ]
     }
 
     model = TypeAdapter(  # astrein: disable=pydantic-type-adapter
-        HostUpdateAttributeModel
+        HostAttributeRequestModel
     ).validate_python(payload)
 
     assert model.to_internal()["metrics_association"] == (
@@ -141,9 +144,12 @@ def test_metrics_association_view_exposes_multi_rule_filter_groups() -> None:
         )
     }
 
-    model = HostViewAttributeModel.from_internal(internal_value, set())  # type: ignore[arg-type]
+    model = HostAttributeResponseModel.from_internal(internal_value, set())  # type: ignore[arg-type]
 
-    assert not isinstance(model.metrics_association, (ApiOmitted, str))
-    groups = model.metrics_association.attribute_filter_groups
+    assert not isinstance(model.metrics_association, ApiOmitted)
+    status, config = model.metrics_association
+    assert status == "enabled"
+    assert config is not None
+    groups = config.attribute_filter_groups
     assert not isinstance(groups, ApiOmitted)
     assert [(f.key, f.value) for f in groups[0].resource_attributes] == [("k8s.pod.name", "pod-a")]

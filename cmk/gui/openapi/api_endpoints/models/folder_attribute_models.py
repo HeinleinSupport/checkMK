@@ -11,7 +11,7 @@ from pydantic import AfterValidator
 
 from cmk.gui.openapi.api_endpoints.models.attributes import (
     FolderCustomHostAttributesAndTagGroupsModel,
-    HostContactGroupModel,
+    HostContactGroupRequestModel,
     HostLabels,
     IPMIParametersModel,
     MetaDataModel,
@@ -42,7 +42,7 @@ class BaseFolderAttributeModel:
             default_factory=ApiOmitted,
         )
     )
-    contactgroups: HostContactGroupModel | ApiOmitted = api_field(
+    contactgroups: HostContactGroupRequestModel | ApiOmitted = api_field(
         description=(
             "Only members of the contact groups listed here have Setup permission for the "
             "host/folder. Optionally, you can make these contact groups automatically monitor "

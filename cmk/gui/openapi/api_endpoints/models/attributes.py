@@ -11,17 +11,18 @@
 
 import datetime as dt
 import re
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from ipaddress import IPv4Network
 from typing import Annotated, Literal, Self
 
 from annotated_types import Ge, Interval, MaxLen, MinLen
-from pydantic import AfterValidator, model_validator, WithJsonSchema
+from pydantic import AfterValidator, model_validator, PlainSerializer, WithJsonSchema
 
 from cmk.ccc.hostaddress import HostAddress
 from cmk.ccc.site import SiteId
 from cmk.ccc.translations import TranslationOptions
 from cmk.ccc.user import UserId
+from cmk.gui.config import active_config
 from cmk.gui.fields.attributes import (
     AuthProtocolConverter,
     AuthProtocolType,
@@ -40,6 +41,8 @@ from cmk.gui.openapi.framework.model.converter import (
 from cmk.gui.openapi.framework.model.dynamic_fields import WithDynamicFields
 from cmk.gui.openapi.utils import ProblemException
 from cmk.gui.watolib.host_attributes import (
+    ABCHostAttribute,
+    all_host_attributes,
     ExcludeIPRange,
     HostContactGroupSpec,
     IPMICredentials,
@@ -48,32 +51,46 @@ from cmk.gui.watolib.host_attributes import (
     NetworkScanResult,
     NetworkScanSpec,
 )
+from cmk.gui.watolib.tags import load_tag_config_read_only
+from cmk.utils.tags import TagGroupID
+
+# Shared between the lenient input model (flags optional) and the read-only view model
+# (flags always rendered), so extracted to module level to avoid duplication.
+_CONTACT_GROUP_USE_DESC = "Add these contact groups to the host."
+_CONTACT_GROUP_USE_FOR_SERVICES_DESC = "<p>Always add host contact groups also to its services.</p>With this option contact groups that are added to hosts are always being added to services, as well. This only makes a difference if you have assigned other contact groups to services via rules in <i>Host & Service Parameters</i>. As long as you do not have any such rule a service always inherits all contact groups from its host."
+_CONTACT_GROUP_RECURSE_USE_DESC = (
+    "Add these groups as contacts to all hosts in all sub-folders of this folder."
+)
+_CONTACT_GROUP_RECURSE_PERMS_DESC = "Give these groups also permission on all sub-folders."
 
 
 @api_model
-class HostContactGroupModel:
-    groups: list[Annotated[str, AfterValidator(GroupConverter(group_type="host").exists)]] = (
+class HostContactGroupRequestModel:
+    groups: list[Annotated[str, AfterValidator(GroupConverter(group_type="contact").exists)]] = (
         api_field(description="A list of contact groups.", example="all")
     )
-    use: bool = api_field(description="Add these contact groups to the host.")
+    use: bool = api_field(description=_CONTACT_GROUP_USE_DESC, default=False)
     use_for_services: bool = api_field(
-        description="<p>Always add host contact groups also to its services.</p>With this option contact groups that are added to hosts are always being added to services, as well. This only makes a difference if you have assigned other contact groups to services via rules in <i>Host & Service Parameters</i>. As long as you do not have any such rule a service always inherits all contact groups from its host.",
+        description=_CONTACT_GROUP_USE_FOR_SERVICES_DESC,
+        default=False,
     )
     recurse_use: bool = api_field(
-        description="Add these groups as contacts to all hosts in all sub-folders of this folder.",
+        description=_CONTACT_GROUP_RECURSE_USE_DESC,
+        default=False,
     )
     recurse_perms: bool = api_field(
-        description="Give these groups also permission on all sub-folders."
+        description=_CONTACT_GROUP_RECURSE_PERMS_DESC,
+        default=False,
     )
 
     @classmethod
-    def from_internal(cls, value: HostContactGroupSpec) -> "HostContactGroupModel":
+    def from_internal(cls, value: HostContactGroupSpec) -> "HostContactGroupRequestModel":
         return cls(
             groups=value["groups"],
-            use=value["use"],
-            use_for_services=value["use_for_services"],
-            recurse_use=value["recurse_use"],
-            recurse_perms=value["recurse_perms"],
+            use=value.get("use", False),
+            use_for_services=value.get("use_for_services", False),
+            recurse_use=value.get("recurse_use", False),
+            recurse_perms=value.get("recurse_perms", False),
         )
 
     def to_internal(self) -> HostContactGroupSpec:
@@ -87,6 +104,30 @@ class HostContactGroupModel:
 
 
 @api_model
+class HostContactGroupResponseModel(HostContactGroupRequestModel):
+    """Read-only variant used in (effective) attributes responses.
+
+    The flags are declared without a default so that they are always rendered, even when
+    ``False`` - the response serializer strips fields equal to their default, which would
+    otherwise drop them (the previous implementation always included them)."""
+
+    use: bool = api_field(description=_CONTACT_GROUP_USE_DESC)
+    use_for_services: bool = api_field(description=_CONTACT_GROUP_USE_FOR_SERVICES_DESC)
+    recurse_use: bool = api_field(description=_CONTACT_GROUP_RECURSE_USE_DESC)
+    recurse_perms: bool = api_field(description=_CONTACT_GROUP_RECURSE_PERMS_DESC)
+
+    @classmethod
+    def from_internal(cls, value: HostContactGroupSpec) -> "HostContactGroupResponseModel":
+        return cls(
+            groups=value["groups"],
+            use=value.get("use", False),
+            use_for_services=value.get("use_for_services", False),
+            recurse_use=value.get("recurse_use", False),
+            recurse_perms=value.get("recurse_perms", False),
+        )
+
+
+@api_model
 class SNMPCommunityModel:
     type: Literal["v1_v2_community"] = api_field(description="SNMP v1 or v2 with community")
     community: str | ApiOmitted = api_field(
@@ -97,7 +138,7 @@ class SNMPCommunityModel:
 
 @api_model
 class SNMPv3NoAuthNoPrivacyModel:
-    type: Literal["noAuthNoPriv"] = api_field(
+    type: Literal["v3_no_auth_no_privacy"] = api_field(
         description="SNMPv3 without authentication or privacy"
     )
     security_name: str = api_field(description="Security name")
@@ -105,17 +146,17 @@ class SNMPv3NoAuthNoPrivacyModel:
     @classmethod
     def from_internal(cls, value: tuple[Literal["noAuthNoPriv"], str]) -> Self:
         return cls(
-            type=value[0],
+            type="v3_no_auth_no_privacy",
             security_name=value[1],
         )
 
     def to_internal(self) -> tuple[Literal["noAuthNoPriv"], str]:
-        return self.type, self.security_name
+        return "noAuthNoPriv", self.security_name
 
 
 @api_model
 class SNMPv3AuthNoPrivacyModel:
-    type: Literal["authNoPriv"] = api_field(
+    type: Literal["v3_auth_no_privacy"] = api_field(
         description="SNMPv3 with authentication, but without privacy"
     )
     auth_protocol: AuthProtocolType = api_field(description="Authentication protocol.")
@@ -128,7 +169,7 @@ class SNMPv3AuthNoPrivacyModel:
     @classmethod
     def from_internal(cls, value: tuple[Literal["authNoPriv"], str, str, str]) -> Self:
         return cls(
-            type=value[0],
+            type="v3_auth_no_privacy",
             auth_protocol=AuthProtocolConverter.from_checkmk(value[1]),
             security_name=value[2],
             auth_password=ApiOmitted(),
@@ -142,7 +183,7 @@ class SNMPv3AuthNoPrivacyModel:
                 detail="The 'auth_password' field is required for SNMPv3 authNoPriv credentials.",
             )
         return (
-            self.type,
+            "authNoPriv",
             AuthProtocolConverter.to_checkmk(self.auth_protocol),
             self.security_name,
             self.auth_password,
@@ -151,7 +192,9 @@ class SNMPv3AuthNoPrivacyModel:
 
 @api_model
 class SNMPv3AuthPrivacyModel:
-    type: Literal["authPriv"] = api_field(description="SNMPv3 with authentication and privacy")
+    type: Literal["v3_auth_privacy"] = api_field(
+        description="SNMPv3 with authentication and privacy"
+    )
     auth_protocol: AuthProtocolType = api_field(description="Authentication protocol.")
     security_name: str = api_field(description="Security name")
     auth_password: Annotated[str, MinLen(8)] | ApiOmitted = api_field(
@@ -169,7 +212,7 @@ class SNMPv3AuthPrivacyModel:
     @classmethod
     def from_internal(cls, value: tuple[Literal["authPriv"], str, str, str, str, str]) -> Self:
         return cls(
-            type=value[0],
+            type="v3_auth_privacy",
             auth_protocol=AuthProtocolConverter.from_checkmk(value[1]),
             security_name=value[2],
             auth_password=ApiOmitted(),
@@ -195,7 +238,7 @@ class SNMPv3AuthPrivacyModel:
                 detail=f"The following field(s) are required for SNMPv3 authPriv credentials: {', '.join(missing)}.",
             )
         return (
-            self.type,
+            "authPriv",
             AuthProtocolConverter.to_checkmk(self.auth_protocol),
             self.security_name,
             self.auth_password,
@@ -540,12 +583,13 @@ class NetworkScanModel:
         description="Only execute the discovery during this time range each day."
     )
     set_ipaddress: bool = api_field(
+        serialization_alias="set_ip_address",
         description="When set, the found IPv4 address is set on the discovered host.",
         # default=True
     )
-    max_parallel_pings: Annotated[int, Interval(ge=1, le=200)] = api_field(
+    max_parallel_pings: Annotated[int, Interval(ge=1, le=200)] | ApiOmitted = api_field(
         description="Set the maximum number of concurrent pings sent to target IP addresses.",
-        # default=100,
+        default_factory=ApiOmitted,
     )
     run_as: (
         Annotated[
@@ -578,13 +622,13 @@ class NetworkScanModel:
             ]
             if "exclude_ranges" in value
             else ApiOmitted(),
-            scan_interval=value["scan_interval"],
+            scan_interval=value.get("scan_interval", ApiOmitted()),
             time_allowed=[
                 TimeAllowedRangeModel.from_internal(entry) for entry in value["time_allowed"]
             ],
             set_ipaddress=value["set_ipaddress"],
-            max_parallel_pings=value["max_parallel_pings"],
-            run_as=value["run_as"],
+            max_parallel_pings=value.get("max_parallel_pings", ApiOmitted()),
+            run_as=value.get("run_as", ApiOmitted()),
             tag_criticality=value["tag_criticality"]
             if "tag_criticality" in value
             else ApiOmitted(),
@@ -681,13 +725,18 @@ class NetworkScanResultModel:
         )
 
 
+# Render UTC timestamps as "...+00:00" (via isoformat) rather than pydantic's default "...Z",
+# matching the previous implementation's output.
+_IsoDateTime = Annotated[dt.datetime, PlainSerializer(lambda v: v.isoformat(), return_type=str)]
+
+
 @api_model
 class MetaDataModel:
-    created_at: dt.datetime | ApiOmitted = api_field(
+    created_at: _IsoDateTime | ApiOmitted = api_field(
         description="When has this object been created.",
         default_factory=ApiOmitted,
     )
-    updated_at: dt.datetime | ApiOmitted = api_field(
+    updated_at: _IsoDateTime | ApiOmitted = api_field(
         description="When this object was last changed.",
         default_factory=ApiOmitted,
     )
@@ -699,10 +748,10 @@ class MetaDataModel:
     @classmethod
     def from_internal(cls, value: MetaData) -> Self:
         return cls(
-            created_at=dt.datetime.fromtimestamp(value["created_at"])
+            created_at=dt.datetime.fromtimestamp(value["created_at"], tz=dt.UTC)
             if "created_at" in value
             else ApiOmitted(),
-            updated_at=dt.datetime.fromtimestamp(value["updated_at"])
+            updated_at=dt.datetime.fromtimestamp(value["updated_at"], tz=dt.UTC)
             if "updated_at" in value
             else ApiOmitted(),
             created_by=value["created_by"] if "created_by" in value else ApiOmitted(),
@@ -725,23 +774,72 @@ class LockedByModel:
             instance_id=value[2],
         )
 
-    def to_internal(self) -> Sequence[str]:
-        # for some godforsaken reason, the locked_by attribute is a list and not a tuple
-        return [self.site_id, self.program_id, self.instance_id]
+    def to_internal(self) -> tuple[str, str, str]:
+        # The internal hosts.mk representation of locked_by is a tuple (site_id, program, instance).
+        return (self.site_id, self.program_id, self.instance_id)
 
 
 @api_model
 class FolderCustomHostAttributesAndTagGroupsModel(WithDynamicFields):
     """Class for custom host attributes and tag groups."""
 
-    # TODO: validate the attribute key as well as value possibly with Annotated?
-    dynamic_fields: dict[str, str] = api_field(
+    # ``None`` is allowed so a custom tag group can be unset (matching the previous
+    # implementation, which used ``allow_none=True``). The keys/values are validated against the
+    # configured custom attributes and tag groups by `validate_custom_attributes_and_tag_groups`,
+    # which is called from the input models only (the read-only view must keep rendering
+    # attributes of since-deleted custom attributes).
+    dynamic_fields: dict[str, str | None] = api_field(
         description=(
             "The property name must be\n\n"
             " * A custom host attribute\n"
             " * A custom tag group starting with `tag_`\n"
         ),
     )
+
+
+def validate_custom_attributes_and_tag_groups(dynamic_fields: Mapping[str, str | None]) -> None:
+    """Validate custom host attributes and tag groups passed as dynamic fields.
+
+    Mirrors the behaviour of the previous marshmallow implementation: each key must be either a
+    host attribute that is editable through the REST API (a configured custom attribute or a
+    built-in/edition-specific attribute such as ``relay``) or a custom tag group (``tag_<id>``);
+    the value of a tag group must be one of its tags. Unknown keys - including internal,
+    non-editable attributes such as ``meta_data`` - are rejected. Raises ``ValueError`` (reported
+    as a 400) on the first problem."""
+    if not dynamic_fields:
+        return
+
+    host_attributes = all_host_attributes(
+        active_config.wato_host_attrs, active_config.tags.get_tag_groups_by_topic()
+    )
+    tag_group_config = load_tag_config_read_only()
+
+    for name, value in dynamic_fields.items():
+        if (tag_group := tag_group_config.get_tag_group(TagGroupID(name[4:]))) is not None:
+            if value not in tag_group.get_tag_ids():
+                raise ValueError(f"Invalid value for tag-group {tag_group.title!r}: {value!r}")
+        elif (host_attribute := _custom_host_attribute(host_attributes, name)) is not None:
+            # Validate the attribute is settable; the value itself is validated when the host is
+            # saved. We deliberately do not call ``validate_input`` here: some attributes (e.g.
+            # ``relay``) read request form/query vars in their validation, which are not populated
+            # for JSON request bodies in this framework.
+            if not isinstance(value, str):
+                raise ValueError(f"Attribute {host_attribute.name()!r} must be a string.")
+        else:
+            raise ValueError(f"Unknown Attribute: {name!r}: {value!r}")
+
+
+def _custom_host_attribute(
+    attributes: dict[str, ABCHostAttribute], name: str
+) -> ABCHostAttribute | None:
+    # ``openapi_editable`` covers both user-defined custom attributes and built-in/edition-specific
+    # attributes that are settable via the REST API but have no dedicated model field (e.g.
+    # ``relay``). Internal, read-only attributes (e.g. ``meta_data``) return ``False`` and are
+    # therefore rejected.
+    attribute = attributes.get(name)
+    if attribute is None or not attribute.openapi_editable():
+        return None
+    return attribute
 
 
 def _validate_label_key(value: str) -> str:
@@ -818,4 +916,8 @@ class MetricsAssociationEnabledModel:
     )
 
 
-MetricsAssociationModel = Literal["disabled"] | MetricsAssociationEnabledModel
+# Mirrors the internal representation (and the previous marshmallow tuple): the status and the
+# config are correlated, so "enabled" always carries the config and "disabled" always carries None.
+MetricsAssociationModel = (
+    tuple[Literal["enabled"], MetricsAssociationEnabledModel] | tuple[Literal["disabled"], None]
+)

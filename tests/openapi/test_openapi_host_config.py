@@ -1353,7 +1353,7 @@ def test_openapi_host_config_redacted_snmp_credentials_roundtrip_no_500(
         host_name="heute",
         attributes={
             "snmp_community": {
-                "type": "authPriv",
+                "type": "v3_auth_privacy",
                 "auth_protocol": "SHA-2-256",
                 "security_name": "bob",
                 "auth_password": "auth-secret-1",

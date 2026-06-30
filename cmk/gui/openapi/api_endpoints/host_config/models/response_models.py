@@ -11,7 +11,7 @@ from typing import Annotated, Literal
 from pydantic import AfterValidator
 
 from cmk.gui.openapi.api_endpoints.models.folder_attribute_models import FolderViewAttributeModel
-from cmk.gui.openapi.api_endpoints.models.host_attribute_models import HostViewAttributeModel
+from cmk.gui.openapi.api_endpoints.models.host_attribute_models import HostAttributeResponseModel
 from cmk.gui.openapi.framework.model import api_field, api_model, ApiOmitted
 from cmk.gui.openapi.framework.model.base_models import (
     DomainObjectCollectionModel,
@@ -28,8 +28,8 @@ from cmk.gui.openapi.framework.model.response import ApiErrorDataclass
 @api_model
 class HostExtensionsModel:
     folder: AnnotatedFolder = api_field(description="The folder, in which this host resides.")
-    attributes: HostViewAttributeModel = api_field(description="Attributes of this host.")
-    effective_attributes: HostViewAttributeModel | ApiOmitted = api_field(
+    attributes: HostAttributeResponseModel = api_field(description="Attributes of this host.")
+    effective_attributes: HostAttributeResponseModel | ApiOmitted = api_field(
         description="All attributes of this host and all parent folders.",
         default_factory=ApiOmitted,
     )

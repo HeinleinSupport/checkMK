@@ -5,17 +5,24 @@
 
 # mypy: disable-error-code="type-arg"
 
-from collections.abc import Mapping, Sequence
-from typing import Annotated, Literal
+# The read-only view model intentionally overrides some inherited input fields with read-only
+# variants (e.g. a subclassed contactgroups model, a non-validating site, a nullable
+# snmp_community), which mypy flags as covariant/mutable overrides.
+# mypy: disable-error-code="mutable-override"
 
-from pydantic import AfterValidator, WithJsonSchema
+from collections.abc import Callable, Mapping, Sequence
+from typing import Annotated, Literal, Self
+
+from pydantic import AfterValidator, model_validator, PlainSerializer, WithJsonSchema
 
 from cmk.ccc.hostaddress import HostAddress, HostName
 from cmk.ccc.site import SiteId
 from cmk.ccc.version import Edition
+from cmk.gui.config import active_config
 from cmk.gui.openapi.api_endpoints.models.attributes import (
     FolderCustomHostAttributesAndTagGroupsModel,
-    HostContactGroupModel,
+    HostContactGroupRequestModel,
+    HostContactGroupResponseModel,
     HostLabels,
     IPMIParametersModel,
     LockedByModel,
@@ -28,11 +35,13 @@ from cmk.gui.openapi.api_endpoints.models.attributes import (
     NetworkScanResultModel,
     SNMPCredentialsConverter,
     SNMPCredentialsModel,
+    validate_custom_attributes_and_tag_groups,
 )
 from cmk.gui.openapi.framework.model import api_field, api_model, ApiOmitted
 from cmk.gui.openapi.framework.model.converter import (
     HostAddressConverter,
     HostConverter,
+    SiteIdConverter,
     TypedPlainValidator,
 )
 from cmk.gui.openapi.framework.model.restrict_editions import RestrictEditions
@@ -40,6 +49,7 @@ from cmk.gui.openapi.framework.model.restrict_features import RestrictFeatures
 from cmk.gui.watolib.builtin_attributes import HostAttributeLabels, HostAttributeWaitingForDiscovery
 from cmk.gui.watolib.host_attributes import (
     HostAttributes,
+    IPMICredentials,
     MetricsAssociationAttributeFilter,
     MetricsAssociationAttributeFilters,
     MetricsAssociationEnabled,
@@ -60,6 +70,52 @@ HostNameOrIPv6 = Annotated[
     TypedPlainValidator(str, HostAddressConverter(allow_ipv4=False)),
     WithJsonSchema({"type": "string"}, mode="serialization"),
 ]
+
+
+def _snmp_community_or_none(value: str | tuple | None) -> SNMPCredentialsModel | None:
+    """Convert an internal SNMP credential to its model, preserving an explicit ``None``.
+
+    The ``HostAttributes`` TypedDict types the value as non-optional, but at runtime it can be
+    ``None`` (e.g. effective attributes of a host without SNMP configured)."""
+    if value is None:
+        return None
+    return SNMPCredentialsConverter.from_internal(value)
+
+
+def _ipmi_credentials_or_none(value: IPMICredentials | None) -> IPMIParametersModel | None:
+    if value is None:
+        return None
+    return IPMIParametersModel.from_internal(value)
+
+
+class RelayValidationHook:
+    """Validates a relay id; installed by the nonfree relay registration when the relay feature
+    is licensed.
+
+    Community code must not import the nonfree relay module, so the existence check is delegated
+    to this hook. It defaults to rejecting every value, making relay unavailable unless the
+    feature wired in a real validator."""
+
+    validate_relay_id: Callable[[str], bool] = lambda _relay_id: False
+
+
+def _validate_relay(value: str | ApiOmitted) -> str | ApiOmitted:
+    # Existence is delegated to a hook the nonfree relay module installs. Licensing is enforced by
+    # the RestrictFeatures validator (which runs first), so unlicensed requests never reach here
+    # with a value.
+    if value and not RelayValidationHook.validate_relay_id(value):
+        raise ValueError(f"The specified relay does not exist: {value!r}")
+    return value
+
+
+def _render_view_site(value: str) -> str:
+    """Render a host's site for read-only responses.
+
+    Unknown sites (e.g. a host configured for a site that no longer exists) are rendered as
+    ``Unknown Site: <id>`` rather than failing, matching the previous implementation."""
+    if value not in active_config.sites:
+        return f"Unknown Site: {value}"
+    return value
 
 
 def _validate_tag_id(tag_id: str, built_in_tag_group_id: TagGroupID) -> str:
@@ -129,8 +185,8 @@ class BaseHostAttributeModel:
         description="Add a comment or describe this host", default_factory=ApiOmitted
     )
 
-    site: SiteId | ApiOmitted = api_field(
-        description="The site that should monitor this host.", default_factory=ApiOmitted
+    site: Annotated[SiteId, TypedPlainValidator(str, SiteIdConverter.should_exist)] | ApiOmitted = (
+        api_field(description="The site that should monitor this host.", default_factory=ApiOmitted)
     )
 
     parents: (
@@ -144,7 +200,7 @@ class BaseHostAttributeModel:
         | ApiOmitted
     ) = api_field(description="A list of parents of this host.", default_factory=ApiOmitted)
 
-    contactgroups: HostContactGroupModel | ApiOmitted = api_field(
+    contactgroups: HostContactGroupRequestModel | ApiOmitted = api_field(
         description="Only members of the contact groups listed here have Setup permission for the host/folder. Optionally, you can make these contact groups automatically monitor contacts. The assignment of hosts to contact groups can also be defined by rules.",
         default_factory=ApiOmitted,
     )
@@ -234,11 +290,11 @@ class BaseHostAttributeModel:
         default_factory=ApiOmitted,
     )
 
-    management_snmp_community: SNMPCredentialsModel | ApiOmitted = api_field(
+    management_snmp_community: SNMPCredentialsModel | None | ApiOmitted = api_field(
         description="SNMP credentials", default_factory=ApiOmitted
     )
 
-    management_ipmi_credentials: IPMIParametersModel | ApiOmitted = api_field(
+    management_ipmi_credentials: IPMIParametersModel | None | ApiOmitted = api_field(
         description="IPMI credentials", default_factory=ApiOmitted
     )
 
@@ -254,6 +310,16 @@ class BaseHostAttributeModel:
 
     inventory_failed: bool | ApiOmitted = api_field(
         description="Whether or not the last bulk discovery failed. It is set to True once it fails and unset in case a later discovery succeeds.",
+        default_factory=ApiOmitted,
+    )
+
+    relay: Annotated[
+        str | ApiOmitted,
+        RestrictFeatures(option_name=OptionName.RELAY, which_field="relay"),
+        AfterValidator(_validate_relay),
+    ] = api_field(
+        description="The relay ID through which this host is monitored, if not empty. "
+        "Requires the relay feature to be licensed.",
         default_factory=ApiOmitted,
     )
 
@@ -283,7 +349,7 @@ class BaseHostAttributeModel:
 
 
 @api_model
-class HostViewAttributeModel(
+class HostAttributeResponseModel(
     BaseHostAttributeModel, BaseHostTagGroupModel, FolderCustomHostAttributesAndTagGroupsModel
 ):
     network_scan_result: NetworkScanResultModel | ApiOmitted = api_field(
@@ -292,12 +358,37 @@ class HostViewAttributeModel(
     meta_data: MetaDataModel | ApiOmitted = api_field(
         description="Read only access to configured metadata.", default_factory=ApiOmitted
     )
+    # Override the input model with the read-only variant, whose flags are always rendered.
+    contactgroups: HostContactGroupResponseModel | ApiOmitted = api_field(
+        description="Only members of the contact groups listed here have Setup permission for the host/folder. Optionally, you can make these contact groups automatically monitor contacts. The assignment of hosts to contact groups can also be defined by rules.",
+        default_factory=ApiOmitted,
+    )
+    # Read-only: the site may no longer exist, so render it instead of validating existence.
+    site: Annotated[SiteId, PlainSerializer(_render_view_site, return_type=str)] | ApiOmitted = (
+        api_field(
+            description="The site that should monitor this host.",
+            default_factory=ApiOmitted,
+        )
+    )
+    # Read-only: an effective (or explicitly unset) ``snmp_community`` is rendered as ``None``
+    # rather than omitted, matching the previous implementation.
+    snmp_community: SNMPCredentialsModel | None | ApiOmitted = api_field(  # type: ignore[assignment]
+        description="The SNMP access configuration. A configured SNMP v1/v2 community here will have precedence over any configured SNMP community rule. For this attribute to take effect, the attribute `tag_snmp_ds` needs to be set first.",
+        default_factory=ApiOmitted,
+    )
+    # Read-only: render the stored relay id as-is. The input model validates its existence and the
+    # license, but on read the referenced relay may no longer exist, so we must not re-validate -
+    # mirroring ``site``.
+    relay: str | ApiOmitted = api_field(
+        description="The relay ID through which this host is monitored, if not empty.",
+        default_factory=ApiOmitted,
+    )
 
     @staticmethod
     def from_internal(
         value: HostAttributes, static_attributes: set[str]
-    ) -> "HostViewAttributeModel":
-        return HostViewAttributeModel(
+    ) -> "HostAttributeResponseModel":
+        return HostAttributeResponseModel(
             alias=value.get("alias", ApiOmitted()),
             site=value.get("site", ApiOmitted()),
             meta_data=MetaDataModel.from_internal(value["meta_data"])
@@ -307,7 +398,7 @@ class HostViewAttributeModel(
             if "network_scan_result" in value
             else ApiOmitted(),
             parents=value["parents"] if "parents" in value else ApiOmitted(),
-            contactgroups=HostContactGroupModel.from_internal(value["contactgroups"])
+            contactgroups=HostContactGroupResponseModel.from_internal(value["contactgroups"])
             if "contactgroups" in value
             else ApiOmitted(),
             ipaddress=value.get("ipaddress", ApiOmitted()),
@@ -316,79 +407,16 @@ class HostViewAttributeModel(
             additional_ipv6addresses=value.get("additional_ipv6addresses", ApiOmitted()),
             bake_agent_package=value.get("bake_agent_package", ApiOmitted()),
             cmk_agent_connection=value.get("cmk_agent_connection", ApiOmitted()),
-            snmp_community=BaseHostAttributeModel.snmp_community_from_internal(
-                value["snmp_community"]
-            )
-            if "snmp_community" in value
-            else ApiOmitted(),
+            snmp_community=(
+                _snmp_community_or_none(value["snmp_community"])
+                if "snmp_community" in value
+                else ApiOmitted()
+            ),
             metrics_association=(
-                "disabled"
-                if metrics_assoc[0] == "disabled"
-                else MetricsAssociationEnabledModel(
-                    attribute_filters=MetricsAssociationAttributeFiltersModel(
-                        resource_attributes=[
-                            MetricsAssociationAttributeFilterModel(
-                                key=attribute_filter["key"],
-                                value=attribute_filter["value"],
-                            )
-                            for attribute_filter in metrics_assoc[1]["attribute_filters"][
-                                "resource_attributes"
-                            ]
-                        ],
-                        scope_attributes=[
-                            MetricsAssociationAttributeFilterModel(
-                                key=attribute_filter["key"],
-                                value=attribute_filter["value"],
-                            )
-                            for attribute_filter in metrics_assoc[1]["attribute_filters"][
-                                "scope_attributes"
-                            ]
-                        ],
-                        data_point_attributes=[
-                            MetricsAssociationAttributeFilterModel(
-                                key=attribute_filter["key"],
-                                value=attribute_filter["value"],
-                            )
-                            for attribute_filter in metrics_assoc[1]["attribute_filters"][
-                                "data_point_attributes"
-                            ]
-                        ],
-                    ),
-                    host_name_template=_metrics_association_host_name_template(metrics_assoc[1]),
-                    attribute_filter_groups=(
-                        [
-                            MetricsAssociationAttributeFiltersModel(
-                                resource_attributes=[
-                                    MetricsAssociationAttributeFilterModel(
-                                        key=attribute_filter["key"],
-                                        value=attribute_filter["value"],
-                                    )
-                                    for attribute_filter in group["resource_attributes"]
-                                ],
-                                scope_attributes=[
-                                    MetricsAssociationAttributeFilterModel(
-                                        key=attribute_filter["key"],
-                                        value=attribute_filter["value"],
-                                    )
-                                    for attribute_filter in group["scope_attributes"]
-                                ],
-                                data_point_attributes=[
-                                    MetricsAssociationAttributeFilterModel(
-                                        key=attribute_filter["key"],
-                                        value=attribute_filter["value"],
-                                    )
-                                    for attribute_filter in group["data_point_attributes"]
-                                ],
-                            )
-                            for group in metrics_assoc[1]["attribute_filter_groups"]
-                        ]
-                        if "attribute_filter_groups" in metrics_assoc[1]
-                        else ApiOmitted()
-                    ),
-                )
-            )
-            if (metrics_assoc := value.get("metrics_association"))
-            else ApiOmitted(),
+                _metrics_association_from_internal(value["metrics_association"])
+                if "metrics_association" in value
+                else ApiOmitted()
+            ),
             labels=dict(value["labels"]) if "labels" in value else ApiOmitted(),
             waiting_for_discovery=value.get("waiting_for_discovery", ApiOmitted()),
             network_scan=NetworkScanModel.from_internal(value["network_scan"])
@@ -400,16 +428,16 @@ class HostViewAttributeModel(
             if "management_protocol" in value
             else ApiOmitted(),
             management_address=value.get("management_address", ApiOmitted()),
-            management_snmp_community=SNMPCredentialsConverter.from_internal(
-                value["management_snmp_community"]
-            )
-            if "management_snmp_community" in value
-            else ApiOmitted(),
-            management_ipmi_credentials=IPMIParametersModel.from_internal(
-                value["management_ipmi_credentials"]
-            )
-            if "management_ipmi_credentials" in value
-            else ApiOmitted(),
+            management_snmp_community=(
+                _snmp_community_or_none(value["management_snmp_community"])
+                if "management_snmp_community" in value
+                else ApiOmitted()
+            ),
+            management_ipmi_credentials=(
+                _ipmi_credentials_or_none(value["management_ipmi_credentials"])
+                if "management_ipmi_credentials" in value
+                else ApiOmitted()
+            ),
             tag_agent=value.get("tag_agent", ApiOmitted()),
             tag_piggyback=value.get("tag_piggyback", ApiOmitted()),
             tag_snmp_ds=value.get("tag_snmp_ds", ApiOmitted()),
@@ -422,18 +450,26 @@ class HostViewAttributeModel(
                 if "locked_by" in value
                 else ApiOmitted()
             ),
+            inventory_failed=value.get("inventory_failed", ApiOmitted()),
+            relay=value.get("relay", ApiOmitted()),
             dynamic_fields={
                 k: v
                 for k, v in value.items()
-                if (k not in static_attributes or k == "tag_criticality") and isinstance(v, str)
+                if (k not in static_attributes or k == "tag_criticality")
+                and (isinstance(v, str) or v is None)
             },
         )
 
 
 @api_model
-class HostUpdateAttributeModel(
+class HostAttributeRequestModel(
     BaseHostAttributeModel, BaseHostTagGroupModel, FolderCustomHostAttributesAndTagGroupsModel
 ):
+    @model_validator(mode="after")
+    def _validate_dynamic_fields(self) -> Self:
+        validate_custom_attributes_and_tag_groups(self.dynamic_fields)
+        return self
+
     def to_internal(self) -> HostAttributes:
         attributes = HostAttributes()
         if not isinstance(self.alias, ApiOmitted):
@@ -466,6 +502,10 @@ class HostUpdateAttributeModel(
             attributes["labels"] = self.labels
         if not isinstance(self.waiting_for_discovery, ApiOmitted):
             attributes["waiting_for_discovery"] = self.waiting_for_discovery
+        if not isinstance(self.inventory_failed, ApiOmitted):
+            attributes["inventory_failed"] = self.inventory_failed
+        if not isinstance(self.relay, ApiOmitted):
+            attributes["relay"] = self.relay
         if not isinstance(self.network_scan, ApiOmitted):
             attributes["network_scan"] = self.network_scan.to_internal()
         if not isinstance(self.management_protocol, ApiOmitted):
@@ -475,13 +515,21 @@ class HostUpdateAttributeModel(
         if not isinstance(self.management_address, ApiOmitted):
             attributes["management_address"] = self.management_address
         if not isinstance(self.management_snmp_community, ApiOmitted):
-            attributes["management_snmp_community"] = self.snmp_community_to_internal(
-                self.management_snmp_community
+            # ``None`` clears the credential; the HostAttributes TypedDict types the value as
+            # non-optional, but storing ``None`` is valid at runtime.
+            management_snmp = (
+                None
+                if self.management_snmp_community is None
+                else self.snmp_community_to_internal(self.management_snmp_community)
             )
+            attributes["management_snmp_community"] = management_snmp  # type: ignore[typeddict-item]
         if not isinstance(self.management_ipmi_credentials, ApiOmitted):
-            attributes["management_ipmi_credentials"] = (
-                self.management_ipmi_credentials.to_internal()
+            management_ipmi = (
+                None
+                if self.management_ipmi_credentials is None
+                else self.management_ipmi_credentials.to_internal()
             )
+            attributes["management_ipmi_credentials"] = management_ipmi  # type: ignore[typeddict-item]
         if not isinstance(self.tag_agent, ApiOmitted):
             attributes["tag_agent"] = self.tag_agent
         if not isinstance(self.tag_piggyback, ApiOmitted):
@@ -512,47 +560,82 @@ def _metrics_association_host_name_template(enabled: Mapping[str, object]) -> st
     return ApiOmitted()
 
 
+def _attribute_filters_to_internal(
+    filters: MetricsAssociationAttributeFiltersModel,
+) -> MetricsAssociationAttributeFilters:
+    return MetricsAssociationAttributeFilters(
+        resource_attributes=[
+            MetricsAssociationAttributeFilter(key=f.key, value=f.value)
+            for f in filters.resource_attributes
+        ],
+        scope_attributes=[
+            MetricsAssociationAttributeFilter(key=f.key, value=f.value)
+            for f in filters.scope_attributes
+        ],
+        data_point_attributes=[
+            MetricsAssociationAttributeFilter(key=f.key, value=f.value)
+            for f in filters.data_point_attributes
+        ],
+    )
+
+
+def _attribute_filters_from_internal(
+    filters: MetricsAssociationAttributeFilters,
+) -> MetricsAssociationAttributeFiltersModel:
+    return MetricsAssociationAttributeFiltersModel(
+        resource_attributes=[
+            MetricsAssociationAttributeFilterModel(key=f["key"], value=f["value"])
+            for f in filters["resource_attributes"]
+        ],
+        scope_attributes=[
+            MetricsAssociationAttributeFilterModel(key=f["key"], value=f["value"])
+            for f in filters["scope_attributes"]
+        ],
+        data_point_attributes=[
+            MetricsAssociationAttributeFilterModel(key=f["key"], value=f["value"])
+            for f in filters["data_point_attributes"]
+        ],
+    )
+
+
 def _metrics_association_to_internal(
     model: MetricsAssociationModel,
 ) -> tuple[Literal["disabled"], None] | tuple[Literal["enabled"], MetricsAssociationEnabled]:
-    if model == "disabled":
+    _status, config = model
+    if config is None:
         return ("disabled", None)
     enabled = MetricsAssociationEnabled(
-        attribute_filters=MetricsAssociationAttributeFilters(
-            resource_attributes=[
-                MetricsAssociationAttributeFilter(key=f.key, value=f.value)
-                for f in model.attribute_filters.resource_attributes
-            ],
-            scope_attributes=[
-                MetricsAssociationAttributeFilter(key=f.key, value=f.value)
-                for f in model.attribute_filters.scope_attributes
-            ],
-            data_point_attributes=[
-                MetricsAssociationAttributeFilter(key=f.key, value=f.value)
-                for f in model.attribute_filters.data_point_attributes
-            ],
-        ),
+        attribute_filters=_attribute_filters_to_internal(config.attribute_filters),
     )
     # Optional manual host name template; absent for hosts created by the DCD connector.
-    if not isinstance(model.host_name_template, ApiOmitted):
-        enabled["host_name_template"] = model.host_name_template
+    if not isinstance(config.host_name_template, ApiOmitted):
+        enabled["host_name_template"] = config.host_name_template
     # Multiple filter groups for hosts produced by more than one host name lookup rule.
-    if not isinstance(model.attribute_filter_groups, ApiOmitted):
+    if not isinstance(config.attribute_filter_groups, ApiOmitted):
         enabled["attribute_filter_groups"] = [
-            MetricsAssociationAttributeFilters(
-                resource_attributes=[
-                    MetricsAssociationAttributeFilter(key=f.key, value=f.value)
-                    for f in group.resource_attributes
-                ],
-                scope_attributes=[
-                    MetricsAssociationAttributeFilter(key=f.key, value=f.value)
-                    for f in group.scope_attributes
-                ],
-                data_point_attributes=[
-                    MetricsAssociationAttributeFilter(key=f.key, value=f.value)
-                    for f in group.data_point_attributes
-                ],
-            )
-            for group in model.attribute_filter_groups
+            _attribute_filters_to_internal(group) for group in config.attribute_filter_groups
         ]
     return ("enabled", enabled)
+
+
+def _metrics_association_from_internal(
+    value: tuple[Literal["enabled"], MetricsAssociationEnabled] | tuple[Literal["disabled"], None],
+) -> MetricsAssociationModel:
+    _status, config = value
+    if config is None:
+        return ("disabled", None)
+    return (
+        "enabled",
+        MetricsAssociationEnabledModel(
+            attribute_filters=_attribute_filters_from_internal(config["attribute_filters"]),
+            host_name_template=_metrics_association_host_name_template(config),
+            attribute_filter_groups=(
+                [
+                    _attribute_filters_from_internal(group)
+                    for group in config["attribute_filter_groups"]
+                ]
+                if "attribute_filter_groups" in config
+                else ApiOmitted()
+            ),
+        ),
+    )

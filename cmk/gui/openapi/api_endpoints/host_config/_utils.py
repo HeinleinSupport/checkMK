@@ -8,7 +8,7 @@ from typing import get_type_hints
 
 from cmk.ccc.hostaddress import HostName
 from cmk.ccc.site import omd_site
-from cmk.gui.openapi.api_endpoints.models.host_attribute_models import HostViewAttributeModel
+from cmk.gui.openapi.api_endpoints.models.host_attribute_models import HostAttributeResponseModel
 from cmk.gui.openapi.endpoints.utils import folder_slug
 from cmk.gui.openapi.framework import ApiContext, ETag
 from cmk.gui.openapi.framework.model import (
@@ -115,10 +115,10 @@ def serialize_host(
         members=None,
         extensions=HostExtensionsModel(
             folder=host.folder(),
-            attributes=HostViewAttributeModel.from_internal(
+            attributes=HostAttributeResponseModel.from_internal(
                 host.attributes, _static_attribute_names
             ),
-            effective_attributes=HostViewAttributeModel.from_internal(
+            effective_attributes=HostAttributeResponseModel.from_internal(
                 host.effective_attributes(), _static_attribute_names
             )
             if compute_effective_attributes
