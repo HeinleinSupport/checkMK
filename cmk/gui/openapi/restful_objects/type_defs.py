@@ -123,6 +123,7 @@ CmkEndpointName = Literal[
     "cmk/bake_and_sign",
     "cmk/cancel",
     "cmk/bulk_create",
+    "cmk/bulk_delete",
     "cmk/bulk_discovery",
     "cmk/bulk_update",
     "cmk/clone_dashboard_relative_grid",

@@ -464,7 +464,7 @@ def test_openapi_bulk_hosts(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setattr(
-        "cmk.gui.openapi.endpoints.host_config.delete_hosts",
+        "cmk.gui.openapi.api_endpoints.host_config.bulk_delete_host.delete_hosts",
         lambda *args, **kwargs: DeleteHostsResult(),
     )
 
@@ -2205,7 +2205,9 @@ def test_create_host_with_too_long_of_a_name(
 def test_bulk_delete_no_entries(clients: ClientRegistry) -> None:
     r = clients.HostConfig.bulk_delete(entries=[], expect_ok=False)
     r.assert_status_code(400)
-    assert r.json["fields"] == {"entries": ["At least one entry is required"]}
+    assert any(e["type"] == "too_short" for e in _field_errors(r.json["fields"], "entries")), (
+        r.json["fields"]
+    )
 
 
 def test_move_host_between_nested_folders(clients: ClientRegistry) -> None:

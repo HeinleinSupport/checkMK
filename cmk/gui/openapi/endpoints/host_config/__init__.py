@@ -7,7 +7,6 @@
 
 # mypy: disable-error-code="no-any-return"
 
-import itertools
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from typing import Any
 from urllib.parse import urlparse
@@ -27,7 +26,6 @@ from cmk.gui.fields.utils import BaseSchema
 from cmk.gui.http import request, Response
 from cmk.gui.logged_in import user
 from cmk.gui.openapi.endpoints.host_config.request_schemas import (
-    BulkDeleteHost,
     MoveHost,
     RenameHost,
 )
@@ -48,7 +46,6 @@ from cmk.gui.utils import permission_verification as permissions
 from cmk.gui.utils.roles import UserPermissionSerializableConfig
 from cmk.gui.watolib.activate_changes import ActivateChanges
 from cmk.gui.watolib.audit_log import make_audit_log_change_hook
-from cmk.gui.watolib.check_mk_automations import delete_hosts
 from cmk.gui.watolib.configuration_bundle_store import is_locked_by_quick_setup
 from cmk.gui.watolib.host_attributes import HostAttributes
 from cmk.gui.watolib.host_rename import (
@@ -571,50 +568,6 @@ def move(params: Mapping[str, Any]) -> Response:
     )
 
 
-@Endpoint(
-    constructors.domain_type_action_href("host_config", "bulk-delete"),
-    ".../delete",
-    method="post",
-    request_schema=BulkDeleteHost,
-    permissions_required=with_access_check_permission(PERMISSIONS),
-    output_empty=True,
-    family_name=HOST_CONFIG_FAMILY.name,
-)
-def bulk_delete(params: Mapping[str, Any]) -> Response:
-    """Bulk delete hosts"""
-    user.need_permission("wato.edit")
-    body = params["body"]
-    hostnames = body["entries"]
-
-    # Ideally, we would not need folder id's. However, folders cannot be sorted.
-    folder_by_id = {}
-    folder_id_by_hostname = {}
-    tree = folder_tree()
-    for hostname in hostnames:
-        folder = tree.load_host(hostname).folder()
-        folder_id_by_hostname[hostname] = folder.id()
-        folder_by_id[folder.id()] = folder
-
-    for id_, hostnames_per_folder in itertools.groupby(
-        sorted(hostnames, key=folder_id_by_hostname.__getitem__),
-        key=folder_id_by_hostname.__getitem__,
-    ):
-        folder = folder_by_id[id_]
-        # Calling Folder.delete_hosts is very expensive. Thus, we only call it once per folder.
-        folder.delete_hosts(
-            list(hostnames_per_folder),
-            automation=delete_hosts,
-            pprint_value=active_config.wato_pprint_config,
-            debug=active_config.debug,
-            pending_changes=_pending_changes(
-                config=active_config, local_site=omd_site(), acting_user=user.id
-            ),
-            acting_user=user,
-        )
-
-    return Response(status=204)
-
-
 def _serve_host(host: Host, fields_filter: FieldsFilter) -> Response:
     response = serve_json(serialize_host(host, fields_filter=fields_filter))
     return constructors.response_with_etag_created_from_dict(response, _host_etag_values(host))
@@ -690,7 +643,6 @@ def register(endpoint_registry: EndpointRegistry) -> None:
     endpoint_registry.register(rename_host)
     endpoint_registry.register(renaming_job_wait_for_completion)
     endpoint_registry.register(move)
-    endpoint_registry.register(bulk_delete)
 
 
 def _pending_changes(
