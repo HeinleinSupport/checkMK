@@ -15,18 +15,16 @@ from marshmallow import ValidationError
 
 from cmk import fields
 from cmk.ccc.hostaddress import HostName
-from cmk.ccc.site import omd_site, SiteId
+from cmk.ccc.site import SiteId
 from cmk.ccc.user import UserId
 from cmk.gui import fields as gui_fields
 from cmk.gui.background_job.job import InitialStatusArgs, JobTarget
 from cmk.gui.config import active_config, Config
-from cmk.gui.exceptions import MKAuthException
 from cmk.gui.fields.fields_filter import FieldsFilter, make_filter
 from cmk.gui.fields.utils import BaseSchema
 from cmk.gui.http import request, Response
 from cmk.gui.logged_in import user
 from cmk.gui.openapi.endpoints.host_config.request_schemas import (
-    MoveHost,
     RenameHost,
 )
 from cmk.gui.openapi.endpoints.host_config.response_schemas import (
@@ -36,7 +34,6 @@ from cmk.gui.openapi.endpoints.host_config.response_schemas import (
 from cmk.gui.openapi.endpoints.utils import folder_slug
 from cmk.gui.openapi.restful_objects import constructors, Endpoint
 from cmk.gui.openapi.restful_objects.api_error import ApiError
-from cmk.gui.openapi.restful_objects.parameters import HOST_NAME
 from cmk.gui.openapi.restful_objects.registry import EndpointRegistry
 from cmk.gui.openapi.restful_objects.type_defs import DomainObject, LinkType
 from cmk.gui.openapi.shared_endpoint_families.host_config import HOST_CONFIG_FAMILY
@@ -508,66 +505,6 @@ def renaming_job_wait_for_completion(params: Mapping[str, Any]) -> Response:
     return Response(status=204)
 
 
-@Endpoint(
-    constructors.object_action_href("host_config", "{host_name}", action_name="move"),
-    "cmk/move",
-    method="post",
-    path_params=[HOST_NAME],
-    etag="both",
-    additional_status_codes=[403],
-    request_schema=MoveHost,
-    response_schema=HostConfigSchema,
-    permissions_required=permissions.AllPerm(
-        [
-            permissions.Perm("wato.edit"),
-            permissions.Perm("wato.edit_hosts"),
-            permissions.Perm("wato.move_hosts"),
-            permissions.Undocumented(permissions.Perm("wato.see_all_folders")),
-            *PERMISSIONS.perms,
-        ]
-    ),
-    family_name=HOST_CONFIG_FAMILY.name,
-)
-def move(params: Mapping[str, Any]) -> Response:
-    """Move a host to another folder"""
-    user.need_permission("wato.edit")
-    user.need_permission("wato.move_hosts")
-    host_name = params["host_name"]
-    host = folder_tree().load_host(host_name)
-    _require_host_etag(host)
-    current_folder = host.folder()
-    target_folder: Folder = params["body"]["target_folder"]
-
-    if target_folder is current_folder:
-        return problem(
-            status=400,
-            title="Invalid move action",
-            detail="The host is already part of the specified target folder",
-        )
-    try:
-        if target_folder.as_choice_for_moving() not in current_folder.choices_for_moving_host(user):
-            raise MKAuthException
-        current_folder.move_hosts(
-            [host_name],
-            target_folder,
-            pprint_value=active_config.wato_pprint_config,
-            pending_changes=_pending_changes(
-                config=active_config, local_site=omd_site(), acting_user=user.id
-            ),
-            acting_user=user,
-        )
-    except MKAuthException:
-        return problem(
-            status=403,
-            title="Permission denied",
-            detail=f"You lack the permissions to move host {host.name()} to {folder_slug(target_folder)}.",
-        )
-    return _serve_host(
-        host,
-        host_fields_filter(is_collection=False, include_links=True, effective_attributes=False),
-    )
-
-
 def _serve_host(host: Host, fields_filter: FieldsFilter) -> Response:
     response = serve_json(serialize_host(host, fields_filter=fields_filter))
     return constructors.response_with_etag_created_from_dict(response, _host_etag_values(host))
@@ -642,7 +579,6 @@ def _host_etag_values(host: Host) -> dict[str, Any]:
 def register(endpoint_registry: EndpointRegistry) -> None:
     endpoint_registry.register(rename_host)
     endpoint_registry.register(renaming_job_wait_for_completion)
-    endpoint_registry.register(move)
 
 
 def _pending_changes(
