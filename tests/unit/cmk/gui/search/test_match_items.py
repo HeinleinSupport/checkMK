@@ -14,10 +14,10 @@ class TestCategoriesFor:
     @pytest.fixture
     def registry(self) -> MatchItemGeneratorRegistry:
         registry = MatchItemGeneratorRegistry()
-        registry.register(_FakeGenerator("hosts"), provider=ProviderName.setup)
-        registry.register(_FakeGenerator("notifications"), provider=ProviderName.setup)
-        registry.register(_FakeGenerator("views"), provider=ProviderName.customize)
-        registry.register(_FakeGenerator("dashboards"), provider=ProviderName.customize)
+        registry.register(_FakeGenerator("hosts"))
+        registry.register(_FakeGenerator("notifications"))
+        registry.register(_FakeGenerator("views", provider="customize"))
+        registry.register(_FakeGenerator("dashboards", provider="customize"))
         return registry
 
     def test_returns_correct_categories_for_setup(

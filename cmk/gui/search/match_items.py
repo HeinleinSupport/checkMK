@@ -6,7 +6,7 @@
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
 from dataclasses import dataclass
-from typing import Final, override
+from typing import Final, Literal, override
 
 from cmk.ccc.plugin_registry import Registry
 from cmk.gui.utils.loading_transition import LoadingTransition
@@ -31,8 +31,14 @@ MatchItemsByTopic = dict[str, MatchItems]
 
 
 class ABCMatchItemGenerator(ABC):
-    def __init__(self, name: str) -> None:
+    def __init__(
+        self,
+        name: str,
+        *,
+        provider: Literal["customize", "monitoring", "setup"] = "setup",
+    ) -> None:
         self.name: Final[str] = name
+        self.provider: Final[ProviderName] = ProviderName(provider)
 
     @override
     def __hash__(self) -> int:
@@ -53,28 +59,17 @@ class ABCMatchItemGenerator(ABC):
 class MatchItemGeneratorRegistry(Registry[ABCMatchItemGenerator]):
     def __init__(self) -> None:
         super().__init__()
-        self._provider_map: dict[str, ProviderName] = {}
         self._categories_cache: dict[ProviderName, frozenset[str]] = {}
 
     @override
     def plugin_name(self, instance: ABCMatchItemGenerator) -> str:
         return instance.name
 
-    @override
-    def register(
-        self, instance: ABCMatchItemGenerator, *, provider: ProviderName | None = None
-    ) -> ABCMatchItemGenerator:
-        if provider is not None:
-            self._provider_map[self.plugin_name(instance)] = provider
-        return super().register(instance)
-
     def provider_for(self, category: str) -> ProviderName | None:
         if category not in self:
             return None
 
-        # NOTE: to keep the change radius small for this introduction, we default to setup. We may
-        # want to be explicit in the future and add the provider to all existing setup generators.
-        return self._provider_map.get(category, ProviderName.setup)
+        return self[category].provider
 
     def categories_for(self, provider: ProviderName) -> frozenset[str]:
         if provider not in self._categories_cache:

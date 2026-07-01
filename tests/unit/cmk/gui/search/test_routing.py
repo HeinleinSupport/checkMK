@@ -3,7 +3,9 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
+import inspect
 from collections.abc import Callable
+from typing import get_args
 
 import pytest
 
@@ -46,7 +48,7 @@ class _FakeHandler:
 def fixture_registry() -> MatchItemGeneratorRegistry:
     registry = MatchItemGeneratorRegistry()
     registry.register(_FakeGenerator("hosts"))
-    registry.register(_FakeGenerator("customize"), provider=ProviderName.customize)
+    registry.register(_FakeGenerator("customize", provider="customize"))
     return registry
 
 
@@ -59,6 +61,15 @@ class TestMatchItemGeneratorRegistryProviderFor:
 
     def test_unknown_category_returns_none(self, registry: MatchItemGeneratorRegistry) -> None:
         assert registry.provider_for("nope") is None
+
+
+def test_generator_provider_literal_matches_shared_type_members() -> None:
+    provider_param = inspect.signature(ABCMatchItemGenerator.__init__).parameters["provider"]
+
+    value = set(get_args(provider_param.annotation))
+    expected = {member.value for member in ProviderName}
+
+    assert value == expected
 
 
 class TestCompositePermissionsHandler:

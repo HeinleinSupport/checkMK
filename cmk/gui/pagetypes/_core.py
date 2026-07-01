@@ -2560,7 +2560,7 @@ class MatchItemGeneratorCustomizeMenu(ABCMatchItemGenerator):
         name: str,
         topic_generator: Callable[[UserPermissions], Iterable[NavItemTopic]],
     ) -> None:
-        super().__init__(name)
+        super().__init__(name, provider="customize")
         self._topic_generator = topic_generator
 
     def generate_match_items(self, user_permissions: UserPermissions) -> MatchItems:
