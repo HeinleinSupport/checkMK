@@ -218,7 +218,7 @@ def put_rule(params: Mapping[str, Any]) -> Response:
     raise ProblemException(
         status=404,
         title=_("Not found"),
-        detail=_("The rule_id %s does not exist.") % rule_id,
+        detail=_("The rule_id %(rule_id)s does not exist.") % {"rule_id": rule_id},
     )
 
 
