@@ -38,6 +38,7 @@ import ActionFeedback from '../shared/components/action/ActionFeedback.vue'
 import MonitoringActionBar from '../shared/components/action/MonitoringActionBar.vue'
 import MonitoringActionPane from '../shared/components/action/MonitoringActionPane.vue'
 import { useAcknowledgeAction } from '../shared/components/action/actions/acknowledge'
+import { useRescheduleAction } from '../shared/components/action/actions/reschedule'
 import { createActionRegistry } from '../shared/components/action/registry'
 import { useMonitoringActions } from '../shared/services/useMonitoringActions'
 import { HostApi } from './api/hosts'
@@ -267,7 +268,7 @@ const searchInput = useTemplateRef<{ focus: () => void }>('searchInput')
 
 const rowSelection = ref<RowSelectionState>({})
 
-const actionRegistry = createActionRegistry([useAcknowledgeAction()])
+const actionRegistry = createActionRegistry([useAcknowledgeAction(), useRescheduleAction()])
 const {
   activeAction,
   selectedCount,
@@ -303,8 +304,15 @@ function onHostAction(payload: { action: CellAction; host: HostEntry }): void {
 }
 
 function onBulkAction(action: CellAction): void {
-  if (action.id in actionRegistry) {
-    openAction(action.id)
+  if (selectedHosts.value.length === 0 || !(action.id in actionRegistry)) {
+    return
+  }
+  openAction(action.id)
+}
+
+function onRightPaneCollapse(collapsed: boolean): void {
+  if (collapsed) {
+    closeAction()
   }
 }
 </script>
@@ -353,7 +361,7 @@ function onBulkAction(action: CellAction): void {
       :right-min-size="30"
       :right-max-size="50"
       class="monitoring-all-hosts-app__split"
-      @update:collapsed="($event as boolean) && closeAction()"
+      @update:collapsed="onRightPaneCollapse($event as boolean)"
     >
       <template #left>
         <div class="monitoring-all-hosts-app__left-pane">

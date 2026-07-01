@@ -8,6 +8,7 @@ from cmk.gui.openapi.restful_objects.endpoint_family import EndpointFamilyRegist
 
 from ._family import MONITOR_HOSTS_FAMILY
 from ._list_hosts import ENDPOINT_LIST_HOSTS
+from ._reschedule import ENDPOINT_RESCHEDULE_CHECKS
 
 
 def register_endpoints(
@@ -17,3 +18,4 @@ def register_endpoints(
     endpoint_family_registry.register(MONITOR_HOSTS_FAMILY)
 
     versioned_endpoint_registry.register(ENDPOINT_LIST_HOSTS)
+    versioned_endpoint_registry.register(ENDPOINT_RESCHEDULE_CHECKS)

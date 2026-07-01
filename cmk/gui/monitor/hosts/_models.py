@@ -12,6 +12,7 @@ logic.
 """
 
 import dataclasses
+import datetime as dt
 import enum
 from typing import assert_never, Literal, NewType
 
@@ -91,6 +92,15 @@ class HostSort:
 
     def __str__(self) -> str:
         return f"{self.column.value}:{self.direction.value}"
+
+
+@dataclasses.dataclass(frozen=True)
+class RescheduleTarget:
+    """A single host check to be forcibly rescheduled at a specific time."""
+
+    site_id: str
+    host_name: str
+    check_time: dt.datetime
 
 
 # NOTE: this is intended to indicate that a stringified filter has been properly parsed into a

@@ -248,6 +248,47 @@ class TestMonitorHostsFilters:
         ]
 
 
+class TestMonitorHostsReschedule:
+    def test_reschedule_sends_forced_check_command(
+        self,
+        clients: ClientRegistry,
+        mock_livestatus: MockLiveStatusConnection,
+    ) -> None:
+        mock_livestatus.add_table("hosts", _HOSTS)
+        mock_livestatus.expect_query(
+            "COMMAND [...] SCHEDULE_FORCED_HOST_CHECK;heute;...", match_type="ellipsis"
+        )
+
+        with mock_livestatus(expect_status_query=True):
+            resp = clients.MonitorHosts.reschedule(hosts=[{"site_id": "NO_SITE", "name": "heute"}])
+
+        assert resp.json["rescheduled"] == 1
+
+    def test_reschedule_sends_one_command_per_host(
+        self,
+        clients: ClientRegistry,
+        mock_livestatus: MockLiveStatusConnection,
+    ) -> None:
+        mock_livestatus.add_table("hosts", _HOSTS)
+        mock_livestatus.expect_query(
+            "COMMAND [...] SCHEDULE_FORCED_HOST_CHECK;heute;...", match_type="ellipsis"
+        )
+        mock_livestatus.expect_query(
+            "COMMAND [...] SCHEDULE_FORCED_HOST_CHECK;gestern;...", match_type="ellipsis"
+        )
+
+        with mock_livestatus(expect_status_query=True):
+            resp = clients.MonitorHosts.reschedule(
+                hosts=[
+                    {"site_id": "NO_SITE", "name": "heute"},
+                    {"site_id": "NO_SITE", "name": "gestern"},
+                ],
+                spread_minutes=5,
+            )
+
+        assert resp.json["rescheduled"] == 2
+
+
 _LIMIT = 1000
 _HOSTS = [
     {

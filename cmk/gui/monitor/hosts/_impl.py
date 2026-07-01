@@ -12,12 +12,18 @@ when instantiated.
 
 from collections.abc import Sequence
 
-from cmk.livestatus_client import MultiSiteConnection
+from cmk.ccc.hostaddress import HostName
+from cmk.ccc.site import SiteId
+from cmk.livestatus_client import (
+    LivestatusClient,
+    MultiSiteConnection,
+    ScheduleForcedHostCheck,
+)
 from cmk.livestatus_client.expressions import NothingExpression, Or, QueryExpression
 from cmk.livestatus_client.queries import detailed_connection, Query
 from cmk.livestatus_client.tables import Hosts, Status
 
-from ._models import Host, HostFilter, HostSort, HostState, ServiceCounts
+from ._models import Host, HostFilter, HostSort, HostState, RescheduleTarget, ServiceCounts
 from ._sorting import host_sorter
 
 
@@ -98,6 +104,17 @@ class LiveStatusHostRepository:
             ]
         )
         return sum(int(row[-1]) for row in self._connection.query(stats_query))
+
+    def reschedule(self, targets: Sequence[RescheduleTarget]) -> None:
+        client = LivestatusClient(self._connection)
+        for target in targets:
+            client.command(
+                ScheduleForcedHostCheck(
+                    host_name=HostName(target.host_name),
+                    check_time=target.check_time,
+                ),
+                SiteId(target.site_id),
+            )
 
 
 def _build_query_filter(query: str) -> QueryExpression:

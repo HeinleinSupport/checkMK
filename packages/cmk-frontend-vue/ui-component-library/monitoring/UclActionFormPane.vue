@@ -8,11 +8,12 @@ import { type Options, type PanelConfig } from '@ucl/_ucl/components/detail-page
 
 import codeExample from './UclActionFormPaneCodeExample.vue?raw'
 
-type FormKind = 'none' | 'comment'
+type FormKind = 'none' | 'comment' | 'reschedule'
 
 const FORM_OPTIONS: Options<FormKind>[] = [
   { title: 'No inputs (confirm)', name: 'none' },
-  { title: 'Comment', name: 'comment' }
+  { title: 'Comment', name: 'comment' },
+  { title: 'Reschedule', name: 'reschedule' }
 ]
 
 export const panelConfig = {
@@ -41,6 +42,8 @@ import type { TranslatedString } from '@/lib/i18nString'
 
 import ActionFormPane from '@/monitoring/shared/components/action/ActionFormPane.vue'
 import { useCommentAction } from '@/monitoring/shared/components/action/actions/comment'
+import { useRescheduleAction } from '@/monitoring/shared/components/action/actions/reschedule'
+import type { MonitoringAction } from '@/monitoring/shared/components/action/types'
 
 defineProps<{ screenshotMode: boolean }>()
 
@@ -50,13 +53,19 @@ const propState = ref(
   ) as InferPanelState<typeof panelConfig>
 )
 
-const comment = useCommentAction()
-const form = computed<Component | undefined>(() =>
-  propState.value.form === 'comment' ? comment.form : undefined
+const actions: Record<Exclude<FormKind, 'none'>, MonitoringAction> = {
+  comment: useCommentAction(),
+  reschedule: useRescheduleAction()
+}
+
+const activeAction = computed<MonitoringAction | undefined>(() =>
+  propState.value.form === 'none' ? undefined : actions[propState.value.form]
 )
-const initialValues = computed(() =>
-  propState.value.form === 'comment' ? comment.defaultValues() : {}
+const title = computed<TranslatedString>(
+  () => activeAction.value?.title ?? ('Run action' as TranslatedString)
 )
+const form = computed<Component | undefined>(() => activeAction.value?.form)
+const initialValues = computed<unknown>(() => activeAction.value?.defaultValues() ?? {})
 
 const lastResult = ref<string | null>(null)
 
@@ -78,7 +87,7 @@ function onCancel(): void {
         <div class="ucl-action-form-pane__container">
           <ActionFormPane
             :key="propState.form"
-            :title="'Add comment' as TranslatedString"
+            :title="title"
             :subtitle="'web-server-01' as TranslatedString"
             :form="form"
             :initial-values="initialValues"
