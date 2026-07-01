@@ -20,7 +20,7 @@ class MatchItemGeneratorHosts(ABCMatchItemGenerator):
         name: str,
         host_collector: Callable[[], Mapping[HostName, CollectedHostAttributes]],
     ) -> None:
-        super().__init__(name)
+        super().__init__(name, provider="setup")
         self._host_collector = host_collector
 
     @staticmethod

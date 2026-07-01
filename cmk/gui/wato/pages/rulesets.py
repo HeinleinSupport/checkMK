@@ -245,7 +245,9 @@ def register(
     mode_registry.register(ModeNewRule)
     mode_registry.register(ModeExportRule)
     mode_registry.register(ModeUnknownRulesets)
-    match_item_generator_registry.register(MatchItemGeneratorUnknownRuleSets("unknown_rulesets"))
+    match_item_generator_registry.register(
+        MatchItemGeneratorUnknownRuleSets("unknown_rulesets", provider="setup")
+    )
 
 
 def _group_rulesets(

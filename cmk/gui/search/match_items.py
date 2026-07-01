@@ -35,7 +35,7 @@ class ABCMatchItemGenerator(ABC):
         self,
         name: str,
         *,
-        provider: Literal["customize", "monitoring", "setup"] = "setup",
+        provider: Literal["customize", "monitoring", "setup"],
     ) -> None:
         self.name: Final[str] = name
         self.provider: Final[ProviderName] = ProviderName(provider)

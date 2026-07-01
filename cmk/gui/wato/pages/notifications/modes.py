@@ -319,7 +319,7 @@ def register(
     mode_registry.register(ModeEditNotificationParameter)
 
     match_item_generator_registry.register(
-        MatchItemGeneratorNotificationParameter("notification_parameter")
+        MatchItemGeneratorNotificationParameter("notification_parameter", provider="setup")
     )
     automation_command_registry.register(AutomationNotificationTest)
 

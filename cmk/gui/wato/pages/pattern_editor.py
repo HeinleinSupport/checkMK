@@ -79,7 +79,7 @@ def register(
 ) -> None:
     mode_registry.register(ModePatternEditor)
     match_item_generator_registry.register(
-        MatchItemGeneratorLogfilePatternAnalyzer("logfile_pattern_analyzer")
+        MatchItemGeneratorLogfilePatternAnalyzer("logfile_pattern_analyzer", provider="setup")
     )
 
 

@@ -5358,7 +5358,7 @@ class MatchItemGeneratorECRulePacksAndRules(ABCMatchItemGenerator):
         name: str,
         rule_pack_loader: Callable[[], Iterable[ec.ECRulePack]],
     ) -> None:
-        super().__init__(name)
+        super().__init__(name, provider="setup")
         self._rule_pack_loader = rule_pack_loader
 
     def generate_match_items(self, user_permissions: UserPermissions) -> MatchItems:

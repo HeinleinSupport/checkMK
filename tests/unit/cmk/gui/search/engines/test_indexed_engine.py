@@ -192,8 +192,12 @@ def fixture_get_languages(monkeypatch: MonkeyPatch) -> None:
 @pytest.fixture(name="match_item_generator_registry")
 def fixture_match_item_generator_registry() -> MatchItemGeneratorRegistry:
     match_item_generator_registry = MatchItemGeneratorRegistry()
-    match_item_generator_registry.register(MatchItemGeneratorLocDep("localization_dependent"))
-    match_item_generator_registry.register(MatchItemGeneratorChangeDep("change_dependent"))
+    match_item_generator_registry.register(
+        MatchItemGeneratorLocDep("localization_dependent", provider="setup")
+    )
+    match_item_generator_registry.register(
+        MatchItemGeneratorChangeDep("change_dependent", provider="setup")
+    )
     return match_item_generator_registry
 
 

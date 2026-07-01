@@ -47,7 +47,7 @@ class _FakeHandler:
 @pytest.fixture(name="registry")
 def fixture_registry() -> MatchItemGeneratorRegistry:
     registry = MatchItemGeneratorRegistry()
-    registry.register(_FakeGenerator("hosts"))
+    registry.register(_FakeGenerator("hosts", provider="setup"))
     registry.register(_FakeGenerator("customize", provider="customize"))
     return registry
 

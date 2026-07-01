@@ -22,7 +22,7 @@ class MatchItemGeneratorRules(ABCMatchItemGenerator):
         rulesepc_group_reg: RulespecGroupRegistry,
         rulespec_reg: RulespecRegistry,
     ) -> None:
-        super().__init__(name)
+        super().__init__(name, provider="setup")
         self._rulespec_group_registry = rulesepc_group_reg
         self._rulespec_registry = rulespec_reg
 

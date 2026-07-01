@@ -728,7 +728,7 @@ class MatchItemGeneratorSettings(ABCMatchItemGenerator):
         # ABCGlobalSettingsMode.__init__ --> _from_vars --> get_search_expression)
         create_mode: Callable[[], ABCGlobalSettingsMode],
     ) -> None:
-        super().__init__(name)
+        super().__init__(name, provider="setup")
         self._topic: Final[str] = topic
         self._create_mode: Final = create_mode
 
