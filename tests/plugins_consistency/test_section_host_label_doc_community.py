@@ -78,7 +78,7 @@ DOCUMENTED_BUILTIN_HOST_LABELS: Final = {
     "cmk/pve/entity:<entity_type>",
     "cmk/vsphere_object",
     "cmk/vsphere_vcenter",
-    "cmk/systemd/unit:{name}",
+    "cmk/systemd/unit/{name}:yes",
     "cmk/podman/host",
     "cmk/podman/object:container",
     "cmk/podman/object:node",

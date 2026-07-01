@@ -104,7 +104,7 @@ def _valuespec_discovery_systemd_units_host_labels() -> list[tuple[str, ValueSpe
                     "Create host labels for each discovered systemd service in the following"
                     " format %r"
                 )
-                % "cmk/systemd/unit:<name>",
+                % "cmk/systemd/unit/<name>:yes",
             ),
         ),
         (

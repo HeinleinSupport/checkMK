@@ -659,14 +659,14 @@ def discover_host_labels(
 
     Labels:
 
-        cmk/systemd/unit:{name} :
+        cmk/systemd/unit/{name}:yes :
             This label is set automatically if the corresponding systemd unit matches.
 
     """
     for unit in _match_systemd_units(params, list(section.services.values())):
         for settings in params:
             if settings.get("host_labels_auto"):
-                yield HostLabel("cmk/systemd/unit", unit.name)
+                yield HostLabel(f"cmk/systemd/unit/{unit.name}", "yes")
 
             for name, value in settings.get("host_labels_explicit", {}).items():
                 yield HostLabel(name, value)

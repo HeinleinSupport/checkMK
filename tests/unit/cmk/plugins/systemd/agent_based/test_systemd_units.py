@@ -656,7 +656,7 @@ def test_parse_systemd_units(pre_string_table: Sequence[str], section: Section) 
         ),
         pytest.param(
             [{"names": ["~apache"], "host_labels_auto": True}],
-            [HostLabel("cmk/systemd/unit", "apache")],
+            [HostLabel("cmk/systemd/unit/apache", "yes")],
             id="host-labels-auto",
         ),
         pytest.param(
@@ -694,6 +694,38 @@ def test_discover_host_labels_of_systemd_units(
         )
         == expected
     )
+
+
+def test_discover_host_labels_one_label_per_unit() -> None:
+    def _unit(name: str) -> UnitEntry:
+        return UnitEntry(
+            name=name,
+            loaded_status="loaded",
+            active_status="active",
+            current_state="running",
+            description=name,
+            enabled_status=None,
+            time_since_change=timedelta(days=2),
+            cpu_seconds=None,
+            memory=None,
+            number_of_tasks=None,
+        )
+
+    assert list(
+        discover_host_labels(
+            [{"names": ["~.*"], "host_labels_auto": True}],
+            Section(
+                services={
+                    "apache": _unit("apache"),
+                    "nginx": _unit("nginx"),
+                },
+                sockets={},
+            ),
+        )
+    ) == [
+        HostLabel("cmk/systemd/unit/apache", "yes"),
+        HostLabel("cmk/systemd/unit/nginx", "yes"),
+    ]
 
 
 @pytest.mark.parametrize(
