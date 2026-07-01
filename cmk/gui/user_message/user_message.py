@@ -163,7 +163,9 @@ def show_user_messages() -> None:
     ):
         if entry.get("security"):
             security_count = num + 1
-            forms.header(_("Security message #%d") % security_count)
+            forms.header(
+                _("Security message #%(security_count)d") % {"security_count": security_count}
+            )
         else:
             forms.header(_("Message #%d") % (num + 1 - security_count))
         forms.container()

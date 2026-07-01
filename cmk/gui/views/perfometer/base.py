@@ -140,7 +140,8 @@ def _render_metricometer(stack: Sequence[Sequence[tuple[int | float, str]]]) -> 
     """Create HTML representation of Perf-O-Meter"""
     if len(stack) not in (1, 2):
         raise MKGeneralException(
-            _("Invalid Perf-O-Meter definition %r: only one or two entries are allowed") % stack
+            _("Invalid Perf-O-Meter definition %(stack)r: only one or two entries are allowed")
+            % {"stack": stack}
         )
     h = HTML.empty().join(map(render_perfometer, stack))
     if len(stack) == 2:

@@ -88,6 +88,6 @@ def declare_icons_and_actions_perm(icons: dict[str, IconSpec]) -> None:
         declare_permission(
             permname,
             ident,
-            _("Allow to see the icon %s in the host and service views") % ident,
+            _("Allow to see the icon %(ident)s in the host and service views") % {"ident": ident},
             default_authorized_builtin_role_ids,
         )

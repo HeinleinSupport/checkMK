@@ -218,7 +218,9 @@ class MasterControlSnapin(SidebarSnapin):
 
         command = commands.get((column, state))
         if not command:
-            html.write_text_permissive(_("Command %s/%d not found") % (column, state))
+            html.write_text_permissive(
+                _("Command %(column)s/%(state)d not found") % {"column": column, "state": state}
+            )
             return
         LivestatusClient(sites.live()).command(command, site)
         sites.live().set_only_sites([site])

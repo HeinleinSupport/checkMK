@@ -113,7 +113,10 @@ class NotificationParameterRegistry(Registry[NotificationParameter | Notificatio
         if not instance:
             if any(method == script_name for script_name, _title in notification_script_choices()):
                 return self.parameter_called()
-            raise MKUserError(None, _("No notification parameters for method '%s' found") % method)
+            raise MKUserError(
+                None,
+                _("No notification parameters for method '%(method)s' found") % {"method": method},
+            )
         if isinstance(instance, NotificationParameters):
             return instance.parameter_form()
         if instance.form_spec:
@@ -123,7 +126,8 @@ class NotificationParameterRegistry(Registry[NotificationParameter | Notificatio
         except Exception as e:
             raise MKUserError(
                 None,
-                _("Error on creating FormSpec from old ValueSpec for method %s: %s") % (method, e),
+                _("Error on creating FormSpec from old ValueSpec for method %(method)s: %(e)s")
+                % {"method": method, "e": e},
             )
 
     def form_spec(self, method: str) -> TransformDataForLegacyFormatOrRecomposeFunction:

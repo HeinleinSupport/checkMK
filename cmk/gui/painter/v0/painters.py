@@ -4675,8 +4675,8 @@ class PainterLogPluginOutput(Painter):
         if "FLAPPING" in log_type:
             what = _("host") if "HOST" in log_type else _("service")
             if lst == "STOPPED":
-                return "", _("The %s stopped flapping") % what
-            return "", _("The %s started flapping") % what
+                return "", _("The %(what)s stopped flapping") % {"what": what}
+            return "", _("The %(what)s started flapping") % {"what": what}
         if lst:
             return "", (lst + " - " + log_type)
         return "", ""

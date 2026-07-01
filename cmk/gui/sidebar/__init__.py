@@ -1046,7 +1046,9 @@ class AjaxGetAvialableSnapins(AjaxPage):
                     html.close_div()
                 except Exception as e:
                     write_snapin_exception(e)
-                    e_message = _("Exception during element refresh (element '%s')") % name
+                    e_message = _("Exception during element refresh (element '%(name)s')") % {
+                        "name": name
+                    }
                     logger.error(
                         "%s %s: %s",
                         request.requested_url,
@@ -1086,10 +1088,12 @@ class AjaxAddSnapin(AjaxPage):
 
         user_permissions = UserPermissions.from_config(ctx.config, permission_registry)
         if addname is None or addname not in all_snapins(user_permissions):
-            raise MKUserError(None, _("Invalid sidebar element %s") % addname)
+            raise MKUserError(None, _("Invalid sidebar element %(addname)s") % {"addname": addname})
 
         if addname in _used_snapins(ctx.config, user_permissions):
-            raise MKUserError(None, _("Element %s is already enabled") % addname)
+            raise MKUserError(
+                None, _("Element %(addname)s is already enabled") % {"addname": addname}
+            )
 
         user_config = UserSidebarConfig(user, ctx.config.sidebar, user_permissions)
         snapin = UserSidebarSnapin.from_snapin_type_id(addname, user_permissions)

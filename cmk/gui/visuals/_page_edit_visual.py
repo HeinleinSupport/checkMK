@@ -157,7 +157,9 @@ def page_edit_visual(
             single_infos = single_infos_raw.split(",")
             for key in single_infos:
                 if key not in visual_info_registry:
-                    raise MKUserError("single_infos", _("The info %s does not exist.") % key)
+                    raise MKUserError(
+                        "single_infos", _("The info %(key)s does not exist.") % {"key": key}
+                    )
         visual["single_infos"] = single_infos
 
     breadcrumb = visual_page_breadcrumb(what, title, mode)

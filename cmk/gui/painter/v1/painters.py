@@ -88,8 +88,8 @@ for i in range(1, 11):
             ident=f"svc_perf_val{i:02}",
             computer=_get_perfdata_with_staleness_callable(i - 1),
             formatters=Formatters[StrWithStaleness](html=render_str_with_staleness),
-            title=_l("Service metrics - value number %2d") % i,
-            short_title=_l("Val. %d") % i,
+            title=_l("Service metrics - value number %(i)2d") % {"i": i},
+            short_title=_l("Val. %(i)d") % {"i": i},
             columns=["service_perf_data", "service_staleness", "host_staleness"],
         )
     )

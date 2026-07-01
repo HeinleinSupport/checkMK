@@ -130,7 +130,8 @@ class PageRescheduleCheck(AjaxPage):
         if last_check < int(now.timestamp()):
             return {
                 "state": "TIMEOUT",
-                "message": _("Check not executed within %d seconds") % (reschedule_timeout),
+                "message": _("Check not executed within %(reschedule_timeout)d seconds")
+                % {"reschedule_timeout": reschedule_timeout},
             }
 
         if service == "Check_MK":

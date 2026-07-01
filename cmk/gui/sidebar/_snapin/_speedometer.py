@@ -93,16 +93,20 @@ class Speedometer(SidebarSnapin):
 
             percentage = 100.0 * current_rate / scheduled_rate
             title = _(
-                "Scheduled service check rate: %.1f/s, current rate: %.1f/s, that is "
-                "%.0f%% of the scheduled rate"
-            ) % (scheduled_rate, current_rate, percentage)
+                "Scheduled service check rate: %(scheduled_rate).1f/s, current rate: %(current_rate).1f/s, that is "
+                "%(percentage).0f%% of the scheduled rate"
+            ) % {
+                "scheduled_rate": scheduled_rate,
+                "current_rate": current_rate,
+                "percentage": percentage,
+            }
 
         except Exception as e:
             scheduled_rate = 0.0
             program_start = 0
             percentage = 0
             last_perc = 0.0
-            title = _("No metrics: %s") % e
+            title = _("No metrics: %(e)s") % {"e": e}
 
         response.set_data(
             json.dumps(

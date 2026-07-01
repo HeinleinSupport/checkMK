@@ -329,6 +329,7 @@ class PageAjaxSidebarGetUnackIncompWerks(AjaxPage):
 
         return {
             "count": num_unack_werks,
-            "text": _("%d open incompatible Werks") % num_unack_werks,
+            "text": _("%(num_unack_werks)d open incompatible Werks")
+            % {"num_unack_werks": num_unack_werks},
             "tooltip": tooltip_text,
         }

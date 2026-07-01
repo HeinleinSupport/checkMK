@@ -473,7 +473,7 @@ class MobileViewRenderer(ABCViewRenderer):
                     )
                 except Exception as e:
                     logger.exception("error rendering mobile view")
-                    html.write_text_permissive(_("Error showing view: %s") % e)
+                    html.write_text_permissive(_("Error showing view: %(e)s") % {"e": e})
             html.close_div()
             jqm_page_navfooter(navbar, "data", page_id)
 
@@ -582,7 +582,7 @@ def do_commands(what: str, rows: Rows) -> bool:
                 count += 1
 
     if count > 0:
-        html.show_message(_("Successfully sent %d commands.") % count)
+        html.show_message(_("Successfully sent %(count)d commands.") % {"count": count})
     return True  # Show commands again
 
 

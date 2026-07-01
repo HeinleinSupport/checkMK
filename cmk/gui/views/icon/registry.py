@@ -22,7 +22,7 @@ class IconRegistry(Registry[Icon]):
         declare_permission(
             "icons_and_actions.%s" % ident,
             ident,
-            _("Allow to see the icon %s in the host and service views") % ident,
+            _("Allow to see the icon %(ident)s in the host and service views") % {"ident": ident},
             default_authorized_builtin_role_ids,
         )
 

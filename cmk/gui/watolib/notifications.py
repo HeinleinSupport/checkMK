@@ -125,7 +125,7 @@ class NotificationRuleConfigFile(WatoListConfigFile[EventRule]):
         pending_changes.add(
             Change(
                 action_name="edit-notification-rule",
-                text=_("Changed notification rule #%s") % rule_number,
+                text=_("Changed notification rule #%(rule_number)s") % {"rule_number": rule_number},
                 force_restart=False,
                 domains=[CORE],
             ),
@@ -163,7 +163,7 @@ class NotificationRuleConfigFile(WatoListConfigFile[EventRule]):
         pending_changes.add(
             Change(
                 action_name="notification-delete-rule",
-                text=_("Deleted notification rule #%s") % rule_number,
+                text=_("Deleted notification rule #%(rule_number)s") % {"rule_number": rule_number},
                 force_restart=False,
                 domains=[CORE],
             ),
@@ -824,7 +824,7 @@ def find_usages_of_contact_group_in_notification_rules(
         for rule in user_rules:
             if _used_in_notification_rule(name, rule):
                 title = "{}: {}".format(
-                    _("Notification rules of user %s") % user_id,
+                    _("Notification rules of user %(user_id)s") % {"user_id": user_id},
                     rule.get("description", ""),
                 )
                 used_in.append((title, "wato.py?mode=user_notifications&user=%s" % user_id))

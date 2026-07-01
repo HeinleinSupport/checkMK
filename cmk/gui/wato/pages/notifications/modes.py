@@ -565,7 +565,8 @@ class ABCNotificationsMode(ABCEventsMode[EventRule]):
                         elif what == "miss":
                             html.static_icon(
                                 StaticIcon(IconNames.hyphen),
-                                title=_("This rule does not match: %s") % reason,
+                                title=_("This rule does not match: %(reason)s")
+                                % {"reason": reason},
                             )
                     else:
                         html.static_icon(
@@ -676,7 +677,7 @@ class ABCNotificationsMode(ABCEventsMode[EventRule]):
                 table.cell(_("Conditions"), css=["rule_conditions"])
                 num_conditions = len([key for key in rule if key.startswith("match_")])
                 if num_conditions:
-                    title = _("%d conditions") % num_conditions
+                    title = _("%(num_conditions)d conditions") % {"num_conditions": num_conditions}
                     with foldable_container(
                         treename="rule_%s_%d" % (userid, nr),
                         id_=str(nr),
@@ -750,7 +751,7 @@ class ABCNotificationsMode(ABCEventsMode[EventRule]):
             code = html.render_icon_button(
                 url, _("Edit this user's notifications"), StaticIcon(IconNames.edit)
             )
-            return code + _("Notification rules of user %s") % userid
+            return code + _("Notification rules of user %(userid)s") % {"userid": userid}
         return _("Global notification rules")
 
     def _rule_infos(self, rule: EventRule, all_users: Users) -> list[str | HTML]:
@@ -770,7 +771,8 @@ class ABCNotificationsMode(ABCEventsMode[EventRule]):
             ):
                 info += html.render_static_icon(
                     StaticIcon(IconNames.warning),
-                    title=_("User %s does not exist.") % explicit_user,
+                    title=_("User %(explicit_user)s does not exist.")
+                    % {"explicit_user": explicit_user},
                 )
             info += HTML.with_escaping(", ".join(rule["contact_users"]))
             infos.append(info)
@@ -823,7 +825,7 @@ class ABCNotificationsMode(ABCEventsMode[EventRule]):
                 httpvars.append(("search", search))
             return make_confirm_delete_link(
                 url=make_action_link(httpvars + back_mode),
-                title=_("Delete notification rule #%d") % nr,
+                title=_("Delete notification rule #%(nr)d") % {"nr": nr},
                 suffix=rule.get("description", ""),
             )
 
@@ -858,7 +860,7 @@ class ABCNotificationsMode(ABCEventsMode[EventRule]):
                 httpvars.append(("search", search))
             return make_confirm_delete_link(
                 url=folder_preserving_link(httpvars + back_mode),
-                title=_("Clone & edit notification rule #%d") % nr,
+                title=_("Clone & edit notification rule #%(nr)d") % {"nr": nr},
                 suffix=rule.get("description", ""),
                 confirm_button=_("Yes, clone & edit"),
                 cancel_button=_("No, don't clone"),
@@ -1407,7 +1409,8 @@ def _get_ruleset_infos(entries: dict[str, list[str]]) -> list[RuleTopic]:
 
             rule_list.append(
                 Rule(
-                    i18n=rule.title() or _("Unknown rule with ID %s") % rule_id,
+                    i18n=rule.title()
+                    or _("Unknown rule with ID %(rule_id)s") % {"rule_id": rule_id},
                     count=str(rule.num_rules()),
                     link=makeuri_contextless(
                         request,
@@ -1629,7 +1632,7 @@ class ModeAnalyzeNotifications(ModeNotifications):
         try:
             bulks = notification_get_bulks(only_ripe=only_ripe, debug=debug).result
         except Exception as exc:
-            html.show_error(_("Could not retrieve bulk notifications: %s") % exc)
+            html.show_error(_("Could not retrieve bulk notifications: %(exc)s") % {"exc": exc})
             return False
         if not bulks:
             return False
@@ -2396,7 +2399,8 @@ class ModeTestNotifications(ModeNotifications):
         if len(resp) < 1:
             raise MKUserError(
                 None,
-                _("Host '%s' is not known in the activated monitoring configuration") % hostname,
+                _("Host '%(hostname)s' is not known in the activated monitoring configuration")
+                % {"hostname": hostname},
             )
 
         self._set_custom_variables(context, resp, "HOST")
@@ -2460,7 +2464,8 @@ class ModeTestNotifications(ModeNotifications):
         if len(resp) < 1:
             raise MKUserError(
                 None,
-                _("Host '%s' is not known in the activated monitoring configuration") % hostname,
+                _("Host '%(hostname)s' is not known in the activated monitoring configuration")
+                % {"hostname": hostname},
             )
 
         self._set_custom_variables(context, resp, "SERVICE")
@@ -2534,10 +2539,10 @@ class ModeTestNotifications(ModeNotifications):
                 choices=choices,
                 empty_text=_(
                     "There are no parameters defined for this method yet. Please "
-                    '<a href="wato.py?mode=notification_parameters&method=%s">create</a> '
+                    '<a href="wato.py?mode=notification_parameters&method=%(script_name)s">create</a> '
                     "at least one first."
                 )
-                % script_name,
+                % {"script_name": script_name},
             )
 
             return_choices.append((script_name, title, vs))
@@ -3669,13 +3674,16 @@ class ModeEditNotificationRule(ABCEditNotificationRuleMode):
     def _log_text(self, edit_nr: int) -> str:
         if self._new:
             return _("Created new notification rule")
-        return _("Changed notification rule %d") % edit_nr
+        return _("Changed notification rule %(edit_nr)d") % {"edit_nr": edit_nr}
 
 
 def _log_text(new: bool, user_id: UserId, edit_nr: int) -> str:
     if new:
-        return _("Created new notification rule for user %s") % user_id
-    return _("Changed notification rule %d of user %s") % (edit_nr, user_id)
+        return _("Created new notification rule for user %(user_id)s") % {"user_id": user_id}
+    return _("Changed notification rule %(edit_nr)d of user %(user_id)s") % {
+        "edit_nr": edit_nr,
+        "user_id": user_id,
+    }
 
 
 def _set_event_rule_attrs(event_rule: EventRule, user_id: UserId) -> EventRule:
@@ -4129,7 +4137,8 @@ class ABCNotificationParameterMode(WatoMode):
             )
             self._add_change(
                 action_name="notification-delete-notification-parameter",
-                text=_("Deleted notification parameter %d") % parameter_number,
+                text=_("Deleted notification parameter %(parameter_number)d")
+                % {"parameter_number": parameter_number},
                 pending_changes=_pending_changes(config, omd_site(), user.id),
                 site_configs=config.sites,
             )
@@ -4147,7 +4156,8 @@ class ABCNotificationParameterMode(WatoMode):
 
             self._add_change(
                 action_name="notification-move-notification-parameter",
-                text=_("Changed position of notification parameter %d") % from_pos,
+                text=_("Changed position of notification parameter %(from_pos)d")
+                % {"from_pos": from_pos},
                 pending_changes=_pending_changes(config, omd_site(), user.id),
                 site_configs=config.sites,
             )
@@ -4203,7 +4213,7 @@ class ModeNotificationParameters(ABCNotificationParameterMode):
     def _log_text(self, edit_nr: int) -> str:
         if self._new:
             return _("Created new notification parameter")
-        return _("Changed notification parameter %d") % edit_nr
+        return _("Changed notification parameter %(edit_nr)d") % {"edit_nr": edit_nr}
 
     def page_menu(self, config: Config, breadcrumb: Breadcrumb) -> PageMenu:
         return PageMenu(
@@ -4280,7 +4290,8 @@ class ModeNotificationParameters(ABCNotificationParameterMode):
             links_to_related_rules += html.render_li(
                 HTML.with_escaping("").join(
                     (
-                        _("%d notification rule(s) ") % nondescript_rule_count,
+                        _("%(nondescript_rule_count)d notification rule(s) ")
+                        % {"nondescript_rule_count": nondescript_rule_count},
                         html.render_a(
                             _("without a description were found"),
                             href=build_href(query=self._method()),
@@ -4340,7 +4351,9 @@ class ModeNotificationParameters(ABCNotificationParameterMode):
 
                 table.cell(_("Parameter properties"))
                 num_properties = len(parameter["parameter_properties"])
-                title = _("%d defined parameter properties") % num_properties
+                title = _("%(num_properties)d defined parameter properties") % {
+                    "num_properties": num_properties
+                }
                 with foldable_container(
                     treename="parameter_{nr}",
                     id_=str(nr),
@@ -4394,7 +4407,7 @@ class ModeNotificationParameters(ABCNotificationParameterMode):
                 ]
                 + additional_vars
             ),
-            title=_("Delete notification parameter #%d") % nr,
+            title=_("Delete notification parameter #%(nr)d") % {"nr": nr},
             suffix=parameter["general"].get("description", ""),
         )
         drag_url = make_action_link(
@@ -4461,7 +4474,7 @@ class ModeEditNotificationParameter(ABCNotificationParameterMode):
     def _log_text(self, edit_nr: int) -> str:
         if self._new:
             return _("Created new notification parameter")
-        return _("Changed notification parameter #%s") % edit_nr
+        return _("Changed notification parameter #%(edit_nr)s") % {"edit_nr": edit_nr}
 
     def _form_spec(self) -> TransformDataForLegacyFormatOrRecomposeFunction:
         return notification_parameter_registry.form_spec(self._method())
@@ -4631,7 +4644,7 @@ class ModeEditNotificationRuleQuickSetup(WatoMode):
 class MatchItemGeneratorNotificationParameter(ABCMatchItemGenerator):
     def generate_match_items(self, user_permissions: UserPermissions) -> MatchItems:
         for script_name, script_title in notification_script_choices():
-            title = _("%s") % script_title
+            title = _("%(script_title)s") % {"script_title": script_title}
             yield MatchItem(
                 title=title,
                 topic=_("Notification parameter"),

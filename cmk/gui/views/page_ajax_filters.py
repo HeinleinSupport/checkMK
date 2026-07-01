@@ -47,7 +47,10 @@ class AjaxInitialViewFilters(ABCAjaxInitialFilters):
         try:
             view_spec = get_permitted_views()[view_name]
         except KeyError:
-            raise MKUserError("view_name", _("The requested item %s does not exist") % view_name)
+            raise MKUserError(
+                "view_name",
+                _("The requested item %(view_name)s does not exist") % {"view_name": view_name},
+            )
 
         datasource = data_source_registry[view_spec["datasource"]]()
         show_filters = visuals.filters_of_visual(

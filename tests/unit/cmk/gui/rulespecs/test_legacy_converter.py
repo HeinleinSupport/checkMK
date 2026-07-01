@@ -1984,8 +1984,14 @@ def _get_legacy_fixed_levels_choice(at_or_below: str) -> tuple[str, str, legacy_
         _("Fixed levels"),
         legacy_valuespecs.Tuple(
             elements=[
-                legacy_valuespecs.Integer(title=_("Warning %s") % at_or_below, default_value=1),
-                legacy_valuespecs.Integer(title=_("Critical %s") % at_or_below, default_value=2),
+                legacy_valuespecs.Integer(
+                    title=_("Warning %(at_or_below)s") % {"at_or_below": at_or_below},
+                    default_value=1,
+                ),
+                legacy_valuespecs.Integer(
+                    title=_("Critical %(at_or_below)s") % {"at_or_below": at_or_below},
+                    default_value=2,
+                ),
             ]
         ),
     )

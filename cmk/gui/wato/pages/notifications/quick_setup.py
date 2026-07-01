@@ -1174,7 +1174,8 @@ def notification_method() -> QuickSetupStage:
                             elements=[
                                 CascadingSingleChoiceElementExtended(
                                     name=name,
-                                    title=Title("%s") % (_("%s") % timeperiod),
+                                    title=Title("%s")
+                                    % (_("%(timeperiod)s") % {"timeperiod": timeperiod}),
                                     parameter_form=bulk_notification(
                                         title="timeperiod",
                                     ),
@@ -1370,7 +1371,8 @@ def notification_method() -> QuickSetupStage:
                                             title=Title("Method"),
                                             elements=[
                                                 CascadingSingleChoiceElementExtended(
-                                                    title=Title("%s") % (_("%s") % title),
+                                                    title=Title("%s")
+                                                    % (_("%(title)s") % {"title": title}),
                                                     name=script_name,
                                                     parameter_form=Dictionary(
                                                         elements={
@@ -1408,7 +1410,8 @@ def notification_method() -> QuickSetupStage:
                                             title=Title("Method"),
                                             elements=[
                                                 CascadingSingleChoiceElementExtended(
-                                                    title=Title("%s") % (_("%s") % title),
+                                                    title=Title("%s")
+                                                    % (_("%(title)s") % {"title": title}),
                                                     name=script_name,
                                                     parameter_form=FixedValue(value=None),
                                                 )

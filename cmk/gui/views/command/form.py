@@ -201,9 +201,9 @@ def do_actions(
 
     message = None
     if command:
-        message = _("Successfully sent %d commands.") % count
+        message = _("Successfully sent %(count)d commands.") % {"count": count}
         if debug:
-            message += _("The last one was: <pre>%s</pre>") % command
+            message += _("The last one was: <pre>%(command)s</pre>") % {"command": command}
     elif count == 0:
         message = _("No matching data row. No command sent.")
 

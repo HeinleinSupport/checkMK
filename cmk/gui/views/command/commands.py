@@ -221,7 +221,8 @@ def command_reschedule_action(
         spread = request.get_validated_type_input_mandatory(int, "_resched_spread")
         if spread < 0:
             raise MKUserError(
-                "_resched_spread", _("Spread should be a positive number: %s") % spread
+                "_resched_spread",
+                _("Spread should be a positive number: %(spread)s") % {"spread": spread},
             )
 
         t = time.time()
@@ -926,7 +927,8 @@ def command_acknowledge_confirm_dialog_additions(
         else _("If state changes OR on recovery (OK/UP)")
     )
     expire_time_li = html.render_li(
-        _("On %s (server time).") % formatted_datetime_str
+        _("On %(formatted_datetime_str)s (server time).")
+        % {"formatted_datetime_str": formatted_datetime_str}
         if request.var("_ack_expire")
         else _("No expiration date")
     )
@@ -1512,7 +1514,10 @@ class CommandScheduleDowntimesForm:
         adhoc_duration = active_config.adhoc_downtime.get("duration")
         adhoc_comment = active_config.adhoc_downtime.get("comment", "")
         html.open_div(class_="group")
-        html.button("_down_adhoc", _("Ad hoc for %d minutes") % adhoc_duration)
+        html.button(
+            "_down_adhoc",
+            _("Ad hoc for %(adhoc_duration)d minutes") % {"adhoc_duration": adhoc_duration},
+        )
         html.nbsp()
         html.write_text_permissive(_("Comment") + ": " + adhoc_comment)
         html.hr()

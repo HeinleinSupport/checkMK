@@ -78,7 +78,7 @@ class PainterPerfometer(Painter):
             logger.exception("error rendering performeter")
             if self.config.debug:
                 raise
-            return " ".join(classes), _("Exception: %s") % e
+            return " ".join(classes), _("Exception: %(e)s") % {"e": e}
 
         assert h is not None
         content = (

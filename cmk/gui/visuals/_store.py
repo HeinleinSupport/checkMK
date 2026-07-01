@@ -238,7 +238,10 @@ def _load_custom_user_visuals[TVisual: Visual](
             )
 
         except SyntaxError as e:
-            raise MKGeneralException(_("Cannot load %s from %s: %s") % (what, visual_path, e))
+            raise MKGeneralException(
+                _("Cannot load %(what)s from %(visual_path)s: %(e)s")
+                % {"what": what, "visual_path": visual_path, "e": e}
+            )
 
     visuals.update(
         _get_packaged_visuals(

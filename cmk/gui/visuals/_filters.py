@@ -1620,7 +1620,8 @@ class CustomAttributeFilter(Filter):
         if attribute_id not in items:
             raise MKUserError(
                 self.name_varname(self.ident),
-                _("The requested item %s does not exist") % attribute_id,
+                _("The requested item %(attribute_id)s does not exist")
+                % {"attribute_id": attribute_id},
             )
         val = value[self.value_varname(self.ident)]
         return f"Filter: {self.info}_custom_variables ~~ {livestatus.lqencode(attribute_id.upper())} ^{livestatus.lqencode(val)}\n"

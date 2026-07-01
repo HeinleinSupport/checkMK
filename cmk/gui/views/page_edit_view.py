@@ -93,7 +93,9 @@ def page_edit_view(ctx: PageContext) -> None:
         try:
             return data_source_registry[ds_name]().infos
         except KeyError:
-            raise MKUserError("datasource", _("Invalid data source: %s") % ds_name)
+            raise MKUserError(
+                "datasource", _("Invalid data source: %(ds_name)s") % {"ds_name": ds_name}
+            )
 
     visuals.page_edit_visual(
         "views",

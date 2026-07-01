@@ -35,7 +35,7 @@ def page_create_visual(
     next_url: str | None = None,
 ) -> None:
     visual_name = visual_type_registry[what]().title
-    title = _("Create %s") % visual_name
+    title = _("Create %(visual_name)s") % {"visual_name": visual_name}
     what_s = what[:-1]
 
     vs_infos = SingleInfoSelection(info_keys)
@@ -66,7 +66,7 @@ def page_create_visual(
     html.open_p()
     html.write_text_permissive(
         _(
-            "Depending on the chosen data source, a %s can list <i>multiple</i> or <i>single</i> objects. "
+            "Depending on the chosen data source, a %(what_s)s can list <i>multiple</i> or <i>single</i> objects. "
             "For example, the <i>services</i> data source can be used to simply create a list "
             "of <i>multiple</i> services, a list of <i>multiple</i> services of a <i>single</i> host or even "
             "a list of services with the same name on <i>multiple</i> hosts. When you just want to "
@@ -74,7 +74,7 @@ def page_create_visual(
             "Alternatively, you have the option to restrict to a single host or to choose the type "
             "of objects you want to restrict to manually."
         )
-        % what_s
+        % {"what_s": what_s}
     )
     html.close_p()
 

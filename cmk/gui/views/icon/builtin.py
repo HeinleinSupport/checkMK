@@ -846,16 +846,16 @@ def _render_notifications_icon(
     modified = "notifications_enabled" in row[what + "_modified_attributes_list"]
     if modified and enabled:
         return StaticIcon(IconNames.notif_enabled), _(
-            "Notifications are manually enabled for this %s"
-        ) % what
+            "Notifications are manually enabled for this %(what)s"
+        ) % {"what": what}
     if modified and not enabled:
         return StaticIcon(IconNames.notif_man_disabled), _(
-            "Notifications are manually disabled for this %s"
-        ) % what
+            "Notifications are manually disabled for this %(what)s"
+        ) % {"what": what}
     if not enabled:
         return StaticIcon(IconNames.notif_disabled), _(
-            "Notifications are disabled for this %s"
-        ) % what
+            "Notifications are disabled for this %(what)s"
+        ) % {"what": what}
     return None
 
 
@@ -986,11 +986,11 @@ def _render_active_checks_icon(
         if row[what + "_active_checks_enabled"] == 0:
             return (
                 StaticIcon(IconNames.disabled),
-                _("Active checks have been manually disabled for this %s!") % what,
+                _("Active checks have been manually disabled for this %(what)s!") % {"what": what},
             )
         return StaticIcon(IconNames.checkmark), _(
-            "Active checks have been manually enabled for this %s!"
-        ) % what
+            "Active checks have been manually enabled for this %(what)s!"
+        ) % {"what": what}
     return None
 
 
@@ -1035,7 +1035,7 @@ def _render_passive_checks_icon(
         if row[what + "_accept_passive_checks"] == 0:
             return (
                 StaticIcon(IconNames.npassive),
-                _("Passive checks have been manually disabled for this %s!") % what,
+                _("Passive checks have been manually disabled for this %(what)s!") % {"what": what},
             )
     return None
 
@@ -1165,7 +1165,9 @@ def _render_stars(
         title = _("service")
 
     if starred:
-        return StaticIcon(IconNames.starred), _("This %s is one of your favorites") % title
+        return StaticIcon(IconNames.starred), _("This %(title)s is one of your favorites") % {
+            "title": title
+        }
     return None
 
 

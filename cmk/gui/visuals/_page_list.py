@@ -279,10 +279,10 @@ def page_list(
                     and not is_packaged
                 ):
                     add_vars: HTTPVariables = [("_delete", visual_name)]
-                    confirm_message = _("ID: %s") % visual_name
+                    confirm_message = _("ID: %(visual_name)s") % {"visual_name": visual_name}
                     if owner != user.id:
                         add_vars.append(("_user_id", owner))
-                        confirm_message += "<br>" + _("Owner: %s") % owner
+                        confirm_message += "<br>" + _("Owner: %(owner)s") % {"owner": owner}
                     html.icon_button(
                         make_confirm_delete_link(
                             url=makeactionuri(request, transactions, add_vars),
@@ -375,8 +375,8 @@ def _render_extension_package_icons(
                 ],
                 filename="edit_%s.py" % what_s,
             ),
-            title=_("Clone %s for packaging") % what_s,
-            message=_("ID: %s") % visual_name,
+            title=_("Clone %(what_s)s for packaging") % {"what_s": what_s},
+            message=_("ID: %(visual_name)s") % {"visual_name": visual_name},
             confirm_button=_("Clone"),
             cancel_button=_("Cancel"),
         )
@@ -388,13 +388,15 @@ def _render_extension_package_icons(
         if local_file_exists(what, visual_name):
             html.static_icon(
                 clone_icon,
-                title=_("This %s is already available for packaging as extension package") % what_s,
+                title=_("This %(what_s)s is already available for packaging as extension package")
+                % {"what_s": what_s},
                 css_classes=["service_button", "disabled", "tooltip"],
             )
         else:
             html.icon_button(
                 url=export_url,
-                title=_("Clone this %s for packaging as extension package") % what_s,
+                title=_("Clone this %(what_s)s for packaging as extension package")
+                % {"what_s": what_s},
                 icon=clone_icon,
             )
         return
@@ -411,14 +413,15 @@ def _render_extension_package_icons(
                 ],
                 filename="edit_%s.py" % what_s,
             ),
-            title=_("Remove %s from extensions") % what_s,
-            message=_("ID: %s") % visual_name,
+            title=_("Remove %(what_s)s from extensions") % {"what_s": what_s},
+            message=_("ID: %(visual_name)s") % {"visual_name": visual_name},
             confirm_button=_("Remove"),
             cancel_button=_("Cancel"),
         )
         html.icon_button(
             url=delete_url,
-            title=_("Remove this %s from the extension packages module") % what_s,
+            title=_("Remove this %(what_s)s from the extension packages module")
+            % {"what_s": what_s},
             icon=StaticIcon(IconNames.delete),
         )
 
@@ -435,12 +438,14 @@ def _render_extension_package_icons(
     if mkp_name:
         html.static_icon(
             StaticIcon(IconNames.mkps),
-            title=_("This %s is provided via the MKP '%s'") % (what_s, mkp_name),
+            title=_("This %(what_s)s is provided via the MKP '%(mkp_name)s'")
+            % {"what_s": what_s, "mkp_name": mkp_name},
         )
     else:
         html.static_icon(
             StaticIcon(IconNames.mkps),
-            title=_("This %s can be packaged with the extension packages module") % what_s,
+            title=_("This %(what_s)s can be packaged with the extension packages module")
+            % {"what_s": what_s},
         )
 
 
