@@ -969,6 +969,7 @@ allows = [
   "cmk.diagnostics",
   "cmk.discover_plugins",
   "cmk.diskspace",
+  "cmk.events.notification_result",
   "cmk.fields",
   "cmk.graphing_engine",
   "cmk.gui_plugins.internal",
@@ -1073,7 +1074,7 @@ allows = []
 allows = ["@plugin_apis"]
 
 [components."cmk.notification_plugins"]
-allows = ["@ccc", "cmk.utils"]
+allows = ["@ccc", "cmk.events.notification_result", "cmk.utils"]
 
 [components."cmk.piggyback"]
 allows = ["@ccc", "@messaging"]
@@ -1530,13 +1531,12 @@ allows = ["cmk.ccc.site", "cmk.multi_tenancy.shared.customer"]
 
 [components."cmk.utils.notify"]
 allows = [
-  "cmk.ccc.config_path",
   "cmk.ccc.exceptions",
   "cmk.ccc.hostaddress",
   "cmk.ccc.i18n",
   "cmk.ccc.store",
+  "cmk.events.notification_result",
   "cmk.utils.labels",
-  "cmk.utils.notify_types",
   "cmk.utils.servicename",
   "cmk.utils.tags",
 ]

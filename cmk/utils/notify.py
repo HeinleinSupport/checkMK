@@ -16,8 +16,8 @@ from cmk.ccc.exceptions import MKGeneralException
 from cmk.ccc.hostaddress import HostName
 from cmk.ccc.i18n import _
 from cmk.ccc.store import DimSerializer, load_object_from_file
+from cmk.events.notification_result import NotificationContext
 from cmk.utils.labels import Labels
-from cmk.utils.notify_types import NotificationContext as NotificationContext
 from cmk.utils.servicename import ServiceName
 from cmk.utils.tags import TagGroupID, TagID
 

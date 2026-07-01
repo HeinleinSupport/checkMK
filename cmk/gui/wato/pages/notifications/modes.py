@@ -33,6 +33,7 @@ from cmk.ccc.exceptions import MKGeneralException, MKTimeout
 from cmk.ccc.site import omd_site, SiteId
 from cmk.ccc.user import UserId
 from cmk.ccc.version import Edition
+from cmk.events.notification_result import NotificationContext
 from cmk.gui import forms, permissions, sites, userdb
 from cmk.gui.breadcrumb import Breadcrumb
 from cmk.gui.config import active_config, Config
@@ -206,7 +207,6 @@ from cmk.shared_typing.notifications import (
 )
 from cmk.utils.automation_config import LocalAutomationConfig
 from cmk.utils.labels import Labels
-from cmk.utils.notify import NotificationContext
 from cmk.utils.notify_types import (
     EventRule,
     get_rules_related_to_parameter,

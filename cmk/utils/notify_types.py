@@ -23,7 +23,6 @@ from pydantic import (
     ValidationInfo,
 )
 
-from cmk.events.notification_result import NotificationContext as NotificationContext
 from cmk.utils.rulesets.ruleset_matcher import TagCondition
 from cmk.utils.tags import TagGroupID
 from cmk.utils.timeperiod import TimeperiodName
@@ -35,7 +34,6 @@ __all__ = [
     "HandlerParameters",
     "NotifyPluginParamsDict",
     "NotifyBulkParameters",
-    "NotificationContext",
     "PluginNotificationContext",
     "NotifyRuleInfo",
     "NotifyPluginName",

@@ -76,7 +76,11 @@ from cmk.events.log_to_history import (
     notification_message,
     notification_result_message,
 )
-from cmk.events.notification_result import NotificationPluginName, NotificationResultCode
+from cmk.events.notification_result import (
+    NotificationContext,
+    NotificationPluginName,
+    NotificationResultCode,
+)
 from cmk.events.notification_spool_file import (
     create_spool_file,
     NotificationForward,
@@ -96,7 +100,6 @@ from cmk.utils.notify_types import (
     HostEventType,
     is_always_bulk,
     is_timeperiod_bulk,
-    NotificationContext,
     NotificationParameterSpecs,
     NotificationPluginNameStr,
     NotifyAnalysisInfo,
