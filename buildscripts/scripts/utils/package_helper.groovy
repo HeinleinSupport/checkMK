@@ -170,7 +170,9 @@ void provide_agent_binaries(Map args) {
             dependency_paths_hash: all_dependency_paths_hashes["winagt-build"],
             skip: test_binaries_only || fake_artifacts,
             retry: 3,
-            additional_build_params: [],
+            additional_build_params: [
+                SIGN_METHOD: "azure",
+            ],
             install_cmd: """\
                 cp \
                     mk-oracle.exe \
