@@ -254,9 +254,9 @@ class StatusHostFormSpecAdapter(FormSpecAdapter[tuple[SiteId, str] | None, Casca
                     "you prevent the graphical user interface (GUI) from running into timeouts when remote sites do not respond. "
                     "You need to add the remote monitoring servers as hosts to your local monitoring "
                     "site and use their host state as the reachability state of the remote site. Please "
-                    'refer to the <a href="%s" target="_blank">User Guide</a> for details.'
+                    'refer to the <a href="%(status_host_docu_url)s" target="_blank">User Guide</a> for details.'
                 )
-                % status_host_docu_url
+                % {"status_host_docu_url": status_host_docu_url}
             ),
         )
 
@@ -667,10 +667,10 @@ class ModeEditSite(WatoMode):
                             "service on that site. You can either use an absolute URL prefix like <tt>http://some.host/mysite/</tt> "
                             "or a relative URL like <tt>/mysite/</tt>. When using relative prefixes you need a mod_proxy "
                             "configuration in your local system Apache that proxies such URLs to the according remote site. "
-                            'Please refer to the <a href="%s" target="_blank">User Guide</a> for details. '
+                            'Please refer to the <a href="%(proxy_docu_url)s" target="_blank">User Guide</a> for details. '
                             "The prefix should end with a slash. Omit the <tt>/nagvis/</tt> from the prefix."
                         )
-                        % proxy_docu_url
+                        % {"proxy_docu_url": proxy_docu_url}
                     ),
                 ),
             ),
@@ -876,7 +876,9 @@ class ModeEditBrokerConnection(WatoMode):
             try:
                 self._connection = self._connections[el_id]
             except IndexError:
-                raise MKUserError(None, _("The requested connection %s does not exist") % el_id)
+                raise MKUserError(
+                    None, _("The requested connection %(el_id)s does not exist") % {"el_id": el_id}
+                )
 
     def title(self) -> str:
         if self._is_new:
@@ -896,7 +898,8 @@ class ModeEditBrokerConnection(WatoMode):
         if self._site_mgmt.broker_connection_id_exists(connection_id):
             raise MKUserError(
                 None,
-                _("Connection ID %s already exists.") % connection_id,
+                _("Connection ID %(connection_id)s already exists.")
+                % {"connection_id": connection_id},
             )
 
     def action(self, config: Config) -> ActionResult:
@@ -1165,7 +1168,10 @@ class ModeDistributedMonitoring(WatoMode):
         configured_sites = self._site_mgmt.load_sites()
         site = configured_sites[trigger_certs_site_id]
         trigger_remote_certs_creation(trigger_certs_site_id, site, force=True, debug=debug)
-        flash(_("Remote broker certificates created for site %s.") % trigger_certs_site_id)
+        flash(
+            _("Remote broker certificates created for site %(trigger_certs_site_id)s.")
+            % {"trigger_certs_site_id": trigger_certs_site_id}
+        )
         return redirect(mode_url("sites"))
 
     def _action_delete(
@@ -1205,10 +1211,10 @@ class ModeDistributedMonitoring(WatoMode):
                 None,
                 _(
                     "You cannot delete this connection. It still has hosts related to the site "
-                    'assigned to it. You can use the <a href="%s">host '
+                    'assigned to it. You can use the <a href="%(search_url)s">host '
                     "search</a> to get a list of the hosts."
                 )
-                % search_url,
+                % {"search_url": search_url},
             )
 
         folders_related_to_site = folder_site_stats.folders.get(delete_id, set())
@@ -1256,7 +1262,11 @@ class ModeDistributedMonitoring(WatoMode):
         empty_folders = {folder for folder in folders_related_to_site if folder.is_empty()}
 
         if not empty_folders:
-            raise MKUserError(None, _("No empty folders for %s available to delete.") % delete_id)
+            raise MKUserError(
+                None,
+                _("No empty folders for %(delete_id)s available to delete.")
+                % {"delete_id": delete_id},
+            )
 
         for empty_folder in empty_folders:
             if (parent := empty_folder.parent()) is not None:
@@ -1360,7 +1370,7 @@ class ModeDistributedMonitoring(WatoMode):
                 return redirect(mode_url("sites"))
 
             except MKAutomationException as e:
-                error = _("Cannot connect to remote site: %s") % e
+                error = _("Cannot connect to remote site: %(e)s") % {"e": e}
 
             except MKUserError as e:
                 user_errors.add(e)
@@ -1484,7 +1494,7 @@ class ModeDistributedMonitoring(WatoMode):
         delete_url = make_confirm_delete_link(
             url=makeactionuri(request, transactions, [("_delete_connection_id", connection_id)]),
             title=_("Delete peer-to-peer connection to site"),
-            message=_("ID: %s") % connection_id,
+            message=_("ID: %(connection_id)s") % {"connection_id": connection_id},
         )
         html.icon_button(delete_url, _("Delete"), StaticIcon(IconNames.delete))
 
@@ -1515,7 +1525,7 @@ class ModeDistributedMonitoring(WatoMode):
                 url=makeactionuri(request, transactions, [("_delete", site_id)]),
                 title=_("Delete connection to site"),
                 suffix=site.get("alias", ""),
-                message=_("ID: %s") % site_id,
+                message=_("ID: %(site_id)s") % {"site_id": site_id},
             )
             html.icon_button(delete_url, _("Delete"), StaticIcon(IconNames.delete))
 
@@ -1608,7 +1618,7 @@ class ModeDistributedMonitoring(WatoMode):
                     url=make_action_link([("mode", "sites"), ("_logout", site_id)]),
                     title=_("Log out of site"),
                     suffix=site["alias"],
-                    message=_("ID: %s") % site_id,
+                    message=_("ID: %(site_id)s") % {"site_id": site_id},
                     confirm_button=_("Log out"),
                 )
                 html.icon_button(logout_url, _("Logout"), StaticIcon(IconNames.autherr))
@@ -1793,23 +1803,23 @@ class PageAjaxFetchSiteStatus(AjaxPage):
         except (MKTerminate, MKTimeout):
             raise
         except Exception as e:
-            return StaticIcon(IconNames.alert), _("Unknown error: %s") % (e,)
+            return StaticIcon(IconNames.alert), _("Unknown error: %(e)s") % {"e": e}
 
         match connection_status:
             case ConnectionOK():
                 return StaticIcon(IconNames.checkmark), _("Online")
             case ConnectionFailed(error):
-                return StaticIcon(IconNames.cross), _("Failed to establish connection: %s") % (
-                    error,
-                )
+                return StaticIcon(IconNames.cross), _(
+                    "Failed to establish connection: %(error)s"
+                ) % {"error": error}
             case ConnectionRefused.WRONG_SITE:
                 return StaticIcon(IconNames.cross), _(
-                    "Connection to port %s refused. You are probably connecting to the wrong site."
-                ) % (remote_port,)
+                    "Connection to port %(remote_port)s refused. You are probably connecting to the wrong site."
+                ) % {"remote_port": remote_port}
             case ConnectionRefused.SELF_SIGNED:
                 return StaticIcon(IconNames.cross), _(
-                    "Connection to port %s refused. The site is using a self-signed certificate. Are you logged in?"
-                ) % (remote_port,)
+                    "Connection to port %(remote_port)s refused. The site is using a self-signed certificate. Are you logged in?"
+                ) % {"remote_port": remote_port}
             case ConnectionRefused.CERTIFICATE_VERIFY_FAILED:
                 return StaticIcon(IconNames.cross), _(
                     "Connection to port %s refused: Invalid certificate"
@@ -1817,7 +1827,9 @@ class PageAjaxFetchSiteStatus(AjaxPage):
             case ConnectionRefused.CLOSED:
                 return StaticIcon(IconNames.cross), _("Not available")
 
-                return "cross", _("Connection to port %s refused") % (remote_port,)
+                return "cross", _("Connection to port %(remote_port)s refused") % {
+                    "remote_port": remote_port
+                }
             case _:
                 assert_never(_)
 
@@ -2110,7 +2122,7 @@ class ModeSiteLivestatusEncryption(WatoMode):
             cert_details = self._fetch_certificate_details()
         except Exception as e:
             logger.exception("Failed to fetch peer certificate")
-            html.show_error(_("Failed to fetch peer certificate (%s)") % e)
+            html.show_error(_("Failed to fetch peer certificate (%(e)s)") % {"e": e})
             return None
 
         cert_pem = None
@@ -2147,8 +2159,10 @@ class ModeSiteLivestatusEncryption(WatoMode):
         ).add(
             Change(
                 action_name="edit-configvar",
-                text=_("Added CA with fingerprint %s to trusted certificate authorities")
-                % digest_sha256,
+                text=_(
+                    "Added CA with fingerprint %(digest_sha256)s to trusted certificate authorities"
+                )
+                % {"digest_sha256": digest_sha256},
                 domains=[config_variable.primary_domain().ident()],
                 force_restart=config_variable.need_restart() or None,
             ),
@@ -2161,7 +2175,10 @@ class ModeSiteLivestatusEncryption(WatoMode):
             }
         )
 
-        flash(_("Added CA with fingerprint %s to trusted certificate authorities") % digest_sha256)
+        flash(
+            _("Added CA with fingerprint %(digest_sha256)s to trusted certificate authorities")
+            % {"digest_sha256": digest_sha256}
+        )
         return None
 
     def page(self, config: Config) -> None:
@@ -2185,7 +2202,7 @@ class ModeSiteLivestatusEncryption(WatoMode):
             cert_details = list(self._fetch_certificate_details())
         except Exception as e:
             logger.exception("Failed to fetch peer certificate")
-            html.show_error(_("Failed to fetch peer certificate (%s)") % e)
+            html.show_error(_("Failed to fetch peer certificate (%(e)s)") % {"e": e})
             return
 
         html.h3(_("Certificate details"))
