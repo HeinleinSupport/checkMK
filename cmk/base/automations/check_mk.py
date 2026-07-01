@@ -122,7 +122,6 @@ from cmk.base.core.interface import do_reload, do_restart, MonitoringCore
 from cmk.base.core.shared import autodetect_plugin, get_service_attributes
 from cmk.base.errorhandling import create_section_crash_dump
 from cmk.base.parent_scan import ScanConfig
-from cmk.base.snmp_plugin_store import make_plugin_store
 from cmk.ccc import tty, version
 from cmk.ccc.exceptions import (
     MKBailOut,
@@ -171,6 +170,7 @@ from cmk.checkengine.plugins import (
     AutocheckEntry,
     CheckPlugin,
     CheckPluginName,
+    make_plugin_store,
     SectionName,
     ServiceID,
 )

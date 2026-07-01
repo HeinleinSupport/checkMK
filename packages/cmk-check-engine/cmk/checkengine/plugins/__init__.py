@@ -26,3 +26,4 @@ from ._sections import SectionPlugin as SectionPlugin
 from ._sections import SimpleSNMPParseFunction as SimpleSNMPParseFunction
 from ._sections import SNMPParseFunction as SNMPParseFunction
 from ._sections import SNMPSectionPlugin as SNMPSectionPlugin
+from .snmp_plugin_store import make_plugin_store as make_plugin_store

@@ -57,21 +57,6 @@ py_library(
 )
 
 py_library(
-    name = "snmp-plugin-store",
-    srcs = ["snmp_plugin_store.py"],
-    imports = ["../.."],
-    visibility = [
-        "//cmk:__pkg__",
-        "//cmk/base:__subpackages__",
-    ],
-    deps = [
-        "//packages/cmk-check-engine:fetchers",
-        "//packages/cmk-check-engine:snmplib",
-        "//packages/cmk-check-engine/cmk/checkengine/plugins",
-    ],
-)
-
-py_library(
     name = "config",
     srcs = ["config.py"],
     imports = ["../.."],
@@ -83,7 +68,6 @@ py_library(
     ],
     deps = [
         ":parent-scan",
-        ":snmp-plugin-store",
         "//cmk/base/configlib",
         "//cmk/base/default_config:default-config",
         "//cmk/inventory",
@@ -384,7 +368,6 @@ py_library(
         ":localize",
         ":notify",
         ":parent-scan",
-        ":snmp-plugin-store",
         ":utils",
         "//cmk/base/api",
         "//cmk/base/automation_helper:automation-helper",

@@ -55,7 +55,6 @@ from cmk.base.configlib.piggyback import guess_piggybacked_hosts_time_settings
 from cmk.base.configlib.scheduling import make_check_interval_config
 from cmk.base.configlib.servicename import PassiveServiceNameConfig
 from cmk.base.parent_scan import ScanConfig as ParentScanConfig
-from cmk.base.snmp_plugin_store import make_plugin_store
 from cmk.ccc import tty
 from cmk.ccc.exceptions import MKBailOut, MKGeneralException
 from cmk.ccc.hostaddress import HostAddress, HostName, Hosts
@@ -102,6 +101,7 @@ from cmk.checkengine.plugins import (
     CheckPlugin,
     CheckPluginName,
     InventoryPlugin,
+    make_plugin_store,
     SectionName,
     ServiceID,
     SNMPSectionPlugin,

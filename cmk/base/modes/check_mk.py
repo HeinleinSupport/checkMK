@@ -52,7 +52,6 @@ from cmk.base.core.active_config_layout import (
     RELATIVE_PATH_TRUSTED_CAS,
 )
 from cmk.base.errorhandling import CheckResultErrorHandler, create_section_crash_dump
-from cmk.base.snmp_plugin_store import make_plugin_store
 from cmk.ccc import tty
 from cmk.ccc.config_path import VersionedConfigPath
 from cmk.ccc.cpu_tracking import CPUTracker
@@ -100,6 +99,7 @@ from cmk.checkengine.plugins import (
     CheckPluginName,
     InventoryPlugin,
     InventoryPluginName,
+    make_plugin_store,
     SectionName,
     SNMPSectionPlugin,
 )

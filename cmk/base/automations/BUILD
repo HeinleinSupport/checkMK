@@ -16,7 +16,6 @@ py_library(
         "//cmk/base:checkers",
         "//cmk/base:config",
         "//cmk/base:parent-scan",
-        "//cmk/base:snmp-plugin-store",
         "//cmk/base:utils",
         "//cmk/base/configlib",
         "//cmk/base/core",
