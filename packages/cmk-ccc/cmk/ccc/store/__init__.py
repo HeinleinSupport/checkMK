@@ -141,7 +141,9 @@ def load_mk_file(path: Path, *, default: Mapping[str, object], lock: bool) -> Ma
             raise
         except Exception as e:
             # TODO: How to handle debug mode or logging?
-            raise MKGeneralException(_('Cannot read configuration file "%s": %s') % (path, e))
+            raise MKGeneralException(
+                _('Cannot read configuration file "%(path)s": %(e)s') % {"path": path, "e": e}
+            )
 
         return default
 

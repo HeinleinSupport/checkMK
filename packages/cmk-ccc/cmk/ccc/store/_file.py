@@ -92,9 +92,13 @@ def _raise_for_permissions(path: Path) -> None:
     world_writable = S_IMODE(stat.st_mode) & S_IWOTH != 0
 
     if not owned_by_current_user_or_root:
-        raise MKGeneralException(_('Refusing to read file not owned by us: "%s"') % path)
+        raise MKGeneralException(
+            _('Refusing to read file not owned by us: "%(path)s"') % {"path": path}
+        )
     if world_writable:
-        raise MKGeneralException(_('Refusing to read world writable file: "%s"') % path)
+        raise MKGeneralException(
+            _('Refusing to read world writable file: "%(path)s"') % {"path": path}
+        )
 
 
 class FileIo(Protocol):

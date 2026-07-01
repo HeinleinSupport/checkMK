@@ -248,7 +248,8 @@ class AuxTagList:
     def _append(self, aux_tag: AuxTag) -> None:
         if self.exists(aux_tag.id):
             raise MKGeneralException(
-                _('The tag ID "%s" does already exist in the list of auxiliary tags.') % aux_tag
+                _('The tag ID "%(aux_tag)s" does already exist in the list of auxiliary tags.')
+                % {"aux_tag": aux_tag}
             )
         self._tags.append(aux_tag)
 
@@ -296,7 +297,7 @@ class AuxTagList:
         for aux_tag in self._tags:
             if aux_tag_id == aux_tag.id:
                 return aux_tag
-        raise KeyError(_("Aux tag '%s' does not exist") % aux_tag_id)
+        raise KeyError(_("Aux tag '%(aux_tag_id)s' does not exist") % {"aux_tag_id": aux_tag_id})
 
     def get_tag_ids(self) -> set[TagID]:
         return {tag.id for tag in self._tags}

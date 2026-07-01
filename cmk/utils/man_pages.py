@@ -49,7 +49,7 @@ class ManPage:
         return cls(
             name=name,
             path=path,
-            title=_("%s: Cannot parse manual page: %s") % (name, msg),
+            title=_("%(name)s: Cannot parse manual page: %(msg)s") % {"name": name, "msg": msg},
             agents=[],
             catalog=["generic"],
             license="unknown",

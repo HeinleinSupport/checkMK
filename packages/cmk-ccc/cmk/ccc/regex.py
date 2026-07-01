@@ -94,7 +94,9 @@ def regex(pattern: str, flags: int = 0) -> re.Pattern[str]:
         reg = re.compile(pattern, flags=flags)
 
     except Exception as e:
-        raise MKGeneralException(_("Invalid regular expression '%s': %s") % (pattern, e))
+        raise MKGeneralException(
+            _("Invalid regular expression '%(pattern)s': %(e)s") % {"pattern": pattern, "e": e}
+        )
 
     g_compiled_regexes[(pattern, flags)] = reg
     return reg
