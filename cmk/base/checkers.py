@@ -98,9 +98,9 @@ from cmk.checkengine.sectionparserutils import (
 )
 from cmk.checkengine.snmplib import SNMPBackendEnum, SNMPRawData
 from cmk.checkengine.sources import (
-    FetcherFactory,
     Source,
     SourceBuilder,
+    SourceConfig,
 )
 from cmk.checkengine.specs.checkresults import (
     ActiveCheckResult,
@@ -371,7 +371,7 @@ class CMKFetcher(FetcherFunction):
         host_tags: HostTags,
         get_relay_id: Callable[[HostName], str | None],
         make_trigger: Callable[[str | None], FetcherTrigger],
-        factory: FetcherFactory,
+        source_config: SourceConfig,
         plugins: AgentBasedPlugins,
         *,
         clusters: Mapping[HostName, Sequence[HostName]],
@@ -398,7 +398,7 @@ class CMKFetcher(FetcherFunction):
         self.make_trigger: Final = make_trigger
         self.clusters: Final = clusters
         self.default_address_family: Final = default_address_family
-        self.factory: Final = factory
+        self.source_config: Final = source_config
         self.plugins: Final = plugins
         self.file_cache_options: Final = file_cache_options
         self.force_snmp_cache_refresh: Final = force_snmp_cache_refresh
@@ -478,7 +478,7 @@ class CMKFetcher(FetcherFunction):
                     current_ip_family,
                     current_ip_address,
                     current_ip_stack_config,
-                    fetcher_factory=self.factory,
+                    source_config=self.source_config,
                     force_snmp_cache_refresh=(
                         self.force_snmp_cache_refresh if not is_cluster else False
                     ),

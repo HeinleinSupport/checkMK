@@ -70,7 +70,7 @@ def _make_sources(
         ip_family,
         ipaddress,
         IPStackConfig.IPv4,
-        fetcher_factory=config_cache.fetcher_factory(
+        source_config=config_cache.make_source_config(
             config_cache.make_service_configurer({}, lambda *a: ""),
             ip_lookup=lambda *a: ipaddress,
             service_name_config=lambda *a: "",

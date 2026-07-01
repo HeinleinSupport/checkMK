@@ -180,7 +180,7 @@ def _inventory_as_check(
         make_trigger=lambda relay_id: app.make_fetcher_trigger(
             relay_id, latest_config_path / RELATIVE_PATH_TRUSTED_CAS
         ),
-        factory=config_cache.fetcher_factory(
+        source_config=config_cache.make_source_config(
             config_cache.make_service_configurer(plugins.check_plugins, service_name_config),
             ip_address_of,
             service_name_config,

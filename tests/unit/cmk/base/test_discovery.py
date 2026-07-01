@@ -1657,7 +1657,7 @@ def test_commandline_discovery(monkeypatch: MonkeyPatch) -> None:
         loading_result.host_tags,
         get_relay_id=lambda hn: None,
         make_trigger=lambda hn: PlainFetcherTrigger(Path("/")),
-        factory=config_cache.fetcher_factory(
+        source_config=config_cache.make_source_config(
             config_cache.make_service_configurer({}, service_name_config),
             ip_lookup=lambda *a: HostAddress(""),
             service_name_config=service_name_config,

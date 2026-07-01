@@ -359,7 +359,7 @@ def _automation_service_discovery(
         make_trigger=lambda relay_id: env.make_fetcher_trigger(
             relay_id, config_source=ConfigSource.PENDING
         ),
-        factory=config_cache.fetcher_factory(
+        source_config=config_cache.make_source_config(
             env.service_configurer,
             ip_address_of,
             env.passive_service_name_config,
@@ -594,7 +594,7 @@ def _automation_discovery_preview(
         make_trigger=lambda relay_id: env.make_fetcher_trigger(
             relay_id, config_source=ConfigSource.PENDING
         ),
-        factory=config_cache.fetcher_factory(
+        source_config=config_cache.make_source_config(
             env.service_configurer,
             ip_address_of_with_fallback,
             env.passive_service_name_config,
@@ -1107,7 +1107,7 @@ def _execute_autodiscovery(
         make_trigger=lambda relay_id: env.make_fetcher_trigger(
             relay_id, config_source=ConfigSource.ACTIVATED
         ),
-        factory=env.config_cache.fetcher_factory(
+        source_config=env.config_cache.make_source_config(
             env.service_configurer,
             slightly_different_ip_address_of,
             env.passive_service_name_config,
@@ -3369,7 +3369,7 @@ class AutomationDiagHost:
             ip_family,
             ipaddress,
             ip_lookup_config.ip_stack_config(host_name),
-            fetcher_factory=config_cache.fetcher_factory(
+            source_config=config_cache.make_source_config(
                 service_configurer,
                 ip_address_of,
                 service_name_config,
@@ -3965,7 +3965,7 @@ def _automation_get_agent_output(
                 ip_family,
                 ipaddress,
                 ip_stack_config,
-                fetcher_factory=env.config_cache.fetcher_factory(
+                source_config=env.config_cache.make_source_config(
                     env.service_configurer,
                     ip_address_of_with_fallback,
                     env.passive_service_name_config,

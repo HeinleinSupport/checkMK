@@ -27,8 +27,8 @@ from cmk.utils.ip_lookup import IPStackConfig
 from cmk.utils.tags import ComputedDataSources, TagID
 
 from ._api import Source
+from ._source_config import SourceConfig
 from ._sources import (
-    FetcherFactory,
     IPMISource,
     MetricBackendSource,
     MgmtSNMPSource,
@@ -53,7 +53,7 @@ class SourceBuilder:
         ip_stack_config: IPStackConfig,
         *,
         simulation_mode: bool,
-        fetcher_factory: FetcherFactory,
+        source_config: SourceConfig,
         force_snmp_cache_refresh: bool = False,
         snmp_backend: SNMPBackendEnum,
         file_cache_options: FileCacheOptions,
@@ -75,7 +75,7 @@ class SourceBuilder:
         self.plugins: Final = plugins
         self.host_name: Final = host_name
         self.host_ip_family: Final = host_ip_family
-        self.fetcher_factory: Final = fetcher_factory
+        self._source_config: Final = source_config
         self.ipaddress: Final = ipaddress
         self.ip_stack_config: Final = ip_stack_config
         self.simulation_mode: Final = simulation_mode
@@ -112,7 +112,7 @@ class SourceBuilder:
             self._add(MissingSourceSource(self.host_name, self.ipaddress, "API/agent"))
 
         if TagID("no-piggyback") not in self.tag_list:
-            self._add(PiggybackSource(self.fetcher_factory, self.host_name, self.ipaddress))
+            self._add(PiggybackSource(self.host_name, self.ipaddress))
 
         self._initialize_snmp_based()
         self._initialize_mgmt_boards()
@@ -155,7 +155,7 @@ class SourceBuilder:
         def make_special_agents() -> Iterable[Source]:
             for agentname, agent_data in self.special_agent_command_lines:
                 yield SpecialAgentSource(
-                    self.fetcher_factory,
+                    self._source_config,
                     self.host_name,
                     self.ipaddress,
                     max_age=self.max_age_agent,
@@ -213,7 +213,7 @@ class SourceBuilder:
             # configuration error with SNMP.  We should try to find a better solution in the future.
             self._add(
                 SNMPSource(
-                    self.fetcher_factory,
+                    self._source_config,
                     self.plugins,
                     self.host_name,
                     self.host_ip_family,
@@ -234,7 +234,7 @@ class SourceBuilder:
 
         self._add(
             SNMPSource(
-                self.fetcher_factory,
+                self._source_config,
                 self.plugins,
                 self.host_name,
                 self.host_ip_family,
@@ -260,7 +260,7 @@ class SourceBuilder:
             case "snmp":
                 self._add(
                     MgmtSNMPSource(
-                        self.fetcher_factory,
+                        self._source_config,
                         self.plugins,
                         self.host_name,
                         self.host_ip_family,
@@ -273,7 +273,7 @@ class SourceBuilder:
             case "ipmi":
                 self._add(
                     IPMISource(
-                        self.fetcher_factory,
+                        self._source_config,
                         self.host_name,
                         self.management_ip,
                         max_age=self.max_age_agent,
@@ -291,7 +291,7 @@ class SourceBuilder:
         if self.datasource_programs:
             self._add(
                 ProgramSource(
-                    self.fetcher_factory,
+                    self._source_config,
                     self.host_name,
                     self.host_ip_family,
                     self.ipaddress,
@@ -325,7 +325,7 @@ class SourceBuilder:
                     return
                 self._add(
                     TCPSource(
-                        self.fetcher_factory,
+                        self._source_config,
                         self.host_name,
                         self.host_ip_family,
                         self.ipaddress,

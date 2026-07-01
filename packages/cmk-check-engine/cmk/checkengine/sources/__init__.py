@@ -5,7 +5,7 @@
 
 from ._api import Source as Source
 from ._builder import SourceBuilder as SourceBuilder
-from ._sources import FetcherFactory as FetcherFactory
+from ._source_config import SourceConfig as SourceConfig
 from ._sources import IPMISource as IPMISource
 from ._sources import MgmtSNMPSource as MgmtSNMPSource
 from ._sources import MissingIPSource as MissingIPSource

@@ -250,7 +250,7 @@ def dump_host(
                 primary_family,
                 ipaddress,
                 ip_stack_config,
-                fetcher_factory=config_cache.fetcher_factory(
+                source_config=config_cache.make_source_config(
                     config_cache.make_service_configurer(
                         plugins.check_plugins, service_name_config
                     ),

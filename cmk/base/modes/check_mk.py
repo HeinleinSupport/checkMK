@@ -734,7 +734,7 @@ def _mode_dump_agent(
             ip_family,
             ipaddress,
             ip_stack_config,
-            fetcher_factory=config_cache.fetcher_factory(
+            source_config=config_cache.make_source_config(
                 config_cache.make_service_configurer(plugins.check_plugins, service_name_config),
                 ip_address_of,
                 service_name_config,
@@ -2193,7 +2193,7 @@ def _mode_check_discovery(
         make_trigger=lambda relay_id: app.make_fetcher_trigger(
             relay_id, latest_config_path / RELATIVE_PATH_TRUSTED_CAS
         ),
-        factory=config_cache.fetcher_factory(
+        source_config=config_cache.make_source_config(
             config_cache.make_service_configurer(plugins.check_plugins, service_name_config),
             ip_address_of,
             service_name_config,
@@ -2583,7 +2583,7 @@ def _mode_discover(app: CheckmkBaseApp, options: _DiscoveryOptions, args: list[s
         make_trigger=lambda relay_id: app.make_fetcher_trigger(
             relay_id, cmk.utils.paths.trusted_ca_file
         ),
-        factory=config_cache.fetcher_factory(
+        source_config=config_cache.make_source_config(
             config_cache.make_service_configurer(plugins.check_plugins, service_name_config),
             ip_address_of,
             service_name_config,
@@ -2864,7 +2864,7 @@ def run_checking(
         host_tags,
         get_relay_id=lambda hn: config.get_relay_id(label_manager.labels_of_host(hn)),
         make_trigger=lambda relay_id: app.make_fetcher_trigger(relay_id, trusted_ca_file),
-        factory=config_cache.fetcher_factory(
+        source_config=config_cache.make_source_config(
             service_configurer,
             ip_address_of,
             service_name_config,
@@ -3171,7 +3171,7 @@ def _mode_inventory(app: CheckmkBaseApp, options: _InventoryOptions, args: list[
         make_trigger=lambda relay_id: app.make_fetcher_trigger(
             relay_id, cmk.utils.paths.trusted_ca_file
         ),
-        factory=config_cache.fetcher_factory(
+        source_config=config_cache.make_source_config(
             config_cache.make_service_configurer(plugins.check_plugins, service_name_config),
             ip_address_of,
             service_name_config,
@@ -3510,7 +3510,7 @@ def _mode_inventorize_marked_hosts(app: CheckmkBaseApp, options: Mapping[str, ob
         make_trigger=lambda relay_id: app.make_fetcher_trigger(
             relay_id, latest_config_path / RELATIVE_PATH_TRUSTED_CAS
         ),
-        factory=config_cache.fetcher_factory(
+        source_config=config_cache.make_source_config(
             config_cache.make_service_configurer(plugins.check_plugins, service_name_config),
             ip_address_of,
             service_name_config,
