@@ -605,6 +605,7 @@ class SimpleEditMode[T: Mapping[str, Any]](_SimpleWatoModeBase[T]):
         elements: dict[str, form_specs.DictElement[Any]] = {}
         if self._new:
             elements["ident"] = form_specs.DictElement(
+                required=True,
                 parameter_form=form_specs.String(
                     title=Title("Unique ID"),
                     help_text=Help(
@@ -650,6 +651,7 @@ class SimpleEditMode[T: Mapping[str, Any]](_SimpleWatoModeBase[T]):
             )
 
         elements["title"] = form_specs.DictElement(
+            required=True,
             parameter_form=form_specs.String(
                 title=Title("Title"),
                 help_text=Help("Name your %s for easy recognition.")
@@ -663,6 +665,7 @@ class SimpleEditMode[T: Mapping[str, Any]](_SimpleWatoModeBase[T]):
             ),
         )
         elements["comment"] = form_specs.DictElement(
+            required=True,
             parameter_form=CommentTextArea(
                 title=Title("Comment"),
                 help_text=Help(
@@ -681,6 +684,7 @@ class SimpleEditMode[T: Mapping[str, Any]](_SimpleWatoModeBase[T]):
                 )
 
         elements["docu_url"] = form_specs.DictElement(
+            required=True,
             parameter_form=form_specs.String(
                 title=Title("Documentation URL"),
                 help_text=Help(
@@ -698,6 +702,7 @@ class SimpleEditMode[T: Mapping[str, Any]](_SimpleWatoModeBase[T]):
 
         if self._mode_type.can_be_disabled():
             elements["disabled"] = form_specs.DictElement(
+                required=True,
                 parameter_form=form_specs.BooleanChoice(
                     title=Title("Configuration activation"),
                     help_text=Help(
@@ -711,7 +716,7 @@ class SimpleEditMode[T: Mapping[str, Any]](_SimpleWatoModeBase[T]):
 
         if self._mode_type.is_site_specific():
             elements["site"] = form_specs.DictElement(
-                parameter_form=self._mode_type.site_form_spec()
+                required=True, parameter_form=self._mode_type.site_form_spec()
             )
 
         return elements
