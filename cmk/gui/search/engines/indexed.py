@@ -37,24 +37,6 @@ from cmk.gui.i18n import (
 from cmk.gui.logged_in import user
 from cmk.gui.pages import get_page_handler, PageContext
 from cmk.gui.permissions import permission_registry
-from cmk.gui.search.match_items import (
-    ABCMatchItemGenerator as ABCMatchItemGenerator,
-)
-from cmk.gui.search.match_items import (
-    match_item_generator_registry as match_item_generator_registry,
-)
-from cmk.gui.search.match_items import (
-    MatchItem as MatchItem,
-)
-from cmk.gui.search.match_items import (
-    MatchItemGeneratorRegistry as MatchItemGeneratorRegistry,
-)
-from cmk.gui.search.match_items import (
-    MatchItems as MatchItems,
-)
-from cmk.gui.search.match_items import (
-    MatchItemsByTopic as MatchItemsByTopic,
-)
 from cmk.gui.session_context import SuperUserContext
 from cmk.gui.type_defs import SearchQuery, SearchResult
 from cmk.gui.utils.loading_transition import LoadingTransition
@@ -73,6 +55,11 @@ from cmk.utils.setup_search_index import (
 )
 
 from ..legacy_helpers import transform_legacy_results_to_unified
+from ..match_items import (
+    ABCMatchItemGenerator,
+    match_item_generator_registry,
+    MatchItemGeneratorRegistry,
+)
 from ..routing import CompositePermissionsHandler
 from ..type_defs import SearchPermissionsHandler, VisibilityCheck
 
