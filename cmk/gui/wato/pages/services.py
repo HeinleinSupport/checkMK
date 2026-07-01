@@ -734,7 +734,10 @@ class ModeAjaxServiceDiscovery(AjaxPage):
             if initial_action == DiscoveryAction.REFRESH:
                 return (_waiting_message_refresh(host_name)), "waiting"
 
-            return _("%s running for %s") % (job_title, duration_txt), "waiting"
+            return _("%(job_title)s running for %(duration_txt)s") % {
+                "job_title": job_title,
+                "duration_txt": duration_txt,
+            }, "waiting"
 
         if discovery_result.job_status["state"] == JobStatusStates.EXCEPTION:
             return _(
@@ -753,7 +756,12 @@ class ModeAjaxServiceDiscovery(AjaxPage):
 
         if discovery_result.job_status["state"] == JobStatusStates.STOPPED:
             messages.append(
-                _("%s was stopped after %s at %s.") % (job_title, duration_txt, finished_txt)
+                _("%(job_title)s was stopped after %(duration_txt)s at %(finished_txt)s.")
+                % {
+                    "job_title": job_title,
+                    "duration_txt": duration_txt,
+                    "finished_txt": finished_txt,
+                }
             )
 
         progress_update_log = discovery_result.job_status["loginfo"]["JobProgressUpdate"]
@@ -1067,26 +1075,28 @@ class DiscoveryPageRenderer:
                 case DiscoveryState.UNDECIDED:
                     messages.append(
                         _(
-                            "%d service(s) moved to undecided services table. Monitoring is disabled."
+                            "%(num)d service(s) moved to undecided services table. Monitoring is disabled."
                         )
-                        % num
+                        % {"num": num}
                         if use_plural
                         else _("Service moved to undecided services table. Monitoring is disabled.")
                     )
                 case DiscoveryState.MONITORED:
                     messages.append(
-                        _("%d service(s) moved to monitored services table. Monitoring is enabled.")
-                        % num
+                        _(
+                            "%(num)d service(s) moved to monitored services table. Monitoring is enabled."
+                        )
+                        % {"num": num}
                         if use_plural
                         else _("Service moved to monitored services table. Monitoring is enabled.")
                     )
                 case DiscoveryState.VANISHED:
                     messages.append(
                         _(
-                            "%d service(s) moved to vanished services table. "
+                            "%(num)d service(s) moved to vanished services table. "
                             "Monitoring is enabled, but service is in status UNKNOWN."
                         )
-                        % num
+                        % {"num": num}
                         if use_plural
                         else _(
                             "Service moved to vanished services table. "
@@ -1095,14 +1105,16 @@ class DiscoveryPageRenderer:
                     )
                 case DiscoveryState.IGNORED:
                     messages.append(
-                        _("%d service(s) moved to disabled services table. Monitoring is disabled.")
-                        % num
+                        _(
+                            "%(num)d service(s) moved to disabled services table. Monitoring is disabled."
+                        )
+                        % {"num": num}
                         if use_plural
                         else _("Service moved to disabled services table. Monitoring is disabled.")
                     )
                 case DiscoveryState.REMOVED:
                     messages.append(
-                        _("%d service(s) removed. Monitoring is disabled.") % num
+                        _("%(num)d service(s) removed. Monitoring is disabled.") % {"num": num}
                         if use_plural
                         else _("Service removed. Monitoring is disabled.")
                     )
@@ -1538,7 +1550,7 @@ class DiscoveryPageRenderer:
                 % len(added_parameters)
                 + html.render_static_icon(
                     StaticIcon(IconNames.search),
-                    title=_("New: %r") % added_parameters,
+                    title=_("New: %(added_parameters)r") % {"added_parameters": added_parameters},
                     css_classes=["iconbutton"],
                 )
             )
@@ -1552,7 +1564,8 @@ class DiscoveryPageRenderer:
                 % len(removed_parameters)
                 + html.render_static_icon(
                     StaticIcon(IconNames.search),
-                    title=_("Removed: %r") % removed_parameters,
+                    title=_("Removed: %(removed_parameters)r")
+                    % {"removed_parameters": removed_parameters},
                     css_classes=["iconbutton"],
                 )
             )
@@ -1860,7 +1873,7 @@ class DiscoveryPageRenderer:
             raise ValueError(f"descr_target {descr_target} not known")
         html.icon_button(
             url="",
-            title=_("Move to %s services") % descr_target,
+            title=_("Move to %(descr_target)s services") % {"descr_target": descr_target},
             icon=icon,
             class_=button_classes,
             onclick=_start_js_call(
@@ -2476,11 +2489,11 @@ def _page_menu_service_configuration_entries(
 
 
 def _waiting_message_refresh(host_name: HostName) -> str:
-    return _("Rescanning services of host %s.") % host_name
+    return _("Rescanning services of host %(host_name)s.") % {"host_name": host_name}
 
 
 def _waiting_message_fix_all(host_name: HostName) -> str:
-    return _("Accepting all services of host %s.") % host_name
+    return _("Accepting all services of host %(host_name)s.") % {"host_name": host_name}
 
 
 class BulkEntry(NamedTuple):
