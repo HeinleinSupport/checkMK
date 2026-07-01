@@ -12,14 +12,12 @@ from collections.abc import Mapping, Sequence
 from logging import Logger
 from pathlib import Path
 
-from cmk.ccc.config_path import VersionedConfigPath
 from cmk.ccc.exceptions import MKGeneralException
 from cmk.ccc.hostaddress import HostName
 from cmk.ccc.i18n import _
 from cmk.ccc.store import DimSerializer, load_object_from_file
 from cmk.utils.labels import Labels
 from cmk.utils.notify_types import NotificationContext as NotificationContext
-from cmk.utils.paths import omd_root
 from cmk.utils.servicename import ServiceName
 from cmk.utils.tags import TagGroupID, TagID
 
@@ -162,9 +160,8 @@ def create_notify_host_files(
 
 def read_notify_host_file(
     host_name: HostName,
+    config_path: Path,
 ) -> NotificationHostConfig:
-    # FIXME: using "latest" here is subject to race conditions
-    config_path = VersionedConfigPath.make_latest_path(omd_root)
     host_file_path: Path = make_notify_host_file_path(config_path, host_name)
     return NotificationHostConfig(
         **load_object_from_file(

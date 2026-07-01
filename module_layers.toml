@@ -1537,7 +1537,6 @@ allows = [
   "cmk.ccc.store",
   "cmk.utils.labels",
   "cmk.utils.notify_types",
-  "cmk.utils.paths",
   "cmk.utils.servicename",
   "cmk.utils.tags",
 ]

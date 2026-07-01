@@ -25,6 +25,7 @@ import livestatus
 
 import cmk.ccc.daemon
 import cmk.ccc.debug
+from cmk.ccc.config_path import VersionedConfigPath
 from cmk.ccc.hostaddress import HostName
 from cmk.ccc.regex import regex
 from cmk.ccc.site import omd_site
@@ -483,7 +484,9 @@ def complete_raw_context(
 
 
 def _update_enriched_context_from_notify_host_file(enriched_context: EnrichedEventContext) -> None:
-    notify_host_config = read_notify_host_file(HostName(enriched_context["HOSTNAME"]))
+    # FIXME: using "latest" here is subject to race conditions
+    config_path = VersionedConfigPath.make_latest_path(cmk.utils.paths.omd_root)
+    notify_host_config = read_notify_host_file(HostName(enriched_context["HOSTNAME"]), config_path)
     for k, v in notify_host_config.host_labels.items():
         # Dynamically added keys...
         enriched_context["HOSTLABEL_" + k] = v  # type: ignore[literal-required]

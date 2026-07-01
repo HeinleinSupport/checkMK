@@ -53,7 +53,7 @@ def test_create_notify_host_files(tmp_path: Path, monkeypatch: MonkeyPatch) -> N
         "make_notify_host_file_path",
         lambda config_path, host_name: test_file,
     )
-    assert read_notify_host_file(host_name) == NHC_EXPECTED
+    assert read_notify_host_file(host_name, tmp_path) == NHC_EXPECTED
 
 
 def test_build_descendants_map_simple_tree() -> None:
