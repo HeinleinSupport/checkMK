@@ -85,6 +85,7 @@ class ModeBulkDiscovery(WatoMode):
             request.var("folder"),
             request.get_ascii_input("host"),
             acting_user=user,
+            request=request,
         )
 
     def _get_bulk_discovery_params(self) -> None:

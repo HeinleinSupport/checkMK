@@ -52,7 +52,7 @@ from cmk.gui.groups import GroupName
 from cmk.gui.hooks import request_memoize
 from cmk.gui.htmllib.generator import HTMLWriter
 from cmk.gui.htmllib.html import html
-from cmk.gui.http import request
+from cmk.gui.http import Request, request
 from cmk.gui.i18n import _, _l
 from cmk.gui.log import logger
 from cmk.gui.logged_in import LoggedInUser
@@ -1220,6 +1220,7 @@ def disk_or_search_folder_from_request(
     host_name: str | None = None,
     *,
     acting_user: LoggedInUser,
+    request: Request,
 ) -> Folder | SearchFolder:
     """Return `Folder` that is specified by the current URL
 
@@ -1230,14 +1231,16 @@ def disk_or_search_folder_from_request(
     the later case we call search_folder_from_request() to let it decide whether
     this is a host search. This method has to return a folder in all cases.
     """
-    search_folder = _search_folder_from_request(tree, acting_user)
+    search_folder = _search_folder_from_request(tree, acting_user, request)
     if search_folder:
         return search_folder
 
     return folder_from_request(tree, var_folder, host_name)
 
 
-def _search_folder_from_request(tree: FolderTree, acting_user: LoggedInUser) -> SearchFolder | None:
+def _search_folder_from_request(
+    tree: FolderTree, acting_user: LoggedInUser, request: Request
+) -> SearchFolder | None:
     if request.has_var("host_search"):
         base_folder = tree.folder(request.get_str_input_mandatory("folder", ""))
         search_criteria = {
@@ -1250,15 +1253,19 @@ def _search_folder_from_request(tree: FolderTree, acting_user: LoggedInUser) -> 
                 varprefix="host_search_",
             ),
         }
-        return SearchFolder(tree, base_folder, search_criteria, acting_user)
+        return SearchFolder(tree, base_folder, search_criteria, acting_user, request)
     return None
 
 
 def disk_or_search_base_folder_from_request(
-    var_folder: str | None = None, host_name: str | None = None, *, acting_user: LoggedInUser
+    var_folder: str | None = None,
+    host_name: str | None = None,
+    *,
+    acting_user: LoggedInUser,
+    request: Request,
 ) -> Folder:
     disk_or_search_folder = disk_or_search_folder_from_request(
-        folder_tree(), var_folder, host_name, acting_user=acting_user
+        folder_tree(), var_folder, host_name, acting_user=acting_user, request=request
     )
     if isinstance(disk_or_search_folder, Folder):
         return disk_or_search_folder
@@ -1266,6 +1273,17 @@ def disk_or_search_base_folder_from_request(
     folder = disk_or_search_folder.parent()
     assert isinstance(folder, Folder)
     return folder
+
+
+def _makeuri_to_wato(vars_: HTTPVariables) -> str:
+    """Build a "wato.py" URL without depending on the request global proxy.
+
+    This is equivalent to ``urls.makeuri_contextless(request, vars_, filename="wato.py")``,
+    but does not need the request because the target file name is always known here.
+    """
+    if vars_:
+        return "wato.py?" + urls.urlencode_vars(vars_)
+    return "wato.py"
 
 
 class Folder:
@@ -1379,11 +1397,6 @@ class Folder:
 
     def parent(self) -> Folder | None:
         return self._parent
-
-    def is_current_folder(self) -> bool:
-        return self.is_same_as(
-            folder_from_request(self.tree, request.var("folder"), request.get_ascii_input("host"))
-        )
 
     def is_transitive_parent_of(self, maybe_child: Folder) -> bool:
         if self.is_same_as(maybe_child):
@@ -2051,11 +2064,7 @@ class Folder:
         return [
             HTMLWriter.render_a(
                 folder.title(),
-                href=urls.makeuri_contextless(
-                    request,
-                    [("mode", "folder"), ("folder", folder.path())],
-                    filename="wato.py",
-                ),
+                href=_makeuri_to_wato([("mode", "folder"), ("folder", folder.path())]),
             )
             for folder in parent_folder_chain(self) + [self]
         ]
@@ -2237,14 +2246,12 @@ class Folder:
                 backfolder = parent
             else:
                 backfolder = self
-        return urls.makeuri_contextless(
-            request,
+        return _makeuri_to_wato(
             [
                 ("mode", "editfolder"),
                 ("folder", self.path()),
                 ("backfolder", backfolder.path()),
-            ],
-            filename="wato.py",
+            ]
         )
 
     def locked(self) -> bool | str:
@@ -3204,6 +3211,7 @@ class SearchFolder:
         base_folder: Folder,
         criteria: SearchCriteria,
         acting_user: LoggedInUser,
+        request: Request,
     ) -> None:
         super().__init__()
         self.attributes: dict[str, Any] = {"meta_data": {}}
@@ -3213,6 +3221,9 @@ class SearchFolder:
         self._criteria = criteria
         self._base_folder = base_folder
         self._acting_user = acting_user
+        # Captured here only until the follow-up change threads the request into
+        # Folder.url(); then SearchFolder.url() takes it as a parameter and this can go.
+        self._request = request
         self._found_hosts: dict[HostName, Host] | None = None
         self._name = None
 
@@ -3277,7 +3288,7 @@ class SearchFolder:
 
         url_vars: HTTPVariables = [("host_search", "1"), *add_vars]
 
-        for varname, value in request.itervars():
+        for varname, value in self._request.itervars():
             if varname.startswith(("host_search_", "_change")):
                 url_vars.append((varname, value))
         return self.parent().url(url_vars)
@@ -3626,47 +3637,39 @@ class Host:
         return any(group in permitted_groups for group in user_.contact_groups)
 
     def edit_url(self) -> str:
-        return urls.makeuri_contextless(
-            request,
+        return _makeuri_to_wato(
             [
                 ("mode", "edit_host"),
                 ("folder", self.folder().path()),
                 ("host", self.name()),
-            ],
-            filename="wato.py",
+            ]
         )
 
     def params_url(self) -> str:
-        return urls.makeuri_contextless(
-            request,
+        return _makeuri_to_wato(
             [
                 ("mode", "object_parameters"),
                 ("folder", self.folder().path()),
                 ("host", self.name()),
-            ],
-            filename="wato.py",
+            ]
         )
 
     def services_url(self) -> str:
-        return urls.makeuri_contextless(
-            request,
+        return _makeuri_to_wato(
             [
                 ("mode", "inventory"),
                 ("folder", self.folder().path()),
                 ("host", self.name()),
-            ],
-            filename="wato.py",
+            ]
         )
 
     def clone_url(self) -> str:
-        return urls.makeuri_contextless(
-            request,
+        return _makeuri_to_wato(
             [
                 ("mode", "newcluster" if self.is_cluster() else "newhost"),
                 ("folder", self.folder().path()),
                 ("clone", self.name()),
-            ],
-            filename="wato.py",
+            ]
         )
 
     # .--------------------------------------------------------------------.
@@ -4121,14 +4124,14 @@ host_action_menu_registry = HostActionMenuRegistry()
 
 
 def ajax_popup_host_action_menu(ctx: PageContext) -> None:
-    hostname = request.get_validated_type_input_mandatory(HostName, "hostname")
+    hostname = ctx.request.get_validated_type_input_mandatory(HostName, "hostname")
     host = folder_tree().host(hostname)
     if host is None:
         html.show_error(_('"%(hostname)s" is not a valid host name') % {"hostname": hostname})
         return
 
     # Clone host
-    if request.get_str_input("show_clone_link"):
+    if ctx.request.get_str_input("show_clone_link"):
         html.open_a(href=host.clone_url())
         html.static_icon(StaticIcon(IconNames.insert))
         html.write_text_permissive(_("Clone host"))
@@ -4137,7 +4140,7 @@ def ajax_popup_host_action_menu(ctx: PageContext) -> None:
     form_name: str = "hosts"
 
     # Remove TLS registration
-    if request.get_str_input("show_remove_tls_link"):
+    if ctx.request.get_str_input("show_remove_tls_link"):
         remove_tls_options: dict[str, str | dict[str, str]] = confirmed_form_submit_options(
             title=_('Remove TLS registration of host "%(hostname)s"') % {"hostname": hostname},
             message=remove_tls_registration_help(),
@@ -4160,7 +4163,7 @@ def ajax_popup_host_action_menu(ctx: PageContext) -> None:
         html.close_a()
 
     for entry in host_action_menu_registry.values():
-        if request.get_str_input(entry.ident):
+        if ctx.request.get_str_input(entry.ident):
             entry.render(hostname, form_name)
 
 

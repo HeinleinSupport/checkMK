@@ -82,6 +82,7 @@ class ModeBulkEdit(WatoMode):
             request.var("folder"),
             request.get_ascii_input("host"),
             acting_user=user,
+            request=request,
         )
 
     @override
@@ -203,6 +204,7 @@ class ModeBulkCleanup(WatoMode):
             request.var("folder"),
             request.get_ascii_input("host"),
             acting_user=user,
+            request=request,
         )
 
     @override

@@ -146,6 +146,7 @@ class ModeParentScan(WatoMode):
             request.var("folder"),
             request.get_ascii_input("host"),
             acting_user=user,
+            request=request,
         )
 
     @override
@@ -369,7 +370,10 @@ class ModeParentScan(WatoMode):
         html.open_ul()
 
         disk_folder = disk_or_search_base_folder_from_request(
-            request.var("folder"), request.get_ascii_input("host"), acting_user=user
+            request.var("folder"),
+            request.get_ascii_input("host"),
+            acting_user=user,
+            request=request,
         )
         html.radiobutton(
             "where",

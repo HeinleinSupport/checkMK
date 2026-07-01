@@ -248,7 +248,7 @@ class ModeFolder(WatoMode):
             host_name = None
         self._tree = folder_tree()
         self._folder = disk_or_search_folder_from_request(
-            self._tree, request.var("folder"), host_name, acting_user=user
+            self._tree, request.var("folder"), host_name, acting_user=user, request=request
         )
 
         if request.has_var("_show_host_tags"):
