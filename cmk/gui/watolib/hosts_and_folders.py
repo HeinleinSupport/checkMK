@@ -27,7 +27,7 @@ from dataclasses import dataclass
 from enum import Enum
 from functools import cached_property
 from pathlib import Path
-from typing import Any, Final, Literal, NamedTuple, NotRequired, Protocol, Self, TypedDict
+from typing import Any, Final, Literal, NamedTuple, NotRequired, Self, TypedDict
 
 from redis.client import Pipeline
 
@@ -832,22 +832,6 @@ class EffectiveAttributes:
         self._effective_attributes = None
 
 
-class FolderProtocol(Protocol):
-    def is_disk_folder(self) -> bool: ...
-
-    def is_search_folder(self) -> bool: ...
-
-    def breadcrumb(self) -> Breadcrumb: ...
-
-    def has_host(self, host_name: HostName) -> bool: ...
-
-    def has_hosts(self) -> bool: ...
-
-    def load_host(self, host_name: HostName) -> Host: ...
-
-    def host_validation_errors(self) -> dict[HostName, list[str]]: ...
-
-
 def rename_host_in_list(thelist: list[str], oldname: str, newname: str) -> bool:
     """Replace occurrences of *oldname* with *newname* (also for negated entries).
 
@@ -1284,7 +1268,7 @@ def disk_or_search_base_folder_from_request(
     return folder
 
 
-class Folder(FolderProtocol):
+class Folder:
     """This class represents a Setup folder that contains other folders and hosts."""
 
     @classmethod
@@ -1415,9 +1399,6 @@ class Folder(FolderProtocol):
 
     def is_root(self) -> bool:
         return not self.has_parent()
-
-    def is_disk_folder(self) -> bool:
-        return True
 
     def _load_hosts_on_demand(self) -> None:
         if self._hosts is None:
@@ -3214,7 +3195,7 @@ def _get_cgconf_from_attributes(attributes: HostAttributes) -> HostContactGroupS
     )
 
 
-class SearchFolder(FolderProtocol):
+class SearchFolder:
     """A virtual folder representing the result of a search."""
 
     def __init__(
@@ -3240,12 +3221,6 @@ class SearchFolder(FolderProtocol):
 
     def parent(self) -> Folder:
         return self._base_folder
-
-    def is_disk_folder(self) -> bool:
-        return False
-
-    def is_search_folder(self) -> bool:
-        return True
 
     def title(self) -> str:
         return _("Search results for folder %s") % self._base_folder.title()

@@ -267,9 +267,8 @@ class ModeFolder(WatoMode):
 
     @override
     def page_menu(self, config: Config, breadcrumb: Breadcrumb) -> PageMenu:
-        if not self._folder.is_disk_folder():
+        if isinstance(self._folder, SearchFolder):
             return self._search_folder_page_menu(breadcrumb)
-        assert not isinstance(self._folder, SearchFolder)
 
         has_hosts = self._folder.has_hosts()
 
@@ -852,7 +851,7 @@ class ModeFolder(WatoMode):
             self._show_hosts(config)
 
         if not self._folder.has_hosts():
-            if self._folder.is_search_folder():
+            if isinstance(self._folder, SearchFolder):
                 html.show_message(_("No matching hosts found."))
             elif not self._folder.has_subfolders() and self._folder.permissions.may("write", user):
                 self._show_empty_folder_menu()
@@ -1131,7 +1130,7 @@ class ModeFolder(WatoMode):
                     and user.may("wato.move_hosts")
                 ):
                     colspan += 1
-                if self._folder.is_search_folder():
+                if isinstance(self._folder, SearchFolder):
                     colspan += 1
 
                 contact_group_names = load_contact_group_information()
@@ -1301,7 +1300,7 @@ class ModeFolder(WatoMode):
             html.write_html(show_all_code)
 
         # Located in folder
-        if self._folder.is_search_folder():
+        if isinstance(self._folder, SearchFolder):
             table.cell(_("Folder"))
             html.a(host.folder().alias_path(), href=host.folder().url())
 

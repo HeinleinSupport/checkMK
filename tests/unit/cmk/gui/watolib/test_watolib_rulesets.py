@@ -64,7 +64,7 @@ def fixture_allrulesets_with_rules_in_multiple_files() -> AllRulesets:
     tree = folder_tree()
     root_folder = tree.root_folder()
     sub_folder = Folder(
-        tree=tree,  # type: ignore[abstract]
+        tree=tree,
         name="Sub",
         folder_id="sub",
         folder_path="sub",
