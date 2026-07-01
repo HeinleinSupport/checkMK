@@ -18,7 +18,7 @@ def _parameter_valuespec_skype_conferencing() -> Dictionary:
             (
                 "incomplete_calls",
                 Dictionary(
-                    title=_("Incomplete calls"),
+                    title=_("Incomplete Calls"),
                     elements=[
                         (
                             "upper",
@@ -44,7 +44,7 @@ def _parameter_valuespec_skype_conferencing() -> Dictionary:
             (
                 "create_conference_latency",
                 Dictionary(
-                    title=_("Create conference latency"),
+                    title=_("Create Conference Latency"),
                     elements=[
                         (
                             "upper",

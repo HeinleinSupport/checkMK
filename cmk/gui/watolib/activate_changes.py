@@ -3099,9 +3099,9 @@ def get_pending_changes_tooltip(changes_info: PendingChangesInfo) -> str:
                 else _("Currently, there are %s not yet activated.") % n_changes
             )
             + "\n"
-            + _("Click the icon to see details.")
+            + _("Click here for details.")
         )
-    return _("Click this icon to see the activation status per site.")
+    return _("Click here to see the activation status per site.")
 
 
 def get_pending_changes(sites: Sequence[SiteId]) -> dict[str, ActivationChange]:

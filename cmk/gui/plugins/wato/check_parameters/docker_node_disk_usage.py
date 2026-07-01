@@ -17,9 +17,9 @@ from cmk.gui.valuespec import Dictionary, DropdownChoice, Filesize, Integer, Tup
 def _item_spec_docker_node_disk_usage() -> DropdownChoice:
     return DropdownChoice(
         title=_("Type"),
-        help=_("Either containers, images, local volumes or build cache"),
+        help=_("Either Containers, Images, Local Volumes or Build Cache"),
         choices=[
-            ("buildcache", _("Build cache")),
+            ("buildcache", _("Build Cache")),
             ("containers", _("Containers")),
             ("images", _("Images")),
             ("volumes", _("Local Volumes")),

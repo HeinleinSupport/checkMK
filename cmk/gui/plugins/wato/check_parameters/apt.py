@@ -40,7 +40,7 @@ def _parameter_form_spec_apt() -> Dictionary:
 
 rule_spec_apt = CheckParameters(
     name="apt",
-    title=Title("APT updates"),
+    title=Title("APT Updates"),
     topic=Topic.OPERATING_SYSTEM,
     parameter_form=_parameter_form_spec_apt,
     condition=HostCondition(),

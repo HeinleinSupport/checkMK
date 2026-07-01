@@ -44,7 +44,7 @@ def _parameter_form_spec_battery() -> Dictionary:
 
 rule_spec_battery = CheckParameters(
     name="battery",
-    title=Title("Battery levels"),
+    title=Title("Battery Levels"),
     topic=Topic.ENVIRONMENTAL,
     parameter_form=_parameter_form_spec_battery,
     condition=HostAndItemCondition(item_title=Title("Sensor name")),

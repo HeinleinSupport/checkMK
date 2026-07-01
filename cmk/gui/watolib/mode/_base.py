@@ -79,7 +79,7 @@ class WatoMode[RequestOK](abc.ABC):
         return Error(None)
 
     def title(self) -> str:
-        return _("(untitled module)")
+        return _("(Untitled module)")
 
     # Currently only needed for a special Setup module "user_notifications_p" that
     # is not part of the Setup main menu but the user menu.

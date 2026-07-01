@@ -489,7 +489,7 @@ class ModeDiagnostics(WatoMode[object]):
                 FixedValue(
                     value=True,
                     totext="",
-                    title=_("Checkmk overview"),
+                    title=_("Checkmk Overview"),
                     help=_(
                         "Checkmk agent, number, version and edition of sites, cluster host; "
                         "number of hosts, services, CMK Helper, Live Helper, "
@@ -504,7 +504,7 @@ class ModeDiagnostics(WatoMode[object]):
                 FixedValue(
                     value=True,
                     totext="",
-                    title=_("Crash reports"),
+                    title=_("Crash Reports"),
                     help=_(
                         "The latest crash reports<br>"
                         "<b>Note</b>: Some crash reports may contain sensitive data like "
@@ -515,7 +515,7 @@ class ModeDiagnostics(WatoMode[object]):
             (
                 OPT_CHECKMK_LOG_FILES,
                 self._get_component_specific_checkmk_files_choices(
-                    _("Checkmk log files"),
+                    _("Checkmk Log files"),
                     [
                         (f, get_checkmk_file_info(f))
                         for f in self._checkmk_files_map[FILE_MAP_LOG.file_type]
@@ -525,7 +525,7 @@ class ModeDiagnostics(WatoMode[object]):
             (
                 OPT_CHECKMK_CONFIG_FILES,
                 self._get_component_specific_checkmk_files_choices(
-                    _("Checkmk configuration files"),
+                    _("Checkmk Configuration files"),
                     [
                         (f, get_checkmk_file_info(f))
                         for f in self._checkmk_files_map[FILE_MAP_CONFIG.file_type]
@@ -570,7 +570,7 @@ class ModeDiagnostics(WatoMode[object]):
             (
                 OPT_COMP_HOSTS_AND_FOLDERS,
                 Dictionary(
-                    title=_("Hosts and folders"),
+                    title=_("Hosts and Folders"),
                     help=_("Configuration files ('*.mk' or '*.conf') from etc/check_mk.%s")
                     % _CHECKMK_FILES_NOTE,
                     elements=self._get_component_specific_checkmk_files_elements(
@@ -653,7 +653,7 @@ class ModeDiagnostics(WatoMode[object]):
                     FixedValue(
                         value=True,
                         totext="",
-                        title=_("Metrics backend information"),
+                        title=_("Metric Backend Information"),
                         help=_("Infomation about the database schema, revision, and footprint"),
                     ),
                 )

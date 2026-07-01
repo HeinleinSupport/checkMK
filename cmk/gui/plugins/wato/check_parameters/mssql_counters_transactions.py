@@ -32,7 +32,7 @@ def _parameter_valuespec_mssql_counters_transactions() -> Dictionary:
             (
                 "write_transactions/sec",
                 Tuple(
-                    title=_("Write transactions / sec"),
+                    title=_("Write Transactions / sec"),
                     help=_("Number of write transactions per second."),
                     elements=[
                         Float(title=_("Warning at"), unit=_("transactions/sec")),
@@ -43,7 +43,7 @@ def _parameter_valuespec_mssql_counters_transactions() -> Dictionary:
             (
                 "tracked_transactions/sec",
                 Tuple(
-                    title=_("Tracked transactions / sec"),
+                    title=_("Tracked Transactions / sec"),
                     help=_("Number of tracked transactions per second."),
                     elements=[
                         Float(title=_("Warning at"), unit=_("transactions/sec")),
@@ -62,6 +62,6 @@ rulespec_registry.register(
         item_spec=mssql_item_spec_instance_tablespace,
         match_type="dict",
         parameter_valuespec=_parameter_valuespec_mssql_counters_transactions,
-        title=lambda: _("MSSQL transactions"),
+        title=lambda: _("MSSQL Transactions"),
     )
 )

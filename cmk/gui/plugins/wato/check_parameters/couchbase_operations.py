@@ -16,7 +16,7 @@ from cmk.gui.valuespec import Dictionary, Float, TextInput, Tuple
 
 def _parameter_valuespec_couchbase_operations() -> Dictionary:
     return Dictionary(
-        title=_("Couchbase operations"),
+        title=_("Couchbase Operations"),
         elements=[
             (
                 "ops",
@@ -43,7 +43,7 @@ rulespec_registry.register(
         match_type="dict",
         item_spec=lambda: TextInput(title=_("Node or bucket name")),
         parameter_valuespec=_parameter_valuespec_couchbase_operations,
-        title=lambda: _("Couchbase operations"),
+        title=lambda: _("Couchbase Operations"),
     )
 )
 
@@ -53,7 +53,7 @@ rulespec_registry.register(
         group=RulespecGroupCheckParametersApplications,
         match_type="dict",
         parameter_valuespec=_parameter_valuespec_couchbase_operations,
-        title=lambda: _("Couchbase total node operations"),
+        title=lambda: _("Couchbase Total Node Operations"),
     )
 )
 
@@ -63,6 +63,6 @@ rulespec_registry.register(
         group=RulespecGroupCheckParametersApplications,
         match_type="dict",
         parameter_valuespec=_parameter_valuespec_couchbase_operations,
-        title=lambda: _("Couchbase total bucket operations"),
+        title=lambda: _("Couchbase Total Bucket Operations"),
     )
 )

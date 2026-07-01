@@ -14,7 +14,7 @@ from cmk.gui.valuespec import Dictionary, MonitoringState
 
 def _parameter_valuespec_f5_bigip_cluster_v11() -> Dictionary:
     return Dictionary(
-        title=_("Interpretation of config sync status"),
+        title=_("Interpretation of Config Sync Status"),
         elements=[
             ("0", MonitoringState(title="Unknown", default_value=3)),
             ("1", MonitoringState(title="Syncing", default_value=0)),

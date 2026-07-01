@@ -20,7 +20,7 @@ def _parameter_valuespec_checkpoint_packets() -> Dictionary:
             (
                 "accepted",
                 Levels(
-                    title=_("Maximum rate of accepted packets"),
+                    title=_("Maximum Rate of Accepted Packets"),
                     default_value=None,
                     default_levels=(100000, 200000),
                     unit="pkts/sec",
@@ -29,7 +29,7 @@ def _parameter_valuespec_checkpoint_packets() -> Dictionary:
             (
                 "rejected",
                 Levels(
-                    title=_("Maximum rate of rejected packets"),
+                    title=_("Maximum Rate of Rejected Packets"),
                     default_value=None,
                     default_levels=(100000, 200000),
                     unit="pkts/sec",
@@ -38,7 +38,7 @@ def _parameter_valuespec_checkpoint_packets() -> Dictionary:
             (
                 "dropped",
                 Levels(
-                    title=_("Maximum rate of dropped packets"),
+                    title=_("Maximum Rate of Dropped Packets"),
                     default_value=None,
                     default_levels=(100000, 200000),
                     unit="pkts/sec",
@@ -47,7 +47,7 @@ def _parameter_valuespec_checkpoint_packets() -> Dictionary:
             (
                 "logged",
                 Levels(
-                    title=_("Maximum rate of logged packets"),
+                    title=_("Maximum Rate of Logged Packets"),
                     default_value=None,
                     default_levels=(100000, 200000),
                     unit="pkts/sec",
@@ -56,7 +56,7 @@ def _parameter_valuespec_checkpoint_packets() -> Dictionary:
             (
                 "espencrypted",
                 Levels(
-                    title=_("Maximum rate of ESP encrypted packets"),
+                    title=_("Maximum Rate of ESP Encrypted Packets"),
                     default_value=None,
                     default_levels=(100000, 200000),
                     unit="pkts/sec",
@@ -65,7 +65,7 @@ def _parameter_valuespec_checkpoint_packets() -> Dictionary:
             (
                 "espdecrypted",
                 Levels(
-                    title=_("Maximum rate of ESP decrypted packets"),
+                    title=_("Maximum Rate of ESP Decrypted Packets"),
                     default_value=None,
                     default_levels=(100000, 200000),
                     unit="pkts/sec",
@@ -80,7 +80,7 @@ rulespec_registry.register(
         check_group_name="checkpoint_packets",
         group=RulespecGroupCheckParametersNetworking,
         parameter_valuespec=_parameter_valuespec_checkpoint_packets,
-        title=lambda: _("Check point firewall packet rates"),
+        title=lambda: _("Check Point firewall packet rates"),
     )
 )
 
@@ -143,6 +143,6 @@ rulespec_registry.register(
             allow_empty=True,
         ),
         parameter_valuespec=_parameter_valuespec_checkpoint_tunnels,
-        title=lambda: _("Check point tunnel status"),
+        title=lambda: _("Check Point tunnel status"),
     )
 )

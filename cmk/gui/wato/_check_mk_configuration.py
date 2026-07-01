@@ -1991,8 +1991,8 @@ ConfigVariableWATOHideHosttags = ConfigVariable(
     ident="wato_hide_hosttags",
     valuespec=lambda context: Checkbox(
         title=_("Hide host tags in Setup folder view"),
-        label=_("hide host tags"),
-        help=_("When enabled, host tags are no longer shown within the Setup folder view"),
+        label=_("hide hosttags"),
+        help=_("When enabled, hosttags are no longer shown within the Setup folder view"),
     ),
 )
 
@@ -2484,7 +2484,7 @@ def use_new_descriptions_for_valuespec(context: GlobalSettingsContext) -> ValueS
         ),
         (
             "barracuda_mailqueues",
-            Checkbox(title=_("Barracuda: mail queue"), label=_("Use the new service name")),
+            Checkbox(title=_("Barracuda: Mail queue"), label=_("Use the new service name")),
         ),
         (
             "brocade_sys_mem",
@@ -2560,19 +2560,19 @@ def use_new_descriptions_for_valuespec(context: GlobalSettingsContext) -> ValueS
         ("db2_mem", Checkbox(title=_("DB2 memory usage"), label=_("Use the new service name"))),
         (
             "df",
-            Checkbox(title=_("Used space in file systems"), label=_("Use the new service name")),
+            Checkbox(title=_("Used space in filesystems"), label=_("Use the new service name")),
         ),
         (
             "df_netapp",
             Checkbox(
-                title=_("NetApp Filers: Used space in file systems"),
+                title=_("NetApp Filers: Used Space in Filesystems"),
                 label=_("Use the new service name"),
             ),
         ),
         (
             "df_netapp32",
             Checkbox(
-                title=_("NetApp Filers: Used space in file system using 32-bit counters"),
+                title=_("NetApp Filers: Used space in Filesystem Using 32-Bit Counters"),
                 label=_("Use the new service name"),
             ),
         ),
@@ -2585,7 +2585,7 @@ def use_new_descriptions_for_valuespec(context: GlobalSettingsContext) -> ValueS
         ),
         (
             "enterasys_temp",
-            Checkbox(title=_("Enterasys switch: temperature"), label=_("Use the new service name")),
+            Checkbox(title=_("Enterasys Switch: Temperature"), label=_("Use the new service name")),
         ),
         (
             "esx_vsphere_datastores",
@@ -2608,7 +2608,7 @@ def use_new_descriptions_for_valuespec(context: GlobalSettingsContext) -> ValueS
         (
             "etherbox_temp",
             Checkbox(
-                title=_("Etherbox / MessPC: sensor temperature"),
+                title=_("Etherbox / MessPC: Sensor Temperature"),
                 label=_("Use the new service name"),
             ),
         ),
@@ -2628,12 +2628,12 @@ def use_new_descriptions_for_valuespec(context: GlobalSettingsContext) -> ValueS
         ),
         (
             "fortigate_node_memory",
-            Checkbox(title=_("FortiGate node memory"), label=_("Use the new service name")),
+            Checkbox(title=_("Fortigate node memory"), label=_("Use the new service name")),
         ),
         (
             "hr_fs",
             Checkbox(
-                title=_("Used space in file systems via SNMP"),
+                title=_("Used space in filesystems via SNMP"),
                 label=_("Use the new service name"),
             ),
         ),
@@ -2648,7 +2648,7 @@ def use_new_descriptions_for_valuespec(context: GlobalSettingsContext) -> ValueS
             "http",
             Checkbox(
                 title=_(
-                    "Check HTTP: use HTTPS instead of HTTP for SSL/TLS connections (deprecated/ineffective)"
+                    "Check HTTP: Use HTTPS instead of HTTP for SSL/TLS connections (Deprecated/ineffective)"
                 ),
                 label=_("Use the new service name"),
             ),
@@ -2667,39 +2667,39 @@ def use_new_descriptions_for_valuespec(context: GlobalSettingsContext) -> ValueS
         (
             "ibm_svc_mdiskgrp",
             Checkbox(
-                title=_("IBM SVC / Storwize V3700 / V7000: status and usage of MDisksGrps"),
+                title=_("IBM SVC / Storwize V3700 / V7000: Status and Usage of MDisksGrps"),
                 label=_("Use the new service name"),
             ),
         ),
         (
             "ibm_svc_system",
-            Checkbox(title=_("IBM SVC / V7000: system info"), label=_("Use the new service name")),
+            Checkbox(title=_("IBM SVC / V7000: System Info"), label=_("Use the new service name")),
         ),
         (
             "ibm_svc_systemstats_cache",
             Checkbox(
-                title=_("IBM SVC / V7000: cache usage in total"),
+                title=_("IBM SVC / V7000: Cache Usage in Total"),
                 label=_("Use the new service name"),
             ),
         ),
         (
             "ibm_svc_systemstats_disk_latency",
             Checkbox(
-                title=_("IBM SVC / V7000: latency for drives/MDisks/VDisks in total"),
+                title=_("IBM SVC / V7000: Latency for Drives/MDisks/VDisks in Total"),
                 label=_("Use the new service name"),
             ),
         ),
         (
             "ibm_svc_systemstats_diskio",
             Checkbox(
-                title=_("IBM SVC / V7000: disk throughput for drives/MDisks/VDisks in total"),
+                title=_("IBM SVC / V7000: Disk Throughput for Drives/MDisks/VDisks in Total"),
                 label=_("Use the new service name"),
             ),
         ),
         (
             "ibm_svc_systemstats_iops",
             Checkbox(
-                title=_("IBM SVC / V7000: I/O operations/sec for drives/MDisks/VDisks in total"),
+                title=_("IBM SVC / V7000: IO operations/sec for Drives/MDisks/VDisks in Total"),
                 label=_("Use the new service name"),
             ),
         ),
@@ -2710,7 +2710,7 @@ def use_new_descriptions_for_valuespec(context: GlobalSettingsContext) -> ValueS
         (
             "innovaphone_temp",
             Checkbox(
-                title=_("Innovaphone Gateway: current temperature"),
+                title=_("Innovaphone Gateway: Current Temperature"),
                 label=_("Use the new service name"),
             ),
         ),
@@ -2764,14 +2764,14 @@ def use_new_descriptions_for_valuespec(context: GlobalSettingsContext) -> ValueS
         (
             "megaraid_bbu",
             Checkbox(
-                title=_("LSI MegaRAID: Battery backup unit"),
+                title=_("LSI MegaRAID: Battery Backup Unit"),
                 label=_("Use the new service name"),
             ),
         ),
         (
             "mem_used",
             Checkbox(
-                title=_("Main memory usage (Unix / other devices)"),
+                title=_("Main memory usage (UNIX / Other Devices)"),
                 label=_("Use the new service name"),
             ),
         ),
@@ -2784,69 +2784,69 @@ def use_new_descriptions_for_valuespec(context: GlobalSettingsContext) -> ValueS
         ),
         (
             "mknotifyd",
-            Checkbox(title=_("Notification spooler"), label=_("Use the new service name")),
+            Checkbox(title=_("Notification Spooler"), label=_("Use the new service name")),
         ),
         (
             "mknotifyd_connection",
             Checkbox(
-                title=_("Notification spooler connection"), label=_("Use the new service name")
+                title=_("Notification Spooler Connection"), label=_("Use the new service name")
             ),
         ),
         (
             "mssql_backup",
-            Checkbox(title=_("MSSQL backup"), label=_("Use the new service name")),
+            Checkbox(title=_("MSSQL Backup"), label=_("Use the new service name")),
         ),
         (
             "mssql_blocked_sessions",
-            Checkbox(title=_("MSSQL blocked sessions"), label=_("Use the new service name")),
+            Checkbox(title=_("MSSQL Blocked Sessions"), label=_("Use the new service name")),
         ),
         (
             "mssql_counters_cache_hits",
-            Checkbox(title=_("MSSQL cache hits"), label=_("Use the new service name")),
+            Checkbox(title=_("MSSQL Cache Hits"), label=_("Use the new service name")),
         ),
         (
             "mssql_counters_file_sizes",
-            Checkbox(title=_("MSSQL file sizes"), label=_("Use the new service name")),
+            Checkbox(title=_("MSSQL File Sizes"), label=_("Use the new service name")),
         ),
         (
             "mssql_counters_locks",
-            Checkbox(title=_("MSSQL locks"), label=_("Use the new service name")),
+            Checkbox(title=_("MSSQL Locks"), label=_("Use the new service name")),
         ),
         (
             "mssql_counters_locks_per_batch",
-            Checkbox(title=_("MSSQL locks per batch"), label=_("Use the new service name")),
+            Checkbox(title=_("MSSQL Locks per Batch"), label=_("Use the new service name")),
         ),
         (
             "mssql_counters_pageactivity",
-            Checkbox(title=_("MSSQL page activity"), label=_("Use the new service name")),
+            Checkbox(title=_("MSSQL Page Activity"), label=_("Use the new service name")),
         ),
         (
             "mssql_counters_sqlstats",
-            Checkbox(title=_("MSSQL SQL stats"), label=_("Use the new service name")),
+            Checkbox(title=_("MSSQL SQL Stats"), label=_("Use the new service name")),
         ),
         (
             "mssql_counters_transactions",
-            Checkbox(title=_("MSSQL transactions"), label=_("Use the new service name")),
+            Checkbox(title=_("MSSQL Transactions"), label=_("Use the new service name")),
         ),
         (
             "mssql_databases",
-            Checkbox(title=_("MSSQL database"), label=_("Use the new service name")),
+            Checkbox(title=_("MSSQL Database"), label=_("Use the new service name")),
         ),
         (
             "mssql_datafiles",
-            Checkbox(title=_("MSSQL datafile"), label=_("Use the new service name")),
+            Checkbox(title=_("MSSQL Datafile"), label=_("Use the new service name")),
         ),
         (
             "mssql_tablespaces",
-            Checkbox(title=_("MSSQL tablespace"), label=_("Use the new service name")),
+            Checkbox(title=_("MSSQL Tablespace"), label=_("Use the new service name")),
         ),
         (
             "mssql_transactionlogs",
-            Checkbox(title=_("MSSQL transaction log"), label=_("Use the new service name")),
+            Checkbox(title=_("MSSQL Transactionlog"), label=_("Use the new service name")),
         ),
         (
             "mssql_versions",
-            Checkbox(title=_("MSSQL version"), label=_("Use the new service name")),
+            Checkbox(title=_("MSSQL Version"), label=_("Use the new service name")),
         ),
         (
             "netapp_ontap_volumes",
@@ -2870,11 +2870,11 @@ def use_new_descriptions_for_valuespec(context: GlobalSettingsContext) -> ValueS
         ),
         (
             "netscaler_mem",
-            Checkbox(title=_("Netscaler memory usage"), label=_("Use the new service name")),
+            Checkbox(title=_("Netscaler memory Usage"), label=_("Use the new service name")),
         ),
         (
             "nullmailer_mailq",
-            Checkbox(title=_("Nullmailer: Mail queue"), label=_("Use the new service name")),
+            Checkbox(title=_("Nullmailer: Mail Queue"), label=_("Use the new service name")),
         ),
         (
             "prism_alerts",
@@ -2901,7 +2901,7 @@ def use_new_descriptions_for_valuespec(context: GlobalSettingsContext) -> ValueS
         ),
         (
             "postfix_mailq",
-            Checkbox(title=_("Postfix: Mail queue"), label=_("Use the new service name")),
+            Checkbox(title=_("Postfix: Mail Queue"), label=_("Use the new service name")),
         ),
         (
             "ps",
@@ -2909,7 +2909,7 @@ def use_new_descriptions_for_valuespec(context: GlobalSettingsContext) -> ValueS
         ),
         (
             "qmail_stats",
-            Checkbox(title=_("Qmail: Mail queue"), label=_("Use the new service name")),
+            Checkbox(title=_("Qmail: Mail Queue"), label=_("Use the new service name")),
         ),
         (
             "raritan_emx",
@@ -2963,7 +2963,7 @@ def use_new_descriptions_for_valuespec(context: GlobalSettingsContext) -> ValueS
         (
             "zfsget",
             Checkbox(
-                title=_("Used space in ZFS pools and file systems"),
+                title=_("Used space in ZFS pools and filesystems"),
                 label=_("Use the new service name"),
             ),
         ),
@@ -3140,13 +3140,13 @@ ConfigVariableChooseSNMPBackend = ConfigVariable(
     ident="snmp_backend_default",
     valuespec=lambda context: Transform(
         valuespec=DropdownChoice(
-            title=_("Choose SNMP backend"),
+            title=_("Choose SNMP back-end"),
             choices=[
-                (SNMPBackendEnum.CLASSIC, _("Use classic SNMP backend")),
-                (SNMPBackendEnum.INLINE, _("Use inline SNMP backend")),
+                (SNMPBackendEnum.CLASSIC, _("Use Classic SNMP Backend")),
+                (SNMPBackendEnum.INLINE, _("Use Inline SNMP Backend")),
             ],
             help=_(
-                "By default, Checkmk uses command line calls of Net-SNMP tools like snmpget or snmpwalk to gather SNMP information. For each request a new command line program is being executed. It is now possible to use the inline SNMP implementation which calls the respective libraries directly via its Python bindings. This should increase the performance of SNMP checks in a significant way. Both SNMP modes are features which improve the performance for large installations and are only available via our subscription."
+                "By default Checkmk uses command line calls of Net-SNMP tools like snmpget or snmpwalk to gather SNMP information. For each request a new command line program is being executed. It is now possible to use the inline SNMP implementation which calls the respective libraries directly via its Python bindings. This should increase the performance of SNMP checks in a significant way. Both SNMP modes are features which improve the performance for large installations and are only available via our subscription."
             ),
         ),
         to_valuespec=_transform_snmp_backend_hosts_to_valuespec,
@@ -3639,14 +3639,14 @@ def _host_check_commands_host_check_command_choices(
 ) -> list[CascadingDropdownChoice]:
     choices: list[CascadingDropdownChoice] = [
         ("ping", _("Ping (active check with ICMP echo request)")),
-        ("smart", _("Smart Ping (only with Checkmk Micro Core)")),
+        ("smart", _("Smart PING (only with Checkmk Micro Core)")),
         (
             "tcp",
             _("TCP Connect"),
             NetworkPort(label=_("to port:"), minvalue=1, maxvalue=65535, default_value=80),
         ),
         ("ok", _("Always assume host to be up")),
-        ("agent", _("Use the state of the Check_MK service")),
+        ("agent", _("Use the status of the Check_MK Service")),
         (
             "service",
             _("Use the status of the service..."),
@@ -4686,7 +4686,7 @@ def _valuespec_custom_service_attributes() -> ListOf:
             orientation="horizontal",
         ),
         title=_("Custom service attributes"),
-        help=_('Use this rule set to assign <a href="%s">%s</a> to services.')
+        help=_('Use this ruleset to assign <a href="%s">%s</a> to services.')
         % (
             "wato.py?mode=edit_configvar&varname=custom_service_attributes",
             _("Custom service attributes"),
@@ -4890,7 +4890,7 @@ def _valuespec_service_label_rules() -> Labels:
         world=Labels.World.CONFIG,
         label_source=Labels.Source.RULESET,
         title=_("Service labels"),
-        help=_("Use this rule set to assign labels to the service of your choice."),
+        help=_("Use this ruleset to assign labels to service of your choice."),
     )
 
 
@@ -4910,7 +4910,7 @@ def _valuespec_service_tag_rules() -> ListOf:
             orientation="horizontal",
         ),
         title=_("Service tags"),
-        help=_('Use this rule set to assign <a href="%s">%s</a> to services.')
+        help=_('Use this ruleset to assign <a href="%s">%s</a> to services.')
         % ("wato.py?mode=tags", _("Tags")),
         allow_empty=False,
         validate=_service_tag_rules_validate_unique_entries,
@@ -4955,7 +4955,7 @@ def _valuespec_host_label_rules() -> Labels:
         world=Labels.World.CONFIG,
         label_source=Labels.Source.RULESET,
         title=_("Host labels"),
-        help=_("Use this rule set to assign labels to hosts of your choice."),
+        help=_("Use this ruleset to assign labels to hosts of your choice."),
     )
 
 
@@ -4987,7 +4987,7 @@ def _valuespec_extra_service_conf_service_period() -> TimeperiodSelection:
 def _valuespec_extra_host_conf_notes_url() -> TextInput:
     return TextInput(
         label=_("URL:"),
-        title=_("Notes (URL) for hosts"),
+        title=_("Notes (URL) for Hosts"),
         help=_(
             "With this setting you can set links to documentations for Hosts. "
             "You can use some macros within the URL which are dynamically "
@@ -5020,7 +5020,7 @@ ExtraServiceConfServicePeriod = ServiceRulespec(
 
 def _valuespec_extra_service_conf_display_name() -> TextInput:
     return TextInput(
-        title=_("Alternative display name for services"),
+        title=_("Alternative display name for Services"),
         help=_(
             "This rule set allows you to specify an alternative name "
             "to be displayed for certain services. This name is available as "
@@ -5047,7 +5047,7 @@ ExtraServiceConfDisplayName = ServiceRulespec(
 def _valuespec_extra_service_conf_notes_url() -> TextInput:
     return TextInput(
         label=_("URL:"),
-        title=_("Notes (URL) for services"),
+        title=_("Notes (URL) for Services"),
         help=_(
             "With this setting you can set links to documentations for each service. "
             "You can use some macros within the URL which are dynamically "
@@ -5281,7 +5281,7 @@ ExtraHostConfEscapePluginOutput = HostRulespec(
 
 def _valuespec_extra_service_conf__ESCAPE_PLUGIN_OUTPUT() -> DropdownChoice:
     return DropdownChoice(
-        title=_("Escape HTML in service output (dangerous to deactivate - read help)"),
+        title=_("Escape HTML in service output (Dangerous to deactivate - read help)"),
         help=_(
             "By default, for security reasons, the GUI does not interpret any HTML "
             "code received from external sources, like service output or log messages. "
@@ -5320,7 +5320,7 @@ class RulespecGroupAgentGeneralSettings(RulespecSubGroup):
 
     @property
     def title(self) -> str:
-        return _("General settings")
+        return _("General Settings")
 
 
 def _help_dyndns_hosts() -> str:
@@ -5450,7 +5450,7 @@ ManagementBulkwalkHosts = BinaryHostRulespec(
 
 def _valuespec_snmp_bulk_size() -> Integer:
     return Integer(
-        title=_("Bulk walk: number of OIDs per bulk"),
+        title=_("Bulk walk: Number of OIDs per bulk"),
         label=_("Number of OIDs to request per bulk: "),
         minvalue=1,
         maxvalue=100,
@@ -5574,7 +5574,7 @@ NonInlineSnmpHosts = BinaryHostRulespec(
     group=RulespecGroupAgentSNMP,
     help_func=_help_non_inline_snmp_hosts,
     name="non_inline_snmp_hosts",
-    title=lambda: _("Hosts not using inline SNMP"),
+    title=lambda: _("Hosts not using Inline-SNMP"),
     is_deprecated=True,
 )
 
@@ -5608,8 +5608,8 @@ def _valuespec_snmp_backend() -> Transform:
         valuespec=DropdownChoice(
             title=_("Choose SNMP backend"),
             choices=[
-                (SNMPBackendEnum.INLINE, _("Use inline SNMP backend")),
-                (SNMPBackendEnum.CLASSIC, _("Use classic backend")),
+                (SNMPBackendEnum.INLINE, _("Use Inline SNMP backend")),
+                (SNMPBackendEnum.CLASSIC, _("Use Classic backend")),
             ],
         ),
         to_valuespec=_transform_snmp_backend_hosts_to_valuespec,
@@ -5622,7 +5622,7 @@ SnmpBackendHosts = HostRulespec(
     group=RulespecGroupAgentSNMP,
     help_func=_help_snmp_backend,
     name="snmp_backend_hosts",
-    title=lambda: _("Hosts using a specific SNMP backend"),
+    title=lambda: _("Hosts using a specific SNMP Backend"),
 )
 
 
@@ -5727,7 +5727,7 @@ def _valuespec_encryption_handling() -> Dictionary:
             (
                 "accept",
                 DropdownChoice(
-                    title=_("Server-side handling of unencrypted data"),
+                    title=_("Server side handling of unencrypted data"),
                     help=_(
                         "The agent can send data either using TLS encryption, a symmetric encryption, or unencrypted."
                         " This rule determines how the monitoring site handles each type of data, in case it is sent by the agent."
@@ -5917,7 +5917,7 @@ def _valuespec_check_mk_exit_status() -> Dictionary:
                         ),
                         (
                             "special",
-                            _individual_spec(_("Special agent")),
+                            _individual_spec(_("Special Agent")),
                         ),
                         (
                             "snmp",
@@ -5937,7 +5937,7 @@ def _valuespec_check_mk_exit_status() -> Dictionary:
                         ),
                         (
                             "otel_metrics",
-                            _individual_spec(_("Metrics backend")),
+                            _individual_spec(_("Metric Backend")),
                         ),
                     ],
                 ),
@@ -5958,7 +5958,7 @@ CheckMkExitStatus = HostRulespec(
 def _valuespec_check_mk_agent_target_versions() -> CascadingDropdown:
     return CascadingDropdown(
         title=_("Check for correct version of Checkmk agent"),
-        help=_('This rule set is deprecated. Please use the rule set <i>"%s"</i> instead.')
+        help=_('This ruleset is deprecated. Please use the ruleset <i>"%s"</i> instead.')
         % _("Checkmk agent installation auditing"),
         choices=[
             ("ignore", _("Ignore the version")),
@@ -6308,10 +6308,10 @@ def _valuespec_piggybacked_host_files() -> Migrate:
     )
 
     global_max_cache_age_title = (
-        _('Use maximum age from <a href="%s">Global settings</a>') % global_max_cache_age_uri
+        _('Use maximum age from <a href="%s">global settings</a>') % global_max_cache_age_uri
     )
     max_cache_age_title = (
-        _('Use maximum age from <a href="%s">Global settings</a> or above')
+        _('Use maximum age from <a href="%s">global settings</a> or above')
         % global_max_cache_age_uri
     )
 

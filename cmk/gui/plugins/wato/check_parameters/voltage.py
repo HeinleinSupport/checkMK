@@ -15,13 +15,13 @@ from cmk.gui.valuespec import Dictionary, Float, TextInput, Tuple
 
 def _parameter_valuespec_voltage() -> Dictionary:
     return Dictionary(
-        title=_("Voltage sensor"),
+        title=_("Voltage Sensor"),
         optional_keys=True,
         elements=[
             (
                 "levels",
                 Tuple(
-                    title=_("Upper levels for voltage"),
+                    title=_("Upper levels for Voltage"),
                     elements=[
                         Float(title=_("Warning at"), default_value=15.00, unit="V"),
                         Float(title=_("Critical at"), default_value=16.00, unit="V"),

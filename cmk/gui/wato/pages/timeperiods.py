@@ -686,7 +686,7 @@ class ModeEditTimeperiod(WatoMode):
                 "weekday."
             ),
             movable=False,
-            add_label=_("Add exception"),
+            add_label=_("Add Exception"),
         )
 
     def _validate_timeperiod_exception(self, value: str, varprefix: str) -> None:

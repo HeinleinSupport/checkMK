@@ -14,7 +14,7 @@ from cmk.gui.valuespec import Dictionary, Percentage, TextInput, Tuple
 
 def _item_spec_openhardwaremonitor_smart() -> TextInput:
     return TextInput(
-        title=_("Device name"),
+        title=_("Device Name"),
         help=_("Name of the hard disk as reported by OHM: hdd0, hdd1, ..."),
     )
 

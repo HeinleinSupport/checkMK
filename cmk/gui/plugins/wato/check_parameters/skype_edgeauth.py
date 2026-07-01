@@ -18,7 +18,7 @@ def _parameter_valuespec_skype_edgeauth() -> Dictionary:
             (
                 "bad_requests",
                 Dictionary(
-                    title=_("Bad requests received"),
+                    title=_("Bad Requests Received"),
                     elements=[
                         (
                             "upper",

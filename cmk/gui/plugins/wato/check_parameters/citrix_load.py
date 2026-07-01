@@ -23,7 +23,7 @@ def _parameter_valuespec_citrix_load() -> Migrate[dict[str, Any]]:
                     "levels",
                     SimpleLevels(
                         spec=Percentage,
-                        title=_("Citrix server load"),
+                        title=_("Citrix Server load"),
                         default_levels=(85.0, 95.0),
                     ),
                 )

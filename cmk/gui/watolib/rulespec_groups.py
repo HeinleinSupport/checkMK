@@ -260,7 +260,7 @@ class RulespecGroupEnforcedServicesApplications(RulespecSubGroup):
 
     @property
     def title(self) -> str:
-        return _("Applications, processes & services")
+        return _("Applications, Processes & Services")
 
 
 class RulespecGroupEnforcedServicesEnvironment(RulespecSubGroup):
@@ -274,7 +274,7 @@ class RulespecGroupEnforcedServicesEnvironment(RulespecSubGroup):
 
     @property
     def title(self) -> str:
-        return _("Temperature, humidity, electrical parameters, etc.")
+        return _("Temperature, Humidity, Electrical Parameters, etc.")
 
 
 class RulespecGroupEnforcedServicesOperatingSystem(RulespecSubGroup):
@@ -421,7 +421,7 @@ class RulespecGroupCheckParametersEnvironment(RulespecSubGroup):
 
     @property
     def title(self) -> str:
-        return _("Temperature, humidity, electrical parameters, etc.")
+        return _("Temperature, Humidity, Electrical Parameters, etc.")
 
 
 class RulespecGroupCheckParametersApplications(RulespecSubGroup):
@@ -435,7 +435,7 @@ class RulespecGroupCheckParametersApplications(RulespecSubGroup):
 
     @property
     def title(self) -> str:
-        return _("Applications, processes & services")
+        return _("Applications, Processes & Services")
 
 
 class RulespecGroupCheckParametersVirtualization(RulespecSubGroup):
@@ -559,7 +559,7 @@ class RulespecGroupDatasourceProgramsCloud(RulespecSubGroup):
 
     @property
     def title(self) -> str:
-        return _("Cloud-based environments")
+        return _("Cloud based environments")
 
 
 class RulespecGroupDatasourceProgramsContainer(RulespecSubGroup):

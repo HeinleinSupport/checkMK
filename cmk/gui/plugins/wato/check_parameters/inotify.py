@@ -33,7 +33,7 @@ def _parameter_valuespec_inotify() -> Dictionary:
                     valuespec=Tuple(
                         elements=[
                             DropdownChoice(
-                                title=_("INotify operation"),
+                                title=_("INotify Operation"),
                                 choices=[
                                     ("create", _("Create")),
                                     ("delete", _("Delete")),
@@ -65,6 +65,6 @@ rulespec_registry.register(
         item_spec=_item_spec_inotify,
         match_type="dict",
         parameter_valuespec=_parameter_valuespec_inotify,
-        title=lambda: _("INotify levels"),
+        title=lambda: _("INotify Levels"),
     )
 )

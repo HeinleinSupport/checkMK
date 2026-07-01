@@ -47,7 +47,7 @@ def _valuespec_winperf_msx_queues_inventory() -> Dictionary:
                         "offsets manually."
                     ),
                     movable=False,
-                    add_label=_("Add counter"),
+                    add_label=_("Add Counter"),
                 ),
             )
         ],
@@ -66,7 +66,7 @@ rulespec_registry.register(
 
 def _item_spec_msx_queues() -> TextInput:
     return TextInput(
-        title=_("Explicit queue names"),
+        title=_("Explicit Queue Names"),
         help=_("Specify queue names that the rule should apply to"),
     )
 

@@ -57,7 +57,7 @@ def _valuespec_active_checks_traceroute() -> Dictionary:
                         ]
                     ),
                     title=_("Router that must or must not be used"),
-                    add_label=_("Add condition"),
+                    add_label=_("Add Condition"),
                 ),
             ),
             (
@@ -66,7 +66,7 @@ def _valuespec_active_checks_traceroute() -> Dictionary:
                     title=_("Method of probing"),
                     choices=[
                         (None, _("UDP (default behavior of traceroute)")),
-                        ("icmp", _("ICMP echo request")),
+                        ("icmp", _("ICMP Echo Request")),
                         ("tcp", _("TCP SYN")),
                     ],
                 ),

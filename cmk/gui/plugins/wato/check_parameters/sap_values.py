@@ -40,7 +40,7 @@ def _valuespec_sap_value_groups() -> Migrate[dict[str, Any]]:
                                             mode=RegExp.prefix,
                                         ),
                                         RegExp(
-                                            title=_("Exclude pattern"),
+                                            title=_("Exclude Pattern"),
                                             mode=RegExp.prefix,
                                         ),
                                     ],
