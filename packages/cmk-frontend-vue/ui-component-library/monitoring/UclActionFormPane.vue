@@ -8,12 +8,13 @@ import { type Options, type PanelConfig } from '@ucl/_ucl/components/detail-page
 
 import codeExample from './UclActionFormPaneCodeExample.vue?raw'
 
-type FormKind = 'none' | 'comment' | 'reschedule'
+type FormKind = 'none' | 'comment' | 'reschedule' | 'schedule-downtime'
 
 const FORM_OPTIONS: Options<FormKind>[] = [
   { title: 'No inputs (confirm)', name: 'none' },
   { title: 'Comment', name: 'comment' },
-  { title: 'Reschedule', name: 'reschedule' }
+  { title: 'Reschedule', name: 'reschedule' },
+  { title: 'Schedule downtime', name: 'schedule-downtime' }
 ]
 
 export const panelConfig = {
@@ -43,6 +44,7 @@ import type { TranslatedString } from '@/lib/i18nString'
 import ActionFormPane from '@/monitoring/shared/components/action/ActionFormPane.vue'
 import { useCommentAction } from '@/monitoring/shared/components/action/actions/comment'
 import { useRescheduleAction } from '@/monitoring/shared/components/action/actions/reschedule'
+import { useScheduleDowntimeAction } from '@/monitoring/shared/components/action/actions/scheduleDowntime'
 import type { MonitoringAction } from '@/monitoring/shared/components/action/types'
 
 defineProps<{ screenshotMode: boolean }>()
@@ -55,7 +57,8 @@ const propState = ref(
 
 const actions: Record<Exclude<FormKind, 'none'>, MonitoringAction> = {
   comment: useCommentAction(),
-  reschedule: useRescheduleAction()
+  reschedule: useRescheduleAction(),
+  'schedule-downtime': useScheduleDowntimeAction()
 }
 
 const activeAction = computed<MonitoringAction | undefined>(() =>

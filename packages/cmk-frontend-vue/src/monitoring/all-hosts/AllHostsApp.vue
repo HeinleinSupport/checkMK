@@ -42,6 +42,10 @@ import {
   useAcknowledgeAction
 } from '../shared/components/action/actions/acknowledge'
 import { useRescheduleAction } from '../shared/components/action/actions/reschedule'
+import {
+  SCHEDULE_DOWNTIME_ACTION_ID,
+  useScheduleDowntimeAction
+} from '../shared/components/action/actions/scheduleDowntime'
 import { createActionRegistry } from '../shared/components/action/registry'
 import { useMonitoringActions } from '../shared/services/useMonitoringActions'
 import { HostApi } from './api/hosts'
@@ -53,7 +57,8 @@ const { _t } = usei18n()
 const props = defineProps<MonitoringAllHostsApp>()
 
 const ACTION_ICONS: Record<string, SimpleIcons> = {
-  [ACK_ACTION_ID]: 'ack'
+  [ACK_ACTION_ID]: 'ack',
+  [SCHEDULE_DOWNTIME_ACTION_ID]: 'downtime'
 }
 
 const hostActions: CellAction[] = (props.actions ?? []).map((action) => ({
@@ -261,7 +266,11 @@ const searchInput = useTemplateRef<{ focus: () => void }>('searchInput')
 
 const rowSelection = ref<RowSelectionState>({})
 
-const actionRegistry = createActionRegistry([useAcknowledgeAction(), useRescheduleAction()])
+const actionRegistry = createActionRegistry([
+  useAcknowledgeAction(),
+  useRescheduleAction(),
+  useScheduleDowntimeAction()
+])
 const {
   activeAction,
   selectedCount,
