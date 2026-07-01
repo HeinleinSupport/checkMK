@@ -36,18 +36,6 @@ from cmk.gui.log import logger
 _VALUE_AND_UNIT = re.compile(r"([0-9.,-]*)(.*)")
 
 
-@dataclass(frozen=True)
-class _PerfEntry:
-    metric_name: MetricName
-    value: float
-    warn: float | None
-    crit: float | None
-    warn_lower: float | None
-    crit_lower: float | None
-    min_: float | None
-    max_: float | None
-
-
 def _float_or_int(val: str | None) -> int | float | None:
     if val is None:
         return None
@@ -111,8 +99,8 @@ def _parse_check_command(check_command: str) -> str:
 
 def _parse_perf_data(
     perf_data_string: str, check_command: str, *, debug: bool
-) -> tuple[list[_PerfEntry], str]:
-    """Convert perf_data_string into perf entries and extract the (normalized) check command."""
+) -> tuple[list[RawPerformanceValue], str]:
+    """Convert perf_data_string into performance values and extract the (normalized) check command."""
     check_command = _parse_check_command(check_command)
 
     parts = shlex.split(perf_data_string)
@@ -122,7 +110,7 @@ def _parse_perf_data(
         del parts[-1]
     check_command = check_command.replace(".", "_")  # cf. maincheckify
 
-    perf_data: list[_PerfEntry] = []
+    perf_data: list[RawPerformanceValue] = []
     for part in parts:
         try:
             varname, value_text, value_parts = _parse_perf_values(part)
@@ -132,15 +120,15 @@ def _parse_perf_data(
             warn_lower, warn = _parse_range(value_parts[0])
             crit_lower, crit = _parse_range(value_parts[1])
             perf_data.append(
-                _PerfEntry(
+                RawPerformanceValue(
                     metric_name=MetricName(varname),
                     value=value,
-                    warn=warn,
-                    crit=crit,
-                    warn_lower=warn_lower,
-                    crit_lower=crit_lower,
-                    min_=_float_or_int(value_parts[2]),
-                    max_=_float_or_int(value_parts[3]),
+                    warning=warn,
+                    critical=crit,
+                    lower_warning=warn_lower,
+                    lower_critical=crit_lower,
+                    minimum=_float_or_int(value_parts[2]),
+                    maximum=_float_or_int(value_parts[3]),
                 )
             )
         except Exception as exc:
@@ -174,24 +162,12 @@ class EngineRRDSource:
                 check_command,
                 debug=debug,
             )
-            present = {entry.metric_name for entry in perf_data}
-            perf_data = [*perf_data, *(e for e in rrd_only if e.metric_name not in present)]
-        return RawPerformanceData(
-            check_command=normalized_check_command,
-            values=[
-                RawPerformanceValue(
-                    metric_name=entry.metric_name,
-                    value=entry.value,
-                    warning=entry.warn,
-                    critical=entry.crit,
-                    lower_warning=entry.warn_lower,
-                    lower_critical=entry.crit_lower,
-                    minimum=entry.min_,
-                    maximum=entry.max_,
-                )
-                for entry in perf_data
-            ],
-        )
+            present = {value.metric_name for value in perf_data}
+            perf_data = [
+                *perf_data,
+                *(value for value in rrd_only if value.metric_name not in present),
+            ]
+        return RawPerformanceData(check_command=normalized_check_command, values=perf_data)
 
     def fetch_performance_data(
         self, services: Sequence[ServiceRef]
