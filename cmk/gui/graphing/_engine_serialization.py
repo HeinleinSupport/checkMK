@@ -194,7 +194,7 @@ def _range_from_json(data: object, codec: QuantityCodec) -> MinimalRange | Fixed
     )
 
 
-def _rrd_metric_to(quantity: Quantity, codec: QuantityCodec) -> Json:
+def _rrd_metric_to_json(quantity: Quantity, codec: QuantityCodec) -> Json:
     quantity = ensure_type(quantity, RRDMetric)
     return {
         "host_name": quantity.host_name,
@@ -208,7 +208,7 @@ def _rrd_metric_to(quantity: Quantity, codec: QuantityCodec) -> Json:
     }
 
 
-def _rrd_metric_from(data: Mapping[str, object], codec: QuantityCodec) -> RRDMetric:
+def _rrd_metric_from_json(data: Mapping[str, object], codec: QuantityCodec) -> RRDMetric:
     consolidation_function = data["consolidation_function"]
     return RRDMetric(
         host_name=HostName(ensure_type(data["host_name"], str)),
@@ -222,16 +222,16 @@ def _rrd_metric_from(data: Mapping[str, object], codec: QuantityCodec) -> RRDMet
     )
 
 
-def _constant_to(quantity: Quantity, codec: QuantityCodec) -> Json:
+def _constant_to_json(quantity: Quantity, codec: QuantityCodec) -> Json:
     quantity = ensure_type(quantity, Constant)
     return {"value": quantity.value, "display": display_to_json(quantity.display)}
 
 
-def _constant_from(data: Mapping[str, object], codec: QuantityCodec) -> Constant:
+def _constant_from_json(data: Mapping[str, object], codec: QuantityCodec) -> Constant:
     return Constant(_as_number(data["value"]), display_from_json(data["display"]))
 
 
-def _scalar_of_to(quantity: Quantity, codec: QuantityCodec) -> Json:
+def _scalar_of_to_json(quantity: Quantity, codec: QuantityCodec) -> Json:
     quantity = ensure_type(quantity, ScalarOf)
     return {
         "metric": codec.serialize(quantity.metric),
@@ -240,7 +240,7 @@ def _scalar_of_to(quantity: Quantity, codec: QuantityCodec) -> Json:
     }
 
 
-def _scalar_of_from(data: Mapping[str, object], codec: QuantityCodec) -> ScalarOf:
+def _scalar_of_from_json(data: Mapping[str, object], codec: QuantityCodec) -> ScalarOf:
     color = data["color"]
     if color is not None and not isinstance(color, str):
         raise TypeError(f"expected a string or None, got {type(color).__name__}")
@@ -251,39 +251,39 @@ def _scalar_of_from(data: Mapping[str, object], codec: QuantityCodec) -> ScalarO
     )
 
 
-def _operands_to(operands: Sequence[Quantity], codec: QuantityCodec) -> list[Json]:
+def _operands_to_json(operands: Sequence[Quantity], codec: QuantityCodec) -> list[Json]:
     return [codec.serialize(operand) for operand in operands]
 
 
-def operands_from(data: object, codec: QuantityCodec) -> list[Quantity]:
+def _operands_from_json(data: object, codec: QuantityCodec) -> list[Quantity]:
     return [codec.deserialize(operand) for operand in _as_list(data)]
 
 
-def _sum_to(quantity: Quantity, codec: QuantityCodec) -> Json:
+def _sum_to_json(quantity: Quantity, codec: QuantityCodec) -> Json:
     quantity = ensure_type(quantity, Sum)
     return {
-        "summands": _operands_to(quantity.summands, codec),
+        "summands": _operands_to_json(quantity.summands, codec),
         "display": display_to_json(quantity.display),
     }
 
 
-def _sum_from(data: Mapping[str, object], codec: QuantityCodec) -> Sum:
-    return Sum(operands_from(data["summands"], codec), display_from_json(data["display"]))
+def _sum_from_json(data: Mapping[str, object], codec: QuantityCodec) -> Sum:
+    return Sum(_operands_from_json(data["summands"], codec), display_from_json(data["display"]))
 
 
-def _product_to(quantity: Quantity, codec: QuantityCodec) -> Json:
+def _product_to_json(quantity: Quantity, codec: QuantityCodec) -> Json:
     quantity = ensure_type(quantity, Product)
     return {
-        "factors": _operands_to(quantity.factors, codec),
+        "factors": _operands_to_json(quantity.factors, codec),
         "display": display_to_json(quantity.display),
     }
 
 
-def _product_from(data: Mapping[str, object], codec: QuantityCodec) -> Product:
-    return Product(operands_from(data["factors"], codec), display_from_json(data["display"]))
+def _product_from_json(data: Mapping[str, object], codec: QuantityCodec) -> Product:
+    return Product(_operands_from_json(data["factors"], codec), display_from_json(data["display"]))
 
 
-def _difference_to(quantity: Quantity, codec: QuantityCodec) -> Json:
+def _difference_to_json(quantity: Quantity, codec: QuantityCodec) -> Json:
     quantity = ensure_type(quantity, Difference)
     return {
         "minuend": codec.serialize(quantity.minuend),
@@ -292,7 +292,7 @@ def _difference_to(quantity: Quantity, codec: QuantityCodec) -> Json:
     }
 
 
-def _difference_from(data: Mapping[str, object], codec: QuantityCodec) -> Difference:
+def _difference_from_json(data: Mapping[str, object], codec: QuantityCodec) -> Difference:
     return Difference(
         minuend=codec.deserialize(data["minuend"]),
         subtrahend=codec.deserialize(data["subtrahend"]),
@@ -300,7 +300,7 @@ def _difference_from(data: Mapping[str, object], codec: QuantityCodec) -> Differ
     )
 
 
-def _fraction_to(quantity: Quantity, codec: QuantityCodec) -> Json:
+def _fraction_to_json(quantity: Quantity, codec: QuantityCodec) -> Json:
     quantity = ensure_type(quantity, Fraction)
     return {
         "dividend": codec.serialize(quantity.dividend),
@@ -309,7 +309,7 @@ def _fraction_to(quantity: Quantity, codec: QuantityCodec) -> Json:
     }
 
 
-def _fraction_from(data: Mapping[str, object], codec: QuantityCodec) -> Fraction:
+def _fraction_from_json(data: Mapping[str, object], codec: QuantityCodec) -> Fraction:
     return Fraction(
         dividend=codec.deserialize(data["dividend"]),
         divisor=codec.deserialize(data["divisor"]),
@@ -321,13 +321,13 @@ def engine_quantity_codec(additional: QuantityCodec | None = None) -> QuantityCo
     # The standard engine quantities, optionally combined with a consumer's additional codec (e.g. the
     # pro quantities), so a caller never has to reconstruct the engine set.
     engine_specs = (
-        QuantitySpec("rrd_metric", RRDMetric, _rrd_metric_to, _rrd_metric_from),
-        QuantitySpec("constant", Constant, _constant_to, _constant_from),
-        QuantitySpec("scalar_of", ScalarOf, _scalar_of_to, _scalar_of_from),
-        QuantitySpec("sum", Sum, _sum_to, _sum_from),
-        QuantitySpec("product", Product, _product_to, _product_from),
-        QuantitySpec("difference", Difference, _difference_to, _difference_from),
-        QuantitySpec("fraction", Fraction, _fraction_to, _fraction_from),
+        QuantitySpec("rrd_metric", RRDMetric, _rrd_metric_to_json, _rrd_metric_from_json),
+        QuantitySpec("constant", Constant, _constant_to_json, _constant_from_json),
+        QuantitySpec("scalar_of", ScalarOf, _scalar_of_to_json, _scalar_of_from_json),
+        QuantitySpec("sum", Sum, _sum_to_json, _sum_from_json),
+        QuantitySpec("product", Product, _product_to_json, _product_from_json),
+        QuantitySpec("difference", Difference, _difference_to_json, _difference_from_json),
+        QuantitySpec("fraction", Fraction, _fraction_to_json, _fraction_from_json),
     )
     return QuantityCodec(
         engine_specs if additional is None else (*engine_specs, *additional._specs)
