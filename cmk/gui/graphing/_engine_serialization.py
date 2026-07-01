@@ -57,7 +57,7 @@ def _as_mapping(value: object) -> Mapping[str, object]:
     return value
 
 
-def _as_list(value: object) -> list[object]:
+def _as_list(value: object) -> Sequence[object]:
     if not isinstance(value, list):
         raise TypeError(f"expected a list, got {type(value).__name__}")
     return value
@@ -251,11 +251,11 @@ def _scalar_of_from_json(data: Mapping[str, object], codec: QuantityCodec) -> Sc
     )
 
 
-def _operands_to_json(operands: Sequence[Quantity], codec: QuantityCodec) -> list[Json]:
+def _operands_to_json(operands: Sequence[Quantity], codec: QuantityCodec) -> Sequence[Json]:
     return [codec.serialize(operand) for operand in operands]
 
 
-def _operands_from_json(data: object, codec: QuantityCodec) -> list[Quantity]:
+def _operands_from_json(data: object, codec: QuantityCodec) -> Sequence[Quantity]:
     return [codec.deserialize(operand) for operand in _as_list(data)]
 
 

@@ -10,7 +10,7 @@ from ._objects import TimeSeries
 from ._options import ConsolidationFunction, TimeRange
 
 
-def _timestamps(time_range: TimeRange) -> list[int]:
+def _timestamps(time_range: TimeRange) -> Sequence[int]:
     if time_range.step <= 0:
         return []
     return [t + time_range.step for t in range(time_range.start, time_range.end, time_range.step)]
@@ -35,7 +35,7 @@ def _downsample(
     series: TimeSeries,
     target: TimeRange,
     consolidation_function: ConsolidationFunction,
-) -> list[float | None]:
+) -> Sequence[float | None]:
     desired = _timestamps(target)
     resampled: list[float | None] = []
     bucket: list[float | None] = []
@@ -52,7 +52,7 @@ def _downsample(
     return resampled
 
 
-def _forward_fill(series: TimeSeries, target: TimeRange) -> list[float | None]:
+def _forward_fill(series: TimeSeries, target: TimeRange) -> Sequence[float | None]:
     source = series.time_range
     last = len(series.values) - 1
     return [

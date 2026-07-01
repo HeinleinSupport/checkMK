@@ -99,7 +99,7 @@ def _parse_check_command(check_command: str) -> str:
 
 def _parse_perf_data(
     perf_data_string: str, check_command: str, *, debug: bool
-) -> tuple[list[RawPerformanceValue], str]:
+) -> tuple[Sequence[RawPerformanceValue], str]:
     """Convert perf_data_string into performance values and extract the (normalized) check command."""
     check_command = _parse_check_command(check_command)
 

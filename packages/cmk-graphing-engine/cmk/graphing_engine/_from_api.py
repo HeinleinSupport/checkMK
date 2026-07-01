@@ -483,7 +483,7 @@ def _parse_lines(
     context: _ParseContext,
     *,
     inverse: bool,
-) -> tuple[list[Stack], list[Line], list[Rule]]:
+) -> tuple[Sequence[Stack], Sequence[Line], Sequence[Rule]]:
     # Scalar quantities (thresholds/constants) become horizontal rules rather than drawn curves;
     # everything else stacks (compound_lines) or draws as a line (simple_lines). Each drawn quantity is
     # wrapped in a Curve with its display resolved right here (registry / scalar kind / intrinsic).
