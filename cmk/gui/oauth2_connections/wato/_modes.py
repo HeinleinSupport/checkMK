@@ -652,6 +652,11 @@ class ModeMicrosoftEntraIdConnections(ModeOAuth2Connections):
     def title(self) -> str:
         return _("Microsoft Entra ID connections")
 
+    @override
+    def page(self, config: Config) -> None:
+        html.vue_component(component_name="cmk-oauth2-connection-info", data={})
+        super().page(config)
+
     @classmethod
     @override
     def _connector_type(cls) -> str | None:

@@ -26,6 +26,7 @@ import { GlobalTimePickerApp } from './graphing/GlobalTimePicker'
 import { registerMetricBackendFormComponents } from './metric-backend/registerFormComponents'
 import ModeCreateOAuth2ConnectionApp from './mode-oauth2-connection/ModeCreateOAuth2ConnectionApp.vue'
 import ModeRedirectOAuth2ConnectionAppCopy from './mode-oauth2-connection/ModeRedirectOAuth2ConnectionApp.vue'
+import OAuth2ConnectionInfoApp from './mode-oauth2-connection/OAuth2ConnectionInfoApp.vue'
 import { registerOAuth2ConnectionFormComponents } from './mode-oauth2-connection/registerFormComponents'
 import ModeCreateOTelConfApp from './mode-otel/ModeCreateOTelConfApp.vue'
 import ModeCreatePrometheusConfApp from './mode-otel/ModeCreatePrometheusConfApp.vue'
@@ -59,6 +60,7 @@ defineCmkComponent('cmk-mode-create-otel-conf', ModeCreateOTelConfApp)
 defineCmkComponent('cmk-mode-create-prometheus-conf', ModeCreatePrometheusConfApp)
 defineCmkComponent('cmk-mode-create-relay', ModeCreateRelayApp)
 defineCmkComponent('cmk-mode-create-oauth2-connection', ModeCreateOAuth2ConnectionApp)
+defineCmkComponent('cmk-oauth2-connection-info', OAuth2ConnectionInfoApp)
 defineCmkComponent('cmk-mode-redirect-oauth2-connection', ModeRedirectOAuth2ConnectionAppCopy)
 defineCmkComponent('cmk-monitoring-all-hosts', AllHostsApp)
 defineCmkComponent('cmk-unified-search', UnifiedSearchApp)
