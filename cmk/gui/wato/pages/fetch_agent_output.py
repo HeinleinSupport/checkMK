@@ -444,7 +444,8 @@ class FetchAgentOutputBackgroundJob(BackgroundJob):
                         + _("%s Click on the icon to review.")
                         % HTMLGenerator.render_icon_button(
                             url=url,
-                            title=_("Global setting '%s'") % global_setting_name,
+                            title=_("Global setting '%(global_setting_name)s'")
+                            % {"global_setting_name": global_setting_name},
                             icon=StaticIcon(IconNames.configuration),
                             theme=make_theme(validate_choices=False),
                         )

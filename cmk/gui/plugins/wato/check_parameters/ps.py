@@ -407,12 +407,12 @@ def forbid_re_delimiters_inside_groups(pattern: str, varprefix: str) -> None:
                 raise MKUserError(
                     varprefix,
                     _(
-                        '"%s" is not allowed inside the regular expression group %s. '
+                        '"%(char)s" is not allowed inside the regular expression group %(match)s. '
                         "Bounding characters inside groups will vanish after discovery, "
                         "because processes are instanced for every matching group. "
                         "Thus enforce delimiters outside the group."
                     )
-                    % (char, match),
+                    % {"char": char, "match": match},
                 )
 
 

@@ -35,12 +35,12 @@ class TimeoutManager:
         def handle_request_timeout(signum: int, frame: FrameType | None) -> None:
             raise RequestTimeout(
                 _(
-                    "Your request timed out after %d seconds. This issue may be "
+                    "Your request timed out after %(duration)d seconds. This issue may be "
                     "related to a local configuration problem or a request which works "
                     "with a too large number of objects. But if you think this "
                     "issue is a bug, please send a crash report."
                 )
-                % duration
+                % {"duration": duration}
             )
 
         signal.signal(signal.SIGALRM, handle_request_timeout)

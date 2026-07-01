@@ -303,8 +303,10 @@ class PageAutomation(AjaxPage):
 
         if our_id is not None and our_id != site_id:
             raise MKGeneralException(
-                _("Site ID mismatch. Our ID is '%s', but you are saying we are '%s'.")
-                % (our_id, site_id)
+                _(
+                    "Site ID mismatch. Our ID is '%(our_id)s', but you are saying we are '%(site_id)s'."
+                )
+                % {"our_id": our_id, "site_id": site_id}
             )
 
         profile = request.var("profile")

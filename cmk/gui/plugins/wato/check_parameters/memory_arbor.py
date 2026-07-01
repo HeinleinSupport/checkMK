@@ -45,7 +45,7 @@ def UsedPercentage(
     default_percents: tuple[float, float] | None = None, of_what: str | None = None
 ) -> Tuple[tuple[float, float]]:
     if of_what:
-        unit = _("%% of %s") % of_what
+        unit = _("%% of %(of_what)s") % {"of_what": of_what}
         maxvalue = None
     else:
         unit = "%"
@@ -72,7 +72,7 @@ def FreePercentage(
     default_percents: tuple[float, float] | None = None, of_what: str | None = None
 ) -> Tuple[tuple[float, float]]:
     if of_what:
-        unit = _("%% of %s") % of_what
+        unit = _("%% of %(of_what)s") % {"of_what": of_what}
     else:
         unit = "%"
     return Tuple(
@@ -95,16 +95,20 @@ def DualMemoryLevels(
     what: str, default_percents: tuple[float, float] | None = None
 ) -> CascadingDropdown:
     return CascadingDropdown(
-        title=_("Levels for %s") % what,
+        title=_("Levels for %(what)s") % {"what": what},
         choices=[
             (
                 "perc_used",
-                _("Percentual levels for used %s") % what,
+                _("Percentual levels for used %(what)s") % {"what": what},
                 UsedPercentage(default_percents),
             ),
-            ("perc_free", _("Percentual levels for free %s") % what, FreePercentage()),
-            ("abs_used", _("Absolute levels for used %s") % what, UsedSize()),
-            ("abs_free", _("Absolute levels for free %s") % what, FreeSize()),
+            (
+                "perc_free",
+                _("Percentual levels for free %(what)s") % {"what": what},
+                FreePercentage(),
+            ),
+            ("abs_used", _("Absolute levels for used %(what)s") % {"what": what}, UsedSize()),
+            ("abs_free", _("Absolute levels for free %(what)s") % {"what": what}, FreeSize()),
             # PredictiveMemoryChoice(_("used %s") % what), # not yet implemented
             ("ignore", _("Do not impose levels")),
         ],

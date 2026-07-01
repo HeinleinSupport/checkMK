@@ -555,7 +555,8 @@ def validate_host_parents(host: Host) -> None:
         if not parent:
             raise MKUserError(
                 None,
-                _("You defined the non-existing host '%s' as a parent.") % parent_name,
+                _("You defined the non-existing host '%(parent_name)s' as a parent.")
+                % {"parent_name": parent_name},
             )
 
         if host.site_id() != parent.site_id():

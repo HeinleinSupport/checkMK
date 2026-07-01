@@ -139,9 +139,9 @@ class HTMLGenerator(HTMLWriter):
                     _(
                         "These texts may be localized depending on the users' "
                         "language. You can configure the localizations "
-                        "<a href='%s'>in the global settings</a>."
+                        "<a href='%(url)s'>in the global settings</a>."
                     )
-                    % url,
+                    % {"url": url},
                     escape_links=False,
                 ),
                 "message",

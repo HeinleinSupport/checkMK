@@ -89,7 +89,7 @@ class AjaxFetchCA(AjaxPage):
                 cmk.utils.paths.trusted_ca_file, socket.AF_INET, (address, port)
             )
         except Exception as e:
-            raise MKUserError(None, _("Error fetching data: %s") % e)
+            raise MKUserError(None, _("Error fetching data: %(e)s") % {"e": e})
 
         for cert in certs:
             if not cert.is_ca:

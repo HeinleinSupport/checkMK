@@ -16,11 +16,11 @@ from cmk.gui.valuespec import Alternative, Dictionary, Filesize, Integer, ListOf
 
 def levels_absolute_or_dynamic(name: str, value: str) -> Alternative:
     return Alternative(
-        title=_("Levels of %s %s") % (name, value),
+        title=_("Levels of %(name)s %(value)s") % {"name": name, "value": value},
         default_value=(80.0, 90.0),
         elements=[
             Tuple(
-                title=_("Percentage %s space") % value,
+                title=_("Percentage %(value)s space") % {"value": value},
                 elements=[
                     Percentage(
                         title=_("Warning at"),
@@ -35,7 +35,7 @@ def levels_absolute_or_dynamic(name: str, value: str) -> Alternative:
                 ],
             ),
             Tuple(
-                title=_("Absolute %s space") % value,
+                title=_("Absolute %(value)s space") % {"value": value},
                 elements=[
                     Integer(title=_("Warning at"), unit=_("MB"), default_value=500),
                     Integer(title=_("Critical at"), unit=_("MB"), default_value=1000),
@@ -47,10 +47,11 @@ def levels_absolute_or_dynamic(name: str, value: str) -> Alternative:
                     elements=[
                         Filesize(title=_(" larger than")),
                         Alternative(
-                            title=_("Levels for the %s %s size") % (name, value),
+                            title=_("Levels for the %(name)s %(value)s size")
+                            % {"name": name, "value": value},
                             elements=[
                                 Tuple(
-                                    title=_("Percentage %s space") % value,
+                                    title=_("Percentage %(value)s space") % {"value": value},
                                     elements=[
                                         Percentage(
                                             title=_("Warning at"),

@@ -1016,7 +1016,7 @@ class TextInput(ValueSpec[str]):
                 if c in value:
                     raise MKUserError(
                         varprefix,
-                        _("The character <tt>%s</tt> is not allowed here.") % c,
+                        _("The character <tt>%(c)s</tt> is not allowed here.") % {"c": c},
                     )
 
         if not self._allow_empty and (value == "" or (self._strip and value.strip() == "")):
@@ -1308,7 +1308,7 @@ class RegExp(TextInput):
             compiled = re.compile(value)
 
         except re.error as e:
-            raise MKUserError(varprefix, _("Invalid regular expression: %s") % e)
+            raise MKUserError(varprefix, _("Invalid regular expression: %(e)s") % {"e": e})
 
         if compiled.groups < self._mingroups:
             raise MKUserError(
@@ -1447,13 +1447,14 @@ def IPNetwork(
             ) is not None:
                 raise MKUserError(
                     varprefix,
-                    _("Invalid host or network address. IPv4: %s, IPv6: %s") % (e4, e6),
+                    _("Invalid host or network address. IPv4: %(e4)s, IPv6: %(e6)s")
+                    % {"e4": e4, "e6": e6},
                 )
         elif issubclass(ip_class, ipaddress.IPv4Network):
             if (e4 := _try(ipaddress.IPv4Network, value)) is not None:
-                raise MKUserError(varprefix, _("Invalid IPv4 address: %s") % e4)
+                raise MKUserError(varprefix, _("Invalid IPv4 address: %(e4)s") % {"e4": e4})
         elif (e6 := _try(ipaddress.IPv6Network, value)) is not None:
-            raise MKUserError(varprefix, _("Invalid IPv6 address: %s") % e6)
+            raise MKUserError(varprefix, _("Invalid IPv6 address: %(e6)s") % {"e6": e6})
 
     return TextInput(
         validate=_validate_value,
@@ -1496,13 +1497,14 @@ def IPAddress(
             ) is not None:
                 raise MKUserError(
                     varprefix,
-                    _("Invalid host or IP address. IPv4: %s, IPv6: %s") % (e4, e6),
+                    _("Invalid host or IP address. IPv4: %(e4)s, IPv6: %(e6)s")
+                    % {"e4": e4, "e6": e6},
                 )
         elif issubclass(ip_class, ipaddress.IPv4Address):
             if (e4 := _try(ipaddress.IPv4Address, value)) is not None:
-                raise MKUserError(varprefix, _("Invalid IPv4 address: %s") % e4)
+                raise MKUserError(varprefix, _("Invalid IPv4 address: %(e4)s") % {"e4": e4})
         elif (e6 := _try(ipaddress.IPv6Address, value)) is not None:
-            raise MKUserError(varprefix, _("Invalid IPv6 address: %s") % e6)
+            raise MKUserError(varprefix, _("Invalid IPv6 address: %(e6)s") % {"e6": e6})
 
     return TextInput(
         validate=_validate_value,
@@ -1890,7 +1892,9 @@ class CheckmkVersionInput(TextInput):
         try:
             Version.from_str(value)
         except ValueError:
-            raise MKUserError(varprefix, _("%s is not a valid version number.") % value)
+            raise MKUserError(
+                varprefix, _("%(value)s is not a valid version number.") % {"value": value}
+            )
 
         super()._validate_value(value, varprefix)
 
@@ -2080,7 +2084,8 @@ class Filename(TextInput):
         if not directory.is_dir():
             raise MKUserError(
                 varprefix,
-                _("The directory %s does not exist or is not a directory.") % directory,
+                _("The directory %(directory)s does not exist or is not a directory.")
+                % {"directory": directory},
             )
 
         # Write permissions to the file cannot be checked here since we run with Apache
@@ -3860,7 +3865,7 @@ class CascadingDropdown(ValueSpec[CascadingDropdownChoiceValue]):
             )
         except StopIteration:
             raise self._choice_from_value_raise(
-                _("Could not find an entry matching %r in choices") % (ident,),
+                _("Could not find an entry matching %(ident)r in choices") % {"ident": ident},
                 varprefix,
             )
         ident, title, vs = result
@@ -3958,7 +3963,9 @@ class CascadingDropdown(ValueSpec[CascadingDropdownChoiceValue]):
                         raise TypeError(value)
                     vs.validate_value(value[1], varprefix + "_%d" % nr)
                 return
-        raise MKUserError(varprefix + "_sel", _("Value %r is not allowed here.") % (value,))
+        raise MKUserError(
+            varprefix + "_sel", _("Value %(value)r is not allowed here.") % {"value": value}
+        )
 
     def transform_value(self, value: CascadingDropdownChoiceValue) -> CascadingDropdownChoiceValue:
         choice = self._choice_from_value(value)
@@ -4124,7 +4131,7 @@ class ListChoice(ValueSpec[ListChoiceModel]):
         self.load_elements()
         for v in value:
             if self._value_is_invalid(v):
-                raise MKUserError(varprefix, _("%s is not an allowed value") % v)
+                raise MKUserError(varprefix, _("%(v)s is not an allowed value") % {"v": v})
 
     def _value_is_invalid(self, value: ListChoiceChoiceIdent) -> bool:
         return all(value != val for val, _title in self._elements)
@@ -4608,7 +4615,7 @@ class RelativeDate(OptionalDropdownChoice[int]):
         choices = self.choices()  # TODO: Is this correct when no_preselect_title is not None?
         if reldays < len(choices):
             return choices[reldays][1]
-        return _("in %d days") % reldays
+        return _("in %(reldays)d days") % {"reldays": reldays}
 
     def from_html_vars(self, varprefix: str) -> int:
         reldays = super().from_html_vars(varprefix)
@@ -4802,7 +4809,8 @@ class AbsoluteDate(ValueSpec[None | float]):
             if part < mmin or part > mmax:
                 raise MKUserError(
                     varname,
-                    _("The value for %s must be between %d and %d") % (title, mmin, mmax),
+                    _("The value for %(title)s must be between %(mmin)d and %(mmax)d")
+                    % {"title": title, "mmin": mmin, "mmax": mmax},
                 )
             parts.append(part)
 
@@ -4854,7 +4862,9 @@ class AbsoluteDate(ValueSpec[None | float]):
         if (not self._allow_empty and value is None) or (
             value is not None and (value < 0 or int(value) > (2**31 - 1))
         ):
-            raise MKUserError(varprefix, _("%s is not a valid Unix timestamp") % value)
+            raise MKUserError(
+                varprefix, _("%(value)s is not a valid Unix timestamp") % {"value": value}
+            )
 
 
 TimeofdayValue = tuple[int, int] | None
@@ -4921,7 +4931,8 @@ class Timeofday(ValueSpec[TimeofdayValue]):
         except Exception:
             raise MKUserError(
                 varprefix,
-                _("Invalid time format '<tt>%s</tt>', please use <tt>24:00</tt> format.") % text,
+                _("Invalid time format '<tt>%(text)s</tt>', please use <tt>24:00</tt> format.")
+                % {"text": text},
             )
 
     def validate_datatype(self, value: TimeofdayValue, varprefix: str) -> None:
@@ -5388,7 +5399,7 @@ class Timerange(CascadingDropdown):
             count = int(rangespec[:-1])
             from_time = TimeHelper.add(now, count * -1, rangespec[-1])
             unit_name = {"d": "days", "h": "hours"}[rangespec[-1]]
-            title = _("Last %d %s") % (count, unit_name)
+            title = _("Last %(count)d %(unit_name)s") % {"count": count, "unit_name": unit_name}
             return ComputedTimerange((int(from_time), int(now)), title)
 
         if rangespec in ["f0", "f1", "l1", "fwd0", "lwd0", "fwd1", "lwd1"]:
@@ -5783,7 +5794,7 @@ class Alternative(ValueSpec[AlternativeModel]):
     def mask(self, value: AlternativeModel) -> AlternativeModel:
         vs = self._matching_alternative(value)
         if vs is None:
-            raise ValueError(_("Invalid value: %s") % (value,))
+            raise ValueError(_("Invalid value: %(value)s") % {"value": value})
         return vs.mask(value)
 
     def value_to_html(self, value: AlternativeModel) -> ValueSpecText:
@@ -5798,7 +5809,7 @@ class Alternative(ValueSpec[AlternativeModel]):
     def value_to_json(self, value: AlternativeModel) -> JSONValue:
         vs = self._matching_alternative(value)
         if vs is None:
-            raise ValueError(_("Invalid value: %s") % (value,))
+            raise ValueError(_("Invalid value: %(value)s") % {"value": value})
         return vs.value_to_json(value)
 
     def value_from_json(self, json_value: JSONValue) -> AlternativeModel:
@@ -6527,7 +6538,7 @@ class ElementSelection(ValueSpec[None | str]):
         if value not in self._elements:
             raise MKUserError(
                 varprefix,
-                _("%s is not an existing element in this selection.") % (value,),
+                _("%(value)s is not an existing element in this selection.") % {"value": value},
             )
 
     def validate_datatype(self, value: str | None, varprefix: str) -> None:
@@ -7162,7 +7173,7 @@ class FileUpload(ValueSpec[FileUploadModel]):
     def value_to_html(self, value: FileUploadModel) -> ValueSpecText:
         match value:
             case (str(file_name), str(_), bytes(_)):
-                return _("Chosen file: %s") % file_name
+                return _("Chosen file: %(file_name)s") % {"file_name": file_name}
             case other:
                 raise TypeError(other)
 
@@ -7240,7 +7251,11 @@ class ImageUpload(FileUpload):
             w, h = image.image_size()
             max_w, max_h = self._max_size
             if w > max_w or h > max_h:
-                raise MKUserError(varprefix, _("Maximum image size: %dx%dpx") % (max_w, max_h))
+                raise MKUserError(
+                    varprefix,
+                    _("Maximum image size: %(max_w)dx%(max_h)dpx")
+                    % {"max_w": max_w, "max_h": max_h},
+                )
 
 
 class UploadOrPasteTextFile(Alternative):
@@ -7266,13 +7281,13 @@ class UploadOrPasteTextFile(Alternative):
         f_title = _("File") if file_title is None else file_title
         additional_elements: list[ValueSpec] = [
             FileUpload(
-                title=_("Upload %s") % f_title,
+                title=_("Upload %(f_title)s") % {"f_title": f_title},
                 allow_empty=allow_empty,
                 allowed_extensions=allowed_extensions,
                 mime_types=mime_types,
             ),
             TextAreaUnicode(
-                title=_("Content of %s") % f_title,
+                title=_("Content of %(f_title)s") % {"f_title": f_title},
                 allow_empty=allow_empty,
                 cols=80,
                 rows="auto",
@@ -8467,7 +8482,7 @@ class _CAorCAChain(UploadOrPasteTextFile):
             # make sure the PEM can be loaded
             certificate.Certificate.load_pem(certificate.CertificatePEM(value))
         except Exception as e:
-            raise MKUserError(varprefix, _("Invalid certificate file: %s") % e)
+            raise MKUserError(varprefix, _("Invalid certificate file: %(e)s") % {"e": e})
 
     def value_to_html(self, value: Any) -> ValueSpecText:
         # value is really str | bytes, but UploadOrPasteTextFile doesn't know this
@@ -8844,7 +8859,7 @@ class DatePicker(ValueSpec[str]):
         try:
             dateutil.parser.isoparse(value)
         except ValueError as e:
-            raise MKUserError(varprefix, _("Invalid date format: %s") % e) from e
+            raise MKUserError(varprefix, _("Invalid date format: %(e)s") % {"e": e}) from e
 
 
 class TimePicker(ValueSpec[str]):
@@ -8899,4 +8914,4 @@ class TimePicker(ValueSpec[str]):
         try:
             time.strptime(value, "%H:%M")
         except ValueError as e:
-            raise MKUserError(varprefix, _("Invalid time format: %s") % e) from e
+            raise MKUserError(varprefix, _("Invalid time format: %(e)s") % {"e": e}) from e

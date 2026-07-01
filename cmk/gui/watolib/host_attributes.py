@@ -614,7 +614,7 @@ def declare_host_attribute(
 ) -> None:
     if not issubclass(a, ABCHostAttribute):
         raise MKGeneralException(
-            _("Failed to load legacy host attribute from local plug-ins: %r") % a
+            _("Failed to load legacy host attribute from local plug-ins: %(a)r") % {"a": a}
         )
 
     attrs: dict[str, Any] = {}

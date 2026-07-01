@@ -569,7 +569,8 @@ def validate_port_not_in_use(value: int, omd_path: Path = Path("/omd")) -> None:
         key, site = conflict
         raise MKUserError(
             "",
-            _("Port %d is already in use by site '%s' (key: %s).") % (value, site, key),
+            _("Port %(value)d is already in use by site '%(site)s' (key: %(key)s).")
+            % {"value": value, "site": site, "key": key},
         )
 
 
@@ -723,7 +724,10 @@ class ConfigDomainOMD(ABCConfigDomain):
 
                     settings[key] = val
         except Exception as e:
-            raise MKGeneralException(_("Cannot read configuration file %s: %s") % (file_path, e))
+            raise MKGeneralException(
+                _("Cannot read configuration file %(file_path)s: %(e)s")
+                % {"file_path": file_path, "e": e}
+            )
 
         return settings
 

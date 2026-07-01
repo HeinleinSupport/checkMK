@@ -93,7 +93,8 @@ class DictionaryVisitor(FormSpecVisitor[DictionaryExtended, _ParsedValueModel, _
                 resolved_dict = self._resolve_static_elements(resolved_dict)
             if invalid_keys := self._get_invalid_keys(resolved_dict):
                 return InvalidValue[_FallbackModel](
-                    reason=_("Dictionary contains invalid keys: %r") % invalid_keys,
+                    reason=_("Dictionary contains invalid keys: %(invalid_keys)r")
+                    % {"invalid_keys": invalid_keys},
                     fallback_value=self._compute_default_values(),
                 )
             for k, v in resolved_dict.items():
@@ -114,7 +115,7 @@ class DictionaryVisitor(FormSpecVisitor[DictionaryExtended, _ParsedValueModel, _
         except ValueError as e:
             # This can happen during parsing the static elements with ast.literal_eval
             return InvalidValue[_FallbackModel](
-                reason=_("General value error: %s") % e,
+                reason=_("General value error: %(e)s") % {"e": e},
                 fallback_value=self._compute_default_values(),
             )
 

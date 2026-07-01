@@ -139,7 +139,10 @@ class ABCConfigDomain(abc.ABC):
             return settings
 
         except Exception as e:
-            raise MKGeneralException(_("Cannot read configuration file %s: %s") % (filename, e))
+            raise MKGeneralException(
+                _("Cannot read configuration file %(filename)s: %(e)s")
+                % {"filename": filename, "e": e}
+            )
 
     def load(
         self, site_specific: bool = False, custom_site_path: str | None = None

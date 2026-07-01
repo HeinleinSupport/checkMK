@@ -152,9 +152,9 @@ def forward_token_create(
             status=502,
             title="Could not create token on remote site",
             detail=_(
-                'Token creation on site "%s" failed: %s. Make sure the central site '
+                'Token creation on site "%(site_id)s" failed: %(exc)s. Make sure the central site '
                 "is logged into the remote site (Distributed monitoring → Login)."
             )
-            % (site_id, exc),
+            % {"site_id": site_id, "exc": exc},
         )
     return TokenCreateResponse.model_validate(raw)

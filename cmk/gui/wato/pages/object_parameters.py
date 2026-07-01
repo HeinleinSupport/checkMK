@@ -270,7 +270,9 @@ class ModeObjectParameters(WatoMode):
         checkgroup = serviceinfo["checkgroup"]
 
         if (checktype := serviceinfo["checktype"]) in NOTDISPLAYABLE:
-            reason = _("Check parameters for check type '%s' cannot be displayed") % checktype
+            reason = _("Check parameters for check type '%(checktype)s' cannot be displayed") % {
+                "checktype": checktype
+            }
         else:
             reason = _("This check is not configurable via Setup")
 
@@ -660,7 +662,10 @@ class ModeObjectParameters(WatoMode):
             except Exception as e:
                 if debug:
                     raise
-                html.write_text_permissive(_("Invalid parameter %r: %s") % (known_settings, e))
+                html.write_text_permissive(
+                    _("Invalid parameter %(known_settings)r: %(e)s")
+                    % {"known_settings": known_settings, "e": e}
+                )
 
         elif not rules:  # show the default value
             if rulespec.factory_default is not Rulespec.NO_FACTORY_DEFAULT:

@@ -351,7 +351,10 @@ class ModeUsers(WatoMode):
             if users_used_in_notification_rule:
                 self._render_related_rule_warning(users_used_in_notification_rule)
             if deleted_users:
-                flash(_("Successfully deleted the following user '%s'") % delete_user)
+                flash(
+                    _("Successfully deleted the following user '%(delete_user)s'")
+                    % {"delete_user": delete_user}
+                )
             return redirect(self.mode_url())
 
         if request.var("_sync"):
@@ -465,7 +468,8 @@ class ModeUsers(WatoMode):
                     rule_count,
                     rule_singular_plural,
                     html.render_a(
-                        _(" notification %s") % rule_singular_plural,
+                        _(" notification %(rule_singular_plural)s")
+                        % {"rule_singular_plural": rule_singular_plural},
                         href=makeuri(
                             request,
                             [
@@ -608,7 +612,7 @@ class ModeUsers(WatoMode):
                         url=make_action_link([("mode", "users"), ("_delete", uid)]),
                         title=_("Delete user"),
                         suffix=user_alias,
-                        message=_("ID: %s") % uid,
+                        message=_("ID: %(uid)s") % {"uid": uid},
                     )
                     html.icon_button(delete_url, _("Delete"), StaticIcon(IconNames.delete))
 
@@ -773,12 +777,12 @@ class ModeUsers(WatoMode):
             html.open_div(class_="info")
             html.write_text_permissive(
                 _(
-                    "Note: you haven't defined any contact groups yet. If you <a href='%s'>"
+                    "Note: you haven't defined any contact groups yet. If you <a href='%(url)s'>"
                     "create some contact groups</a> you can assign users to them und thus "
                     "make them monitoring contacts. Only monitoring contacts can receive "
                     "notifications."
                 )
-                % url
+                % {"url": url}
             )
             html.write_text_permissive(
                 " you can assign users to them und thus "
@@ -1265,7 +1269,8 @@ class ModeEditUser(WatoMode):
 
         if not self._contact_groups:
             html.write_text_permissive(
-                _("Please first create some <a href='%s'>contact groups</a>") % groups_page_url
+                _("Please first create some <a href='%(groups_page_url)s'>contact groups</a>")
+                % {"groups_page_url": groups_page_url}
             )
         else:
             entries = sorted(
@@ -1294,14 +1299,18 @@ class ModeEditUser(WatoMode):
             _(
                 "Contact groups are used to assign monitoring "
                 "objects to users. If you haven't defined any contact groups yet, "
-                "then first <a href='%s'>do so</a>. "
+                "then first <a href='%(groups_page_url)s'>do so</a>. "
                 "Hosts and services can be assigned to contact groups using this "
-                "<a href='%s'>rule for hosts</a> and this "
-                "<a href='%s'>rule for services</a>.<br><br>"
+                "<a href='%(hosts_assign_url)s'>rule for hosts</a> and this "
+                "<a href='%(services_assign_url)s'>rule for services</a>.<br><br>"
                 "If you do not put the user into any contact group "
                 "then no monitoring contact will be created for the user."
             )
-            % (groups_page_url, hosts_assign_url, services_assign_url)
+            % {
+                "groups_page_url": groups_page_url,
+                "hosts_assign_url": hosts_assign_url,
+                "services_assign_url": services_assign_url,
+            }
         )
 
         forms.header(_("Notifications"), isopen=False)

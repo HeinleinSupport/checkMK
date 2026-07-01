@@ -357,7 +357,7 @@ class ABCEventsMode[T_EventSpec: EventRule | dict](WatoMode, abc.ABC):
             nr = request.get_integer_input_mandatory("_delete")
             self._add_change(
                 action_name=what + "-delete-rule",
-                text=_("Deleted %s %d") % (what_title, nr),
+                text=_("Deleted %(what_title)s %(nr)d") % {"what_title": what_title, "nr": nr},
                 pending_changes=pending_changes,
                 site_configs=site_configs,
             )
@@ -374,7 +374,8 @@ class ABCEventsMode[T_EventSpec: EventRule | dict](WatoMode, abc.ABC):
                 save_rules(edit_rules)
                 self._add_change(
                     action_name=what + "-move-rule",
-                    text=_("Changed position of %s %d") % (what_title, from_pos),
+                    text=_("Changed position of %(what_title)s %(from_pos)d")
+                    % {"what_title": what_title, "from_pos": from_pos},
                     pending_changes=pending_changes,
                     site_configs=site_configs,
                 )

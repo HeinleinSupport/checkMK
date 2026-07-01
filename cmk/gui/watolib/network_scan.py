@@ -107,7 +107,9 @@ def execute_network_scan_job(config: Config) -> None:
                 found = raw_response
 
             if not isinstance(found, list):
-                raise MKGeneralException(_("Received an invalid network scan result: %r") % found)
+                raise MKGeneralException(
+                    _("Received an invalid network scan result: %(found)r") % {"found": found}
+                )
 
             _add_scanned_hosts_to_folder(
                 tree,
@@ -138,7 +140,7 @@ def execute_network_scan_job(config: Config) -> None:
             result.update(
                 {
                     "state": False,
-                    "output": _("An exception occurred: %s") % e,
+                    "output": _("An exception occurred: %(e)s") % {"e": e},
                 }
             )
             logger.error("Exception in network scan:\n%s", traceback.format_exc())

@@ -42,10 +42,10 @@ def _validate_unique_title(title: str, exclude_ident: str | None = None) -> None
                     shared_type_defs.ValidationMessage(
                         location=["title"],
                         message=_(
-                            "The title must be unique. The title '%s' is already used by "
-                            "the OAuth2 connection with ID %s."
+                            "The title must be unique. The title '%(title)s' is already used by "
+                            "the OAuth2 connection with ID %(ident)s."
                         )
-                        % (title, ident),
+                        % {"title": title, "ident": ident},
                         replacement_value=title,
                     )
                 ]

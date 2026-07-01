@@ -90,7 +90,7 @@ class ModeRandomHosts(WatoMode):
                 ),
             ),
         )
-        flash(_("Added %d random hosts.") % created)
+        flash(_("Added %(created)d random hosts.") % {"created": created})
         return redirect(mode_url("folder", folder=folder.path()))
 
     def page(self, config: Config) -> None:

@@ -122,7 +122,7 @@ def delete_timeperiod(
     pending_changes.add(
         Change(
             action_name="edit-timeperiods",
-            text=_("Deleted time period %s") % name,
+            text=_("Deleted time period %(name)s") % {"name": name},
             domains=[CORE],
         ),
         ChangeScope.all_activation_sites(),
@@ -148,7 +148,7 @@ def modify_timeperiod(
     pending_changes.add(
         Change(
             action_name="edit-timeperiods",
-            text=_("Modified time period %s") % name,
+            text=_("Modified time period %(name)s") % {"name": name},
             domains=[CORE],
         ),
         ChangeScope.all_activation_sites(),
@@ -174,7 +174,7 @@ def create_timeperiod(
     pending_changes.add(
         Change(
             action_name="edit-timeperiods",
-            text=_("Created new time period %s") % name,
+            text=_("Created new time period %(name)s") % {"name": name},
             domains=[CORE],
         ),
         ChangeScope.all_activation_sites(),

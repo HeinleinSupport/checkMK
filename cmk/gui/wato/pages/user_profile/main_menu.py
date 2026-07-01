@@ -258,7 +258,7 @@ class ModeAjaxChangesAction(AjaxPage):
 
         action = body.get("action")
         if action not in self._VALID_ACTIONS:
-            raise MKUserError(None, _("Invalid action: %s") % action)
+            raise MKUserError(None, _("Invalid action: %(action)s") % {"action": action})
 
         set_user_attribute("navbar_changes_action", action)
         return {}
@@ -298,7 +298,7 @@ class ModeAjaxSetStartURL(AjaxPage):
             else:
                 set_user_attribute("start_url", None)
         except Exception as e:
-            raise MKUserError(None, _("Failed to set start URL: %s") % e)
+            raise MKUserError(None, _("Failed to set start URL: %(e)s") % {"e": e})
         return {}
 
 

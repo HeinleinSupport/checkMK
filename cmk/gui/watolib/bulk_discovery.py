@@ -608,7 +608,9 @@ def prepare_hosts_for_discovery(
     for host_name in hostnames:
         host = tree.host(HostName(host_name))
         if host is None:
-            raise MKUserError(None, _("The host '%s' does not exist") % host_name)
+            raise MKUserError(
+                None, _("The host '%(host_name)s' does not exist") % {"host_name": host_name}
+            )
         host.permissions.need_permission("write", user)
         hosts_to_discover.append(
             DiscoveryHost(

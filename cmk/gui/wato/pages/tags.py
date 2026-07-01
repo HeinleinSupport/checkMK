@@ -246,7 +246,8 @@ class ModeTags(ABCTagMode):
             pending_changes.add(
                 Change(
                     action_name="edit-tags",
-                    text=_("Removed tag group %s (%s)") % (message, del_id),
+                    text=_("Removed tag group %(message)s (%(del_id)s)")
+                    % {"message": message, "del_id": del_id},
                     domains=[CORE],
                 ),
                 ChangeScope.all_activation_sites(),
@@ -293,7 +294,8 @@ class ModeTags(ABCTagMode):
             pending_changes.add(
                 Change(
                     action_name="edit-tags",
-                    text=_("Removed auxiliary tag %s (%s)") % (message, del_id),
+                    text=_("Removed auxiliary tag %(message)s (%(del_id)s)")
+                    % {"message": message, "del_id": del_id},
                     domains=[CORE],
                 ),
                 ChangeScope.all_activation_sites(),

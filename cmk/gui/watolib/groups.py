@@ -80,7 +80,7 @@ def add_group(
     _add_group_change(
         extra_info,
         "edit-%sgroups" % group_type,
-        _l("Create new %s group %s") % (group_type, name),
+        _l("Create new %(group_type)s group %(name)s") % {"group_type": group_type, "name": name},
         pending_changes=pending_changes,
     )
 
@@ -98,7 +98,7 @@ def edit_group(
     groups = all_groups.get(group_type, {})
 
     if name not in groups:
-        raise MKUserError("name", _("Unknown group: %s") % name)
+        raise MKUserError("name", _("Unknown group: %(name)s") % {"name": name})
 
     old_group_backup = copy.deepcopy(groups[name])
 
@@ -134,14 +134,16 @@ def edit_group(
             _add_group_change(
                 old_group_backup,
                 "edit-%sgroups" % group_type,
-                _l("Updated properties of %sgroup %s") % (group_type, name),
+                _l("Updated properties of %(group_type)sgroup %(name)s")
+                % {"group_type": group_type, "name": name},
                 pending_changes=pending_changes,
             )
     else:
         _add_group_change(
             extra_info,
             "edit-%sgroups" % group_type,
-            _l("Updated properties of %s group %s") % (group_type, name),
+            _l("Updated properties of %(group_type)s group %(name)s")
+            % {"group_type": group_type, "name": name},
             pending_changes=pending_changes,
         )
 
@@ -166,7 +168,7 @@ def delete_group(
     if name not in groups:
         raise UnknownGroupException(
             None,
-            _("Unknown %s group: %s") % (group_type, name),
+            _("Unknown %(group_type)s group: %(name)s") % {"group_type": group_type, "name": name},
         )
 
     # Check if still used
@@ -184,7 +186,7 @@ def delete_group(
     _add_group_change(
         group,
         "edit-%sgroups" % group_type,
-        _l("Deleted %s group %s") % (group_type, name),
+        _l("Deleted %(group_type)s group %(name)s") % {"group_type": group_type, "name": name},
         pending_changes=pending_changes,
     )
 
@@ -309,7 +311,10 @@ def is_alias_used(
     for what, groups in all_groups.items():
         for gid, group in groups.items():
             if group["alias"] == my_alias and (my_what != what or my_name != gid):
-                return False, _("This alias is already used in the %s group %s.") % (what, gid)
+                return False, _("This alias is already used in the %(what)s group %(gid)s.") % {
+                    "what": what,
+                    "gid": gid,
+                }
 
     # Timeperiods
     timeperiods = load_timeperiods()
@@ -317,13 +322,17 @@ def is_alias_used(
         if timeperiod_spec_alias(timeperiod_spec) == my_alias and (
             my_what != "timeperiods" or my_name != timeperiod_id
         ):
-            return False, _("This alias is already used in time period %s.") % timeperiod_id
+            return False, _("This alias is already used in time period %(timeperiod_id)s.") % {
+                "timeperiod_id": timeperiod_id
+            }
 
     # Roles
     roles = load_roles()
     for role_id, role_spec in roles.items():
         if role_spec.get("alias") == my_alias and (my_what != "roles" or my_name != role_id):
-            return False, _("This alias is already used in the role %s.") % role_id
+            return False, _("This alias is already used in the role %(role_id)s.") % {
+                "role_id": role_id
+            }
 
     return True, None
 
@@ -358,16 +367,13 @@ class HostAttributeContactGroups(ABCHostAttribute):
             [("mode", "edit_ruleset"), ("varname", "host_contactgroups")],
             filename="wato.py",
         )
-        return (
-            _(
-                "Only members of the contact groups listed here have Setup "
-                "permission for the host/folder. Optionally, you can make these "
-                "contact groups automatically monitor contacts. The assignment "
-                "of hosts to contact groups can also be defined by "
-                "<a href='%s'>rules</a>."
-            )
-            % url
-        )
+        return _(
+            "Only members of the contact groups listed here have Setup "
+            "permission for the host/folder. Optionally, you can make these "
+            "contact groups automatically monitor contacts. The assignment "
+            "of hosts to contact groups can also be defined by "
+            "<a href='%(url)s'>rules</a>."
+        ) % {"url": url}
 
     def show_in_table(self) -> bool:
         return False

@@ -133,7 +133,7 @@ def create_snapshot(
     data["comment"] = _("Activated changes by %s.") % (created_by or "")
 
     if comment:
-        data["comment"] += _("Comment: %s") % comment
+        data["comment"] += _("Comment: %(comment)s") % {"comment": comment}
 
     # with SuperUserContext the user.id is None; later this value will be encoded for tar
     data["created_by"] = created_by or ""
@@ -327,7 +327,8 @@ def get_snapshot_status(
             for tarname in status["files"]:
                 if tarname not in allowed_files:
                     raise MKGeneralException(
-                        _("Invalid snapshot (contains invalid tarfile %s)") % tarname
+                        _("Invalid snapshot (contains invalid tarfile %(tarname)s)")
+                        % {"tarname": tarname}
                     )
         else:  # new snapshots
             for entry in ("comment", "created_by", "type"):
@@ -338,7 +339,9 @@ def get_snapshot_status(
 
                     status[entry] = access_snapshot(handler)
                 else:
-                    raise MKGeneralException(_("Invalid snapshot (missing file: %s)") % entry)
+                    raise MKGeneralException(
+                        _("Invalid snapshot (missing file: %(entry)s)") % {"entry": entry}
+                    )
 
     def check_core() -> None:
         if "check_mk.tar.gz" not in status["files"]:
@@ -506,7 +509,7 @@ def _get_file_content(the_tarfile: str | IO[bytes], filename: str) -> bytes:
     with context as archive:
         if obj := archive.extractfile_by_name(filename):
             return obj.read()
-    raise MKGeneralException(_("Failed to extract %s") % filename)
+    raise MKGeneralException(_("Failed to extract %(filename)s") % {"filename": filename})
 
 
 def _get_default_backup_domains() -> dict[str, DomainSpec]:

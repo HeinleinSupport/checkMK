@@ -273,12 +273,14 @@ class ACTestLivestatusUsage(ACTest):
 
         yield ACSingleResult(
             state=state,
-            text=_("The current Livestatus usage is %.2f%%") % usage_perc,
+            text=_("The current Livestatus usage is %(usage_perc).2f%%")
+            % {"usage_perc": usage_perc},
             site_id=site_id,
         )
         yield ACSingleResult(
             state=state,
-            text=_("%d of %d connections used") % (active_connections, threads),
+            text=_("%(active_connections)d of %(threads)d connections used")
+            % {"active_connections": active_connections, "threads": threads},
             site_id=site_id,
         )
 
@@ -286,7 +288,8 @@ class ACTestLivestatusUsage(ACTest):
         if overflows_rate is not None:
             yield ACSingleResult(
                 state=state,
-                text=_("you have a connection overflow rate of %.2f/s") % overflows_rate,
+                text=_("you have a connection overflow rate of %(overflows_rate).2f/s")
+                % {"overflows_rate": overflows_rate},
                 site_id=site_id,
             )
 
@@ -411,17 +414,17 @@ class ACTestNumberOfUsers(ACTest):
         if num_users <= user_warn_threshold:
             yield ACSingleResult(
                 state=ACResultState.OK,
-                text=_("You have %d users configured") % num_users,
+                text=_("You have %(num_users)d users configured") % {"num_users": num_users},
                 site_id=site_id,
             )
         else:
             yield ACSingleResult(
                 state=ACResultState.WARN,
                 text=_(
-                    "You have %d users configured. Please review the number of "
+                    "You have %(num_users)d users configured. Please review the number of "
                     "users you have configured in Checkmk."
                 )
-                % num_users,
+                % {"num_users": num_users},
                 site_id=site_id,
             )
 
@@ -545,7 +548,8 @@ class ACTestBackupConfigured(ACTest):
         if n_configured_jobs:
             yield ACSingleResult(
                 state=ACResultState.OK,
-                text=_("You have configured %d backup jobs") % n_configured_jobs,
+                text=_("You have configured %(n_configured_jobs)d backup jobs")
+                % {"n_configured_jobs": n_configured_jobs},
                 site_id=site_id,
             )
         else:
@@ -807,9 +811,9 @@ class ACTestApacheProcessUsage(ABCACApacheTest):
         yield ACSingleResult(
             state=state,
             text=_(
-                "%d of the configured maximum of %d processes have been started. This is a usage of %0.2f %%."
+                "%(used_slots)d of the configured maximum of %(total_slots)d processes have been started. This is a usage of %(usage)0.2f %%."
             )
-            % (used_slots, total_slots, usage),
+            % {"used_slots": used_slots, "total_slots": total_slots, "usage": usage},
             site_id=site_id,
         )
 
@@ -867,9 +871,12 @@ class ACTestCheckMKHelperUsage(ACTest):
         yield ACSingleResult(
             state=state,
             text=_(
-                "The current checker usage is %.2f%%. The checkers have an average latency of %.3fs."
+                "The current checker usage is %(helper_usage_checker_percent).2f%%. The checkers have an average latency of %(average_latency_checker).3fs."
             )
-            % (helper_usage_checker_percent, average_latency_checker),
+            % {
+                "helper_usage_checker_percent": helper_usage_checker_percent,
+                "average_latency_checker": average_latency_checker,
+            },
             site_id=site_id,
         )
 
@@ -926,10 +933,10 @@ class ACTestCheckMKFetcherUsage(ACTest):
         yield ACSingleResult(
             state=state,
             text=_(
-                "The current fetcher usage is %.2f%%."
-                " The checks have an average check latency of %.3fs."
+                "The current fetcher usage is %(fetcher_usage_perc).2f%%."
+                " The checks have an average check latency of %(fetcher_latency).3fs."
             )
-            % (fetcher_usage_perc, fetcher_latency),
+            % {"fetcher_usage_perc": fetcher_usage_perc, "fetcher_latency": fetcher_latency},
             site_id=site_id,
         )
 
@@ -1003,10 +1010,10 @@ class ACTestCheckMKCheckerUsage(ACTest):
         yield ACSingleResult(
             state=state,
             text=_(
-                "The current checker usage is %.2f%%. "
-                "The checks have an average check latency of %.3fs."
+                "The current checker usage is %(checker_usage_perc).2f%%. "
+                "The checks have an average check latency of %(fetcher_latency).3fs."
             )
-            % (checker_usage_perc, fetcher_latency),
+            % {"checker_usage_perc": checker_usage_perc, "fetcher_latency": fetcher_latency},
             site_id=site_id,
         )
 
@@ -1071,7 +1078,8 @@ class ACTestGenericCheckHelperUsage(ACTest):
             state = ACResultState.OK
         yield ACSingleResult(
             state=state,
-            text=_("The current check helper usage is %.2f%%") % helper_usage_perc,
+            text=_("The current check helper usage is %(helper_usage_perc).2f%%")
+            % {"helper_usage_perc": helper_usage_perc},
             site_id=site_id,
         )
 
@@ -1081,8 +1089,10 @@ class ACTestGenericCheckHelperUsage(ACTest):
             state = ACResultState.OK
         yield ACSingleResult(
             state=state,
-            text=_("The active check services have an average check latency of %.3fs.")
-            % (check_latency_generic),
+            text=_(
+                "The active check services have an average check latency of %(check_latency_generic).3fs."
+            )
+            % {"check_latency_generic": check_latency_generic},
             site_id=site_id,
         )
 
@@ -1165,7 +1175,8 @@ class ACTestBrokenGUIExtension(ACTest):
         for plugin_filepath, gui_part, plugin_file, error in errors:
             yield ACSingleResult(
                 state=ACResultState.CRIT,
-                text=_('Loading "%s/%s" failed: %s') % (gui_part, plugin_file, error),
+                text=_('Loading "%(gui_part)s/%(plugin_file)s" failed: %(error)s')
+                % {"gui_part": gui_part, "plugin_file": plugin_file, "error": error},
                 site_id=site_id,
                 path=plugin_filepath,
             )
@@ -1289,8 +1300,10 @@ class ACTestUnknownCheckParameterRuleSets(ACTest):
                 yield ACSingleResult(
                     state=ACResultState.WARN,
                     text=(
-                        _("Found configured rules of unknown check parameter rule set %r.")
-                        % rule_set
+                        _(
+                            "Found configured rules of unknown check parameter rule set %(rule_set)r."
+                        )
+                        % {"rule_set": rule_set}
                     ),
                     site_id=site_id,
                 )
@@ -1802,10 +1815,10 @@ class ACTestCheckMKCheckerNumber(ACTest):
             yield ACSingleResult(
                 state=ACResultState.WARN,
                 text=_(
-                    "Configuring more checkers than the number of available CPUs (%d) have "
+                    "Configuring more checkers than the number of available CPUs (%(num_cpu)d) have "
                     "a detrimental effect, since they are not I/O bound."
                 )
-                % num_cpu,
+                % {"num_cpu": num_cpu},
                 site_id=site_id,
             )
             return

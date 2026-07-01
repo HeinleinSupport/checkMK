@@ -72,4 +72,6 @@ def check_csrf_token(token: str | None = None) -> None:
                 remote_ip=request.remote_ip,
             )
         )
-        raise MKGeneralException(_("Invalid CSRF token (%r)") % (csrf_token))
+        raise MKGeneralException(
+            _("Invalid CSRF token (%(csrf_token)r)") % {"csrf_token": csrf_token}
+        )

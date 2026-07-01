@@ -794,7 +794,7 @@ def render_renaming_actions(action_counts: Mapping[str, int]) -> list[str]:
             text = action_titles.get(what, what)
 
         if count > 1:
-            text += _(" (%d times)") % count
+            text += _(" (%(count)d times)") % {"count": count}
         texts.append(text)
 
     return texts

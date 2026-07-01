@@ -748,7 +748,8 @@ class SiteManagement:
         if is_new and cls.broker_connection_id_exists(connection_id):
             raise MKUserError(
                 None,
-                _("Connection ID %s already exists.") % connection_id,
+                _("Connection ID %(connection_id)s already exists.")
+                % {"connection_id": connection_id},
             )
 
         old_connection_sites = {connection.connecter.site_id, connection.connectee.site_id}
@@ -789,7 +790,11 @@ class SiteManagement:
     ) -> tuple[SiteId, SiteId]:
         broker_connections = cls.get_broker_connections()
         if connection_id not in broker_connections:
-            raise MKUserError(None, _("Unable to delete unknown connection ID: %s") % connection_id)
+            raise MKUserError(
+                None,
+                _("Unable to delete unknown connection ID: %(connection_id)s")
+                % {"connection_id": connection_id},
+            )
 
         connection = broker_connections[connection_id]
         del broker_connections[connection_id]
@@ -811,7 +816,9 @@ class SiteManagement:
 
         if not site_configuration.get("alias"):
             raise MKUserError(
-                "alias", _("Please enter an alias name or description for the site %s.") % site_id
+                "alias",
+                _("Please enter an alias name or description for the site %(site_id)s.")
+                % {"site_id": site_id},
             )
 
         if site_configuration["url_prefix"] and site_configuration["url_prefix"][-1] != "/":
@@ -836,7 +843,9 @@ class SiteManagement:
                 int(timeout)
             except ValueError:
                 raise MKUserError(
-                    "timeout", _("The timeout %s is not a valid integer number.") % timeout
+                    "timeout",
+                    _("The timeout %(timeout)s is not a valid integer number.")
+                    % {"timeout": timeout},
                 )
 
         # Status host
@@ -930,7 +939,9 @@ class SiteManagement:
         sites_config_file = SitesConfigFile()
         all_sites = sites_config_file.load_for_modification()
         if site_id not in all_sites:
-            raise MKUserError(None, _("Unable to delete unknown site id: %s") % site_id)
+            raise MKUserError(
+                None, _("Unable to delete unknown site id: %(site_id)s") % {"site_id": site_id}
+            )
 
         # Make sure that site is not being used by hosts and folders
         if site_id in folder_tree().root_folder().all_site_ids():
@@ -950,10 +961,10 @@ class SiteManagement:
                 None,
                 _(
                     "You cannot delete this connection. It has folders/hosts "
-                    'assigned to it. You can use the <a href="%s">host '
+                    'assigned to it. You can use the <a href="%(search_url)s">host '
                     "search</a> to get a list of the hosts."
                 )
-                % search_url,
+                % {"search_url": search_url},
             )
 
         if self.is_site_in_broker_connections(site_id):
@@ -980,7 +991,7 @@ class SiteManagement:
         pending_changes.add(
             Change(
                 action_name="edit-sites",
-                text=_("Deleted site %s") % site_id,
+                text=_("Deleted site %(site_id)s") % {"site_id": site_id},
                 domains=[d.ident() for d in domains],
                 force_restart=True,
             ),

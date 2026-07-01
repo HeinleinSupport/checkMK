@@ -653,7 +653,9 @@ def _calc_status_details(
         if estimated_time_left < 0:
             value += " " + _("Takes %.1f seconds longer than expected") % abs(estimated_time_left)
         else:
-            value += " " + _("Approximately finishes in %.1f seconds") % estimated_time_left
+            value += " " + _("Approximately finishes in %(estimated_time_left).1f seconds") % {
+                "estimated_time_left": estimated_time_left
+            }
 
     if status_details:
         value += "<br>%s" % status_details
@@ -808,7 +810,9 @@ def _synchronize_files(
     )
 
     if response is not True:
-        raise MKGeneralException(_("Failed to synchronize with site: %s") % response)
+        raise MKGeneralException(
+            _("Failed to synchronize with site: %(response)s") % {"response": response}
+        )
 
 
 @dataclass(frozen=True)
@@ -1255,7 +1259,7 @@ class ActivateChanges:
         if number_of_changes == 1:
             return _("1 change")
         if number_of_changes > 1:
-            return _("%d changes") % number_of_changes
+            return _("%(number_of_changes)d changes") % {"number_of_changes": number_of_changes}
         return None
 
     @staticmethod
@@ -1947,7 +1951,9 @@ class ActivateChangesManager:
     ) -> None:
         for site_id in requested_sites:
             if site_id not in activation_site_ids:
-                raise MKUserError("sites", _('The site "%s" does not exist.') % site_id)
+                raise MKUserError(
+                    "sites", _('The site "%(site_id)s" does not exist.') % {"site_id": site_id}
+                )
 
     def _info_path(self, activation_id: str) -> str:
         if not validate_uuid_str(activation_id):
@@ -2009,7 +2015,7 @@ class ActivateChangesManager:
             logger.exception("error calling pre-distribute-changes hook")
             if debug:
                 raise
-            raise MKUserError(None, _("Can not start activation: %s") % e)
+            raise MKUserError(None, _("Can not start activation: %(e)s") % {"e": e})
 
     @tracer.instrument("create_snapshots")
     def _create_snapshots(
@@ -3096,7 +3102,8 @@ def get_pending_changes_tooltip(changes_info: PendingChangesInfo) -> str:
             (
                 _("Currently, there is one pending change not yet activated.")
                 if n_changes == 1
-                else _("Currently, there are %s not yet activated.") % n_changes
+                else _("Currently, there are %(n_changes)s not yet activated.")
+                % {"n_changes": n_changes}
             )
             + "\n"
             + _("Click here for details.")
@@ -3310,8 +3317,8 @@ def verify_remote_site_config(sites: Mapping[SiteId, SiteConfiguration], site_id
 
     if our_id is not None and our_id != site_id:
         raise MKGeneralException(
-            _("Site ID mismatch. Our ID is '%s', but you are saying we are '%s'.")
-            % (our_id, site_id)
+            _("Site ID mismatch. Our ID is '%(our_id)s', but you are saying we are '%(site_id)s'.")
+            % {"our_id": our_id, "site_id": site_id}
         )
 
     # Make sure there are no local changes we would lose!
@@ -4072,10 +4079,10 @@ def _check_sites_that_cannot_be_activated(
             None,
             _(
                 "There are changes to activate, but no site can be "
-                "activated (The %s changes, but may be "
+                "activated (The %(err_msg)s changes, but may be "
                 "offline or not logged in)."
             )
-            % err_msg,
+            % {"err_msg": err_msg},
             status=409,
         )
 

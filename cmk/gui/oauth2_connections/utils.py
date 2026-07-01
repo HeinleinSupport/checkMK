@@ -18,7 +18,7 @@ def oauth2_render_link(ident: GlobalIdent) -> HTML:
     instance_id = ident["instance_id"]
     title = load_oauth2_connections()[instance_id]["title"]
     return html.render_a(
-        _("[%s] - OAuth2 connection") % title,
+        _("[%(title)s] - OAuth2 connection") % {"title": title},
         mode_url("edit_oauth2_connection", ident=instance_id),
         class_=["config-bundle-link"],
     )

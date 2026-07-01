@@ -524,9 +524,9 @@ class ModeRenameHost(WatoMode):
                 "newname",
                 _(
                     "You cannot rename a host while you have "
-                    "pending changes on the site the host is monitored on (%s)."
+                    "pending changes on the site the host is monitored on (%(renamed_host_site)s)."
                 )
-                % renamed_host_site,
+                % {"renamed_host_site": renamed_host_site},
             )
         if is_locked_by_quick_setup(self._host.locked_by()):
             raise MKUserError(

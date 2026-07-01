@@ -306,10 +306,10 @@ class ABCHostMode(WatoMode, abc.ABC):
                 raise MKUserError(
                     "nodes_%d" % nr,
                     _(
-                        "The node <b>%s</b> does not exist "
+                        "The node <b>%(cluster_node)s</b> does not exist "
                         "(must be a host that is configured via Setup)"
                     )
-                    % cluster_node,
+                    % {"cluster_node": cluster_node},
                 )
 
             node_computed_datasources = cmk.utils.tags.compute_datasources(
@@ -655,7 +655,7 @@ class ModeEditHost(ABCHostMode):
                 if n == 0
                 else _("Site DNS cache updated for 1 host.")
                 if n == 1
-                else _("Site DNS cache updated for %d hosts.") % n
+                else _("Site DNS cache updated for %(n)d hosts.") % {"n": n}
             )
             flash(infotext)
 
@@ -668,7 +668,7 @@ class ModeEditHost(ABCHostMode):
                 else:
                     hosts_display = ", ".join([str(h) for h in failed_hosts[:display_limit]])
                     remaining = len(failed_hosts) - display_limit
-                    hosts_display += _(", +%d more") % remaining
+                    hosts_display += _(", +%(remaining)d more") % {"remaining": remaining}
 
                 failed_warning_message = _(
                     "<b>Lookup IPv4 addresses of %d hosts failed.</b><br>"
@@ -1035,10 +1035,10 @@ class CreateHostMode(ABCHostMode):
             else (
                 _(
                     "Successfully created the host. Now you should do a "
-                    '<a href="%s">service discovery</a> in order to auto-configure '
+                    '<a href="%(inventory_url)s">service discovery</a> in order to auto-configure '
                     "all services to be checked on this host."
                 )
-                % inventory_url
+                % {"inventory_url": inventory_url}
             )
         )
 

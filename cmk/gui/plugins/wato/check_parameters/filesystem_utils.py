@@ -82,13 +82,13 @@ def _get_free_used_dynamic_valuespec(
             title=_("Percentage"),
             elements=[
                 Percentage(
-                    title=_("Warning if %s") % course,
+                    title=_("Warning if %(course)s") % {"course": course},
                     unit="%",
                     minvalue=0.0 if level_perspective == "used" else 0.0001,
                     maxvalue=None,
                 ),
                 Percentage(
-                    title=_("Critical if %s") % course,
+                    title=_("Critical if %(course)s") % {"course": course},
                     unit="%",
                     minvalue=0.0 if level_perspective == "used" else 0.0001,
                     maxvalue=None,
@@ -102,12 +102,12 @@ def _get_free_used_dynamic_valuespec(
                 title=_("Absolute"),
                 elements=[
                     Integer(
-                        title=_("Warning if %s") % course,
+                        title=_("Warning if %(course)s") % {"course": course},
                         unit=_("MB"),
                         minvalue=0 if level_perspective == "used" else 1,
                     ),
                     Integer(
-                        title=_("Critical if %s") % course,
+                        title=_("Critical if %(course)s") % {"course": course},
                         unit=_("MB"),
                         minvalue=0 if level_perspective == "used" else 1,
                     ),
@@ -120,7 +120,7 @@ def _get_free_used_dynamic_valuespec(
             raise MKUserError(varprefix, _("You need to specify levels of at least 0 bytes."))
 
     return Alternative(
-        title=_("Levels for %s") % title,
+        title=_("Levels for %(title)s") % {"title": title},
         show_alternative_title=True,
         default_value=default_value,
         elements=vs_subgroup

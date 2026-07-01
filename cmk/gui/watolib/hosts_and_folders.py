@@ -1164,7 +1164,9 @@ class FolderTree:
         """
         folders = self._mapped_by_id()
         if identifier not in folders:
-            raise MKUserError(None, _("Folder %s not found.") % (identifier,))
+            raise MKUserError(
+                None, _("Folder %(identifier)s not found.") % {"identifier": identifier}
+            )
         return folders[identifier]
 
     def _mapped_by_id(self) -> dict[str, Folder]:
@@ -2685,7 +2687,7 @@ class Folder(FolderProtocol):
         pending_changes.add(
             Change(
                 action_name="create-host",
-                text=_l("Created new host %s.") % host_name,
+                text=_l("Created new host %(host_name)s.") % {"host_name": host_name},
                 object_ref=host.object_ref(),
                 diff_text=diff_attributes({}, None, host.attributes, host.cluster_nodes()),
                 domains=[CORE_DOMAIN],
@@ -2744,7 +2746,7 @@ class Folder(FolderProtocol):
             pending_changes.add(
                 Change(
                     action_name="delete-host",
-                    text=_l("Deleted host %s") % host_name,
+                    text=_l("Deleted host %(host_name)s") % {"host_name": host_name},
                     object_ref=host.object_ref(),
                     domains=[CORE_DOMAIN],
                     domain_settings=_core_settings_hosts_to_update([host.name()]),
@@ -2764,7 +2766,10 @@ class Folder(FolderProtocol):
         if not allow_locked_deletion and (
             hosts := self._get_hosts_locked_by_quick_setup(host_names)
         ):
-            errors.extend(_("%s is locked by Quick Setup.") % host_name for host_name in hosts)
+            errors.extend(
+                _("%(host_name)s is locked by Quick Setup.") % {"host_name": host_name}
+                for host_name in hosts
+            )
 
         # 2. check if hosts have parents
         if hosts_with_children := self._get_parents_of_hosts(self.tree, host_names):
@@ -2911,7 +2916,8 @@ class Folder(FolderProtocol):
         if is_locked_by_quick_setup(host.locked_by()):
             raise MKUserError(
                 "rename-host",
-                _('You cannot rename host "%s", because it is managed by Quick Setup.') % oldname,
+                _('You cannot rename host "%(oldname)s", because it is managed by Quick Setup.')
+                % {"oldname": oldname},
             )
 
         # 2. Actual modification
@@ -3869,7 +3875,8 @@ class Host:
         pending_changes.add(
             Change(
                 action_name="rename-node",
-                text=_l("Renamed cluster node from %s into %s.") % (oldname, newname),
+                text=_l("Renamed cluster node from %(oldname)s into %(newname)s.")
+                % {"oldname": oldname, "newname": newname},
                 object_ref=self.object_ref(),
                 domains=[CORE_DOMAIN],
             ),
@@ -3897,7 +3904,8 @@ class Host:
         pending_changes.add(
             Change(
                 action_name="rename-parent",
-                text=_l("Renamed parent from %s into %s.") % (oldname, newname),
+                text=_l("Renamed parent from %(oldname)s into %(newname)s.")
+                % {"oldname": oldname, "newname": newname},
                 object_ref=self.object_ref(),
                 domains=[CORE_DOMAIN],
             ),
@@ -4141,7 +4149,7 @@ def ajax_popup_host_action_menu(ctx: PageContext) -> None:
     hostname = request.get_validated_type_input_mandatory(HostName, "hostname")
     host = folder_tree().host(hostname)
     if host is None:
-        html.show_error(_('"%s" is not a valid host name') % hostname)
+        html.show_error(_('"%(hostname)s" is not a valid host name') % {"hostname": hostname})
         return
 
     # Clone host
@@ -4156,7 +4164,7 @@ def ajax_popup_host_action_menu(ctx: PageContext) -> None:
     # Remove TLS registration
     if request.get_str_input("show_remove_tls_link"):
         remove_tls_options: dict[str, str | dict[str, str]] = confirmed_form_submit_options(
-            title=_('Remove TLS registration of host "%s"') % hostname,
+            title=_('Remove TLS registration of host "%(hostname)s"') % {"hostname": hostname},
             message=remove_tls_registration_help(),
             confirm_text=_("Remove"),
             warning=True,

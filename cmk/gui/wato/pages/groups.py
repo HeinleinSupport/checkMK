@@ -207,7 +207,7 @@ class ModeGroups(WatoMode, abc.ABC):
             url=makeactionuri(request, transactions, [("_delete", name)]),
             title=_("Delete %s group #%d") % (self.type_name, nr),
             suffix=group["alias"],
-            message=_("Name: %s") % name,
+            message=_("Name: %(name)s") % {"name": name},
         )
         clone_url = folder_preserving_link(
             [("mode", "edit_%s_group" % self.type_name), ("clone", name)]

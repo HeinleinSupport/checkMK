@@ -235,7 +235,9 @@ class SimpleListMode[T: Mapping[str, Any]](_SimpleWatoModeBase[T]):
 
         The "delete" action is automatically handled by the SimpleListMode implementation.
         """
-        raise MKUserError("_action", _("The action '%s' is not implemented") % action)
+        raise MKUserError(
+            "_action", _("The action '%(action)s' is not implemented") % {"action": action}
+        )
 
     def page_menu(self, config: Config, breadcrumb: Breadcrumb) -> PageMenu:
         return PageMenu(
@@ -377,7 +379,7 @@ class SimpleListMode[T: Mapping[str, Any]](_SimpleWatoModeBase[T]):
         self._show_delete_action(nr, ident, entry)
 
     def _show_delete_action(self, nr: int, ident: str, entry: T) -> None:
-        confirm_delete: str = _("ID: %s") % ident
+        confirm_delete: str = _("ID: %(ident)s") % {"ident": ident}
         if delete_confirm_msg := self._delete_confirm_message():
             confirm_delete += "<br><br>" + delete_confirm_msg
         delete_url = make_confirm_delete_link(

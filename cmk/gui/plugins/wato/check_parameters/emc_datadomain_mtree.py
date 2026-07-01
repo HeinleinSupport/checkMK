@@ -34,7 +34,7 @@ def _parameter_valuespec_emc_datadomain_mtree() -> Dictionary:
             (
                 state,
                 MonitoringState(
-                    title=_("Monitoring state if MTree state is '%s'") % state,
+                    title=_("Monitoring state if MTree state is '%(state)s'") % {"state": state},
                     default_value=check_res,
                 ),
             )

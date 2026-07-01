@@ -105,11 +105,11 @@ def _prevent_reused_attr_names(attr_names: Sequence[str | None]) -> None:
             raise MKUserError(
                 None,
                 _(
-                    'The attribute "%s" is assigned to multiple columns. '
+                    'The attribute "%(name)s" is assigned to multiple columns. '
                     "You can not populate one attribute from multiple columns. "
                     "The column-to-attribute associations need to be unique."
                 )
-                % name,
+                % {"name": name},
             )
         attrs_seen.add(name)
 
@@ -136,7 +136,7 @@ def _attribute_choices(
     # Add custom attributes
     for entry in custom_host_attrs:
         name = entry["name"]
-        attributes.append((name, _("Custom variable: %s") % name))
+        attributes.append((name, _("Custom variable: %(name)s") % {"name": name}))
 
     return attributes
 
@@ -205,16 +205,23 @@ def _host_rows_to_bulk(
                 if not attr_value.isascii():
                     raise MKUserError(
                         None,
-                        _('Non-ASCII characters are not allowed in the attribute "%s".')
-                        % attr_name,
+                        _('Non-ASCII characters are not allowed in the attribute "%(attr_name)s".')
+                        % {"attr_name": attr_name},
                     )
                 try:
                     host_attribute_inst.validate_input(attr_value, "")
                 except MKUserError as exc:
                     raise MKUserError(
                         None,
-                        _("Invalid value in column %d (%s) of row %d: %s")
-                        % (col_num, attr_name, row_num, exc),
+                        _(
+                            "Invalid value in column %(col_num)d (%(attr_name)s) of row %(row_num)d: %(exc)s"
+                        )
+                        % {
+                            "col_num": col_num,
+                            "attr_name": attr_name,
+                            "row_num": row_num,
+                            "exc": exc,
+                        },
                     ) from exc
 
         if _host_name is None:
@@ -589,9 +596,11 @@ class ModeBulkImport(WatoMode):
                 )
             )
 
-        msg = _("Imported %d hosts into the current folder.") % num_succeeded
+        msg = _("Imported %(num_succeeded)d hosts into the current folder.") % {
+            "num_succeeded": num_succeeded
+        }
         if num_failed:
-            msg += "<br><br>" + (_("%d errors occurred:") % num_failed)
+            msg += "<br><br>" + (_("%(num_failed)d errors occurred:") % {"num_failed": num_failed})
             msg += "<ul>"
             for fail_msg in error_msgs:
                 msg += "<li>%s</li>" % fail_msg
@@ -644,7 +653,8 @@ class ModeBulkImport(WatoMode):
                     except (MKAuthException, MKUserError, MKGeneralException) as exc:
                         failed_hosts.append(entry[0])
                         fail_messages.append(
-                            _("Failed to create a host from line %d: %s") % (index, exc)
+                            _("Failed to create a host from line %(index)d: %(exc)s")
+                            % {"index": index, "exc": exc}
                         )
 
         return imported_hosts, failed_hosts, fail_messages

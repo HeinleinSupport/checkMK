@@ -36,5 +36,9 @@ def text_with_links_to_user_translated_html(
 def set_inpage_search_result_info(search_results: int) -> None:
     html.javascript(
         "cmk.utils.set_inpage_search_result_info(%s);"
-        % json.dumps(_("Results: %d") % search_results if search_results else _("No results"))
+        % json.dumps(
+            _("Results: %(search_results)d") % {"search_results": search_results}
+            if search_results
+            else _("No results")
+        )
     )

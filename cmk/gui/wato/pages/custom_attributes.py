@@ -572,7 +572,7 @@ class ModeCustomAttrs[T_CustomAttrSpec: CustomAttrSpec](WatoMode):
         pending_changes.add(
             Change(
                 action_name="edit-%sattrs" % self._type,
-                text=_("Deleted attribute %s") % (delname),
+                text=_("Deleted attribute %(delname)s") % {"delname": delname},
                 domains=[CORE],
             ),
             ChangeScope.all_activation_sites(),
@@ -596,7 +596,7 @@ class ModeCustomAttrs[T_CustomAttrSpec: CustomAttrSpec](WatoMode):
                 )
                 delete_url = make_confirm_delete_link(
                     url=makeactionuri(request, transactions, [("_delete", custom_attr["name"])]),
-                    title=_("Delete custom attribute #%d") % nr,
+                    title=_("Delete custom attribute #%(nr)d") % {"nr": nr},
                     suffix=custom_attr["title"],
                     message=_("Name: %s") % custom_attr["name"],
                 )

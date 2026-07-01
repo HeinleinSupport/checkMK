@@ -99,7 +99,8 @@ def _git_command(args: list[str], stdin: str | None = None) -> None:
         )
     except (FileNotFoundError, UnicodeEncodeError) as e:
         raise MKGeneralException(
-            _("Error executing GIT command <tt>%s</tt>:<br><br>%s") % (debug_command, e)
+            _("Error executing GIT command <tt>%(debug_command)s</tt>:<br><br>%(e)s")
+            % {"debug_command": debug_command, "e": e}
         ) from e
 
     if completed_process.returncode:

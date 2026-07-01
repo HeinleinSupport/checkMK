@@ -282,7 +282,9 @@ class ABCGlobalSettingsMode(WatoMode):
                     to_text = valuespec.value_to_html(value)
                 except Exception:
                     logger.exception("error converting %r to text", value)
-                    to_text = html.render_error(_("Failed to render value: %r") % value)
+                    to_text = html.render_error(
+                        _("Failed to render value: %(value)r") % {"value": value}
+                    )
 
                 # Is this a simple (single) value or not? change styling in these cases...
                 simple = True

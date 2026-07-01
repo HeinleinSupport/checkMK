@@ -258,7 +258,7 @@ def _vs_grouping() -> CascadingDropdown:
 
 def _vs_regex_matching(match_obj: str) -> ListOfStrings:
     return ListOfStrings(
-        title=_("Match interface %s (regex)") % match_obj,
+        title=_("Match interface %(match_obj)s (regex)") % {"match_obj": match_obj},
         help=_(
             "Apply this rule only to interfaces whose %s matches one of the configured regular "
             "expressions. The match is done on the beginning of the %s."

@@ -19,7 +19,8 @@ def _parameter_valuespec_fortigate_antivirus_ips(rate_name: str) -> Dictionary:
                 "detections",
                 Tuple(
                     title=_("Detection rate"),
-                    help=_("Define levels on the %s detection rate.") % rate_name,
+                    help=_("Define levels on the %(rate_name)s detection rate.")
+                    % {"rate_name": rate_name},
                     elements=[
                         Float(
                             title=_("Warning at"),

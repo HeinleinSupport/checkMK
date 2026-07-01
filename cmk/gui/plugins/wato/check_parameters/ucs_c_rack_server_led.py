@@ -39,7 +39,8 @@ def _parameter_valuespec_ucs_c_rack_server_led() -> Dictionary:
             (
                 color,
                 MonitoringState(
-                    title=_("Monitoring state if LED color is %s") % color, default_value=state
+                    title=_("Monitoring state if LED color is %(color)s") % {"color": color},
+                    default_value=state,
                 ),
             )
             for color, state in COLORS_DEF_STATES

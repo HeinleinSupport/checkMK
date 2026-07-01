@@ -784,7 +784,7 @@ class ModeRulesetGroup(ABCRulesetMode):
             if request.get_ascii_input("host"):
                 host_name = request.get_ascii_input_mandatory("host")
                 yield PageMenuEntry(
-                    title=_("Host properties of: %s") % host_name,
+                    title=_("Host properties of: %(host_name)s") % {"host_name": host_name},
                     icon_name=StaticIcon(IconNames.folder),
                     item=make_simple_link(
                         folder_preserving_link([("mode", "edit_host"), ("host", host_name)])
@@ -988,7 +988,9 @@ class ModeEditRuleset(WatoMode):
             try:
                 self._hostname = HostName(hostname)
             except ValueError:
-                raise MKUserError("host", _("Invalid host name: %s") % hostname)
+                raise MKUserError(
+                    "host", _("Invalid host name: %(hostname)s") % {"hostname": hostname}
+                )
             host = self._folder.host(self._hostname)
             self._host = host
             if not self._host:
@@ -1272,7 +1274,9 @@ class ModeEditRuleset(WatoMode):
             case "all" | "list":
                 html.write_text_permissive(_("All matching rules will add to the resulting list."))
             case _:
-                html.write_text_permissive(_("Unknown match type: %s") % match_type)
+                html.write_text_permissive(
+                    _("Unknown match type: %(match_type)s") % {"match_type": match_type}
+                )
 
         html.close_div()
 
@@ -1445,7 +1449,7 @@ class ModeEditRuleset(WatoMode):
             html.icon_button(
                 url=make_confirm_delete_link(
                     url=self._action_url("delete", folder, rule.id),
-                    title=_("Delete rule #%d") % rulenr,
+                    title=_("Delete rule #%(rulenr)d") % {"rulenr": rulenr},
                     suffix=rule.rule_options.description,
                     message=_("Folder: %s") % folder.alias_path(),
                 ),
@@ -1577,7 +1581,7 @@ class ModeEditRuleset(WatoMode):
             )
         match_state["matched"] = True
         return RuleMatchResult(
-            (_("This rule matches for the host '%s'") % host_name)
+            (_("This rule matches for the host '%(host_name)s'") % {"host_name": host_name})
             + (
                 _(" and the %s '%s'.") % (ruleset.item_name(), item) if ruleset.item_type() else "."
             ),
@@ -1674,7 +1678,9 @@ class ModeEditRuleset(WatoMode):
                 assert form_spec is not None
                 _show_rule_frontend(form_spec)
             case _:
-                raise MKGeneralException(_("Unknown render mode %s") % render_mode)
+                raise MKGeneralException(
+                    _("Unknown render mode %(render_mode)s") % {"render_mode": render_mode}
+                )
 
         # Comment
         table.cell(_("Description"), css=["description"])
@@ -1708,7 +1714,8 @@ class ModeEditRuleset(WatoMode):
         condition = self._predefined_conditions.get(condition_id)
         if condition is None:
             html.write_text_permissive(
-                _("Predefined condition: '%s' does not exist or using not permitted") % condition_id
+                _("Predefined condition: '%(condition_id)s' does not exist or using not permitted")
+                % {"condition_id": condition_id}
             )
             return
 
@@ -2163,7 +2170,7 @@ class ABCEditRuleMode(WatoMode):
                 )
 
             case other:
-                raise MKGeneralException(_("Unknown render mode %s") % other)
+                raise MKGeneralException(_("Unknown render mode %(other)s") % {"other": other})
 
     @staticmethod
     def static_permissions() -> Collection[PermissionName]:
@@ -2365,7 +2372,7 @@ class ABCEditRuleMode(WatoMode):
                     catalog=self._form_type.catalog,
                 )
             case other:
-                raise MKGeneralException(_("Unknown form type %s") % other)
+                raise MKGeneralException(_("Unknown form type %(other)s") % {"other": other})
 
         self._rule.rule_options = rule_values.options
         self._rule.value = rule_values.value
@@ -2555,9 +2562,9 @@ class ABCEditRuleMode(WatoMode):
                 _(
                     "Unable to read current options of this rule. Falling back to "
                     "default values. When saving this rule now, your previous settings "
-                    "will be overwritten. The problem is: %s"
+                    "will be overwritten. The problem is: %(e)s"
                 )
-                % e
+                % {"e": e}
             )
             valuespec = self._ruleset.rulespec.valuespec
             valuespec.render_input("ve", valuespec.default_value())
@@ -2600,9 +2607,9 @@ class ABCEditRuleMode(WatoMode):
                 _(
                     "Unable to read current options of this rule. Falling back to "
                     "default values. When saving this rule now, your previous settings "
-                    "will be overwritten. The problem is: %s"
+                    "will be overwritten. The problem is: %(e)s"
                 )
-                % e
+                % {"e": e}
             )
             render_form_spec(
                 catalog,
@@ -2629,7 +2636,7 @@ class ABCEditRuleMode(WatoMode):
             case _FrontendForm():
                 self._page_form_frontend(catalog=self._form_type.catalog, debug=debug)
             case other:
-                raise MKGeneralException(_("Unknown form type %s") % other)
+                raise MKGeneralException(_("Unknown form type %(other)s") % {"other": other})
 
         html.hidden_fields()
 
@@ -3072,7 +3079,12 @@ class RuleConditionRenderer:
             return
 
         labels_html = render_label_groups(label_conditions, object_type)
-        yield HTML.with_escaping(_("%s matching labels: ") % object_title) + labels_html
+        yield (
+            HTML.with_escaping(
+                _("%(object_title)s matching labels: ") % {"object_title": object_title}
+            )
+            + labels_html
+        )
 
     def _host_conditions(self, conditions: RuleConditions) -> Iterable[HTML]:
         if conditions.host_name is None:
@@ -3399,7 +3411,9 @@ class ModeNewRule(ABCEditRuleMode):
                 ).host_folder
 
             case _:
-                raise MKGeneralException(_("Unknown render mode %s") % render_mode)
+                raise MKGeneralException(
+                    _("Unknown render mode %(render_mode)s") % {"render_mode": render_mode}
+                )
 
     def _set_rule(self) -> None:
         host_name_conditions: HostOrServiceConditions | None = None
@@ -3542,7 +3556,9 @@ def _get_rule_render_mode() -> RenderMode:
         case RenderMode.FRONTEND.value:
             return RenderMode.FRONTEND
         case _:
-            raise MKGeneralException(_("Unknown render mode %s") % rendering_mode)
+            raise MKGeneralException(
+                _("Unknown render mode %(rendering_mode)s") % {"rendering_mode": rendering_mode}
+            )
 
 
 class MatchItemGeneratorUnknownRuleSets(ABCMatchItemGenerator):
@@ -3690,7 +3706,8 @@ class ModeUnknownRulesets(WatoMode):
                     ]
                 ),
                 title=_("Delete unknown rule"),
-                message=_("#%s of unknown rule set %r") % (rule_nr, unknown_ruleset_name),
+                message=_("#%(rule_nr)s of unknown rule set %(unknown_ruleset_name)r")
+                % {"rule_nr": rule_nr, "unknown_ruleset_name": unknown_ruleset_name},
             ),
             _("Delete"),
             StaticIcon(IconNames.delete),
@@ -3744,7 +3761,8 @@ class ModeUnknownRulesets(WatoMode):
                     ]
                 ),
                 title=_("Delete unknown rule"),
-                message=_("#%s of unknown rule set %r") % (rule_nr, unknown_ruleset_name),
+                message=_("#%(rule_nr)s of unknown rule set %(unknown_ruleset_name)r")
+                % {"rule_nr": rule_nr, "unknown_ruleset_name": unknown_ruleset_name},
             ),
             _("Delete"),
             StaticIcon(IconNames.delete),
@@ -3785,7 +3803,10 @@ class ModeUnknownRulesets(WatoMode):
                                 table, unknown_check_parameter_ruleset.name, rule_nr, rule
                             )
                 for unknown_ruleset_name, rulespecs in unknown_rulesets.items():
-                    table.groupheader(_("Unknown rule set: %s") % unknown_ruleset_name)
+                    table.groupheader(
+                        _("Unknown rule set: %(unknown_ruleset_name)s")
+                        % {"unknown_ruleset_name": unknown_ruleset_name}
+                    )
                     for rule_nr, (folder_path, rulespec) in enumerate(rulespecs):
                         self._show_row_unknown_rulespec(
                             table, unknown_ruleset_name, rule_nr, folder_path, rulespec

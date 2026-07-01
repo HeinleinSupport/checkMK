@@ -233,7 +233,9 @@ class ModeRevertChanges(WatoMode):
         if not file_to_restore:
             raise MKUserError(None, _("There is no Setup snapshot to be restored."))
 
-        msg = _("Discarded pending changes (restored %s)") % file_to_restore
+        msg = _("Discarded pending changes (restored %(file_to_restore)s)") % {
+            "file_to_restore": file_to_restore
+        }
 
         # All sites and domains can be affected by a restore: Better restart everything.
         _pending_changes(config, omd_site(), user.id).add(
@@ -830,7 +832,9 @@ class ModeActivateChanges(WatoMode):
                 # Livestatus
                 table.cell(_("Status"), css=["narrow nobr"])
                 html.status_label(
-                    content=status, status=status, title=_("This site is %s") % status
+                    content=status,
+                    status=status,
+                    title=_("This site is %(status)s") % {"status": status},
                 )
 
                 # Livestatus-/Checkmk-Version
@@ -1133,7 +1137,7 @@ class AutomationActivateChanges(AutomationCommand[DomainRequests]):
         try:
             return [DomainRequest(**x) for x in ast.literal_eval(domains)]
         except SyntaxError:
-            raise MKAutomationException(_("Invalid request: %r") % domains)
+            raise MKAutomationException(_("Invalid request: %(domains)r") % {"domains": domains})
 
     def execute(self, api_request: DomainRequests) -> ConfigWarnings:
         timeout_manager.enable_timeout(500)

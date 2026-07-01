@@ -62,7 +62,7 @@ def parse_labels_value(value: str) -> Labels:
     try:
         decoded_labels = json.loads(value or "[]")
     except ValueError as e:
-        raise MKUserError(None, _("Failed to parse labels: %s") % e)
+        raise MKUserError(None, _("Failed to parse labels: %(e)s") % {"e": e})
 
     seen: set[str] = set()
     for entry in decoded_labels:
@@ -316,7 +316,8 @@ def _get_validated_count_value(ident: str, value: FilterHTTPVariables) -> int:
     except ValueError:
         raise MKUserError(
             ident,
-            _('The value "%s" of HTTP variable "%s" is not an integer.') % (str_val, ident),
+            _('The value "%(str_val)s" of HTTP variable "%(ident)s" is not an integer.')
+            % {"str_val": str_val, "ident": ident},
         )
 
 
@@ -326,8 +327,8 @@ def _get_validated_operator_value(ident: str, value: FilterHTTPVariables) -> str
         raise MKUserError(
             ident,
             _(
-                'The value "%s" of HTTP variable "%s" is not a valid operator ({"and", "or", "not"}).'
+                'The value "%(operator)s" of HTTP variable "%(ident)s" is not a valid operator ({"and", "or", "not"}).'
             )
-            % (operator, ident),
+            % {"operator": operator, "ident": ident},
         )
     return operator

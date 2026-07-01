@@ -168,7 +168,7 @@ def add_profile_replication_change(
     pending_changes.add(
         Change(
             action_name="edit-users",
-            text=_l("Profile changed (sync failed: %s)") % result,
+            text=_l("Profile changed (sync failed: %(result)s)") % {"result": result},
             domains=[CORE],
             force_restart=False,
         ),
@@ -231,7 +231,8 @@ class ProfileReplicationBackgroundJob(BackgroundJob):
 
         num_sites = len(args.automation_configs)
         job_interface.send_progress_update(
-            _("Replicating profile to %d site(s) in parallel...") % num_sites
+            _("Replicating profile to %(num_sites)d site(s) in parallel...")
+            % {"num_sites": num_sites}
         )
 
         results = _replicate_to_sites_parallel(

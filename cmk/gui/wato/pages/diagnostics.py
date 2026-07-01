@@ -559,8 +559,10 @@ class ModeDiagnostics(WatoMode[object]):
                 OPT_COMP_GLOBAL_SETTINGS,
                 Dictionary(
                     title=_("Global settings"),
-                    help=_("Configuration files ('*.mk' or '*.conf') from etc/check_mk.%s")
-                    % _CHECKMK_FILES_NOTE,
+                    help=_(
+                        "Configuration files ('*.mk' or '*.conf') from etc/check_mk.%(_CHECKMK_FILES_NOTE)s"
+                    )
+                    % {"_CHECKMK_FILES_NOTE": _CHECKMK_FILES_NOTE},
                     elements=self._get_component_specific_checkmk_files_elements(
                         OPT_COMP_GLOBAL_SETTINGS
                     ),
@@ -571,8 +573,10 @@ class ModeDiagnostics(WatoMode[object]):
                 OPT_COMP_HOSTS_AND_FOLDERS,
                 Dictionary(
                     title=_("Hosts and Folders"),
-                    help=_("Configuration files ('*.mk' or '*.conf') from etc/check_mk.%s")
-                    % _CHECKMK_FILES_NOTE,
+                    help=_(
+                        "Configuration files ('*.mk' or '*.conf') from etc/check_mk.%(_CHECKMK_FILES_NOTE)s"
+                    )
+                    % {"_CHECKMK_FILES_NOTE": _CHECKMK_FILES_NOTE},
                     elements=self._get_component_specific_checkmk_files_elements(
                         OPT_COMP_HOSTS_AND_FOLDERS
                     ),
@@ -585,9 +589,9 @@ class ModeDiagnostics(WatoMode[object]):
                     title=_("Notifications"),
                     help=_(
                         "Configuration files ('*.mk' or '*.conf') from etc/check_mk"
-                        " or log files ('*.log' or '*.state') from var/log.%s"
+                        " or log files ('*.log' or '*.state') from var/log.%(_CHECKMK_FILES_NOTE)s"
                     )
-                    % _CHECKMK_FILES_NOTE,
+                    % {"_CHECKMK_FILES_NOTE": _CHECKMK_FILES_NOTE},
                     elements=self._get_component_specific_checkmk_files_elements(
                         OPT_COMP_NOTIFICATIONS
                     ),
@@ -598,8 +602,10 @@ class ModeDiagnostics(WatoMode[object]):
                 OPT_COMP_BUSINESS_INTELLIGENCE,
                 Dictionary(
                     title=_("Business Intelligence"),
-                    help=_("Configuration files ('*.mk' or '*.conf') from etc/check_mk.%s")
-                    % _CHECKMK_FILES_NOTE,
+                    help=_(
+                        "Configuration files ('*.mk' or '*.conf') from etc/check_mk.%(_CHECKMK_FILES_NOTE)s"
+                    )
+                    % {"_CHECKMK_FILES_NOTE": _CHECKMK_FILES_NOTE},
                     elements=self._get_component_specific_checkmk_files_elements(
                         OPT_COMP_BUSINESS_INTELLIGENCE,
                     )
@@ -616,11 +622,11 @@ class ModeDiagnostics(WatoMode[object]):
                     Dictionary(
                         title=_("CMC (Checkmk Micro Core)"),
                         help=_(
-                            "Core files (config, state and history) from var/check_mk/core.%s<br>"
+                            "Core files (config, state and history) from var/check_mk/core.%(_CHECKMK_FILES_NOTE)s<br>"
                             " When this component is selected, a cmcdump will be included in the"
                             " dump, that is also considered highly sensitive."
                         )
-                        % _CHECKMK_FILES_NOTE,
+                        % {"_CHECKMK_FILES_NOTE": _CHECKMK_FILES_NOTE},
                         elements=self._get_component_specific_checkmk_files_elements(
                             OPT_COMP_CMC,
                         ),
@@ -635,9 +641,9 @@ class ModeDiagnostics(WatoMode[object]):
                         title=_("Licensing Information"),
                         help=_(
                             "Licensing files from var/check_mk/licensing, etc/check_mk,"
-                            " var/check_mk/core and var/log/licensing.log.%s"
+                            " var/check_mk/core and var/log/licensing.log.%(_CHECKMK_FILES_NOTE)s"
                         )
-                        % _CHECKMK_FILES_NOTE,
+                        % {"_CHECKMK_FILES_NOTE": _CHECKMK_FILES_NOTE},
                         elements=self._get_component_specific_checkmk_files_elements(
                             OPT_COMP_LICENSING,
                         ),
@@ -883,7 +889,9 @@ class DiagnosticsDumpBackgroundJob(BackgroundJob):
                 filename="download_diagnostics_dump.py",
             )
 
-            job_interface.send_progress_update(_("Dump file: %s") % tarfile_path)
+            job_interface.send_progress_update(
+                _("Dump file: %(tarfile_path)s") % {"tarfile_path": tarfile_path}
+            )
             job_interface.send_result_message(
                 _("%s Retrieve created dump file")
                 % HTMLGenerator.render_icon_button(

@@ -69,7 +69,8 @@ def _expected_state_map() -> Dictionary:
             (
                 vm_state,
                 MonitoringState(
-                    title=_("Monitoring state if VM state is %s") % vm_state,
+                    title=_("Monitoring state if VM state is %(vm_state)s")
+                    % {"vm_state": vm_state},
                     default_value=default_value,
                 ),
             )

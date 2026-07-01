@@ -490,8 +490,15 @@ def compute_deprecation_result(
         return ACSingleResult(
             state=ACResultState.CRIT,
             text=(
-                _("%s uses an API (%s) which was removed in Checkmk %s (file: %s).")
-                % (title_entity, title_api, removed_version, rel_path)
+                _(
+                    "%(title_entity)s uses an API (%(title_api)s) which was removed in Checkmk %(removed_version)s (file: %(rel_path)s)."
+                )
+                % {
+                    "title_entity": title_entity,
+                    "title_api": title_api,
+                    "removed_version": removed_version,
+                    "rel_path": rel_path,
+                }
             ),
             site_id=site_id,
             path=path,
@@ -502,10 +509,16 @@ def compute_deprecation_result(
             state=ACResultState.CRIT,
             text=(
                 _(
-                    "%s uses an API (%s) which was marked as deprecated in"
-                    " Checkmk %s and is removed in Checkmk %s (file: %s)."
+                    "%(title_entity)s uses an API (%(title_api)s) which was marked as deprecated in"
+                    " Checkmk %(deprecated_version)s and is removed in Checkmk %(removed_version)s (file: %(rel_path)s)."
                 )
-                % (title_entity, title_api, deprecated_version, removed_version, rel_path)
+                % {
+                    "title_entity": title_entity,
+                    "title_api": title_api,
+                    "deprecated_version": deprecated_version,
+                    "removed_version": removed_version,
+                    "rel_path": rel_path,
+                }
             ),
             site_id=site_id,
             path=path,
@@ -516,10 +529,16 @@ def compute_deprecation_result(
             state=ACResultState.WARN,
             text=(
                 _(
-                    "%s uses an API (%s) which was marked as deprecated in"
-                    " Checkmk %s and will be removed in Checkmk %s (file: %s)."
+                    "%(title_entity)s uses an API (%(title_api)s) which was marked as deprecated in"
+                    " Checkmk %(deprecated_version)s and will be removed in Checkmk %(removed_version)s (file: %(rel_path)s)."
                 )
-                % (title_entity, title_api, deprecated_version, removed_version, rel_path)
+                % {
+                    "title_entity": title_entity,
+                    "title_api": title_api,
+                    "deprecated_version": deprecated_version,
+                    "removed_version": removed_version,
+                    "rel_path": rel_path,
+                }
             ),
             site_id=site_id,
             path=path,
@@ -530,10 +549,16 @@ def compute_deprecation_result(
             state=ACResultState.WARN,
             text=(
                 _(
-                    "%s uses an API (%s) which is marked as deprecated in"
-                    " Checkmk %s and will be removed in Checkmk %s (file: %s)."
+                    "%(title_entity)s uses an API (%(title_api)s) which is marked as deprecated in"
+                    " Checkmk %(deprecated_version)s and will be removed in Checkmk %(removed_version)s (file: %(rel_path)s)."
                 )
-                % (title_entity, title_api, deprecated_version, removed_version, rel_path)
+                % {
+                    "title_entity": title_entity,
+                    "title_api": title_api,
+                    "deprecated_version": deprecated_version,
+                    "removed_version": removed_version,
+                    "rel_path": rel_path,
+                }
             ),
             site_id=site_id,
             path=path,

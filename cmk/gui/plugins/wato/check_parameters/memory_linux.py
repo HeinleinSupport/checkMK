@@ -28,11 +28,12 @@ def UpperMemoryLevels(
     default_levels_type: Literal["ignore", "abs_used", "perc_used"] | Sentinel = DEF_VALUE,
 ) -> CascadingDropdown:
     return CascadingDropdown(
-        title=_("Upper levels for %s") % what,
+        title=_("Upper levels for %(what)s") % {"what": what},
         choices=[
             (
                 "perc_used",
-                _("Percentual levels%s") % (of_what and (_(" in relation to %s") % of_what) or ""),
+                _("Percentual levels%s")
+                % (of_what and (_(" in relation to %(of_what)s") % {"of_what": of_what}) or ""),
                 UsedPercentage(default_percents, of_what),
             ),
             ("abs_used", _("Absolute levels"), UsedSize()),
@@ -50,7 +51,7 @@ def LowerMemoryLevels(
     help_text: str | None = None,
 ) -> CascadingDropdown:
     return CascadingDropdown(
-        title=_("Lower levels for %s") % what,
+        title=_("Lower levels for %(what)s") % {"what": what},
         help=help_text,
         choices=[
             ("perc_free", _("Percentual levels"), FreePercentage(default_percents, of_what)),

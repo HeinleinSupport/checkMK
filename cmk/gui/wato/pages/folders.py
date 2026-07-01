@@ -649,7 +649,7 @@ class ModeFolder(WatoMode):
             ("_show_explicit_labels", _("explicit host labels"), user.wato_folders_show_labels),
         ]:
             yield PageMenuEntry(
-                title=_("Show %s") % title,
+                title=_("Show %(title)s") % {"title": title},
                 icon_name=StaticIcon(IconNames.toggle_on if setting else IconNames.toggle_off),
                 item=make_simple_link(
                     makeuri(
@@ -1017,10 +1017,9 @@ class ModeFolder(WatoMode):
         confirm_message: str = ""
         num_hosts = subfolder.num_hosts_recursively(user)
         if num_hosts:
-            confirm_message += (
-                _("<b>Beware:</b> The folder contains <b>%d</b> hosts, which will also be deleted!")
-                % num_hosts
-            )
+            confirm_message += _(
+                "<b>Beware:</b> The folder contains <b>%(num_hosts)d</b> hosts, which will also be deleted!"
+            ) % {"num_hosts": num_hosts}
 
         if show_file_names:
             if num_hosts:
@@ -1087,7 +1086,7 @@ class ModeFolder(WatoMode):
         html.popup_trigger(
             html.render_static_icon(
                 StaticIcon(IconNames.move),
-                title=_("Move this %s to another folder") % what_title,
+                title=_("Move this %(what_title)s to another folder") % {"what_title": what_title},
                 css_classes=["iconbutton"],
             ),
             ident="move_" + obj.name(),

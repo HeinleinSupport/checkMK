@@ -141,9 +141,11 @@ def add_changes_after_editing_broker_connection(
     pending_changes: PendingChanges,
 ) -> str:
     change_message = (
-        _("Created new peer-to-peer broker connection ID %s") % connection_id
+        _("Created new peer-to-peer broker connection ID %(connection_id)s")
+        % {"connection_id": connection_id}
         if is_new_broker_connection
-        else _("Modified peer-to-peer broker connection ID %s") % connection_id
+        else _("Modified peer-to-peer broker connection ID %(connection_id)s")
+        % {"connection_id": connection_id}
     )
 
     pending_changes.add(
@@ -170,9 +172,9 @@ def add_changes_after_editing_site_connection(
     pending_changes: PendingChanges,
 ) -> str:
     change_message = (
-        _("Created new connection to site %s") % site_id
+        _("Created new connection to site %(site_id)s") % {"site_id": site_id}
         if is_new_connection
-        else _("Modified site connection %s") % site_id
+        else _("Modified site connection %(site_id)s") % {"site_id": site_id}
     )
 
     sites_to_update = connected_sites | {site_id}

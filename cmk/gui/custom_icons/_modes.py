@@ -118,7 +118,7 @@ class ModeIcons(WatoMode):
             image.save(dest_dir / file_name, ImageType.PNG)
         except OSError as e:
             # Might happen with interlaced PNG files and PIL version < 1.1.7
-            raise MKUserError(None, _("Unable to upload icon: %s") % e)
+            raise MKUserError(None, _("Unable to upload icon: %(e)s") % {"e": e})
 
     def page(self, config: Config) -> None:
         html.p(
@@ -148,9 +148,9 @@ class ModeIcons(WatoMode):
                 category = IconSelector.category_alias(category_name)
                 delete_url = make_confirm_delete_link(
                     url=make_action_link([("mode", "icons"), ("_delete", icon_name)]),
-                    title=_("Delete icon #%d") % nr,
+                    title=_("Delete icon #%(nr)d") % {"nr": nr},
                     suffix=icon_name,
-                    message=_("Category: %s") % category,
+                    message=_("Category: %(category)s") % {"category": category},
                 )
                 html.icon_button(delete_url, _("Delete this Icon"), StaticIcon(IconNames.delete))
 

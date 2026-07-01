@@ -999,7 +999,7 @@ def _virtual_host_tree_choices() -> list[tuple[str, str]]:
     return (
         _wato_host_tag_group_choices()
         + [("foldertree:", _("Folder tree"))]
-        + [("folder:%d" % l, _("Folder level %d") % l) for l in range(1, 7)]
+        + [("folder:%d" % l, _("Folder level %(l)d") % {"l": l}) for l in range(1, 7)]
     )
 
 
@@ -6307,13 +6307,12 @@ def _valuespec_piggybacked_host_files() -> Migrate:
         filename="wato.py",
     )
 
-    global_max_cache_age_title = (
-        _('Use maximum age from <a href="%s">global settings</a>') % global_max_cache_age_uri
-    )
-    max_cache_age_title = (
-        _('Use maximum age from <a href="%s">global settings</a> or above')
-        % global_max_cache_age_uri
-    )
+    global_max_cache_age_title = _(
+        'Use maximum age from <a href="%(global_max_cache_age_uri)s">global settings</a>'
+    ) % {"global_max_cache_age_uri": global_max_cache_age_uri}
+    max_cache_age_title = _(
+        'Use maximum age from <a href="%(global_max_cache_age_uri)s">global settings</a> or above'
+    ) % {"global_max_cache_age_uri": global_max_cache_age_uri}
 
     return Migrate(
         valuespec=Dictionary(

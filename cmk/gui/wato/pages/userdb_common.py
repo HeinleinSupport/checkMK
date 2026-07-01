@@ -157,7 +157,7 @@ def render_connections_page(
             )
             delete_url = make_confirm_delete_link(
                 url=make_action_link([("mode", config_mode_path), ("_delete", real_index)]),
-                title=_("Delete connection #%d") % display_index,
+                title=_("Delete connection #%(display_index)d") % {"display_index": display_index},
                 suffix=connection.get("name", connection["id"]),
                 message=_("ID: %s") % connection["id"],
             )

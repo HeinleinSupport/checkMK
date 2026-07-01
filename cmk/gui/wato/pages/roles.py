@@ -144,7 +144,7 @@ class ModeRoles(WatoMode):
             ).add(
                 Change(
                     action_name="edit-roles",
-                    text=_("Deleted role '%s'") % role_id,
+                    text=_("Deleted role '%(role_id)s'") % {"role_id": role_id},
                     domains=[CORE],
                 ),
                 ChangeScope.sites(get_login_sites(config.sites)),
@@ -186,7 +186,7 @@ class ModeRoles(WatoMode):
                 clone_url = make_action_link([("mode", "roles"), ("_clone", role.name)])
                 delete_url = make_confirm_delete_link(
                     url=make_action_link([("mode", "roles"), ("_delete", role.name)]),
-                    title=_("Delete role #%d") % nr,
+                    title=_("Delete role #%(nr)d") % {"nr": nr},
                     suffix=role.alias,
                     message=("Name: %s") % role.name,
                 )
@@ -416,7 +416,7 @@ class ModeEditRole(WatoMode):
         ).add(
             Change(
                 action_name="edit-roles",
-                text=_("Modified user role '%s'") % new_id,
+                text=_("Modified user role '%(new_id)s'") % {"new_id": new_id},
                 domains=[CORE],
             ),
             ChangeScope.sites(get_login_sites(config.sites)),

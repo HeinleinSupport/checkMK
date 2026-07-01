@@ -19,8 +19,8 @@ def _parameter_valuespec() -> Dictionary:
             (
                 queue,
                 Tuple(
-                    title=_("Levels for %s mail queue") % queue,
-                    help=_("Upper levels for %s mail queue") % queue,
+                    title=_("Levels for %(queue)s mail queue") % {"queue": queue},
+                    help=_("Upper levels for %(queue)s mail queue") % {"queue": queue},
                     elements=[
                         Integer(
                             title=_("Warning at"),

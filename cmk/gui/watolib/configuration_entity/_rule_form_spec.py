@@ -45,7 +45,9 @@ def _get_rule_spec(name: str) -> Rulespec:
     try:
         return rulespec_registry[name]
     except KeyError:
-        raise MKUserError(None, _("The rule specification %r does not exist.") % name)
+        raise MKUserError(
+            None, _("The rule specification %(name)r does not exist.") % {"name": name}
+        )
 
 
 def rule_form_spec_title(name: str) -> str:

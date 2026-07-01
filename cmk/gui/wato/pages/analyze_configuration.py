@@ -274,7 +274,8 @@ class ModeAnalyzeConfig(WatoMode):
                                 ("_test_id", result.test_id),
                             ],
                         ),
-                        _("Unacknowledge this test result for site %s") % site_id,
+                        _("Unacknowledge this test result for site %(site_id)s")
+                        % {"site_id": site_id},
                         StaticIcon(IconNames.unacknowledge_test),
                     )
                 else:
@@ -289,7 +290,8 @@ class ModeAnalyzeConfig(WatoMode):
                                 ("_test_id", result.test_id),
                             ],
                         ),
-                        _("Acknowledge this test result for site %s") % site_id,
+                        _("Acknowledge this test result for site %(site_id)s")
+                        % {"site_id": site_id},
                         StaticIcon(IconNames.acknowledge_test),
                     )
             else:

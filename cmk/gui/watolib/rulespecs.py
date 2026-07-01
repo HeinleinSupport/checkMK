@@ -316,10 +316,13 @@ def _get_legacy_rulespec_group_class(
 def _validate_function_args(arg_infos: list[tuple[Any, bool, bool]], hint: str) -> None:
     for idx, (arg, is_callable, none_allowed) in enumerate(arg_infos):
         if not none_allowed and arg is None:
-            raise MKGeneralException(_("Invalid None argument at for %s idx %d") % (hint, idx))
+            raise MKGeneralException(
+                _("Invalid None argument at for %(hint)s idx %(idx)d") % {"hint": hint, "idx": idx}
+            )
         if arg is not None and callable(arg) != is_callable:
             raise MKGeneralException(
-                _("Invalid expected callable for %s at idx %d: %r") % (hint, idx, arg)
+                _("Invalid expected callable for %(hint)s at idx %(idx)d: %(arg)r")
+                % {"hint": hint, "idx": idx, "arg": arg}
             )
 
 
@@ -1270,7 +1273,9 @@ class RulespecRegistry(cmk.ccc.plugin_registry.Registry[Rulespec]):
 
         # not-yet-a-type: (Rulespec) -> None
         if not isinstance(instance, Rulespec):
-            raise MKGeneralException(_("Tried to register incompatible rulespec: %r") % instance)
+            raise MKGeneralException(
+                _("Tried to register incompatible rulespec: %(instance)r") % {"instance": instance}
+            )
 
         if isinstance(instance, CheckParameterRulespecWithItem | CheckParameterRulespecWithoutItem):
             manual_instance: Any = instance.manual_check_parameter_rulespec_instance

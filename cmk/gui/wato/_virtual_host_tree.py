@@ -84,9 +84,9 @@ class VirtualHostTree(SidebarSnapin):
             html.p(
                 _(
                     "You have not defined any virtual host trees. You can do this "
-                    'in the <a href="%s">Global settings</a>.'
+                    'in the <a href="%(url)s">Global settings</a>.'
                 )
-                % url
+                % {"url": url}
             )
             return
 

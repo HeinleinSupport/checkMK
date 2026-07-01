@@ -1353,7 +1353,9 @@ class Rule:
             raise NotImplementedError()
         except Exception:
             logger.exception("error parsing rule")
-            raise InvalidRuleException(_("Invalid rule <tt>%s</tt>") % (rule_config,))
+            raise InvalidRuleException(
+                _("Invalid rule <tt>%(rule_config)s</tt>") % {"rule_config": rule_config}
+            )
 
     @classmethod
     def _parse_dict_rule(

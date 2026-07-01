@@ -110,7 +110,7 @@ def delete_users(
             )
             del all_users[entry]
         else:
-            raise MKUserError(None, _("Unknown user: %s") % entry)
+            raise MKUserError(None, _("Unknown user: %(entry)s") % {"entry": entry})
 
     if deleted_users:
         for user_id in deleted_users:
@@ -206,7 +206,7 @@ def edit_user(
     pending_changes.add(
         Change(
             action_name="edit-users",
-            text=_l("Modified user: %s") % user_id,
+            text=_l("Modified user: %(user_id)s") % {"user_id": user_id},
             domains=[CORE],
         ),
         ChangeScope.all_activation_sites()
@@ -265,7 +265,7 @@ def create_user(
     pending_changes.add(
         Change(
             action_name="edit-users",
-            text=_l("Created new user: %s") % user_id,
+            text=_l("Created new user: %(user_id)s") % {"user_id": user_id},
             domains=[CORE],
         ),
         ChangeScope.all_activation_sites()

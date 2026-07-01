@@ -102,7 +102,8 @@ def delete_role(
         if role_id in user["roles"]:
             raise MKUserError(
                 None,
-                _("You cannot delete roles, that are still in use (%s)!") % role_id,
+                _("You cannot delete roles, that are still in use (%(role_id)s)!")
+                % {"role_id": role_id},
             )
 
     del all_roles[role_id]
@@ -115,7 +116,9 @@ def validate_new_alias(old_alias: str, new_alias: str) -> None:
     if old_alias != new_alias:
         existing_aliases = {role.alias: role_id for role_id, role in get_all_roles().items()}
         if role_id := existing_aliases.get(new_alias):
-            raise ValueError(_("This alias is already used in the role %s.") % role_id)
+            raise ValueError(
+                _("This alias is already used in the role %(role_id)s.") % {"role_id": role_id}
+            )
 
 
 def validate_new_roleid(old_roleid: str, new_roleid: str) -> None:

@@ -350,7 +350,7 @@ class ModeTimeperiods(WatoMode):
             ),
             title=_("Delete time period"),
             suffix=alias,
-            message=_("Name: %s") % name,
+            message=_("Name: %(name)s") % {"name": name},
         )
 
         html.icon_button(edit_url, _("Properties"), StaticIcon(IconNames.edit))
@@ -692,7 +692,8 @@ class ModeEditTimeperiod(WatoMode):
     def _validate_timeperiod_exception(self, value: str, varprefix: str) -> None:
         if value in dateutils.weekday_ids():
             raise MKUserError(
-                varprefix, _("You cannot use weekday names (%s) in exceptions") % value
+                varprefix,
+                _("You cannot use weekday names (%(value)s) in exceptions") % {"value": value},
             )
 
         if value in ["name", "alias", "timeperiod_name", "register", "use", "exclude"]:

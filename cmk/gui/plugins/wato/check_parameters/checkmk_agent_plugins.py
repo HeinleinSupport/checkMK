@@ -18,7 +18,7 @@ def _validate_version(value: str, varprefix: str) -> None:
     try:
         parse_check_mk_version(value)
     except (ValueError, TypeError, KeyError):
-        raise MKUserError(varprefix, _("Can't parse version %r") % value)
+        raise MKUserError(varprefix, _("Can't parse version %(value)r") % {"value": value})
 
 
 def _parameter_valuespec_checkmk_agent_plugins() -> Dictionary:
