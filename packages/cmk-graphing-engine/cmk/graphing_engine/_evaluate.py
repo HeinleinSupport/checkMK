@@ -42,8 +42,6 @@ class EvaluatedCurve:
 class EvaluatedStack:
     members: Sequence[EvaluatedCurve]
     inverse: bool
-    # The evaluated invisible baseline (cf. Stack.reference): the renderer uses it as the stack's
-    # floor but does not draw it. None when the stack has no reference.
     reference: EvaluatedCurve | None = None
 
 
@@ -62,7 +60,6 @@ class EvaluatedRule:
 
 
 class VerticalRangeType(enum.StrEnum):
-    # MINIMAL: a lower bound on the axis range (it may grow past it); FIXED: a hard clamp.
     MINIMAL = "minimal"
     FIXED = "fixed"
 
@@ -117,11 +114,6 @@ def _evaluate_vertical_range(
 
 
 def _drawable_id(quantity: Quantity, *, inverse: bool, seen: Counter[str]) -> str:
-    # A drawable's id is its quantity's structural ident, with the direction folded in ("-" for the
-    # inverted half of a bidirectional graph, mirroring the legacy stack / -stack split) and a "#n"
-    # suffix appended to the n-th occurrence of an already-seen base. Callers must invoke this once per
-    # drawable slot in definition order, before dropping absent ones, so a surviving drawable's id never
-    # shifts when a sibling is dropped for missing data — the id is a pure function of the graph.
     base = ("-" if inverse else "") + quantity.ident()
     seen[base] += 1
     return base if seen[base] == 1 else f"{base}#{seen[base]}"
@@ -180,8 +172,6 @@ def evaluate_graph(
         time_series=time_series,
         time_range=time_range,
     )
-    # Assign every drawable slot its unique id in definition order (stacks, then lines, then rules),
-    # bumping the shared disambiguation counter even for slots that get dropped for missing data.
     seen: Counter[str] = Counter()
     stacks = []
     for group in graph.stacks:

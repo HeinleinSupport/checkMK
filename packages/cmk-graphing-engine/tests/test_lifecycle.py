@@ -109,8 +109,6 @@ def _discover(
     *,
     translations: Sequence[translations_v1.Translation] = (),
 ) -> Sequence[Graph]:
-    # Discovery the way the GUI does it: fetch performance data only, then build the structural
-    # graphs from the metric names that are present.
     performance_data = fetch_performance_data(
         services=[_SERVICE],
         translations=translations,

@@ -30,9 +30,6 @@ from cmk.graphing_engine import (
 from cmk.gui import sites
 from cmk.gui.log import logger
 
-# Perf-data parsing duplicated from the legacy cmk.gui.graphing._translated_metrics, so this engine
-# RRD source stays independent of the legacy graphing stack (the duplication is intentional). Only the
-# eight fields the engine consumes are kept; the legacy lookup-name / unit handling is dropped.
 _VALUE_AND_UNIT = re.compile(r"([0-9.,-]*)(.*)")
 
 
@@ -104,7 +101,6 @@ def _parse_perf_data(
     check_command = _parse_check_command(check_command)
 
     parts = shlex.split(perf_data_string)
-    # A PNP-style check command may be appended in brackets.
     if parts and parts[-1].startswith("[") and parts[-1].endswith("]"):
         check_command = parts[-1][1:-1]
         del parts[-1]
@@ -154,8 +150,6 @@ class EngineRRDSource:
         perf_data, normalized_check_command = _parse_perf_data(
             perf_data_string, check_command, debug=debug
         )
-        # Merge metric names present in RRD but absent from the current perf_data (as synthetic value=1
-        # entries) so their graphs still appear — legacy parity (cf. compute_translated_metrics).
         if rrd_metrics:
             rrd_only, _command = _parse_perf_data(
                 " ".join(f'"{m}"=1' if " " in m else f"{m}=1" for m in rrd_metrics if "," not in m),
@@ -175,8 +169,6 @@ class EngineRRDSource:
         unique = list(dict.fromkeys(services))
         if not unique:
             return {}
-        # One livestatus query for the whole service set: an OR over the (host, service) pairs. The
-        # host_name / description columns identify which service each row belongs to.
         query = "GET services\nColumns: host_name description perf_data metrics check_command\n"
         for service in unique:
             query += f"Filter: host_name = {lqencode(service.host_name)}\n"
@@ -207,10 +199,6 @@ class EngineRRDSource:
         time_range: TimeRange,
         consolidation_function: ConsolidationFunction,
     ) -> Mapping[RRDMetric, EngineTimeSeries]:
-        # The raw RRD column of every metric, unscaled (the engine scales and merges the originals
-        # itself). Services requesting the same set of metric names share one livestatus query — so a
-        # combined graph (the same metric on every service) is fetched in a single query. Columns must
-        # be uniform per query, hence the grouping by metric-name set rather than one query for all.
         metrics_by_service: dict[ServiceRef, list[RRDMetric]] = {}
         for metric in rrd_metrics:
             ref = ServiceRef(host_name=metric.host_name, service_name=metric.service_name)
@@ -224,7 +212,6 @@ class EngineRRDSource:
         result: dict[RRDMetric, EngineTimeSeries] = {}
         for metric_names, refs in services_by_metric_names.items():
             column_of = {name: index for index, name in enumerate(metric_names)}
-            # ConsolidationFunction is a StrEnum, so it renders as its "max"/"min"/"average" value.
             data_range = f"{time_range.start}:{time_range.end}:{max(1, time_range.step)}"
             columns = [
                 f"rrddata:{name}:{name}.{consolidation_function}:{data_range}"
@@ -240,8 +227,6 @@ class EngineRRDSource:
             with sites.only_sites(self.site_id), contextlib.suppress(MKLivestatusNotFoundError):
                 for row in sites.live().query(query):
                     ref = ServiceRef(host_name=row[0], service_name=row[1])
-                    # The columns come back on RRDTool's native grid; the engine aligns them to the
-                    # requested time range itself, so hand them over as fetched.
                     for metric in metrics_by_service.get(ref, []):
                         column = row[2 + column_of[str(metric.metric_name)]]
                         if not column:

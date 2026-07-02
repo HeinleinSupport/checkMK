@@ -62,8 +62,6 @@ def _walk(
             names = drawn_metric_names_of_graph(graph)
             return _GraphMatch(metric_names=names, matched=_matches(graph, names, available))
         case graphs_v1.Bidirectional() | graphs_v2_unstable.Bidirectional():
-            # Matching is per drawn metric only; the title is not consulted (legacy parity), and a
-            # bidirectional matches when either half matches.
             lower_names = drawn_metric_names_of_graph(graph.lower)
             upper_names = drawn_metric_names_of_graph(graph.upper)
             return _GraphMatch(
@@ -151,9 +149,6 @@ def match_graph_for_services(
         service_available = available.get(service, frozenset())
         if not _walk(graph, service_available).matched:
             continue
-        # Add the predictive lines per service exactly as build_service_graphs does for template
-        # graphs, so a combined graph includes them wherever predict_* exists (legacy combined
-        # parity).
         with_predictive, _names = _add_predictive_lines(
             parse_graph_from_api(graph, service, metrics, localizer, graph_type=graph_type),
             service,

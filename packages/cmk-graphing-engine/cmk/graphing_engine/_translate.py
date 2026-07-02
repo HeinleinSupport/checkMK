@@ -54,10 +54,6 @@ def _reverse_translations(
     canonical_name: MetricName,
     translations: Mapping[MetricName, MetricTranslation],
 ) -> Mapping[MetricName, float]:
-    # The old RRD column names that rename to `canonical_name`, each with its scale. After a metric is
-    # renamed (RenameTo), its historic data still lives under the former column name, so fetching these
-    # too lets a graph spanning the rename keep its pre-rename segment. Regex (`~`) patterns map many
-    # names onto one and cannot be inverted, so they are skipped (the same 1-to-1 restriction as legacy).
     return {
         old_name: translation.scale
         for old_name, translation in translations.items()
@@ -72,8 +68,6 @@ def translate_performance_data(
     command_translations = _translations_for_command(
         raw_performance_data.check_command, translations
     )
-    # Collect each canonical metric's source columns (the current columns, in order) and the raw value
-    # that carries its scaled value / scalars; on a merge the last raw value for a name wins.
     originals_by_name: dict[MetricName, list[RRDOriginal]] = {}
     raw_value_by_name: dict[MetricName, tuple[RawPerformanceValue, float]] = {}
     for raw_perf_value in raw_performance_data.values:
@@ -87,8 +81,6 @@ def translate_performance_data(
 
     result: dict[MetricName, PerformanceData] = {}
     for name, (raw_perf_value, scale) in raw_value_by_name.items():
-        # Append the deprecated (pre-rename) column names as further originals so the historic segment
-        # is fetched and merged in. The current name's originals stay first, so live data wins on overlap.
         prefix, bare_name = _split_predict_prefix(name)
         present = {original.metric_name for original in originals_by_name[name]}
         deprecated = [

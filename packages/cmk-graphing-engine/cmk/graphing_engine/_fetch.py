@@ -41,7 +41,6 @@ class RRDSource(Protocol):
 def _consolidation_function(
     metric: RRDMetric, consolidation_function: ConsolidationFunction
 ) -> ConsolidationFunction:
-    # A metric may pin its own consolidation function; otherwise the graph-wide one applies.
     return (
         consolidation_function
         if metric.consolidation_function is None

@@ -135,12 +135,8 @@ def _parse_unit(unit: metrics_v1.Unit) -> Unit:
 _FALLBACK_COLOR = _COLORS[metrics_v1.Color.GRAY]
 _FALLBACK_UNIT = Unit(notation=DecimalNotation(""), precision=AutoPrecision(2))
 
-# The warn / crit colours threshold rules render in (cf. cmk.gui.color.Color.WARN / .CRIT). They live
-# here so build_curve gives a scalar rule its label + colour from the ScalarType, with no GUI input.
 _WARN_COLOR = "#ffd000"
 _CRIT_COLOR = "#ff3232"
-# The English rule label per scalar kind; build_curve localizes it. A None colour means "use the
-# metric's own colour" (the min / max bound has no warn / crit colour of its own).
 _RULE_DISPLAY: Mapping[ScalarType, tuple[str, str | None]] = {
     ScalarType.WARNING: ("Warning", _WARN_COLOR),
     ScalarType.CRITICAL: ("Critical", _CRIT_COLOR),
@@ -244,9 +240,6 @@ def _curve_display(quantity: _ApiQuantity, context: _ParseContext) -> CurveAttri
 
 
 def _parse_quantity(quantity: _ApiQuantity, context: _ParseContext) -> Quantity:
-    # Plain metrics and scalars carry no display — build_curve resolves those from the registry / kind.
-    # Constants and operations carry their intrinsic plugin display (title / unit / colour), which the
-    # registry cannot reproduce, so it is computed here and read back by build_curve.
     match quantity:
         case str():
             return context.rrd_metric(quantity)
@@ -340,8 +333,6 @@ def _metric_names_in_quantity(quantity: _ApiQuantity) -> Iterable[MetricName]:
 
 
 def _is_scalar(quantity: _ApiQuantity) -> bool:
-    # A scalar quantity (a threshold or constant, possibly combined) is rendered as a horizontal
-    # rule, not a drawn curve. Mirrors the legacy _is_scalar split.
     match quantity:
         case str():
             return False
@@ -370,10 +361,6 @@ def _is_scalar(quantity: _ApiQuantity) -> bool:
 def drawn_metric_names_of_graph(
     graph: graphs_v1.Graph | graphs_v2_unstable.Graph,
 ) -> Sequence[MetricName]:
-    # The metrics actually drawn as curves: the non-scalar compound/simple lines. These are what
-    # matching requires and what the graph claims. Title references and scalar thresholds are
-    # neither required nor claimed — mirroring legacy `_evaluate_graph_lines`, which skips scalars
-    # and never consults the title.
     return list(
         {
             name
@@ -419,8 +406,6 @@ def _bidirectional_range(
         return lower
     if lower is None:
         return upper
-    # The envelope of both halves' ranges (legacy evaluate_graph_plugin_range), not just one half.
-    # Numeric bounds combine statically; with a metric-valued bound we cannot, so keep the upper.
     if (
         isinstance(upper.lower, int | float)
         and isinstance(upper.upper, int | float)
@@ -447,19 +432,12 @@ def _attributes_for(
         case ScalarOf():
             metric = metric_display_attributes(quantity.metric.metric_name, metrics, localizer)
             label, type_color = _RULE_DISPLAY[quantity.scalar_type]
-            # The author colour (MinimumOf / MaximumOf) wins; otherwise the scalar type's warn / crit colour;
-            # otherwise the metric's own colour.
             return CurveAttributes(
                 title=localizer(label),
                 unit=metric.unit,
                 color=quantity.color or type_color or metric.color,
             )
         case _:
-            # A consumer quantity, resolved generically without the engine knowing its type. Either it
-            # delegates its display to a *representative* quantity it exposes via ``display_of`` (e.g. a
-            # combined aggregation → its first operand, so the display is resolved fresh from the
-            # registry and never cached at discovery — the graph stays purely structural), or it carries
-            # its own intrinsic display (an engine operation / constant the registry cannot reproduce).
             if (display_of := getattr(quantity, "display_of", None)) is not None:
                 return _attributes_for(display_of(), metrics, localizer)
             display = getattr(quantity, "display", None)
@@ -484,9 +462,6 @@ def _parse_lines(
     *,
     inverse: bool,
 ) -> tuple[Sequence[Stack], Sequence[Line], Sequence[Rule]]:
-    # Scalar quantities (thresholds/constants) become horizontal rules rather than drawn curves;
-    # everything else stacks (compound_lines) or draws as a line (simple_lines). Each drawn quantity is
-    # wrapped in a Curve with its display resolved right here (registry / scalar kind / intrinsic).
     def _curve(q: _ApiQuantity) -> Curve:
         return build_curve(_parse_quantity(q, context), context.metrics, context.localizer)
 

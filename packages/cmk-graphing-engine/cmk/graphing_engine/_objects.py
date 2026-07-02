@@ -90,9 +90,8 @@ class MetricName(str):
     # (non-injective). The raw name is pnp-cleaned, so a name carrying spaces / ":" / "/" / "\" / NUL is
     # mapped to its canonical RRD identifier.
     def __new__(cls, text: str) -> Self:
-        # A metric name is used as a PNP4Nagios / RRD path element, so the path-hostile characters are
-        # mapped to "_" — including an embedded null byte (some SNMP devices emit a stray NUL), which
-        # would otherwise make open() raise "ValueError: embedded null byte" when the RRD is created.
+        # An embedded null byte is mapped to "_" like the other path-hostile chars: it would otherwise
+        # make open() raise "ValueError: embedded null byte" when the RRD is created.
         return super().__new__(
             cls,
             text.replace(" ", "_")
@@ -151,11 +150,7 @@ class EvaluatedQuantity:
 
 
 class Quantity(Protocol):
-    def ident(self) -> str:
-        # A stable, structural identifier of the quantity — derived from its shape and operands, never
-        # from fetched data or the time range / consolidation function. It is the basis of the unique id
-        # each evaluated drawable carries, so it must stay identical across re-evaluations.
-        ...
+    def ident(self) -> str: ...
 
     def rrd_metrics(self) -> Iterable[RRDMetric]: ...
 
@@ -227,9 +222,6 @@ def _combine(
 @dataclass(frozen=True)
 class Constant:
     value: int | float
-    # Intrinsic display chosen by the plugin author (cmk.graphing.v1 Constant carries title / unit /
-    # colour). Set at parse for plugin graphs; read by ``build_curve``. None for consumer-built
-    # constants that wrap their own Curve attributes (the direct graph types).
     display: CurveAttributes | None = None
 
     def ident(self) -> str:
@@ -249,13 +241,9 @@ class RRDMetric:
     host_name: HostName
     service_name: ServiceName
     metric_name: MetricName
-    # An optional per-metric consolidation function; when None the graph-wide one is used at fetch.
     consolidation_function: ConsolidationFunction | None = None
 
     def ident(self) -> str:
-        # host / service qualify the metric so the same name from two services stays distinct. The
-        # consolidation function is deliberately left out: it is a fetch-time choice that changes on
-        # re-calc, and the id must be preserved across re-calculations.
         return f"metric:{self.host_name}/{self.service_name}/{self.metric_name}"
 
     def rrd_metrics(self) -> Iterable[RRDMetric]:
@@ -296,13 +284,8 @@ _SCALAR_VALUE: Mapping[ScalarType, Callable[[PerformanceData], float | None]] = 
 
 @dataclass(frozen=True)
 class ScalarOf:
-    # A scalar reference of a metric (warn / crit / lower warn / lower crit / min / max bound),
-    # drawn as a flat horizontal line. Unifies the former WarningOf / CriticalOf / LowerWarningOf /
-    # LowerCriticalOf / MinimumOf / MaximumOf, which differed only in the data field they read.
     metric: RRDMetric
     scalar_type: ScalarType
-    # The author-chosen colour the cmk.graphing.v1 MinimumOf / MaximumOf carry (warn / crit references
-    # carry none — their colour comes from the scalar type). Read by build_curve; None for the others.
     color: str | None = None
 
     def ident(self) -> str:
@@ -323,7 +306,6 @@ class ScalarOf:
 @dataclass(frozen=True)
 class Sum:
     summands: Sequence[Quantity]
-    # Intrinsic display from the plugin author (read by ``build_curve``); None for consumer-built sums.
     display: CurveAttributes | None = None
 
     def ident(self) -> str:
@@ -343,7 +325,6 @@ class Sum:
 @dataclass(frozen=True)
 class Product:
     factors: Sequence[Quantity]
-    # Intrinsic display from the plugin author (read by ``build_curve``); None for consumer-built ones.
     display: CurveAttributes | None = None
 
     def ident(self) -> str:
@@ -362,7 +343,6 @@ class Difference:
     _: KW_ONLY
     minuend: Quantity
     subtrahend: Quantity
-    # Intrinsic display from the plugin author (read by ``build_curve``); None for consumer-built ones.
     display: CurveAttributes | None = None
 
     def ident(self) -> str:
@@ -384,7 +364,6 @@ class Fraction:
     _: KW_ONLY
     dividend: Quantity
     divisor: Quantity
-    # Intrinsic display from the plugin author (read by ``build_curve``); None for consumer-built ones.
     display: CurveAttributes | None = None
 
     def ident(self) -> str:
@@ -403,8 +382,6 @@ class Fraction:
 type Bound = int | float | Quantity
 
 
-# A None bound leaves that edge to auto-scaling and fixes/constrains only the other one (e.g. the
-# half-open range (0, None) — fix the floor at 0, auto-scale the top).
 @dataclass(frozen=True)
 class MinimalRange:
     lower: Bound | None
@@ -430,8 +407,6 @@ class Curve:
 class Stack:
     members: Sequence[Curve]
     inverse: bool
-    # An optional invisible baseline (legacy line_type="ref"): it sets the stack's floor but is not
-    # drawn and not shown in the legend. The members stack on top of it.
     reference: Curve | None = None
 
 

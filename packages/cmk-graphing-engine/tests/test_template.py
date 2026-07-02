@@ -178,7 +178,6 @@ def _discover(
     *,
     rrd: _FakeFetchRRD,
 ) -> Sequence[Graph]:
-    # Discovery fetches the performance data only to match / build the structure; it stores none.
     performance_data = fetch_performance_data(services=[service], translations=[], rrd=rrd)
     return build_service_graphs(
         service=service,

@@ -27,8 +27,6 @@ from cmk.gui.i18n import _, translate_to_current_language
 from ._from_api import GraphFromAPI
 
 
-# A template graph has a single value axis, so its drawn curves must share one unit (legacy parity).
-# Only drawn curves are checked — threshold rules (warn / crit) are a separate concern.
 def _assert_uniform_unit(graph: Graph) -> None:
     drawn = [
         *(member for stack in graph.stacks for member in stack.members),
