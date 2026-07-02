@@ -663,13 +663,12 @@ def discover_host_labels(
             This label is set automatically if the corresponding systemd unit matches.
 
     """
-    for unit in _match_systemd_units(params, list(section.services.values())):
-        for settings in params:
-            if settings.get("host_labels_auto"):
-                yield HostLabel(f"cmk/systemd/unit/{unit.name}", "yes")
+    for unit, settings in _match_systemd_units(params, list(section.services.values())):
+        if settings.get("host_labels_auto"):
+            yield HostLabel(f"cmk/systemd/unit/{unit.name}", "yes")
 
-            for name, value in settings.get("host_labels_explicit", {}).items():
-                yield HostLabel(name, value)
+        for name, value in settings.get("host_labels_explicit", {}).items():
+            yield HostLabel(name, value)
 
 
 agent_section_systemd_units = AgentSection(
@@ -710,7 +709,7 @@ def discovery_systemd_units_sockets(
 
 def _match_systemd_units(
     params: Sequence[Mapping[str, Any]], units: Sequence[UnitEntry]
-) -> Iterator[UnitEntry]:
+) -> Iterator[tuple[UnitEntry, Mapping[str, Any]]]:
     def regex_match(what: Sequence[str], name: str) -> bool:
         if not what:
             return True
@@ -739,13 +738,13 @@ def _match_systemd_units(
                 and regex_match(names, unit.name)
                 and state_match(states, unit.active_status)
             ):
-                yield unit
+                yield unit, settings
 
 
 def discovery_systemd_units(
     params: Sequence[Mapping[str, Any]], units: Sequence[UnitEntry]
 ) -> DiscoveryResult:
-    for unit in _match_systemd_units(params, units):
+    for unit, _settings in _match_systemd_units(params, units):
         yield Service(item=unit.name)
 
 

@@ -696,6 +696,82 @@ def test_discover_host_labels_of_systemd_units(
     )
 
 
+def test_discover_host_labels_only_for_matching_units() -> None:
+    def _unit(name: str) -> UnitEntry:
+        return UnitEntry(
+            name=name,
+            loaded_status="loaded",
+            active_status="active",
+            current_state="running",
+            description=name,
+            enabled_status=None,
+            time_since_change=timedelta(days=2),
+            cpu_seconds=None,
+            memory=None,
+            number_of_tasks=None,
+        )
+
+    # The empty settings block mimics the default parameters appended by the
+    # RuleSetType.ALL API. It matches every unit but must not contribute labels.
+    assert list(
+        discover_host_labels(
+            [{"names": ["~apache"], "host_labels_auto": True}, {}],
+            Section(
+                services={
+                    "apache": _unit("apache"),
+                    "nginx": _unit("nginx"),
+                    "mysql": _unit("mysql"),
+                },
+                sockets={},
+            ),
+        )
+    ) == [HostLabel("cmk/systemd/unit/apache", "yes")]
+
+
+@pytest.mark.parametrize(
+    "params",
+    [
+        pytest.param([{"names": ["~nginx"], "host_labels_auto": True}], id="name-mismatch"),
+        pytest.param(
+            [{"descriptions": ["~nginx"], "host_labels_auto": True}], id="description-mismatch"
+        ),
+        pytest.param([{"states": ["failed"], "host_labels_auto": True}], id="state-mismatch"),
+        pytest.param(
+            [{"names": ["~apache"], "states": ["failed"], "host_labels_auto": True}],
+            id="partial-mismatch",
+        ),
+    ],
+)
+def test_discover_host_labels_no_labels_for_non_matching_units(
+    params: Sequence[Mapping[str, Any]],
+) -> None:
+    assert (
+        list(
+            discover_host_labels(
+                params,
+                Section(
+                    services={
+                        "apache": UnitEntry(
+                            name="apache",
+                            loaded_status="loaded",
+                            active_status="active",
+                            current_state="running",
+                            description="LSB: Apache2 web server",
+                            enabled_status=None,
+                            time_since_change=timedelta(days=2),
+                            cpu_seconds=None,
+                            memory=None,
+                            number_of_tasks=None,
+                        )
+                    },
+                    sockets={},
+                ),
+            )
+        )
+        == []
+    )
+
+
 def test_discover_host_labels_one_label_per_unit() -> None:
     def _unit(name: str) -> UnitEntry:
         return UnitEntry(
