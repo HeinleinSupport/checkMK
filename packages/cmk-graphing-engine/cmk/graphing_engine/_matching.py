@@ -137,13 +137,13 @@ def build_matched_graphs_per_service(
 ) -> Sequence[Graph]:
     matched_graphs: list[Graph] = []
     for service in services:
-        service_available = metric_names.get(service, frozenset())
-        if not _walk(graph, service_available).matched:
+        metric_names_of_service = metric_names.get(service, frozenset())
+        if not _walk(graph, metric_names_of_service).matched:
             continue
         with_predictive, _names = _add_predictive_lines(
             parse_graph_from_api(graph, service, metrics, localizer, graph_type=graph_type),
             service,
-            service_available,
+            metric_names_of_service,
             metrics,
             localizer,
         )
