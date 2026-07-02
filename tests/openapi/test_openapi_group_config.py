@@ -374,10 +374,7 @@ def test_host_group_id_with_newline(
 ) -> None:
     resp = clients.HostGroup.create(name=group_id, alias="not_important", expect_ok=False)
     resp.assert_status_code(400)
-    assert (
-        resp.json["fields"]["name"][0]
-        == f"{group_id!r} does not match pattern '{ESCAPED_GROUP_NAME_PATTERN}'."
-    )
+    assert "does not match pattern" in resp.json["fields"]["body.name"]["msg"]
 
 
 @pytest.mark.parametrize("group_id", invalid_group_ids)
@@ -408,6 +405,7 @@ def test_service_group_id_with_newline(
 
 def test_group_attributes_required(
     group_client: GroupConfig,
+    group_type: str,
 ) -> None:
     group_name = "test_name"
     group_client.create(name=group_name, alias="test_alias")
@@ -416,9 +414,13 @@ def test_group_attributes_required(
         expect_ok=False,
     )
     resp.assert_status_code(400)
-    assert resp.json["fields"]["entries"]["0"] == {
-        "attributes": ["Missing data for required field."]
-    }
+    if group_type == "host":
+        # migrated to the versioned endpoint framework, which uses pydantic error responses
+        assert resp.json["fields"]["body.entries.0.attributes"]["type"] == "missing"
+    else:
+        assert resp.json["fields"]["entries"]["0"] == {
+            "attributes": ["Missing data for required field."]
+        }
 
 
 def test_contact_group_dot_names(
@@ -453,12 +455,14 @@ def test_contact_group_dot_names(
     assert "name" in contact_group_double_dot_response.json["fields"]
     assert "name" in contact_group_double_dot_response.json["detail"]
 
+    # host groups are migrated to the versioned endpoint framework, which uses pydantic
+    # error responses with "body." prefixed field names
     assert host_group_dot_response.status_code == 400
-    assert "name" in host_group_dot_response.json["fields"]
+    assert "body.name" in host_group_dot_response.json["fields"]
     assert "name" in host_group_dot_response.json["detail"]
 
     assert host_group_double_dot_response.status_code == 400
-    assert "name" in host_group_double_dot_response.json["fields"]
+    assert "body.name" in host_group_double_dot_response.json["fields"]
     assert "name" in host_group_double_dot_response.json["detail"]
 
     assert service_group_dot_response.status_code == 400
