@@ -10,14 +10,14 @@ export type PresetName =
   | 'gaugeAvg'
   | 'histogramPreserve'
   | 'histogramQuantile'
-  | 'histogramFracBetween'
+  | 'histogramFractionBetween'
 
 export const presetOptions: Array<{ title: string; name: PresetName }> = [
   { title: 'Sum · rate', name: 'sumRate' },
   { title: 'Gauge · avg', name: 'gaugeAvg' },
   { title: 'Histogram · preserve', name: 'histogramPreserve' },
   { title: 'Histogram · quantile', name: 'histogramQuantile' },
-  { title: 'Histogram · frac between', name: 'histogramFracBetween' }
+  { title: 'Histogram · fraction between', name: 'histogramFractionBetween' }
 ]
 
 export const consolidationPresets: Record<PresetName, ConsolidationModel> = {
@@ -35,10 +35,10 @@ export const consolidationPresets: Record<PresetName, ConsolidationModel> = {
     params: { quantile: 0.95 },
     lookbackSeconds: 300
   },
-  histogramFracBetween: {
+  histogramFractionBetween: {
     type: 'histogram',
-    function: 'frac_between',
-    params: { fracLower: 0.1, fracUpper: 0.9 },
+    function: 'fraction_between',
+    params: { fractionLowerThreshold: 0.1, fractionUpperThreshold: 0.9 },
     lookbackSeconds: 300
   }
 }
