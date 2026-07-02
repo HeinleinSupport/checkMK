@@ -99,7 +99,6 @@ _EXCLUDED_PREFIXES = (
     "packages/cmk-agent-receiver",
     "packages/cmk-ccc",
     "packages/cmk-check-engine",
-    "packages/cmk-crash",
     "packages/cmk-dev-deploy",
     "packages/cmk-ec",
     "packages/cmk-events",

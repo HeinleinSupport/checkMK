@@ -332,7 +332,10 @@ class CrashReportStore:
             try:
                 self.consolidate_crash_type_dir(crash_type_dir)
             except Exception:
-                _logger.exception("Error consolidating crash dir %s", crash_type_dir.name)
+                _logger.exception(
+                    "Error consolidating crash dir %(crash_dir)s",
+                    {"crash_dir": crash_type_dir.name},
+                )
 
     def consolidate_crash_type_dir(self, crash_type_dir: Path) -> None:
         """Migrate, deduplicate, and prune one crash type directory.
@@ -361,7 +364,10 @@ class CrashReportStore:
                         store.load_text_from_file(crash_info_path)
                     )
                 except Exception:
-                    _logger.debug("Skipping unreadable crash.info in %s", crash_dir.name)
+                    _logger.debug(
+                        "Skipping unreadable crash.info in %(crash_dir)s",
+                        {"crash_dir": crash_dir.name},
+                    )
                     continue
 
                 # Bring legacy v0 files up to date: normalize the time field and add the
