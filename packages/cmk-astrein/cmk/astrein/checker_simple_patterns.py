@@ -95,7 +95,6 @@ _EXCLUDED_PREFIXES = (
     "doc",
     "non-free",
     "omd",
-    "scripts",
     "tests",
     "packages/cmk-agent-receiver",
     "packages/cmk-ccc",

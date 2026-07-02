@@ -63,7 +63,8 @@ class ChangeDetails(BaseModel):
         """
         if self.status != TChangeStatus.MERGED:
             logger.warning(
-                "Change '%s' is not yet merged; skip peer-review check...", self.change_id
+                "Change '%(change_id)s' is not yet merged; skip peer-review check...",
+                {"change_id": self.change_id},
             )
             return None
 

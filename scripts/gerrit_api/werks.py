@@ -74,7 +74,8 @@ class WerksParser:
         if line.count(WerksParser.DELIMITER) > 1:
             # Parse line with format '| key | value |'
             logger.warning(
-                "Potentially incorrect format in 'Werk %d' at line '%s'!", self._id, line
+                "Potentially incorrect format in 'Werk %(werk_id)d' at line '%(line)s'!",
+                {"werk_id": self._id, "line": line},
             )
             machine_readable_line = [_ for _ in line.split(WerksParser.DELIMITER) if _.strip()]
         else:
