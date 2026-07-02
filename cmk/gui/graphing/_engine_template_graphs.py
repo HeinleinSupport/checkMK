@@ -22,8 +22,18 @@ from cmk.graphing_engine import (
     Service,
     TimeRange,
 )
+from cmk.gui.config import active_config
 from cmk.gui.i18n import _, translate_to_current_language
 
+from ._engine_dispatch import (
+    consolidation_function_of,
+    EngineGraphEvaluator,
+    GraphDataRequest,
+    time_range_of,
+)
+from ._engine_plugins import registered_translations
+from ._engine_rrd_source import EngineRRDSource
+from ._engine_serialization import deserialize_graphs
 from ._from_api import GraphFromAPI
 
 
@@ -82,3 +92,18 @@ def evaluate_template_graphs(
         time_range=time_range,
         rrd=rrd,
     )
+
+
+def _dispatched_evaluate_template_graphs(request: GraphDataRequest) -> Sequence[EvaluatedGraph]:
+    return evaluate_template_graphs(
+        graphs=deserialize_graphs(request.definition),
+        consolidation_function=consolidation_function_of(request),
+        time_range=time_range_of(request),
+        rrd=EngineRRDSource(site_id=None, debug=active_config.debug),
+        registered_translations=registered_translations(),
+    )
+
+
+TEMPLATE_GRAPH_EVALUATOR = EngineGraphEvaluator(
+    graph_type="template", evaluate=_dispatched_evaluate_template_graphs
+)
