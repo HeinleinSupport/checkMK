@@ -22,10 +22,12 @@ import pytest
 
 from livestatus import (
     NetworkSocketDetails,
+    SAMLAuthenticationEntry,
     SiteConfiguration,
+    SiteConfigurations,
 )
 
-from cmk.ccc.site import SiteId
+from cmk.ccc.site import omd_site, SiteId
 from cmk.gui.form_specs.unstable.legacy_converter import (
     TransformDataForLegacyFormatOrRecomposeFunction,
 )
@@ -164,6 +166,67 @@ def test_authentication_connections_form_spec_no_site_config_offers_both_choices
         "central_site",
         "list",
     ]
+
+
+def _distributed_site_configs(central: SiteConfiguration) -> SiteConfigurations:
+    """Central plus one inheriting remote and one remote with its own connections."""
+    inheriting_remote = _remote_site_config()
+    explicit_remote = _remote_site_config()
+    explicit_remote["id"] = SiteId("remote_explicit")
+    explicit_remote["authentication_connections"] = [("ldap", "ldap_a")]
+    return SiteConfigurations(
+        {
+            omd_site(): central,
+            SiteId("remote"): inheriting_remote,
+            SiteId("remote_explicit"): explicit_remote,
+        }
+    )
+
+
+def test_get_connected_sites_to_update_central_auth_change_flags_inheriting_remotes() -> None:
+    current_config = _local_site_config()
+    current_config["authentication_connections"] = [
+        ("saml", SAMLAuthenticationEntry(connection_id="saml_a"))
+    ]
+    assert SiteManagement.get_connected_sites_to_update(
+        new_or_deleted_connection=False,
+        modified_site=omd_site(),
+        current_config=current_config,
+        old_config=_local_site_config(),
+        site_configs=_distributed_site_configs(current_config),
+    ) == {omd_site(), SiteId("remote")}
+
+
+def test_get_connected_sites_to_update_unchanged_auth_flags_no_sites() -> None:
+    current_config = _local_site_config()
+    assert (
+        SiteManagement.get_connected_sites_to_update(
+            new_or_deleted_connection=False,
+            modified_site=omd_site(),
+            current_config=current_config,
+            old_config=_local_site_config(),
+            site_configs=_distributed_site_configs(current_config),
+        )
+        == set()
+    )
+
+
+def test_get_connected_sites_to_update_remote_auth_change_does_not_fan_out() -> None:
+    central = _local_site_config()
+    current_config = _remote_site_config()
+    current_config["authentication_connections"] = [
+        ("saml", SAMLAuthenticationEntry(connection_id="saml_a"))
+    ]
+    assert (
+        SiteManagement.get_connected_sites_to_update(
+            new_or_deleted_connection=False,
+            modified_site=SiteId("remote"),
+            current_config=current_config,
+            old_config=_remote_site_config(),
+            site_configs=_distributed_site_configs(central),
+        )
+        == set()
+    )
 
 
 def test_central_site_connections_readonly_data_empty(monkeypatch: pytest.MonkeyPatch) -> None:

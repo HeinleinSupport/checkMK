@@ -685,6 +685,34 @@ class SiteManagement:
         )
 
     @classmethod
+    def _auth_inheritance_affected_sites(
+        cls,
+        modified_site: SiteId,
+        current_config: SiteConfiguration,
+        old_config: SiteConfiguration,
+        site_configs: SiteConfigurations,
+    ) -> set[SiteId]:
+        """Remote sites whose effective authentication connections change with this edit.
+
+        Editing the central site's ``authentication_connections`` changes the
+        effective config of every remote that inherits them.
+        Those remotes must be flagged for sync even though their own entry in
+        ``sites.mk`` is untouched, so the next activation resolves the
+        inheritance into their snapshot.
+        """
+        if modified_site != omd_site():
+            return set()
+        if current_config.get("authentication_connections") == old_config.get(
+            "authentication_connections"
+        ):
+            return set()
+        return {
+            site_id
+            for site_id, site_config in distributed_setup_remote_sites(site_configs).items()
+            if "authentication_connections" not in site_config
+        }
+
+    @classmethod
     def get_connected_sites_to_update(
         cls,
         *,
@@ -706,8 +734,14 @@ class SiteManagement:
         if old_config is None:
             raise MKUserError(None, _("An old configuration is required for existing connections."))
 
+        auth_affected_sites = cls._auth_inheritance_affected_sites(
+            modified_site, current_config, old_config, site_configs
+        )
+
         if not cls._change_affects_broker_connection(current_config, old_config):
-            return set()
+            return (connected | auth_affected_sites) if auth_affected_sites else set()
+
+        connected |= auth_affected_sites
 
         connections = BrokerConnectionsConfigFile().load_for_reading()
         for connection in connections.values():
