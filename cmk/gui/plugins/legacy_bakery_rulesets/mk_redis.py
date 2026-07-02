@@ -43,7 +43,7 @@ def _valuespec_agent_config_mk_redis() -> CascadingDropdown:
         title=_("Redis databases"),
         help=_(
             "If you activate this option, then the agent plug-in <tt>mk_redis</tt> will be deployed. "
-            "You can configure multiple instances or auto detect running instances."
+            "You can configure multiple instances or auto-detect running instances."
         ),
         choices=[
             ("autodetect", _("Auto-detect instances")),

@@ -48,16 +48,16 @@ def _valuespec_agent_config_mssql() -> Alternative:
     return Alternative(
         title=_("Microsoft SQL Server"),
         help=_(
-            "This plug-in is deprecated and will be removed in Checkmk 2.4.0 (see werk "
-            '15844 for details). Please switch to the new ruleset "Microsoft SQL server '
-            '(Linux, Windows)".'
+            "This plug-in is deprecated and will be removed in Checkmk 2.4.0 (see Werk "
+            '15844 for details). Please switch to the new rule set "Microsoft SQL server '
+            '(Linux, Windows)". '
             "This plug-in can be used to collect information of all running MSSQL servers "
             "on the local system. "
             'The current implementation of the check uses the "trusted authentication" '
             "where no user/password needs to be created in the MSSQL server instance by "
-            "default. Using this method, you needed to grant the user running the Checkmk "
-            "windows agent service access to the MSSQL database. Otherwise you "
-            "can configure the credentials of a database user which has the permission to "
+            "default. Using this method, you need to grant the user running the Checkmk "
+            "Windows agent service access to the MSSQL database. Otherwise you "
+            "can configure the credentials of a database user who has the permission to "
             "read the needed information from the server instance."
         ),
         elements=[
