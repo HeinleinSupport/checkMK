@@ -135,4 +135,5 @@ def _build_query_filter(query: str) -> QueryExpression:
 
 def _build_primary_sort(sorters: Sequence[HostSort]) -> str:
     condition = f"{sorters[0].column} {sorters[0].direction}" if sorters else "name asc"
-    return f"OrderBy: {condition}"
+    natural_sort_flag = " natural" if sorters[0].column.natural_sort else ""
+    return f"OrderBy: {condition}{natural_sort_flag}"

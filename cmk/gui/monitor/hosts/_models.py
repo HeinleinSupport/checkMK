@@ -73,6 +73,19 @@ class HostSortColumn(enum.StrEnum):
     def options(cls) -> str:
         return ", ".join(sorted(item.value for item in cls))
 
+    @property
+    def natural_sort(self) -> bool:
+        return self in _NATURAL_SORT_COLUMNS
+
+
+_NATURAL_SORT_COLUMNS = frozenset(
+    {
+        HostSortColumn.NAME,
+        HostSortColumn.ALIAS,
+        HostSortColumn.ADDRESS,
+    }
+)
+
 
 class HostSortDirection(enum.StrEnum):
     ASC = "asc"

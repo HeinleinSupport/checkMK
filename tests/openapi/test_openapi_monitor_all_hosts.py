@@ -110,7 +110,7 @@ class TestMonitorHosts:
             [
                 "GET hosts",
                 f"Columns: {_HOST_TABLE_COLUMNS}",
-                "OrderBy: name asc",
+                "OrderBy: name asc natural",
                 f"Limit: {_LIMIT}",
             ]
         )
@@ -135,7 +135,7 @@ class TestMonitorHostsQuery:
             [
                 "GET hosts",
                 f"Columns: {_HOST_TABLE_COLUMNS}",
-                "OrderBy: name asc",
+                "OrderBy: name asc natural",
                 f"Limit: {_LIMIT}",
             ]
         )
@@ -160,7 +160,7 @@ class TestMonitorHostsQuery:
                 "Filter: alias ~~ no-such-host",
                 "Filter: address ~~ no-such-host",
                 "Or: 3",
-                "OrderBy: name asc",
+                "OrderBy: name asc natural",
                 f"Limit: {_LIMIT}",
             ]
         )
@@ -197,7 +197,7 @@ class TestMonitorHostsFilters:
                 "Filter: state = 1",
                 "Or: 2",
                 "And: 2",
-                "OrderBy: name asc",
+                "OrderBy: name asc natural",
                 f"Limit: {_LIMIT}",
             ]
         )
