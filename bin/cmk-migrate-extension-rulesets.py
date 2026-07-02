@@ -114,7 +114,7 @@ def _mkps_modules(mkps: Sequence[str]) -> set[str]:
 
     def _is_installed(el: PackageName) -> Manifest | None:
         if (manifest := installer.get_installed_manifest(el)) is None:
-            logger.warning("Ignoring %s (not installed)", el)
+            logger.warning("Ignoring %(package)s (not installed)", {"package": el})
         return manifest
 
     manifests = [m for el in enabled_mkps if (m := _is_installed(el)) is not None]
@@ -139,7 +139,7 @@ def _mkps_modules(mkps: Sequence[str]) -> set[str]:
 
                 # we need to migrate only rulesets
                 if len(rel.parts) != 3 or rel.parts[1] != PluginGroup.RULESETS.value:
-                    logger.debug("Skipping %s", rel)
+                    logger.debug("Skipping %(path)s", {"path": rel})
                     continue
 
                 modules.add(f"{part_to_module[part]}.{'.'.join(rel.parts)}")
@@ -217,7 +217,9 @@ def _load_and_transform_rulesets(
     main_modules.register(edition(paths.omd_root))
 
     if errors := main_modules.get_failed_plugins():
-        logger.error("The following errors occurred during plug-in loading: %r", errors)
+        logger.error(
+            "The following errors occurred during plug-in loading: %(errors)r", {"errors": errors}
+        )
 
     with disable_redis(), gui_context(), SuperUserContext():
         all_rulesets = AllRulesets.load_all_rulesets()
@@ -249,7 +251,7 @@ def _load_and_transform_rulesets(
 
 
 def migrate_extension_rulesets(args: argparse.Namespace) -> int:
-    logger.debug("Migrating rulesets for mkps: %s", args.mkps)
+    logger.debug("Migrating rulesets for mkps: %(mkps)s", {"mkps": args.mkps})
 
     modules = _mkps_modules(args.mkps)
     if not modules:
@@ -262,7 +264,10 @@ def migrate_extension_rulesets(args: argparse.Namespace) -> int:
         logger.info("No rule sets contained in enabled extensions")
         return 0
 
-    logger.debug("Discovered rule sets in enabled extensions: %s", affected_ruleset_names)
+    logger.debug(
+        "Discovered rule sets in enabled extensions: %(rulesets)s",
+        {"rulesets": affected_ruleset_names},
+    )
     _load_and_transform_rulesets(affected_ruleset_names, renames)
 
     return 0

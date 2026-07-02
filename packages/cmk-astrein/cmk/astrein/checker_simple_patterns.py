@@ -89,7 +89,6 @@ def _has_positional_placeholder(format_string: str) -> bool:
 #: Transitional: shrink until empty, then remove this exclusion.
 _EXCLUDED_PREFIXES = (
     "agents",
-    "bin",
     "buildscripts",
     "cmk",
     "doc",
