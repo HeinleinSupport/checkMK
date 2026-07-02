@@ -248,7 +248,9 @@ class ModeTimeperiods(WatoMode):
                                     title=_("Add time period"),
                                     icon_name=StaticIcon(IconNames.new),
                                     item=make_simple_link(
-                                        folder_preserving_link([("mode", "edit_timeperiod")])
+                                        folder_preserving_link(
+                                            request, [("mode", "edit_timeperiod")]
+                                        )
                                     ),
                                     is_shortcut=True,
                                     is_suggested=True,
@@ -257,7 +259,7 @@ class ModeTimeperiods(WatoMode):
                                     title=_("Import iCalendar"),
                                     icon_name=StaticIcon(IconNames.ical),
                                     item=make_simple_link(
-                                        folder_preserving_link([("mode", "import_ical")])
+                                        folder_preserving_link(request, [("mode", "import_ical")])
                                     ),
                                     is_shortcut=True,
                                     is_suggested=True,
@@ -330,23 +332,26 @@ class ModeTimeperiods(WatoMode):
 
     def _action_buttons(self, name: str, alias: str) -> None:
         edit_url = folder_preserving_link(
+            request,
             [
                 ("mode", "edit_timeperiod"),
                 ("edit", name),
-            ]
+            ],
         )
         clone_url = folder_preserving_link(
+            request,
             [
                 ("mode", "edit_timeperiod"),
                 ("clone", name),
-            ]
+            ],
         )
         delete_url = make_confirm_delete_link(
             url=make_action_link(
+                request,
                 [
                     ("mode", "timeperiods"),
                     ("_delete", name),
-                ]
+                ],
             ),
             title=_("Delete time period"),
             suffix=alias,

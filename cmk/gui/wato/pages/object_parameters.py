@@ -342,11 +342,12 @@ class ModeObjectParameters(WatoMode):
 
         rulespec = rulespec_registry[RuleGroup.StaticChecks(checkgroup)]
         url = folder_preserving_link(
+            request,
             [
                 ("mode", "edit_ruleset"),
                 ("varname", RuleGroup.StaticChecks(checkgroup)),
                 ("host", self._hostname),
-            ]
+            ],
         )
         assert isinstance(rulespec.valuespec, Tuple)
         self._render_rule_reason(
@@ -458,17 +459,19 @@ class ModeObjectParameters(WatoMode):
         rule_folder, rule_index, rule = origin_rule_result
 
         url = folder_preserving_link(
-            [("mode", "edit_ruleset"), ("varname", "custom_checks"), ("host", self._hostname)]
+            request,
+            [("mode", "edit_ruleset"), ("varname", "custom_checks"), ("host", self._hostname)],
         )
         forms.section(HTMLWriter.render_a(_("Command line"), href=url))
         url = folder_preserving_link(
+            request,
             [
                 ("mode", "edit_rule"),
                 ("varname", "custom_checks"),
                 ("rule_folder", rule_folder.path()),
                 ("rule_id", rule.id),
                 ("host", self._hostname),
-            ]
+            ],
         )
 
         html.open_table(class_="setting")
@@ -578,6 +581,7 @@ class ModeObjectParameters(WatoMode):
 
         def rule_url(rule: Rule) -> str:
             return folder_preserving_link(
+                request,
                 [
                     ("mode", "edit_rule"),
                     ("varname", varname),
@@ -589,20 +593,21 @@ class ModeObjectParameters(WatoMode):
                         mk_repr(svc_desc_or_item).decode() if svc_desc_or_item else "",
                     ),
                     ("service", mk_repr(svc_desc).decode() if svc_desc else ""),
-                ]
+                ],
             )
 
         varname = rulespec.name
         value_model = rulespec.value_model
 
         url = folder_preserving_link(
+            request,
             [
                 ("mode", "edit_ruleset"),
                 ("varname", varname),
                 ("host", self._hostname),
                 ("item", mk_repr(svc_desc_or_item).decode()),
                 ("service", mk_repr(svc_desc).decode()),
-            ]
+            ],
         )
 
         forms.section(HTMLWriter.render_a(rulespec.title, url))

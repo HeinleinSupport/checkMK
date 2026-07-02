@@ -444,10 +444,11 @@ def _vs_rules(
                     default_value=agent_port if agent_port is not None else 6556,
                     title=_('Checkmk agent port (<a href="%s">rules</a>)')
                     % folder_preserving_link(
+                        request,
                         [
                             ("mode", "edit_ruleset"),
                             ("varname", "agent_ports"),
-                        ]
+                        ],
                     ),
                     help=_(
                         "This variable allows to specify the TCP port to "
@@ -465,10 +466,11 @@ def _vs_rules(
                     size=2,  # SNMP-Timeout
                     title=_('TCP connection timeout (<a href="%s">Rules</a>)')
                     % folder_preserving_link(
+                        request,
                         [
                             ("mode", "edit_ruleset"),
                             ("varname", "tcp_connect_timeouts"),
-                        ]
+                        ],
                     ),
                     help=_(
                         "This variable allows to specify a timeout for the "
@@ -482,10 +484,11 @@ def _vs_rules(
                 Integer(
                     title=_('SNMP-timeout (<a href="%s">Rules</a>)')
                     % folder_preserving_link(
+                        request,
                         [
                             ("mode", "edit_ruleset"),
                             ("varname", "snmp_timing"),
-                        ]
+                        ],
                     ),
                     help=_(
                         "After a request is sent to the remote SNMP agent, the service will wait up to "
@@ -502,10 +505,11 @@ def _vs_rules(
                 Integer(
                     title=_('SNMP-retries (<a href="%s">Rules</a>)')
                     % folder_preserving_link(
+                        request,
                         [
                             ("mode", "edit_ruleset"),
                             ("varname", "snmp_timing"),
-                        ]
+                        ],
                     ),
                     default_value=snmp_retries if snmp_retries is not None else 5,
                     minvalue=0,

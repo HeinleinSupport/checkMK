@@ -370,7 +370,7 @@ class ModeEditConfigurationBundles(WatoMode):
             (self.VAR_BUNDLE_ID, bundle_id),
             (self.VAR_ACTION, action),
         ]
-        return make_action_link(vars_)
+        return make_action_link(request, vars_)
 
     @override
     def action(self, config: Config) -> ActionResult:

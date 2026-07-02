@@ -52,7 +52,7 @@ from cmk.gui.groups import GroupName
 from cmk.gui.hooks import request_memoize
 from cmk.gui.htmllib.generator import HTMLWriter
 from cmk.gui.htmllib.html import html
-from cmk.gui.http import Request, request
+from cmk.gui.http import Request
 from cmk.gui.i18n import _, _l
 from cmk.gui.log import logger
 from cmk.gui.logged_in import LoggedInUser
@@ -886,14 +886,14 @@ def _normalize_folder_name(name: str) -> str:
     return converted
 
 
-def _folder_breadcrumb(folder: Folder | SearchFolder) -> Breadcrumb:
+def _folder_breadcrumb(folder: Folder | SearchFolder, request: Request) -> Breadcrumb:
     breadcrumb = Breadcrumb()
 
     for this_folder in parent_folder_chain(folder) + [folder]:
         breadcrumb.append(
             BreadcrumbItem(
                 title=this_folder.title(),
-                url=this_folder.url(),
+                url=this_folder.url(request),
                 id=this_folder.id() if isinstance(this_folder, Folder) else None,
             )
         )
@@ -1253,7 +1253,7 @@ def _search_folder_from_request(
                 varprefix="host_search_",
             ),
         }
-        return SearchFolder(tree, base_folder, search_criteria, acting_user, request)
+        return SearchFolder(tree, base_folder, search_criteria, acting_user)
     return None
 
 
@@ -1392,8 +1392,8 @@ class Folder:
     def __repr__(self) -> str:
         return f"Folder({self.path()!r}, {self._title!r})"
 
-    def breadcrumb(self) -> Breadcrumb:
-        return _folder_breadcrumb(self)
+    def breadcrumb(self, request: Request) -> Breadcrumb:
+        return _folder_breadcrumb(self, request)
 
     def parent(self) -> Folder | None:
         return self._parent
@@ -2221,7 +2221,7 @@ class Folder:
                 _("Sorry, the sub folders in the folder %s are locked.") % self.title()
             )
 
-    def url(self, add_vars: HTTPVariables | None = None) -> str:
+    def url(self, request: Request, add_vars: HTTPVariables | None = None) -> str:
         if add_vars is None:
             add_vars = []
 
@@ -2236,7 +2236,7 @@ class Folder:
         if request.var("debug") == "1":
             add_vars.append(("debug", "1"))
         url_vars += add_vars
-        return urls.makeuri_contextless(request, url_vars, filename="wato.py")
+        return _makeuri_to_wato(url_vars)
 
     def edit_url(self, backfolder: Folder | None = None) -> str:
         if backfolder is None:
@@ -3185,7 +3185,11 @@ def validate_host_uniqueness(tree: FolderTree, varname: str, host_name: HostName
                 "A host with the name <b><tt>%s</tt></b> already "
                 'exists in the folder <a href="%s">%s</a>.'
             )
-            % (host_name, host.folder().url(), host.folder().alias_path()),
+            % (
+                host_name,
+                _makeuri_to_wato([("mode", "folder"), ("folder", host.folder().path())]),
+                host.folder().alias_path(),
+            ),
         )
 
 
@@ -3211,7 +3215,6 @@ class SearchFolder:
         base_folder: Folder,
         criteria: SearchCriteria,
         acting_user: LoggedInUser,
-        request: Request,
     ) -> None:
         super().__init__()
         self.attributes: dict[str, Any] = {"meta_data": {}}
@@ -3221,9 +3224,6 @@ class SearchFolder:
         self._criteria = criteria
         self._base_folder = base_folder
         self._acting_user = acting_user
-        # Captured here only until the follow-up change threads the request into
-        # Folder.url(); then SearchFolder.url() takes it as a parameter and this can go.
-        self._request = request
         self._found_hosts: dict[HostName, Host] | None = None
         self._name = None
 
@@ -3236,8 +3236,8 @@ class SearchFolder:
     def title(self) -> str:
         return _("Search results for folder %s") % self._base_folder.title()
 
-    def breadcrumb(self) -> Breadcrumb:
-        return _folder_breadcrumb(self)
+    def breadcrumb(self, request: Request) -> Breadcrumb:
+        return _folder_breadcrumb(self, request)
 
     def hosts(self) -> Mapping[HostName, Host]:
         if self._found_hosts is None:
@@ -3282,16 +3282,16 @@ class SearchFolder:
             return self._base_folder.path() + "//search:" + self._name
         return self._base_folder.path() + "//search"
 
-    def url(self, add_vars: HTTPVariables | None = None) -> str:
+    def url(self, request: Request, add_vars: HTTPVariables | None = None) -> str:
         if add_vars is None:
             add_vars = []
 
         url_vars: HTTPVariables = [("host_search", "1"), *add_vars]
 
-        for varname, value in self._request.itervars():
+        for varname, value in request.itervars():
             if varname.startswith(("host_search_", "_change")):
                 url_vars.append((varname, value))
-        return self.parent().url(url_vars)
+        return self.parent().url(request, url_vars)
 
     def delete_hosts(
         self,
@@ -4037,18 +4037,18 @@ def _collect_hosts(folder: Folder) -> Mapping[HostName, CollectedHostAttributes]
     return hosts_attributes
 
 
-def folder_preserving_link(add_vars: HTTPVariables) -> str:
+def folder_preserving_link(request: Request, add_vars: HTTPVariables) -> str:
     return folder_from_request(
         folder_tree(), request.var("folder"), request.get_ascii_input("host")
-    ).url(add_vars)
+    ).url(request, add_vars)
 
 
-def make_action_link(vars_: HTTPVariables) -> str:
+def make_action_link(request: Request, vars_: HTTPVariables) -> str:
     session_vars: HTTPVariables = [("_transid", transactions.get())]
     if (csrf_token := get_session_csrf_token()) is not None:
         session_vars.append(("_csrf_token", csrf_token))
 
-    return folder_preserving_link(vars_ + session_vars)
+    return folder_preserving_link(request, vars_ + session_vars)
 
 
 @request_memoize()

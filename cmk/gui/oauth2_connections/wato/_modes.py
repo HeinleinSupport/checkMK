@@ -587,13 +587,14 @@ class ModeOAuth2Connections(SimpleListMode[OAuth2Connection]):
                     html.render_a(
                         f"{rulespec_registry[ruleset_name].title} {index}",
                         folder_preserving_link(
+                            request,
                             [
                                 ("mode", "edit_rule"),
                                 ("varname", ruleset_name),
                                 ("rulenr", index),
                                 ("rule_folder", folder.path()),
                                 ("rule_id", rule.id),
-                            ]
+                            ],
                         ),
                     )
                 )

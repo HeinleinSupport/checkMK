@@ -111,7 +111,7 @@ class ModeRoles(WatoMode):
                                     title=_("Permission matrix"),
                                     icon_name=StaticIcon(IconNames.matrix),
                                     item=make_simple_link(
-                                        folder_preserving_link([("mode", "role_matrix")])
+                                        folder_preserving_link(request, [("mode", "role_matrix")])
                                     ),
                                 ),
                             ],
@@ -182,10 +182,12 @@ class ModeRoles(WatoMode):
 
                 # Actions
                 table.cell(_("Actions"), css=["buttons"])
-                edit_url = folder_preserving_link([("mode", "edit_role"), ("edit", role.name)])
-                clone_url = make_action_link([("mode", "roles"), ("_clone", role.name)])
+                edit_url = folder_preserving_link(
+                    request, [("mode", "edit_role"), ("edit", role.name)]
+                )
+                clone_url = make_action_link(request, [("mode", "roles"), ("_clone", role.name)])
                 delete_url = make_confirm_delete_link(
-                    url=make_action_link([("mode", "roles"), ("_delete", role.name)]),
+                    url=make_action_link(request, [("mode", "roles"), ("_delete", role.name)]),
                     title=_("Delete role #%(nr)d") % {"nr": nr},
                     suffix=role.alias,
                     message=("Name: %s") % role.name,
@@ -225,7 +227,9 @@ class ModeRoles(WatoMode):
                         [
                             HTMLWriter.render_a(
                                 user.get("alias", user_id),
-                                folder_preserving_link([("mode", "edit_user"), ("edit", user_id)]),
+                                folder_preserving_link(
+                                    request, [("mode", "edit_user"), ("edit", user_id)]
+                                ),
                             )
                             for (user_id, user) in users.items()
                             if role.name in user["roles"]

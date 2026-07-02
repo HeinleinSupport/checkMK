@@ -666,7 +666,7 @@ def _page_menu_entries_predefined_searches(
                 emblem=search_emblem,
             ),
             is_shortcut=search_type != page_type,
-            item=make_simple_link(folder_preserving_link(uri_params)),
+            item=make_simple_link(folder_preserving_link(request, uri_params)),
         )
 
     yield PageMenuEntry(
@@ -778,7 +778,7 @@ class ModeRulesetGroup(ABCRulesetMode):
             yield PageMenuEntry(
                 title=_("Hosts in folder: %s") % current_folder.title(),
                 icon_name=StaticIcon(IconNames.folder),
-                item=make_simple_link(current_folder.url()),
+                item=make_simple_link(current_folder.url(request)),
             )
 
             if request.get_ascii_input("host"):
@@ -787,7 +787,9 @@ class ModeRulesetGroup(ABCRulesetMode):
                     title=_("Host properties of: %(host_name)s") % {"host_name": host_name},
                     icon_name=StaticIcon(IconNames.folder),
                     item=make_simple_link(
-                        folder_preserving_link([("mode", "edit_host"), ("host", host_name)])
+                        folder_preserving_link(
+                            request, [("mode", "edit_host"), ("host", host_name)]
+                        )
                     ),
                 )
 
@@ -808,9 +810,10 @@ def _page_menu_entry_predefined_conditions() -> PageMenuEntry:
         icon_name=StaticIcon(IconNames.predefined_conditions),
         item=make_simple_link(
             folder_preserving_link(
+                request,
                 [
                     ("mode", "predefined_conditions"),
-                ]
+                ],
             )
         ),
     )
@@ -1099,7 +1102,9 @@ class ModeEditRuleset(WatoMode):
                 title=_("Services"),
                 icon_name=StaticIcon(IconNames.services),
                 item=make_simple_link(
-                    folder_preserving_link([("mode", "inventory"), ("host", self._hostname)])
+                    folder_preserving_link(
+                        request, [("mode", "inventory"), ("host", self._hostname)]
+                    )
                 ),
             )
 
@@ -1109,11 +1114,12 @@ class ModeEditRuleset(WatoMode):
                     icon_name=StaticIcon(IconNames.rulesets),
                     item=make_simple_link(
                         folder_preserving_link(
+                            request,
                             [
                                 ("mode", "object_parameters"),
                                 ("host", self._hostname),
                                 ("service", self._service or self._item),
-                            ]
+                            ],
                         )
                     ),
                 )
@@ -1127,10 +1133,11 @@ class ModeEditRuleset(WatoMode):
                 icon_name=StaticIcon(IconNames.logwatch),
                 item=make_simple_link(
                     folder_preserving_link(
+                        request,
                         [
                             ("mode", "pattern_editor"),
                             ("host", self._hostname),
-                        ]
+                        ],
                     )
                 ),
                 is_shortcut=True,
@@ -1419,13 +1426,17 @@ class ModeEditRuleset(WatoMode):
         ]
 
         table.cell(_("Actions"), css=["buttons rulebuttons"])
-        edit_url = folder_preserving_link([("mode", "edit_rule"), *folder_preserving_vars])
+        edit_url = folder_preserving_link(request, [("mode", "edit_rule"), *folder_preserving_vars])
         html.icon_button(edit_url, _("Edit this rule"), StaticIcon(IconNames.edit))
 
-        clone_url = folder_preserving_link([("mode", "clone_rule"), *folder_preserving_vars])
+        clone_url = folder_preserving_link(
+            request, [("mode", "clone_rule"), *folder_preserving_vars]
+        )
         html.icon_button(clone_url, _("Create a copy of this rule"), StaticIcon(IconNames.clone))
 
-        export_url = folder_preserving_link([("mode", "export_rule"), *folder_preserving_vars])
+        export_url = folder_preserving_link(
+            request, [("mode", "export_rule"), *folder_preserving_vars]
+        )
         html.icon_button(
             export_url, _("Export this rule for API"), StaticIcon(IconNames.export_rule)
         )
@@ -1624,7 +1635,7 @@ class ModeEditRuleset(WatoMode):
         if self._service:
             vars_.append(("service", mk_repr(self._service).decode()))
 
-        return make_action_link(vars_)
+        return make_action_link(request, vars_)
 
     # TODO: Refactor this whole method
     def _rule_cells(
@@ -1720,10 +1731,11 @@ class ModeEditRuleset(WatoMode):
             return
 
         url = folder_preserving_link(
+            request,
             [
                 ("mode", "edit_predefined_condition"),
                 ("ident", condition_id),
-            ]
+            ],
         )
         html.write_text_permissive(
             _('Predefined condition: <a href="%s">%s</a>') % (url, condition["title"])
@@ -2311,10 +2323,11 @@ class ABCEditRuleMode(WatoMode):
                 var_list.append(("item", request.get_str_input_mandatory("item")))
             if request.has_var("service"):
                 var_list.append(("service", request.get_str_input_mandatory("service")))
-            return folder_preserving_link(var_list)
+            return folder_preserving_link(request, var_list)
 
         return folder_preserving_link(
-            [("mode", self._back_mode), ("host", request.get_ascii_input_mandatory("host", ""))]
+            request,
+            [("mode", self._back_mode), ("host", request.get_ascii_input_mandatory("host", ""))],
         )
 
     def _validate_and_get_rule_values_from_vars_backend(
@@ -3638,10 +3651,11 @@ class ModeUnknownRulesets(WatoMode):
                                     icon_name=StaticIcon(IconNames.rulesets),
                                     item=make_simple_link(
                                         folder_preserving_link(
+                                            request,
                                             [
                                                 ("group", "monconf"),
                                                 ("mode", "rulesets"),
-                                            ]
+                                            ],
                                         )
                                     ),
                                 )
@@ -3699,11 +3713,12 @@ class ModeUnknownRulesets(WatoMode):
         html.icon_button(
             make_confirm_delete_link(
                 url=make_action_link(
+                    request,
                     [
                         ("mode", "unknown_rulesets"),
                         ("_delete_cp_ruleset_name", unknown_ruleset_name),
                         ("_delete_cp_rule_id", rule.id),
-                    ]
+                    ],
                 ),
                 title=_("Delete unknown rule"),
                 message=_("#%(rule_nr)s of unknown rule set %(unknown_ruleset_name)r")
@@ -3754,11 +3769,12 @@ class ModeUnknownRulesets(WatoMode):
         html.icon_button(
             make_confirm_delete_link(
                 url=make_action_link(
+                    request,
                     [
                         ("mode", "unknown_rulesets"),
                         ("_delete_ruleset_name", unknown_ruleset_name),
                         ("_delete_rule_id", rulespec["id"]),
-                    ]
+                    ],
                 ),
                 title=_("Delete unknown rule"),
                 message=_("#%(rule_nr)s of unknown rule set %(unknown_ruleset_name)r")

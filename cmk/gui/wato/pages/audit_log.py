@@ -218,7 +218,7 @@ class ModeAuditLog(WatoMode[AuditLogRequestData]):
             yield PageMenuEntry(
                 title=_("Activate pending changes"),
                 icon_name=StaticIcon(IconNames.activate),
-                item=make_simple_link(folder_preserving_link([("mode", "changelog")])),
+                item=make_simple_link(folder_preserving_link(request, [("mode", "changelog")])),
             )
 
     def _page_menu_entries_actions(self) -> Iterator[PageMenuEntry]:

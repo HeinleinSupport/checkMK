@@ -1817,7 +1817,8 @@ class ModeEventConsoleRulePacks(ABCEventConsoleMode):
                     item=make_simple_link(
                         make_confirm_delete_link(
                             url=make_action_link(
-                                [("mode", "mkeventd_rule_packs"), ("_reset_counters", "1")]
+                                request,
+                                [("mode", "mkeventd_rule_packs"), ("_reset_counters", "1")],
                             ),
                             title=_("Reset all rule hit counters to zero"),
                             message=_("This affects all rule packs."),
@@ -1980,7 +1981,9 @@ class ModeEventConsoleRulePacks(ABCEventConsoleMode):
         rep_mode = replication_mode()
         if rep_mode in ["sync", "takeover"]:
             copy_url = make_confirm_delete_link(
-                url=make_action_link([("mode", "mkeventd_rule_packs"), ("_copy_rules", "1")]),
+                url=make_action_link(
+                    request, [("mode", "mkeventd_rule_packs"), ("_copy_rules", "1")]
+                ),
                 title=_("Copy all event rules from the central site"),
                 message=_("This will replace your local configuration"),
                 confirm_button=_("Copy"),
@@ -2060,12 +2063,16 @@ class ModeEventConsoleRulePacks(ABCEventConsoleMode):
                 # clone_url  = makeuri_contextless(request, [("mode", "mkeventd_edit_rule_pack"), ("clone", nr)])
                 # html.icon_button(clone_url, _("Create a copy of this rule pack"), "clone")
 
-                drag_url = make_action_link([("mode", "mkeventd_rule_packs"), ("_move", nr)])
+                drag_url = make_action_link(
+                    request, [("mode", "mkeventd_rule_packs"), ("_move", nr)]
+                )
                 table.element_dragger_url("tr", base_url=drag_url)
 
                 if type_ == ec.RulePackType.internal:
                     delete_url = make_confirm_delete_link(
-                        url=make_action_link([("mode", "mkeventd_rule_packs"), ("_delete", nr)]),
+                        url=make_action_link(
+                            request, [("mode", "mkeventd_rule_packs"), ("_delete", nr)]
+                        ),
                         title=_("Delete rule pack #%(nr)d") % {"nr": nr},
                         suffix=rule_pack["title"],
                         message=_("ID: %(id_)s") % {"id_": id_}
@@ -2092,7 +2099,7 @@ class ModeEventConsoleRulePacks(ABCEventConsoleMode):
                     # Icons for mkp export (Commercial editions only)
                     if type_ == ec.RulePackType.internal:
                         export_url = make_action_link(
-                            [("mode", "mkeventd_rule_packs"), ("_export", nr)]
+                            request, [("mode", "mkeventd_rule_packs"), ("_export", nr)]
                         )
                         html.icon_button(
                             export_url,
@@ -2104,7 +2111,7 @@ class ModeEventConsoleRulePacks(ABCEventConsoleMode):
                         )
                     elif type_ == ec.RulePackType.exported:
                         dissolve_url = make_action_link(
-                            [("mode", "mkeventd_rule_packs"), ("_dissolve", nr)]
+                            request, [("mode", "mkeventd_rule_packs"), ("_dissolve", nr)]
                         )
                         html.icon_button(
                             dissolve_url,
@@ -2116,7 +2123,7 @@ class ModeEventConsoleRulePacks(ABCEventConsoleMode):
                         )
                     elif type_ == ec.RulePackType.modified_mkp:
                         reset_url = make_action_link(
-                            [("mode", "mkeventd_rule_packs"), ("_reset", nr)]
+                            request, [("mode", "mkeventd_rule_packs"), ("_reset", nr)]
                         )
                         html.icon_button(
                             reset_url,
@@ -2127,7 +2134,7 @@ class ModeEventConsoleRulePacks(ABCEventConsoleMode):
                             ),
                         )
                         sync_url = make_action_link(
-                            [("mode", "mkeventd_rule_packs"), ("_synchronize", nr)]
+                            request, [("mode", "mkeventd_rule_packs"), ("_synchronize", nr)]
                         )
                         html.icon_button(
                             sync_url,
@@ -2506,18 +2513,20 @@ class ModeEventConsoleRules(ABCEventConsoleMode):
                 table.row(css=["matches_search"] if rule in found_rules else [])
                 delete_url = make_confirm_delete_link(
                     url=make_action_link(
+                        request,
                         [
                             ("mode", "mkeventd_rules"),
                             ("rule_pack", self._rule_pack_id),
                             ("_delete", nr),
-                        ]
+                        ],
                     ),
                     title=_("Delete rule #%(nr)d") % {"nr": nr},
                     message=_("ID: %s") % rule["id"],
                     suffix=rule.get("description", ""),
                 )
                 drag_url = make_action_link(
-                    [("mode", "mkeventd_rules"), ("rule_pack", self._rule_pack_id), ("_move", nr)]
+                    request,
+                    [("mode", "mkeventd_rules"), ("rule_pack", self._rule_pack_id), ("_move", nr)],
                 )
                 edit_url = _rule_edit_url(self._rule_pack_id, nr)
                 clone_url = makeuri_contextless(
@@ -3529,7 +3538,9 @@ class ModeEventConsoleMIBs(ABCEventConsoleMode):
                 table.cell(_("Actions"), css=["buttons"])
                 if deletable:
                     delete_url = make_confirm_delete_link(
-                        url=make_action_link([("mode", "mkeventd_mibs"), ("_delete", filename)]),
+                        url=make_action_link(
+                            request, [("mode", "mkeventd_mibs"), ("_delete", filename)]
+                        ),
                         title=_("Delete MIB file"),
                         message=_("File name: %s") % str(filename),
                         suffix=mib.name,

@@ -645,7 +645,7 @@ class RenameHostBackgroundJob(RenameHostsBackgroundJob):
         self._host = host
 
     def _back_url(self) -> str:
-        return self._host.folder().url()
+        return self._host.folder().url(request)
 
 
 class RenameHostsJobArgs(BaseModel, frozen=True):

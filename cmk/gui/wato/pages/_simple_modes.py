@@ -384,11 +384,12 @@ class SimpleListMode[T: Mapping[str, Any]](_SimpleWatoModeBase[T]):
             confirm_delete += "<br><br>" + delete_confirm_msg
         delete_url = make_confirm_delete_link(
             url=make_action_link(
+                request,
                 [
                     ("mode", self._mode_type.list_mode_name()),
                     ("_action", "delete"),
                     ("_delete", ident),
-                ]
+                ],
             ),
             title=self._delete_confirm_title(nr),
             suffix=entry["title"],

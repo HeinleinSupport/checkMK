@@ -297,7 +297,9 @@ def _find_usages_of_group_in_rules(name: GroupName, varnames: list[str]) -> list
                 used_in.append(
                     (
                         "{}: {}".format(_("Rule set"), ruleset.title()),
-                        folder_preserving_link([("mode", "edit_ruleset"), ("varname", varname)]),
+                        folder_preserving_link(
+                            request, [("mode", "edit_ruleset"), ("varname", varname)]
+                        ),
                     )
                 )
     return used_in

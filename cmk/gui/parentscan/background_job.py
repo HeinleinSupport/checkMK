@@ -102,7 +102,7 @@ class ParentScanBackgroundJob(BackgroundJob):
             request.get_ascii_input("host"),
             acting_user=user,
             request=request,
-        ).url()
+        ).url(request)
 
     def do_execute(
         self,

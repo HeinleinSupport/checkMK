@@ -1891,7 +1891,7 @@ class ActivateChangesManager:
                     [
                         '<a href="%s">%s</a>'
                         % (
-                            folder_preserving_link([("mode", "edit_host"), ("host", hn)]),
+                            folder_preserving_link(_request, [("mode", "edit_host"), ("host", hn)]),
                             hn,
                         )
                         for hn in defective_hosts

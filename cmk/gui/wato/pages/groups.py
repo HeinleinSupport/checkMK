@@ -112,7 +112,8 @@ class ModeGroups(WatoMode, abc.ABC):
                                     icon_name=StaticIcon(IconNames.new),
                                     item=make_simple_link(
                                         folder_preserving_link(
-                                            [("mode", "edit_%s_group" % self.type_name)]
+                                            request,
+                                            [("mode", "edit_%s_group" % self.type_name)],
                                         )
                                     ),
                                     is_shortcut=True,
@@ -201,7 +202,8 @@ class ModeGroups(WatoMode, abc.ABC):
 
         table.cell(_("Actions"), css=["buttons"])
         edit_url = folder_preserving_link(
-            [("mode", "edit_%s_group" % self.type_name), ("edit", name)]
+            request,
+            [("mode", "edit_%s_group" % self.type_name), ("edit", name)],
         )
         delete_url = make_confirm_delete_link(
             url=makeactionuri(request, transactions, [("_delete", name)]),
@@ -210,7 +212,8 @@ class ModeGroups(WatoMode, abc.ABC):
             message=_("Name: %(name)s") % {"name": name},
         )
         clone_url = folder_preserving_link(
-            [("mode", "edit_%s_group" % self.type_name), ("clone", name)]
+            request,
+            [("mode", "edit_%s_group" % self.type_name), ("clone", name)],
         )
         html.icon_button(edit_url, _("Properties"), StaticIcon(IconNames.edit))
         html.icon_button(clone_url, _("Create a copy of this group"), StaticIcon(IconNames.clone))
@@ -379,11 +382,13 @@ class ModeHostgroups(ModeGroups):
         yield PageMenuEntry(
             title=_("Service groups"),
             icon_name=StaticIcon(IconNames.servicegroups),
-            item=make_simple_link(folder_preserving_link([("mode", "service_groups")])),
+            item=make_simple_link(folder_preserving_link(request, [("mode", "service_groups")])),
         )
 
     def _rules_url(self) -> str:
-        return folder_preserving_link([("mode", "edit_ruleset"), ("varname", "host_groups")])
+        return folder_preserving_link(
+            request, [("mode", "edit_ruleset"), ("varname", "host_groups")]
+        )
 
 
 class ModeServicegroups(ModeGroups):
@@ -409,11 +414,13 @@ class ModeServicegroups(ModeGroups):
         yield PageMenuEntry(
             title=_("Host groups"),
             icon_name=StaticIcon(IconNames.hostgroups),
-            item=make_simple_link(folder_preserving_link([("mode", "host_groups")])),
+            item=make_simple_link(folder_preserving_link(request, [("mode", "host_groups")])),
         )
 
     def _rules_url(self) -> str:
-        return folder_preserving_link([("mode", "edit_ruleset"), ("varname", "service_groups")])
+        return folder_preserving_link(
+            request, [("mode", "edit_ruleset"), ("varname", "service_groups")]
+        )
 
 
 class ModeContactgroups(ModeGroups):
@@ -441,12 +448,13 @@ class ModeContactgroups(ModeGroups):
         yield PageMenuEntry(
             title=_("Users"),
             icon_name=StaticIcon(IconNames.users),
-            item=make_simple_link(folder_preserving_link([("mode", "users")])),
+            item=make_simple_link(folder_preserving_link(request, [("mode", "users")])),
         )
 
     def _rules_url(self) -> str:
         return folder_preserving_link(
-            [("mode", "rule_search"), ("filled_in", "search"), ("search", "contactgroups")]
+            request,
+            [("mode", "rule_search"), ("filled_in", "search"), ("search", "contactgroups")],
         )
 
     def _collect_additional_data(self) -> None:
@@ -467,7 +475,9 @@ class ModeContactgroups(ModeGroups):
                 [
                     HTMLWriter.render_a(
                         alias,
-                        href=folder_preserving_link([("mode", "edit_user"), ("edit", userid)]),
+                        href=folder_preserving_link(
+                            request, [("mode", "edit_user"), ("edit", userid)]
+                        ),
                     )
                     for userid, alias in self._members.get(name, [])
                 ]

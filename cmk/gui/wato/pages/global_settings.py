@@ -258,11 +258,12 @@ class ABCGlobalSettingsMode(WatoMode):
                 default_value = self._default_values[varname]
 
                 edit_url = folder_preserving_link(
+                    request,
                     [
                         ("mode", self.edit_mode_name),
                         ("varname", varname),
                         ("site", request.var("site", "")),
-                    ]
+                    ],
                 )
                 title = HTMLWriter.render_a(
                     title_text,

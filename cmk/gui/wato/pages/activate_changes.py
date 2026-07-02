@@ -191,7 +191,7 @@ class ModeRevertChanges(WatoMode):
             yield PageMenuEntry(
                 title=_("Audit log"),
                 icon_name=StaticIcon(IconNames.auditlog),
-                item=make_simple_link(folder_preserving_link([("mode", "auditlog")])),
+                item=make_simple_link(folder_preserving_link(request, [("mode", "auditlog")])),
             )
 
     def _may_discard_changes(
@@ -474,7 +474,7 @@ class ModeActivateChanges(WatoMode):
             yield PageMenuEntry(
                 title=_("Audit log"),
                 icon_name=StaticIcon(IconNames.auditlog),
-                item=make_simple_link(folder_preserving_link([("mode", "auditlog")])),
+                item=make_simple_link(folder_preserving_link(request, [("mode", "auditlog")])),
             )
 
     def _page_menu_entries_all_sites(
@@ -785,7 +785,9 @@ class ModeActivateChanges(WatoMode):
                 table.cell(_("Actions"), css=["buttons"])
 
                 if user.may("wato.sites"):
-                    edit_url = folder_preserving_link([("mode", "edit_site"), ("site", site_id)])
+                    edit_url = folder_preserving_link(
+                        request, [("mode", "edit_site"), ("site", site_id)]
+                    )
                     html.icon_button(
                         edit_url, _("Edit the properties of this site"), StaticIcon(IconNames.edit)
                     )
@@ -962,7 +964,7 @@ def _get_object_reference(object_ref: ObjectRef | None) -> tuple[str | None, str
         tree = folder_tree()
         if tree.folder_exists(object_ref.ident):
             folder = tree.folder(object_ref.ident)
-            return folder.url(), folder.title()
+            return folder.url(request), folder.title()
         return None, object_ref.ident
 
     if object_ref.object_type is ObjectRefType.User:

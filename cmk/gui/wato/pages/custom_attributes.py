@@ -510,7 +510,8 @@ class ModeCustomAttrs[T_CustomAttrSpec: CustomAttrSpec](WatoMode):
                                     icon_name=StaticIcon(IconNames.new),
                                     item=make_simple_link(
                                         folder_preserving_link(
-                                            [("mode", "edit_%s_attr" % self._type)]
+                                            request,
+                                            [("mode", "edit_%s_attr" % self._type)],
                                         )
                                     ),
                                     is_shortcut=True,
@@ -592,7 +593,8 @@ class ModeCustomAttrs[T_CustomAttrSpec: CustomAttrSpec](WatoMode):
 
                 table.cell(_("Actions"), css=["buttons"])
                 edit_url = folder_preserving_link(
-                    [("mode", "edit_%s_attr" % self._type), ("edit", custom_attr["name"])]
+                    request,
+                    [("mode", "edit_%s_attr" % self._type), ("edit", custom_attr["name"])],
                 )
                 delete_url = make_confirm_delete_link(
                     url=makeactionuri(request, transactions, [("_delete", custom_attr["name"])]),

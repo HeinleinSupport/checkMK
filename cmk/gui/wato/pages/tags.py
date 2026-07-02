@@ -160,7 +160,7 @@ class ModeTags(ABCTagMode):
                                     title=_("Add tag group"),
                                     icon_name=StaticIcon(IconNames.new),
                                     item=make_simple_link(
-                                        folder_preserving_link([("mode", "edit_tag")])
+                                        folder_preserving_link(request, [("mode", "edit_tag")])
                                     ),
                                     is_shortcut=True,
                                     is_suggested=True,
@@ -169,7 +169,7 @@ class ModeTags(ABCTagMode):
                                     title=_("Add aux tag"),
                                     icon_name=StaticIcon(IconNames.tag, emblem="add"),
                                     item=make_simple_link(
-                                        folder_preserving_link([("mode", "edit_auxtag")])
+                                        folder_preserving_link(request, [("mode", "edit_auxtag")])
                                     ),
                                     is_shortcut=True,
                                     is_suggested=True,
@@ -186,7 +186,7 @@ class ModeTags(ABCTagMode):
                                         emblem="search",
                                     ),
                                     item=make_simple_link(
-                                        folder_preserving_link([("mode", "tag_usage")])
+                                        folder_preserving_link(request, [("mode", "tag_usage")])
                                     ),
                                 ),
                             ],
@@ -432,15 +432,15 @@ class ModeTags(ABCTagMode):
             html.i("(%s)" % _("built-in"))
             return
 
-        edit_url = folder_preserving_link([("mode", "edit_tag"), ("edit", tag_group.id)])
+        edit_url = folder_preserving_link(request, [("mode", "edit_tag"), ("edit", tag_group.id)])
         html.icon_button(edit_url, _("Edit this tag group"), StaticIcon(IconNames.edit))
 
         table.element_dragger_url(
-            "tr", base_url=make_action_link([("mode", "tags"), ("_move", nr)])
+            "tr", base_url=make_action_link(request, [("mode", "tags"), ("_move", nr)])
         )
 
         delete_url = make_confirm_delete_link(
-            url=make_action_link([("mode", "tags"), ("_delete", tag_group.id)]),
+            url=make_action_link(request, [("mode", "tags"), ("_delete", tag_group.id)]),
             title=_("Delete tag group"),
             suffix=tag_group.title,
             message=_("ID: %s") % tag_group.id,
@@ -486,9 +486,9 @@ class ModeTags(ABCTagMode):
             html.i("(%s)" % _("built-in"))
             return
 
-        edit_url = folder_preserving_link([("mode", "edit_auxtag"), ("edit", aux_tag.id)])
+        edit_url = folder_preserving_link(request, [("mode", "edit_auxtag"), ("edit", aux_tag.id)])
         delete_url = make_confirm_delete_link(
-            url=make_action_link([("mode", "tags"), ("_del_aux", aux_tag.id)]),
+            url=make_action_link(request, [("mode", "tags"), ("_del_aux", aux_tag.id)]),
             title=_("Delete auxiliary tag"),
             suffix=aux_tag.title,
             message=_("ID: %s") % aux_tag.id,
@@ -673,7 +673,7 @@ class ModeTagUsage(ABCTagMode):
             html.i("(%s)" % _("built-in"))
             return
 
-        edit_url = folder_preserving_link([("mode", "edit_tag"), ("edit", tag_group.id)])
+        edit_url = folder_preserving_link(request, [("mode", "edit_tag"), ("edit", tag_group.id)])
         html.icon_button(edit_url, _("Edit this tag group"), StaticIcon(IconNames.edit))
 
     def _show_aux_tag_list(
@@ -741,7 +741,7 @@ class ModeTagUsage(ABCTagMode):
             html.i("(%s)" % _("built-in"))
             return
 
-        edit_url = folder_preserving_link([("mode", "edit_auxtag"), ("edit", aux_tag.id)])
+        edit_url = folder_preserving_link(request, [("mode", "edit_auxtag"), ("edit", aux_tag.id)])
         html.icon_button(edit_url, _("Edit this auxiliary tag"), StaticIcon(IconNames.edit))
 
 
@@ -1192,7 +1192,9 @@ def _show_aux_tag_used_by_tags(tags: set[cmk.utils.tags.GroupedTag]) -> None:
         if builtin_config.tag_group_exists(tag.group.id):
             html.write_text_permissive(_u(tag.choice_title))
         else:
-            edit_url = folder_preserving_link([("mode", "edit_tag"), ("edit", tag.group.id)])
+            edit_url = folder_preserving_link(
+                request, [("mode", "edit_tag"), ("edit", tag.group.id)]
+            )
             html.a(_u(tag.choice_title), href=edit_url)
     html.close_li()
     html.close_ul()
@@ -1229,7 +1231,9 @@ def _show_affected_rulesets(affected_rulesets: list[Ruleset]) -> None:
         html.open_li()
         html.a(
             ruleset.title(),
-            href=folder_preserving_link([("mode", "edit_ruleset"), ("varname", ruleset.name)]),
+            href=folder_preserving_link(
+                request, [("mode", "edit_ruleset"), ("varname", ruleset.name)]
+            ),
         )
         html.close_li()
     html.close_ul()

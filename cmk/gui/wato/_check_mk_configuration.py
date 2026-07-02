@@ -2447,7 +2447,8 @@ def find_usages_of_contact_group_in_default_user_profile(
             (
                 "%s" % (_("Default user profile")),
                 folder_preserving_link(
-                    [("mode", "edit_configvar"), ("varname", "default_user_profile")]
+                    request,
+                    [("mode", "edit_configvar"), ("varname", "default_user_profile")],
                 ),
             )
         )

@@ -824,7 +824,7 @@ class ABCNotificationsMode(ABCEventsMode[EventRule]):
             if search := request.get_str_input("search", ""):
                 httpvars.append(("search", search))
             return make_confirm_delete_link(
-                url=make_action_link(httpvars + back_mode),
+                url=make_action_link(request, httpvars + back_mode),
                 title=_("Delete notification rule #%(nr)d") % {"nr": nr},
                 suffix=rule.get("description", ""),
             )
@@ -838,7 +838,7 @@ class ABCNotificationsMode(ABCEventsMode[EventRule]):
             ]
             if search := request.get_str_input("search", ""):
                 httpvars.append(("search", search))
-            return make_action_link(httpvars + back_mode)
+            return make_action_link(request, httpvars + back_mode)
 
         def _edit_url() -> str:
             httpvars: HTTPVariables = [
@@ -848,7 +848,7 @@ class ABCNotificationsMode(ABCEventsMode[EventRule]):
             ]
             if search := request.get_str_input("search", ""):
                 httpvars.append(("search", search))
-            return folder_preserving_link(httpvars + back_mode)
+            return folder_preserving_link(request, httpvars + back_mode)
 
         def _clone_url() -> str:
             httpvars: HTTPVariables = [
@@ -859,7 +859,7 @@ class ABCNotificationsMode(ABCEventsMode[EventRule]):
             if search := request.get_str_input("search", ""):
                 httpvars.append(("search", search))
             return make_confirm_delete_link(
-                url=folder_preserving_link(httpvars + back_mode),
+                url=folder_preserving_link(request, httpvars + back_mode),
                 title=_("Clone & edit notification rule #%(nr)d") % {"nr": nr},
                 suffix=rule.get("description", ""),
                 confirm_button=_("Yes, clone & edit"),
@@ -915,11 +915,12 @@ class ModeNotifications(ABCNotificationsMode):
                                     icon_name=StaticIcon(IconNames.new),
                                     item=make_simple_link(
                                         folder_preserving_link(
+                                            request,
                                             [
                                                 ("mode", "notification_rule_quick_setup"),
                                                 ("back_mode", self.name()),
                                             ]
-                                            + search_vars
+                                            + search_vars,
                                         )
                                     ),
                                     is_shortcut=True,
@@ -930,12 +931,13 @@ class ModeNotifications(ABCNotificationsMode):
                                     icon_name=StaticIcon(IconNames.clipboard),
                                     item=make_simple_link(
                                         folder_preserving_link(
+                                            request,
                                             [
                                                 (
                                                     "mode",
                                                     ModeNotificationParametersOverview.name(),
                                                 )
-                                            ]
+                                            ],
                                         )
                                     ),
                                     is_shortcut=True,
@@ -951,7 +953,9 @@ class ModeNotifications(ABCNotificationsMode):
                                     name="test_notifications",
                                     icon_name=StaticIcon(IconNames.analysis),
                                     item=make_simple_link(
-                                        folder_preserving_link([("mode", "test_notifications")])
+                                        folder_preserving_link(
+                                            request, [("mode", "test_notifications")]
+                                        )
                                     ),
                                     is_shortcut=True,
                                     is_suggested=True,
@@ -960,7 +964,9 @@ class ModeNotifications(ABCNotificationsMode):
                                     title=_("Analyze recent notifications"),
                                     icon_name=StaticIcon(IconNames.analyze),
                                     item=make_simple_link(
-                                        folder_preserving_link([("mode", "analyze_notifications")])
+                                        folder_preserving_link(
+                                            request, [("mode", "analyze_notifications")]
+                                        )
                                     ),
                                     is_shortcut=True,
                                     is_suggested=True,
@@ -993,10 +999,11 @@ class ModeNotifications(ABCNotificationsMode):
             icon_name=StaticIcon(IconNames.configuration),
             item=make_simple_link(
                 folder_preserving_link(
+                    request,
                     [
                         ("mode", "edit_configvar"),
                         ("varname", "notification_fallback_email"),
-                    ]
+                    ],
                 )
             ),
         )
@@ -1006,10 +1013,11 @@ class ModeNotifications(ABCNotificationsMode):
             icon_name=StaticIcon(IconNames.configuration),
             item=make_simple_link(
                 folder_preserving_link(
+                    request,
                     [
                         ("mode", "edit_configvar"),
                         ("varname", "failed_notification_horizon"),
-                    ]
+                    ],
                 )
             ),
         )
@@ -1019,10 +1027,11 @@ class ModeNotifications(ABCNotificationsMode):
             icon_name=StaticIcon(IconNames.configuration),
             item=make_simple_link(
                 folder_preserving_link(
+                    request,
                     [
                         ("mode", "edit_configvar"),
                         ("varname", "notification_logging"),
-                    ]
+                    ],
                 )
             ),
         )
@@ -1032,10 +1041,11 @@ class ModeNotifications(ABCNotificationsMode):
             icon_name=StaticIcon(IconNames.configuration),
             item=make_simple_link(
                 folder_preserving_link(
+                    request,
                     [
                         ("mode", "edit_configvar"),
                         ("varname", "cmc_debug_notifications"),
-                    ]
+                    ],
                 )
             ),
         )
@@ -1461,10 +1471,11 @@ class ModeAnalyzeNotifications(ModeNotifications):
                                     icon_name=StaticIcon(IconNames.new),
                                     item=make_simple_link(
                                         folder_preserving_link(
+                                            request,
                                             [
                                                 ("mode", "notification_rule_quick_setup"),
                                                 ("back_mode", self.name()),
-                                            ]
+                                            ],
                                         )
                                     ),
                                     is_shortcut=False,
@@ -1480,7 +1491,9 @@ class ModeAnalyzeNotifications(ModeNotifications):
                                     name="test_notifications",
                                     icon_name=StaticIcon(IconNames.analysis),
                                     item=make_simple_link(
-                                        folder_preserving_link([("mode", "test_notifications")])
+                                        folder_preserving_link(
+                                            request, [("mode", "test_notifications")]
+                                        )
                                     ),
                                     is_shortcut=True,
                                     is_suggested=True,
@@ -1501,10 +1514,11 @@ class ModeAnalyzeNotifications(ModeNotifications):
                                     icon_name=StaticIcon(IconNames.configuration),
                                     item=make_simple_link(
                                         folder_preserving_link(
+                                            request,
                                             [
                                                 ("mode", "edit_configvar"),
                                                 ("varname", "notification_backlog"),
-                                            ]
+                                            ],
                                         )
                                     ),
                                 ),
@@ -1513,10 +1527,11 @@ class ModeAnalyzeNotifications(ModeNotifications):
                                     icon_name=StaticIcon(IconNames.configuration),
                                     item=make_simple_link(
                                         folder_preserving_link(
+                                            request,
                                             [
                                                 ("mode", "edit_configvar"),
                                                 ("varname", "notification_logging"),
-                                            ]
+                                            ],
                                         )
                                     ),
                                 ),
@@ -1525,10 +1540,11 @@ class ModeAnalyzeNotifications(ModeNotifications):
                                     icon_name=StaticIcon(IconNames.configuration),
                                     item=make_simple_link(
                                         folder_preserving_link(
+                                            request,
                                             [
                                                 ("mode", "edit_configvar"),
                                                 ("varname", "cmc_debug_notifications"),
-                                            ]
+                                            ],
                                         )
                                     ),
                                 ),
@@ -1857,11 +1873,12 @@ class ModeTestNotifications(ModeNotifications):
                                     icon_name=StaticIcon(IconNames.new),
                                     item=make_simple_link(
                                         folder_preserving_link(
+                                            request,
                                             [
                                                 ("mode", "notification_rule_quick_setup"),
                                                 ("back_mode", self.name()),
                                             ]
-                                            + search_vars
+                                            + search_vars,
                                         )
                                     ),
                                     is_shortcut=False,
@@ -1877,7 +1894,9 @@ class ModeTestNotifications(ModeNotifications):
                                     name="analyze_notifications",
                                     icon_name=StaticIcon(IconNames.analyze),
                                     item=make_simple_link(
-                                        folder_preserving_link([("mode", "analyze_notifications")])
+                                        folder_preserving_link(
+                                            request, [("mode", "analyze_notifications")]
+                                        )
                                     ),
                                     is_shortcut=True,
                                     is_suggested=True,
@@ -1897,7 +1916,7 @@ class ModeTestNotifications(ModeNotifications):
                                     title=_("Notifications"),
                                     icon_name=StaticIcon(IconNames.notifications),
                                     item=make_simple_link(
-                                        folder_preserving_link([("mode", "notifications")])
+                                        folder_preserving_link(request, [("mode", "notifications")])
                                     ),
                                     is_shortcut=True,
                                     is_suggested=True,
@@ -1912,10 +1931,11 @@ class ModeTestNotifications(ModeNotifications):
                                     icon_name=StaticIcon(IconNames.configuration),
                                     item=make_simple_link(
                                         folder_preserving_link(
+                                            request,
                                             [
                                                 ("mode", "edit_configvar"),
                                                 ("varname", "notification_logging"),
-                                            ]
+                                            ],
                                         )
                                     ),
                                 ),
@@ -1924,10 +1944,11 @@ class ModeTestNotifications(ModeNotifications):
                                     icon_name=StaticIcon(IconNames.configuration),
                                     item=make_simple_link(
                                         folder_preserving_link(
+                                            request,
                                             [
                                                 ("mode", "edit_configvar"),
                                                 ("varname", "cmc_debug_notifications"),
-                                            ]
+                                            ],
                                         )
                                     ),
                                 ),
@@ -2911,12 +2932,13 @@ class ModeUserNotifications(ABCUserNotificationsMode):
                                     icon_name=StaticIcon(IconNames.new),
                                     item=make_simple_link(
                                         folder_preserving_link(
+                                            request,
                                             [
                                                 ("mode", "user_notification_rule"),
                                                 ("user", self._user_id()),
                                                 ("back_mode", self.name()),
                                             ]
-                                            + search_vars
+                                            + search_vars,
                                         )
                                     ),
                                     is_shortcut=True,
@@ -2945,7 +2967,7 @@ class ModeUserNotifications(ABCUserNotificationsMode):
         yield PageMenuEntry(
             title=_("Users"),
             icon_name=StaticIcon(IconNames.users),
-            item=make_simple_link(folder_preserving_link([("mode", "users")])),
+            item=make_simple_link(folder_preserving_link(request, [("mode", "users")])),
         )
 
 
@@ -2989,11 +3011,12 @@ class ModePersonalUserNotifications(ABCUserNotificationsMode):
                                     icon_name=StaticIcon(IconNames.new),
                                     item=make_simple_link(
                                         folder_preserving_link(
+                                            request,
                                             [
                                                 ("mode", "notification_rule_p"),
                                                 ("back_mode", self.name()),
                                             ]
-                                            + search_vars
+                                            + search_vars,
                                         )
                                     ),
                                     is_shortcut=True,
@@ -3894,12 +3917,13 @@ class ModeNotificationParametersOverview(WatoMode):
                                     icon_name=StaticIcon(IconNames.new),
                                     item=make_simple_link(
                                         folder_preserving_link(
+                                            request,
                                             [
                                                 ("mode", "notification_parameters"),
                                                 ("method", "mail"),
                                                 ("back_mode", self.name()),
                                                 ("rule_folder", ""),
-                                            ]
+                                            ],
                                         )
                                     ),
                                     is_shortcut=True,
@@ -4230,11 +4254,12 @@ class ModeNotificationParameters(ABCNotificationParameterMode):
                                     icon_name=StaticIcon(IconNames.new),
                                     item=make_simple_link(
                                         folder_preserving_link(
+                                            request,
                                             [
                                                 ("mode", "edit_notification_parameter"),
                                                 ("method", self._method()),
                                             ]
-                                            + self._search_vars()
+                                            + self._search_vars(),
                                         )
                                     ),
                                     is_shortcut=True,
@@ -4401,36 +4426,40 @@ class ModeNotificationParameters(ABCNotificationParameterMode):
 
         delete_url = make_confirm_delete_link(
             url=make_action_link(
+                request,
                 [
                     ("mode", listmode),
                     ("_delete", parameter_id),
                 ]
-                + additional_vars
+                + additional_vars,
             ),
             title=_("Delete notification parameter #%(nr)d") % {"nr": nr},
             suffix=parameter["general"].get("description", ""),
         )
         drag_url = make_action_link(
+            request,
             [
                 ("mode", listmode),
                 ("_move", str(nr)),
             ]
-            + additional_vars
+            + additional_vars,
         )
         edit_url = folder_preserving_link(
+            request,
             [
                 ("mode", mode),
                 ("parameter", parameter_id),
                 ("edit", str(nr)),
             ]
-            + additional_vars
+            + additional_vars,
         )
         clone_url = folder_preserving_link(
+            request,
             [
                 ("mode", mode),
                 ("clone", parameter_id),
             ]
-            + additional_vars
+            + additional_vars,
         )
 
         return NotificationRuleLinks(

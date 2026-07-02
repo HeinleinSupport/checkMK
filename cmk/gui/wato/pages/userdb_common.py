@@ -78,10 +78,11 @@ def add_connections_page_menu(
                                 icon_name=StaticIcon(IconNames.new),
                                 item=make_simple_link(
                                     folder_preserving_link(
+                                        request,
                                         [
                                             ("mode", edit_mode_path),
                                             ("new", request.get_ascii_input("id")),
-                                        ]
+                                        ],
                                     )
                                 ),
                                 is_shortcut=True,
@@ -153,23 +154,27 @@ def render_connections_page(
             table.cell(_("Actions"), css=["buttons"])
             connection_id = connection["id"]
             edit_url = folder_preserving_link(
-                [("mode", edit_mode_path), ("id", connection_id), ("edit", connection_id)]
+                request,
+                [("mode", edit_mode_path), ("id", connection_id), ("edit", connection_id)],
             )
             delete_url = make_confirm_delete_link(
-                url=make_action_link([("mode", config_mode_path), ("_delete", real_index)]),
+                url=make_action_link(
+                    request, [("mode", config_mode_path), ("_delete", real_index)]
+                ),
                 title=_("Delete connection #%(display_index)d") % {"display_index": display_index},
                 suffix=connection.get("name", connection["id"]),
                 message=_("ID: %s") % connection["id"],
             )
             drag_url = make_action_link(
+                request,
                 [
                     ("mode", config_mode_path),
                     ("_move", real_index),
                     ("_connection_type", connection["type"]),
-                ]
+                ],
             )
             clone_url = folder_preserving_link(
-                [("mode", edit_mode_path), ("clone", connection["id"])]
+                request, [("mode", edit_mode_path), ("clone", connection["id"])]
             )
 
             html.icon_button(edit_url, _("Edit this connection"), StaticIcon(IconNames.edit))

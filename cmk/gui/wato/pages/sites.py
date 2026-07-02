@@ -1478,12 +1478,14 @@ class ModeDistributedMonitoring(WatoMode):
     def _show_buttons_connection(self, table: Table, connection_id: str) -> None:
         table.cell(_("Actions"), css=["buttons"])
         edit_url = folder_preserving_link(
-            [("mode", "edit_broker_connection"), ("edit_connection_id", connection_id)]
+            request,
+            [("mode", "edit_broker_connection"), ("edit_connection_id", connection_id)],
         )
         html.icon_button(edit_url, _("Properties"), StaticIcon(IconNames.edit))
 
         clone_url = folder_preserving_link(
-            [("mode", "edit_broker_connection"), ("clone_connection_id", connection_id)]
+            request,
+            [("mode", "edit_broker_connection"), ("clone_connection_id", connection_id)],
         )
         html.icon_button(
             clone_url,
@@ -1506,10 +1508,10 @@ class ModeDistributedMonitoring(WatoMode):
         site_configs: SiteConfigurations,
     ) -> None:
         table.cell(_("Actions"), css=["buttons"])
-        edit_url = folder_preserving_link([("mode", "edit_site"), ("site", site_id)])
+        edit_url = folder_preserving_link(request, [("mode", "edit_site"), ("site", site_id)])
         html.icon_button(edit_url, _("Properties"), StaticIcon(IconNames.edit))
 
-        clone_url = folder_preserving_link([("mode", "edit_site"), ("clone", site_id)])
+        clone_url = folder_preserving_link(request, [("mode", "edit_site"), ("clone", site_id)])
         html.icon_button(
             clone_url,
             _("Clone this connection in order to create a new one"),
@@ -1530,7 +1532,9 @@ class ModeDistributedMonitoring(WatoMode):
             html.icon_button(delete_url, _("Delete"), StaticIcon(IconNames.delete))
 
         if site_globals_editable(site_configs, site):
-            globals_url = folder_preserving_link([("mode", "edit_site_globals"), ("site", site_id)])
+            globals_url = folder_preserving_link(
+                request, [("mode", "edit_site_globals"), ("site", site_id)]
+            )
 
             has_site_globals = bool(site.get("globals"))
             title = _("Site-specific global configuration")
@@ -1573,7 +1577,7 @@ class ModeDistributedMonitoring(WatoMode):
         table.cell("")
 
         encrypted_url = folder_preserving_link(
-            [("mode", "site_livestatus_encryption"), ("site", site_id)]
+            request, [("mode", "site_livestatus_encryption"), ("site", site_id)]
         )
         html.icon_button(
             encrypted_url,
@@ -1615,7 +1619,7 @@ class ModeDistributedMonitoring(WatoMode):
         if is_replication_enabled(site):
             if site.get("secret"):
                 logout_url = make_confirm_delete_link(
-                    url=make_action_link([("mode", "sites"), ("_logout", site_id)]),
+                    url=make_action_link(request, [("mode", "sites"), ("_logout", site_id)]),
                     title=_("Log out of site"),
                     suffix=site["alias"],
                     message=_("ID: %(site_id)s") % {"site_id": site_id},
@@ -1623,7 +1627,7 @@ class ModeDistributedMonitoring(WatoMode):
                 )
                 html.icon_button(logout_url, _("Logout"), StaticIcon(IconNames.autherr))
             else:
-                login_url = make_action_link([("mode", "sites"), ("_login", site_id)])
+                login_url = make_action_link(request, [("mode", "sites"), ("_login", site_id)])
                 html.icon_button(login_url, _("Login"), StaticIcon(IconNames.authok))
 
         html.open_div(id_="replication_status_%s" % site_id, class_="connection_status")
@@ -1642,7 +1646,7 @@ class ModeDistributedMonitoring(WatoMode):
         table.cell("Remote message broker")
         if is_replication_enabled(site):
             trigger_url = make_action_link(
-                [("mode", "sites"), ("_trigger_certs_creation", site_id)]
+                request, [("mode", "sites"), ("_trigger_certs_creation", site_id)]
             )
             html.open_ts_container(
                 container="div",

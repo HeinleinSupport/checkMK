@@ -18,6 +18,7 @@ from cmk.gui import forms
 from cmk.gui.breadcrumb import Breadcrumb
 from cmk.gui.config import Config
 from cmk.gui.htmllib.html import html
+from cmk.gui.http import request
 from cmk.gui.i18n import _
 from cmk.gui.page_menu import (
     make_simple_link,
@@ -83,7 +84,7 @@ class ABCModeDownloadAgents(WatoMode):
                 title=_("Windows files"),
                 icon_name=StaticIcon(IconNames.download_agents),
                 item=make_simple_link(
-                    folder_preserving_link([("mode", "download_agents_windows")])
+                    folder_preserving_link(request, [("mode", "download_agents_windows")])
                 ),
             )
 
@@ -91,14 +92,18 @@ class ABCModeDownloadAgents(WatoMode):
             yield PageMenuEntry(
                 title=_("Linux, Solaris, AIX files"),
                 icon_name=StaticIcon(IconNames.download_agents),
-                item=make_simple_link(folder_preserving_link([("mode", "download_agents_linux")])),
+                item=make_simple_link(
+                    folder_preserving_link(request, [("mode", "download_agents_linux")])
+                ),
             )
 
         if self.name() != "download_agents":
             yield PageMenuEntry(
                 title=_("Other operating systems"),
                 icon_name=StaticIcon(IconNames.download_agents),
-                item=make_simple_link(folder_preserving_link([("mode", "download_agents")])),
+                item=make_simple_link(
+                    folder_preserving_link(request, [("mode", "download_agents")])
+                ),
             )
 
     @abc.abstractmethod

@@ -860,7 +860,7 @@ class DiscoveryPageRenderer:
                         save_host=False,
                         host_exists=True,
                         all_agents_url=folder_preserving_link(
-                            [("mode", "agent_of_host"), ("host", hostname)]
+                            request, [("mode", "agent_of_host"), ("host", hostname)]
                         ),
                         user_settings_url=makeuri_contextless(
                             request=request,
@@ -1191,7 +1191,9 @@ class DiscoveryPageRenderer:
     @staticmethod
     def _show_empty_cluster_hint() -> None:
         html.br()
-        url = folder_preserving_link([("mode", "edit_ruleset"), ("varname", "clustered_services")])
+        url = folder_preserving_link(
+            request, [("mode", "edit_ruleset"), ("varname", "clustered_services")]
+        )
         html.show_message(
             _(
                 "Could not find any service for your cluster. You first need to "
@@ -1436,7 +1438,9 @@ class DiscoveryPageRenderer:
             ctype = "check_" + entry.check_plugin_name
         else:
             ctype = entry.check_plugin_name
-        manpage_url = folder_preserving_link([("mode", "check_manpage"), ("check_type", ctype)])
+        manpage_url = folder_preserving_link(
+            request, [("mode", "check_manpage"), ("check_type", ctype)]
+        )
 
         if self._options.show_parameters:
             table.cell(_("Check parameters"), css=["expanding"])
@@ -1922,11 +1926,12 @@ class DiscoveryPageRenderer:
     @classmethod
     def rulesets_button_link(cls, descr: str, hostname: str) -> str:
         return folder_preserving_link(
+            request,
             [
                 ("mode", "object_parameters"),
                 ("host", hostname),
                 ("service", descr),
-            ]
+            ],
         )
 
     @classmethod
@@ -1947,17 +1952,19 @@ class DiscoveryPageRenderer:
     def check_parameters_button_link(cls, entry: CheckPreviewEntry, hostname: str) -> str | None:
         if entry.check_source == DiscoveryState.MANUAL:
             return folder_preserving_link(
+                request,
                 [
                     ("mode", "edit_ruleset"),
                     ("varname", RuleGroup.StaticChecks(entry.ruleset_name)),
                     ("host", hostname),
-                ]
+                ],
             )
         ruleset_name = cls._get_ruleset_name(entry)
         if ruleset_name is None:
             return None
 
         return folder_preserving_link(
+            request,
             [
                 ("mode", "edit_ruleset"),
                 ("varname", ruleset_name),
@@ -1970,12 +1977,13 @@ class DiscoveryPageRenderer:
                     "service",
                     mk_repr(entry.description).decode(),
                 ),
-            ]
+            ],
         )
 
     def _disabled_services_button(self, descr: str) -> Literal[1]:
         html.icon_button(
             folder_preserving_link(
+                request,
                 [
                     ("mode", "edit_ruleset"),
                     ("varname", "ignored_services"),
@@ -1984,7 +1992,7 @@ class DiscoveryPageRenderer:
                         "item",
                         mk_repr(descr).decode(),
                     ),
-                ]
+                ],
             ),
             _("Edit and analyze the disabled services rules"),
             StaticIcon(IconNames.rulesets),
@@ -2266,7 +2274,7 @@ def _page_menu_host_entries(host: Host) -> Iterator[PageMenuEntry]:
         title=_("Properties"),
         icon_name=StaticIcon(IconNames.edit),
         item=make_simple_link(
-            folder_preserving_link([("mode", "edit_host"), ("host", host.name())])
+            folder_preserving_link(request, [("mode", "edit_host"), ("host", host.name())])
         ),
     )
 
@@ -2275,7 +2283,7 @@ def _page_menu_host_entries(host: Host) -> Iterator[PageMenuEntry]:
             title=_("Test connection"),
             icon_name=StaticIcon(IconNames.analysis),
             item=make_simple_link(
-                folder_preserving_link([("mode", "diag_host"), ("host", host.name())])
+                folder_preserving_link(request, [("mode", "diag_host"), ("host", host.name())])
             ),
         )
 
@@ -2284,7 +2292,9 @@ def _page_menu_host_entries(host: Host) -> Iterator[PageMenuEntry]:
             title=_("Effective parameters"),
             icon_name=StaticIcon(IconNames.rulesets),
             item=make_simple_link(
-                folder_preserving_link([("mode", "object_parameters"), ("host", host.name())]),
+                folder_preserving_link(
+                    request, [("mode", "object_parameters"), ("host", host.name())]
+                ),
                 transition=LoadingTransition.catalog,
             ),
         )
@@ -2309,7 +2319,7 @@ def _page_menu_settings_entries(host: Host) -> Iterator[PageMenuEntry]:
             icon_name=StaticIcon(IconNames.rulesets),
             item=make_simple_link(
                 folder_preserving_link(
-                    [("mode", "edit_ruleset"), ("varname", "clustered_services")]
+                    request, [("mode", "edit_ruleset"), ("varname", "clustered_services")]
                 )
             ),
         )
@@ -2321,7 +2331,9 @@ def _page_menu_settings_entries(host: Host) -> Iterator[PageMenuEntry]:
             emblem="disable",
         ),
         item=make_simple_link(
-            folder_preserving_link([("mode", "edit_ruleset"), ("varname", "ignored_services")])
+            folder_preserving_link(
+                request, [("mode", "edit_ruleset"), ("varname", "ignored_services")]
+            )
         ),
     )
 
@@ -2332,7 +2344,9 @@ def _page_menu_settings_entries(host: Host) -> Iterator[PageMenuEntry]:
             emblem="disable",
         ),
         item=make_simple_link(
-            folder_preserving_link([("mode", "edit_ruleset"), ("varname", "ignored_checks")])
+            folder_preserving_link(
+                request, [("mode", "edit_ruleset"), ("varname", "ignored_checks")]
+            )
         ),
     )
 

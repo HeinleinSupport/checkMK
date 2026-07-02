@@ -1963,7 +1963,9 @@ def find_timeperiod_usage_in_host_and_service_rules(time_period_name: str) -> li
                 used_in.append(
                     (
                         "{}: {}".format(_("Rule set"), ruleset.title()),
-                        folder_preserving_link([("mode", "edit_ruleset"), ("varname", varname)]),
+                        folder_preserving_link(
+                            request, [("mode", "edit_ruleset"), ("varname", varname)]
+                        ),
                     )
                 )
                 break
@@ -1993,6 +1995,7 @@ def find_timeperiod_usage_in_time_specific_parameters(
                 if rule_tp_name != time_period_name:
                     continue
                 edit_url = folder_preserving_link(
+                    request,
                     [
                         ("mode", "edit_rule"),
                         ("back_mode", "timeperiods"),
@@ -2000,7 +2003,7 @@ def find_timeperiod_usage_in_time_specific_parameters(
                         ("rulenr", rule_index),
                         ("rule_folder", rule_folder.path()),
                         ("rule_id", rule.id),
-                    ]
+                    ],
                 )
                 used_in.append((_("Time-specific check parameter #%d") % (index + 1), edit_url))
     return used_in
