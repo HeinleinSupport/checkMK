@@ -14,6 +14,7 @@ from ._objects import (
     Graph,
     MetricName,
     PerformanceData,
+    RawMetricNames,
     RawPerformanceData,
     RRDMetric,
     ServiceRef,
@@ -21,12 +22,20 @@ from ._objects import (
 )
 from ._options import ConsolidationFunction, TimeRange
 from ._resample import resample
-from ._translate import translate_performance_data
+from ._translate import (
+    originals_for_metric_name,
+    translate_metric_names,
+    translate_performance_data,
+)
 
 
 class RRDSource(Protocol):
-    def fetch_performance_data(
+    def fetch_available_metric_names(
         self, services: Sequence[ServiceRef]
+    ) -> Mapping[ServiceRef, RawMetricNames]: ...
+
+    def fetch_performance_data(
+        self, rrd_metrics: Sequence[RRDMetric]
     ) -> Mapping[ServiceRef, RawPerformanceData]: ...
 
     def fetch_time_series(
@@ -67,7 +76,7 @@ def _merge(series: Sequence[TimeSeries], time_range: TimeRange) -> TimeSeries:
     )
 
 
-def _fetch_series(
+def _fetch_time_series(
     *,
     graph: Graph,
     performance_data: Mapping[ServiceRef, Mapping[MetricName, PerformanceData]],
@@ -122,18 +131,45 @@ def _fetch_series(
     return result
 
 
-def fetch_performance_data(
+def fetch_available_metric_names(
     *,
     services: Iterable[ServiceRef],
     translations: Iterable[translations_v1.Translation],
     rrd: RRDSource,
+) -> Mapping[ServiceRef, frozenset[MetricName]]:
+    parsed_translations = parse_translations_from_api(translations)
+    available = rrd.fetch_available_metric_names(list(dict.fromkeys(services)))
+    return {
+        service: translate_metric_names(raw_metrics, parsed_translations)
+        for service, raw_metrics in available.items()
+    }
+
+
+def fetch_performance_data(
+    *,
+    graphs: Sequence[Graph],
+    translations: Iterable[translations_v1.Translation],
+    rrd: RRDSource,
 ) -> Mapping[ServiceRef, Mapping[MetricName, PerformanceData]]:
     parsed_translations = parse_translations_from_api(translations)
-    performance_data = rrd.fetch_performance_data(list(dict.fromkeys(services)))
-    return {
-        service: translate_performance_data(perf, parsed_translations)
-        for service, perf in performance_data.items()
+    rrd_metrics = list(dict.fromkeys(metric for graph in graphs for metric in graph.rrd_metrics()))
+    raw_performance_data = rrd.fetch_performance_data(rrd_metrics)
+    performance_data = {
+        service: dict(translate_performance_data(raw, parsed_translations))
+        for service, raw in raw_performance_data.items()
     }
+    for metric in rrd_metrics:
+        service = ServiceRef(host_name=metric.host_name, service_name=metric.service_name)
+        if (raw := raw_performance_data.get(service)) is None:
+            continue
+        if metric.metric_name not in performance_data[service]:
+            performance_data[service][metric.metric_name] = PerformanceData(
+                value=None,
+                originals=originals_for_metric_name(
+                    metric.metric_name, parsed_translations, raw.check_command
+                ),
+            )
+    return performance_data
 
 
 def evaluate_graphs(
@@ -144,23 +180,12 @@ def evaluate_graphs(
     time_range: TimeRange,
     rrd: RRDSource,
 ) -> Sequence[EvaluatedGraph]:
-    """The sole update entry point: (re-)fetch the performance data and the time series for the given
-    concrete graphs over the range / consolidation function, and evaluate each into an EvaluatedGraph.
-    Discovery stores no data, so update always fetches afresh."""
-    performance_data = fetch_performance_data(
-        services=(
-            ServiceRef(host_name=metric.host_name, service_name=metric.service_name)
-            for graph in graphs
-            for metric in graph.rrd_metrics()
-        ),
-        translations=translations,
-        rrd=rrd,
-    )
+    performance_data = fetch_performance_data(graphs=graphs, translations=translations, rrd=rrd)
     return [
         evaluate_graph(
             graph,
             performance_data,
-            _fetch_series(
+            _fetch_time_series(
                 graph=graph,
                 performance_data=performance_data,
                 consolidation_function=consolidation_function,

@@ -18,6 +18,7 @@ from cmk.ccc.site import SiteId
 from cmk.graphing_engine import (
     ConsolidationFunction,
     MetricName,
+    RawMetricNames,
     RawPerformanceData,
     RawPerformanceValue,
     RRDMetric,
@@ -46,7 +47,6 @@ def _float_or_int(val: str | None) -> int | float | None:
 
 
 def _parse_range(val: str | None) -> tuple[float | None, float | None]:
-    """Nagios range notation → (lower, upper): "10"→(None,10), "1:10"→(1,10), "10:"→(10,None)."""
     if not val:
         return None, None
     if ":" not in val:
@@ -62,7 +62,7 @@ def _split_unit(value_text: str) -> tuple[float | None, str | None]:
     if not value_text or value_text.isspace():
         return None, None
     value_and_unit = re.match(_VALUE_AND_UNIT, value_text)
-    assert value_and_unit is not None  # the regex always matches
+    assert value_and_unit is not None
     return _float_or_int(value_and_unit[1]) if value_and_unit[1] else None, value_and_unit[2]
 
 
@@ -97,14 +97,13 @@ def _parse_check_command(check_command: str) -> str:
 def _parse_perf_data(
     perf_data_string: str, check_command: str, *, debug: bool
 ) -> tuple[Sequence[RawPerformanceValue], str]:
-    """Convert perf_data_string into performance values and extract the (normalized) check command."""
     check_command = _parse_check_command(check_command)
 
     parts = shlex.split(perf_data_string)
     if parts and parts[-1].startswith("[") and parts[-1].endswith("]"):
         check_command = parts[-1][1:-1]
         del parts[-1]
-    check_command = check_command.replace(".", "_")  # cf. maincheckify
+    check_command = check_command.replace(".", "_")
 
     perf_data: list[RawPerformanceValue] = []
     for part in parts:
@@ -112,7 +111,7 @@ def _parse_perf_data(
             varname, value_text, value_parts = _parse_perf_values(part)
             value, unit_name = _split_unit(value_text)
             if value is None or unit_name is None:
-                continue  # ignore useless empty variable
+                continue
             warn_lower, warn = _parse_range(value_parts[0])
             crit_lower, crit = _parse_range(value_parts[1])
             perf_data.append(
@@ -132,6 +131,17 @@ def _parse_perf_data(
             if debug:
                 raise exc
     return perf_data, check_command
+
+
+def _service_or_filter(services: Sequence[ServiceRef]) -> str:
+    query = ""
+    for service in services:
+        query += f"Filter: host_name = {lqencode(service.host_name)}\n"
+        query += f"Filter: description = {lqencode(service.service_name)}\n"
+        query += "And: 2\n"
+    if len(services) > 1:
+        query += f"Or: {len(services)}\n"
+    return query
 
 
 @dataclass(frozen=True)
@@ -163,20 +173,17 @@ class EngineRRDSource:
             ]
         return RawPerformanceData(check_command=normalized_check_command, values=perf_data)
 
-    def fetch_performance_data(
+    def fetch_available_metric_names(
         self, services: Sequence[ServiceRef]
-    ) -> Mapping[ServiceRef, RawPerformanceData]:
+    ) -> Mapping[ServiceRef, RawMetricNames]:
         unique = list(dict.fromkeys(services))
         if not unique:
             return {}
-        query = "GET services\nColumns: host_name description perf_data metrics check_command\n"
-        for service in unique:
-            query += f"Filter: host_name = {lqencode(service.host_name)}\n"
-            query += f"Filter: description = {lqencode(service.service_name)}\n"
-            query += "And: 2\n"
-        if len(unique) > 1:
-            query += f"Or: {len(unique)}\n"
-        result: dict[ServiceRef, RawPerformanceData] = {}
+        query = (
+            "GET services\nColumns: host_name description perf_data metrics check_command\n"
+            + _service_or_filter(unique)
+        )
+        result: dict[ServiceRef, RawMetricNames] = {}
         with sites.only_sites(self.site_id):
             for (
                 host_name,
@@ -185,12 +192,39 @@ class EngineRRDSource:
                 rrd_metrics,
                 check_command,
             ) in sites.live().query(query):
-                result[ServiceRef(host_name=host_name, service_name=description)] = (
-                    self.parse_performance_data(
-                        perf_data_string, check_command, rrd_metrics, debug=self.debug
-                    )
+                raw = self.parse_performance_data(
+                    perf_data_string, check_command, rrd_metrics, debug=self.debug
+                )
+                result[ServiceRef(host_name=host_name, service_name=description)] = RawMetricNames(
+                    check_command=raw.check_command,
+                    metric_names=[value.metric_name for value in raw.values],
                 )
         return {service: result[service] for service in unique if service in result}
+
+    def fetch_performance_data(
+        self, rrd_metrics: Sequence[RRDMetric]
+    ) -> Mapping[ServiceRef, RawPerformanceData]:
+        services = list(
+            dict.fromkeys(
+                ServiceRef(host_name=metric.host_name, service_name=metric.service_name)
+                for metric in rrd_metrics
+            )
+        )
+        if not services:
+            return {}
+        query = (
+            "GET services\nColumns: host_name description perf_data check_command\n"
+            + _service_or_filter(services)
+        )
+        result: dict[ServiceRef, RawPerformanceData] = {}
+        with sites.only_sites(self.site_id):
+            for host_name, description, perf_data_string, check_command in sites.live().query(
+                query
+            ):
+                result[ServiceRef(host_name=host_name, service_name=description)] = (
+                    self.parse_performance_data(perf_data_string, check_command, debug=self.debug)
+                )
+        return {service: result[service] for service in services if service in result}
 
     def fetch_time_series(
         self,

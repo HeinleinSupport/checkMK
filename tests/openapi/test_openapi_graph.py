@@ -109,7 +109,7 @@ def test_fetch_graph_data_comprehensive_graph(
         ],
     )
     mock_livestatus.expect_query(
-        "GET services\nColumns: host_name description perf_data metrics check_command\nFilter: host_name = h\nFilter: description = s\nAnd: 2"
+        "GET services\nColumns: host_name description perf_data check_command\nFilter: host_name = h\nFilter: description = s\nAnd: 2"
     )
     mock_livestatus.expect_query(
         "GET services\nColumns: host_name description rrddata:m:m.average:0:60:10\nFilter: host_name = h\nFilter: description = s\nAnd: 2"

@@ -4,12 +4,13 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 import re
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 
 from ._objects import (
     MetricName,
     MetricTranslation,
     PerformanceData,
+    RawMetricNames,
     RawPerformanceData,
     RawPerformanceValue,
     RRDOriginal,
@@ -59,6 +60,37 @@ def _reverse_translations(
         for old_name, translation in translations.items()
         if not old_name.startswith("~") and translation.name == canonical_name
     }
+
+
+def originals_for_metric_name(
+    metric_name: MetricName,
+    translations: Mapping[str, Mapping[MetricName, MetricTranslation]],
+    check_command: str,
+) -> Sequence[RRDOriginal]:
+    command_translations = _translations_for_command(check_command, translations)
+    prefix, bare_name = _split_predict_prefix(metric_name)
+    seen = {metric_name}
+    originals = [RRDOriginal(metric_name=metric_name, scale=1.0)]
+    for old_name, scale in _reverse_translations(
+        MetricName(bare_name), command_translations
+    ).items():
+        if (column := MetricName(f"{prefix}{old_name}")) not in seen:
+            originals.append(RRDOriginal(metric_name=column, scale=scale))
+            seen.add(column)
+    return originals
+
+
+def translate_metric_names(
+    raw_metrics: RawMetricNames,
+    translations: Mapping[str, Mapping[MetricName, MetricTranslation]],
+) -> frozenset[MetricName]:
+    command_translations = _translations_for_command(raw_metrics.check_command, translations)
+    names = set()
+    for metric_name in raw_metrics.metric_names:
+        prefix, bare_name = _split_predict_prefix(metric_name)
+        translation = _find_translation(MetricName(bare_name), command_translations)
+        names.add(MetricName(f"{prefix}{translation.name}"))
+    return frozenset(names)
 
 
 def translate_performance_data(

@@ -19,6 +19,7 @@ from cmk.graphing_engine import (
     Line,
     MetricName,
     Quantity,
+    RawMetricNames,
     RawPerformanceData,
     RawPerformanceValue,
     RRDMetric,
@@ -86,20 +87,28 @@ class _FakeRRDSource:
     def __init__(
         self,
         *,
+        available_response: Mapping[ServiceRef, RawMetricNames] | None = None,
         performance_response: Mapping[ServiceRef, RawPerformanceData] | None = None,
         time_series_response: Mapping[RRDMetric, TimeSeries] | None = None,
     ) -> None:
+        self._available_response = available_response or {}
         self._performance_response = performance_response or {}
         self._time_series_response = time_series_response or {}
-        self.performance_data_calls: list[tuple[ServiceRef, ...]] = []
+        self.performance_data_calls: list[tuple[RRDMetric, ...]] = []
         self.time_series_calls: list[
             tuple[tuple[RRDMetric, ...], TimeRange, ConsolidationFunction]
         ] = []
 
+    def fetch_available_metric_names(
+        self,
+        services: Sequence[ServiceRef],  # noqa: ARG002
+    ) -> Mapping[ServiceRef, RawMetricNames]:
+        return self._available_response
+
     def fetch_performance_data(
-        self, services: Sequence[ServiceRef]
+        self, rrd_metrics: Sequence[RRDMetric]
     ) -> Mapping[ServiceRef, RawPerformanceData]:
-        self.performance_data_calls.append(tuple(services))
+        self.performance_data_calls.append(tuple(rrd_metrics))
         return self._performance_response
 
     def fetch_time_series(
@@ -152,7 +161,7 @@ def test_fetches_performance_data_and_time_series() -> None:
     [line] = evaluated.lines
     assert line.curve.value == 42.0
     assert line.curve.time_series == series
-    assert rrd.performance_data_calls == [(_service(),)]
+    assert rrd.performance_data_calls == [(cpu_user,)]
 
 
 def test_returns_one_evaluated_graph_per_graph_in_order() -> None:

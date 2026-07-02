@@ -3,7 +3,7 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-from collections.abc import Mapping, Sequence
+from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass, field
 
 import pytest
@@ -20,6 +20,7 @@ from cmk.graphing_engine import (
     HostName,
     Line,
     MetricName,
+    RawMetricNames,
     RawPerformanceData,
     RawPerformanceValue,
     RRDMetric,
@@ -46,9 +47,8 @@ _DISCOVERY_RANGE = TimeRange(start=0, end=60, step=10)
 class _FakeRRD:
     requested_ranges: list[TimeRange] = field(default_factory=list)
 
-    def fetch_performance_data(
-        self, services: Sequence[ServiceRef]
-    ) -> Mapping[ServiceRef, RawPerformanceData]:
+    @staticmethod
+    def _data(services: Iterable[ServiceRef]) -> Mapping[ServiceRef, RawPerformanceData]:
         return {
             service: RawPerformanceData(
                 check_command="check_mk-foo",
@@ -56,6 +56,25 @@ class _FakeRRD:
             )
             for service in services
         }
+
+    def fetch_available_metric_names(
+        self, services: Sequence[ServiceRef]
+    ) -> Mapping[ServiceRef, RawMetricNames]:
+        return {
+            service: RawMetricNames(
+                check_command=raw.check_command,
+                metric_names=[value.metric_name for value in raw.values],
+            )
+            for service, raw in self._data(services).items()
+        }
+
+    def fetch_performance_data(
+        self, rrd_metrics: Sequence[RRDMetric]
+    ) -> Mapping[ServiceRef, RawPerformanceData]:
+        return self._data(
+            ServiceRef(host_name=metric.host_name, service_name=metric.service_name)
+            for metric in rrd_metrics
+        )
 
     def fetch_time_series(
         self,

@@ -14,7 +14,7 @@ from ._evaluate import (
 )
 from ._fetch import (
     evaluate_graphs,
-    fetch_performance_data,
+    fetch_available_metric_names,
     RRDSource,
 )
 from ._from_api import build_curve, metric_display_attributes
@@ -39,6 +39,7 @@ from ._objects import (
     PerformanceData,
     Product,
     Quantity,
+    RawMetricNames,
     RawPerformanceData,
     RawPerformanceValue,
     RRDMetric,
@@ -90,6 +91,7 @@ __all__ = [
     "Line",
     "MetricName",
     "MinimalRange",
+    "RawMetricNames",
     "RawPerformanceData",
     "RawPerformanceValue",
     "Product",
@@ -115,7 +117,7 @@ __all__ = [
     "VerticalRange",
     "VerticalRangeType",
     "build_service_graphs",
-    "fetch_performance_data",
+    "fetch_available_metric_names",
     "match_graph_for_services",
     "metric_display_attributes",
     "build_curve",

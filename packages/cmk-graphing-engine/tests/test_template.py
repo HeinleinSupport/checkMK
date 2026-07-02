@@ -16,13 +16,14 @@ from cmk.graphing_engine import (
     ConsolidationFunction,
     evaluate_graphs,
     EvaluatedGraph,
-    fetch_performance_data,
+    fetch_available_metric_names,
     Graph,
     HostName,
     Line,
     match_graph_for_services,
     MetricName,
     Quantity,
+    RawMetricNames,
     RawPerformanceData,
     RawPerformanceValue,
     RRDMetric,
@@ -147,9 +148,21 @@ class _FakeFetchRRD:
         self._performance_response = performance_response or {}
         self._time_series_response = time_series_response or {}
 
-    def fetch_performance_data(
+    def fetch_available_metric_names(
         self,
         services: Sequence[ServiceRef],  # noqa: ARG002
+    ) -> Mapping[ServiceRef, RawMetricNames]:
+        return {
+            service: RawMetricNames(
+                check_command=raw.check_command,
+                metric_names=[value.metric_name for value in raw.values],
+            )
+            for service, raw in self._performance_response.items()
+        }
+
+    def fetch_performance_data(
+        self,
+        rrd_metrics: Sequence[RRDMetric],  # noqa: ARG002
     ) -> Mapping[ServiceRef, RawPerformanceData]:
         return self._performance_response
 
@@ -178,14 +191,14 @@ def _discover(
     *,
     rrd: _FakeFetchRRD,
 ) -> Sequence[Graph]:
-    performance_data = fetch_performance_data(services=[service], translations=[], rrd=rrd)
+    available = fetch_available_metric_names(services=[service], translations=[], rrd=rrd)
     return build_service_graphs(
         service=service,
         registered_graphs=registered_graphs,
         metrics=_METRICS,
         localizer=_id,
         graph_type=_KIND,
-        available=performance_data.get(service, {}),
+        available=available.get(service, frozenset()),
     )
 
 
@@ -561,8 +574,8 @@ def test_build_service_graphs_builds_threshold_rules_for_fallback_graphs() -> No
     service = _service()
     cpu_user = MetricName("cpu_user")
     rrd = _FakeFetchRRD(performance_response={service: _perf_data(_perf(cpu_user, warning=80.0))})
-    available = fetch_performance_data(services=[service], translations=[], rrd=rrd).get(
-        service, {}
+    available = fetch_available_metric_names(services=[service], translations=[], rrd=rrd).get(
+        service, frozenset()
     )
 
     graphs = build_service_graphs(

@@ -24,10 +24,11 @@ from cmk.graphing_engine import (
     ConsolidationFunction,
     evaluate_graphs,
     EvaluatedGraph,
-    fetch_performance_data,
+    fetch_available_metric_names,
     Graph,
     HostName,
     MetricName,
+    RawMetricNames,
     RawPerformanceData,
     RawPerformanceValue,
     RRDMetric,
@@ -79,9 +80,27 @@ class _FakeRRD:
         # drove the source.
         self.time_series_requests: list[tuple[TimeRange, ConsolidationFunction]] = []
 
-    def fetch_performance_data(
+    def fetch_available_metric_names(
         self, services: Sequence[ServiceRef]
+    ) -> Mapping[ServiceRef, RawMetricNames]:
+        return {
+            service: RawMetricNames(
+                check_command=self._performance_data[service].check_command,
+                metric_names=[
+                    value.metric_name for value in self._performance_data[service].values
+                ],
+            )
+            for service in services
+            if service in self._performance_data
+        }
+
+    def fetch_performance_data(
+        self, rrd_metrics: Sequence[RRDMetric]
     ) -> Mapping[ServiceRef, RawPerformanceData]:
+        services = {
+            ServiceRef(host_name=metric.host_name, service_name=metric.service_name)
+            for metric in rrd_metrics
+        }
         return {
             service: self._performance_data[service]
             for service in services
@@ -109,7 +128,7 @@ def _discover(
     *,
     translations: Sequence[translations_v1.Translation] = (),
 ) -> Sequence[Graph]:
-    performance_data = fetch_performance_data(
+    available = fetch_available_metric_names(
         services=[_SERVICE],
         translations=translations,
         rrd=rrd,
@@ -119,7 +138,7 @@ def _discover(
         registered_graphs=registered_graphs,
         metrics=_METRICS,
         localizer=_id,
-        available=performance_data.get(_SERVICE, {}),
+        available=available.get(_SERVICE, frozenset()),
         graph_type="test",
     )
 

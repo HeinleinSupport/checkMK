@@ -3,7 +3,7 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-from collections.abc import Callable, Container, Mapping, Sequence
+from collections.abc import Callable, Collection, Container, Mapping, Sequence
 from dataclasses import dataclass
 
 from cmk.graphing.v1 import graphs as graphs_v1
@@ -19,7 +19,6 @@ from ._objects import (
     Graph,
     Line,
     MetricName,
-    PerformanceData,
     RRDMetric,
     Rule,
     ScalarOf,
@@ -166,14 +165,9 @@ def build_service_graphs(
     registered_graphs: Sequence[_GraphPlugin],
     metrics: Mapping[str, metrics_v1.Metric],
     localizer: Callable[[str], str],
-    available: Mapping[MetricName, PerformanceData],
+    available: Collection[MetricName],
     graph_type: str,
 ) -> Sequence[Graph]:
-    """Build a service's matching template graphs plus a fallback single-metric graph per unclaimed
-    metric, with each curve's display resolved inline. The fallback metric gets the four warn / crit
-    (and lower) threshold rules as ScalarOf quantities (their labels / colours resolved from the kind);
-    evaluation drops a rule whose level is unset. Matched plugin graphs already carry their own scalar
-    rules."""
     graphs: list[Graph] = []
     claimed: set[MetricName] = set()
 

@@ -250,11 +250,12 @@ class RRDMetric:
         yield self
 
     def evaluate(self, context: EvaluationContext) -> EvaluatedQuantity | None:
-        if (data := context.data_of(self)) is None:
-            return None
+        data = context.data_of(self)
         existing = context.time_series.get(self)
+        if not ((data is not None and data.value is not None) or existing is not None):
+            return None
         return EvaluatedQuantity(
-            value=data.value,
+            value=None if data is None else data.value,
             time_series=(
                 existing
                 if existing is not None
@@ -438,6 +439,12 @@ class RawPerformanceValue:
 class RawPerformanceData:
     check_command: str
     values: Sequence[RawPerformanceValue]
+
+
+@dataclass(frozen=True, kw_only=True)
+class RawMetricNames:
+    check_command: str
+    metric_names: Sequence[MetricName]
 
 
 @dataclass(frozen=True, kw_only=True)
