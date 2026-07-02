@@ -126,7 +126,7 @@ type _GraphPlugin = (
 )
 
 
-def match_graph_for_services(
+def build_matched_graphs_per_service(
     *,
     services: Sequence[Service],
     graph: _GraphPlugin,

@@ -26,7 +26,7 @@ from ._graph import (
 )
 from ._matching import (
     build_matched_graphs,
-    match_graph_for_services,
+    build_matched_graphs_per_service,
 )
 from ._options import (
     ConsolidationFunction,
@@ -124,7 +124,7 @@ __all__ = [
     "VerticalRangeType",
     "build_matched_graphs",
     "fetch_available_metric_names",
-    "match_graph_for_services",
+    "build_matched_graphs_per_service",
     "metric_display_attributes",
     "build_curve",
     "evaluate_graphs",

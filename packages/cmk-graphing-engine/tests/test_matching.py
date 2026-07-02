@@ -13,6 +13,7 @@ from cmk.graphing.v2_unstable import metrics as metrics_v2_unstable
 from cmk.graphing_engine import (
     build_curve,
     build_matched_graphs,
+    build_matched_graphs_per_service,
     ConsolidationFunction,
     evaluate_graphs,
     EvaluatedGraph,
@@ -20,7 +21,6 @@ from cmk.graphing_engine import (
     Graph,
     HostName,
     Line,
-    match_graph_for_services,
     MetricName,
     Quantity,
     RawMetricNames,
@@ -529,7 +529,7 @@ def test_discover_template_graphs_ignores_a_predictive_metric_without_its_base()
     assert _discover(service, registered_graphs, rrd=rrd) == []
 
 
-def test_match_graph_for_services_adds_predictive_lines_per_service() -> None:
+def test_build_matched_graphs_per_service_adds_predictive_lines() -> None:
     # The combined primitive matches one plugin across several services; like the template path it
     # adds a predictive line wherever predict_* exists for that service, and only there.
     cpu_user = MetricName("cpu_user")
@@ -538,7 +538,7 @@ def test_match_graph_for_services_adds_predictive_lines_per_service() -> None:
     without_predict = Service(host_name=HostName("h2"), service_name=ServiceName("svc"))
     plugin = graphs_v1.Graph(name="cpu", title=Title("CPU"), simple_lines=["cpu_user"])
 
-    graphs = match_graph_for_services(
+    graphs = build_matched_graphs_per_service(
         services=[with_predict, without_predict],
         graph=plugin,
         metrics=_METRICS,
