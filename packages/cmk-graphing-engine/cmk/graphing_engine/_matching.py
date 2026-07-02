@@ -135,7 +135,7 @@ def match_graph_for_services(
     available: Mapping[Service, Container[MetricName]],
     graph_type: str,
 ) -> Sequence[Graph]:
-    discovered: list[Graph] = []
+    matched_graphs: list[Graph] = []
     for service in services:
         service_available = available.get(service, frozenset())
         if not _walk(graph, service_available).matched:
@@ -147,8 +147,8 @@ def match_graph_for_services(
             metrics,
             localizer,
         )
-        discovered.append(with_predictive)
-    return discovered
+        matched_graphs.append(with_predictive)
+    return matched_graphs
 
 
 def build_matched_graphs(
