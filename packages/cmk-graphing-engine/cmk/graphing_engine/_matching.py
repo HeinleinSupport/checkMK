@@ -160,7 +160,7 @@ def build_matched_graphs(
     available: Collection[MetricName],
     graph_type: str,
 ) -> Sequence[Graph]:
-    graphs: list[Graph] = []
+    matched_graphs: list[Graph] = []
     claimed: set[MetricName] = set()
 
     def _collect(base: Graph) -> None:
@@ -168,7 +168,7 @@ def build_matched_graphs(
             base, service, available, metrics, localizer
         )
         claimed.update(predictive_names)
-        graphs.append(graph)
+        matched_graphs.append(graph)
 
     for plugin in registered_graphs:
         walk = _walk(plugin, available)
@@ -210,4 +210,4 @@ def build_matched_graphs(
             )
         )
 
-    return graphs
+    return matched_graphs
