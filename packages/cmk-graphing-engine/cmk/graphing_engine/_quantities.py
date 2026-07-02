@@ -90,7 +90,7 @@ def _apply_operator(
     context: EvaluationContext,
 ) -> EvaluatedQuantity:
     values = [None if operand is None else operand.value for operand in operands]
-    series = [
+    time_series = [
         _constant_time_series(None, context.time_range) if operand is None else operand.time_series
         for operand in operands
     ]
@@ -98,7 +98,7 @@ def _apply_operator(
         value=None if any(value is None for value in values) else operator(values),
         time_series=TimeSeries(
             time_range=context.time_range,
-            values=[_apply(operator, point) for point in zip(*(ts.values for ts in series))],
+            values=[_apply(operator, point) for point in zip(*(ts.values for ts in time_series))],
         ),
     )
 

@@ -65,12 +65,12 @@ def _scaled(time_series: TimeSeries, scale: float) -> TimeSeries:
     )
 
 
-def _merge(series: Sequence[TimeSeries], time_range: TimeRange) -> TimeSeries:
+def _merge(time_series: Sequence[TimeSeries], time_range: TimeRange) -> TimeSeries:
     return TimeSeries(
         time_range=time_range,
         values=[
             next((value for value in point if value is not None), None)
-            for point in zip(*(member.values for member in series))
+            for point in zip(*(member.values for member in time_series))
         ],
     )
 

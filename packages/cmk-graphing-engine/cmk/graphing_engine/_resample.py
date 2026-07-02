@@ -32,7 +32,7 @@ def _aggregate(
 
 
 def _downsample(
-    series: TimeSeries,
+    time_series: TimeSeries,
     target: TimeRange,
     consolidation_function: ConsolidationFunction,
 ) -> Sequence[float | None]:
@@ -40,7 +40,7 @@ def _downsample(
     resampled: list[float | None] = []
     bucket: list[float | None] = []
     index = 0
-    for timestamp, value in zip(_timestamps(series.time_range), series.values):
+    for timestamp, value in zip(_timestamps(time_series.time_range), time_series.values):
         if index < len(desired) and timestamp > desired[index]:
             resampled.append(_aggregate(bucket, consolidation_function))
             bucket = []
@@ -52,27 +52,27 @@ def _downsample(
     return resampled
 
 
-def _forward_fill(series: TimeSeries, target: TimeRange) -> Sequence[float | None]:
-    source = series.time_range
-    last = len(series.values) - 1
+def _forward_fill(time_series: TimeSeries, target: TimeRange) -> Sequence[float | None]:
+    source = time_series.time_range
+    last = len(time_series.values) - 1
     return [
-        series.values[max(0, min((timestamp - source.start) // source.step, last))]
+        time_series.values[max(0, min((timestamp - source.start) // source.step, last))]
         for timestamp in range(target.start, target.end, target.step)
     ]
 
 
 def resample(
-    series: TimeSeries,
+    time_series: TimeSeries,
     target: TimeRange,
     consolidation_function: ConsolidationFunction,
 ) -> TimeSeries:
-    if series.time_range == target:
-        return series
-    if not series.values or series.time_range.step <= 0:
+    if time_series.time_range == target:
+        return time_series
+    if not time_series.values or time_series.time_range.step <= 0:
         return TimeSeries(time_range=target, values=[None] * len(_timestamps(target)))
     values = (
-        _downsample(series, target, consolidation_function)
-        if target.step >= series.time_range.step
-        else _forward_fill(series, target)
+        _downsample(time_series, target, consolidation_function)
+        if target.step >= time_series.time_range.step
+        else _forward_fill(time_series, target)
     )
     return TimeSeries(time_range=target, values=values)
