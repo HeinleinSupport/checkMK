@@ -137,7 +137,7 @@ def _evaluate_rule(rule: Rule, rule_id: str, context: EvaluationContext) -> Eval
 
 def _title_metrics(
     graph: Graph,
-    translated_metrics: Mapping[Service, Mapping[MetricName, PerformanceData]],
+    performance_data: Mapping[Service, Mapping[MetricName, PerformanceData]],
 ) -> Mapping[MetricName, PerformanceData]:
     services = {
         Service(host_name=metric.host_name, service_name=metric.service_name)
@@ -146,8 +146,8 @@ def _title_metrics(
     return {
         name: data
         for service in services
-        if service in translated_metrics
-        for name, data in translated_metrics[service].items()
+        if service in performance_data
+        for name, data in performance_data[service].items()
     }
 
 
