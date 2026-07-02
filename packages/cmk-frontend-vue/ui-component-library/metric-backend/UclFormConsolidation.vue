@@ -71,7 +71,9 @@ const model = ref<ConsolidationModel>(clonePreset(propState.value.preset))
 watch(
   () => propState.value.preset,
   (name) => {
-    model.value = clonePreset(name)
+    const preset = clonePreset(name)
+    model.value = preset
+    propState.value.availableTypes = [preset.type]
   }
 )
 </script>
