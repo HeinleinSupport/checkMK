@@ -137,10 +137,10 @@ def fetch_available_metric_names(
     rrd: RRDSource,
 ) -> Mapping[Service, frozenset[MetricName]]:
     parsed_translations = parse_translations_from_api(translations)
-    available = rrd.fetch_raw_metric_names(list(dict.fromkeys(services)))
+    raw_metric_names = rrd.fetch_raw_metric_names(list(dict.fromkeys(services)))
     return {
         service: translate_metric_names(raw_metrics, parsed_translations)
-        for service, raw_metrics in available.items()
+        for service, raw_metrics in raw_metric_names.items()
     }
 
 
