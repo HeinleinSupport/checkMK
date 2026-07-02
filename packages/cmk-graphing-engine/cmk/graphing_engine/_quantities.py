@@ -84,7 +84,7 @@ def _constant_time_series(value: float | None, time_range: TimeRange) -> TimeSer
     return TimeSeries(time_range=time_range, values=[value] * _num_points(time_range))
 
 
-def _combine(
+def _apply_operator(
     operator: _Operator,
     operands: Sequence[EvaluatedQuantity | None],
     context: EvaluationContext,
@@ -204,7 +204,7 @@ class Sum:
         evaluated = [summand.evaluate(context) for summand in self.summands]
         if not evaluated or evaluated[0] is None:
             return None
-        return _combine(_op_sum, evaluated, context)
+        return _apply_operator(_op_sum, evaluated, context)
 
 
 @dataclass(frozen=True)
@@ -220,7 +220,9 @@ class Product:
             yield from factor.rrd_metrics()
 
     def evaluate(self, context: EvaluationContext) -> EvaluatedQuantity:
-        return _combine(_op_product, [factor.evaluate(context) for factor in self.factors], context)
+        return _apply_operator(
+            _op_product, [factor.evaluate(context) for factor in self.factors], context
+        )
 
 
 @dataclass(frozen=True)
@@ -241,7 +243,9 @@ class Difference:
         minuend = self.minuend.evaluate(context)
         if minuend is None:
             return None
-        return _combine(_op_difference, [minuend, self.subtrahend.evaluate(context)], context)
+        return _apply_operator(
+            _op_difference, [minuend, self.subtrahend.evaluate(context)], context
+        )
 
 
 @dataclass(frozen=True)
@@ -259,6 +263,6 @@ class Fraction:
         yield from self.divisor.rrd_metrics()
 
     def evaluate(self, context: EvaluationContext) -> EvaluatedQuantity:
-        return _combine(
+        return _apply_operator(
             _op_fraction, [self.dividend.evaluate(context), self.divisor.evaluate(context)], context
         )
