@@ -31,8 +31,8 @@ def _form_spec_special_agents_rabbitmq():
         help_text=Help(
             "Request data from a RabbitMQ instance."
             " This special agent queries the HTTP API provided by"
-            " RabbitMQ's 'Management Plug-in'. You need to enable this"
-            " plug-in in your RabbitMQ instance."
+            " RabbitMQs 'Management Plugin'. You need to enable this"
+            " plugin in your RabbitMQ instance."
         ),
         elements={
             "instance": DictElement(
