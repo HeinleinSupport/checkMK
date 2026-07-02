@@ -86,9 +86,7 @@ class _FakeRRD:
         return {
             service: RawMetricNames(
                 check_command=self._performance_data[service].check_command,
-                metric_names=[
-                    value.metric_name for value in self._performance_data[service].values
-                ],
+                metric_names=list(self._performance_data[service].values),
             )
             for service in services
             if service in self._performance_data
@@ -180,12 +178,10 @@ def test_update_reproduces_a_title_expression_for_a_non_drawn_metric() -> None:
         performance_data={
             _SERVICE: RawPerformanceData(
                 check_command="check_mk-cpu",
-                values=[
-                    RawPerformanceValue(metric_name=MetricName("cpu_user"), value=3.0),
-                    RawPerformanceValue(
-                        metric_name=MetricName("cpu_cores"), value=8.0, maximum=8.0
-                    ),
-                ],
+                values={
+                    MetricName("cpu_user"): RawPerformanceValue(value=3.0),
+                    MetricName("cpu_cores"): RawPerformanceValue(value=8.0, maximum=8.0),
+                },
             )
         },
         time_series={_column("cpu_user"): _ts(1.0, 2.0, 3.0, 4.0, 5.0, 6.0)},
@@ -210,11 +206,11 @@ def test_update_reproduces_a_compound_and_simple_line_graph() -> None:
         performance_data={
             _SERVICE: RawPerformanceData(
                 check_command="check_mk-cpu",
-                values=[
-                    RawPerformanceValue(metric_name=MetricName("cpu_user"), value=10.0),
-                    RawPerformanceValue(metric_name=MetricName("cpu_system"), value=20.0),
-                    RawPerformanceValue(metric_name=MetricName("util"), value=30.0),
-                ],
+                values={
+                    MetricName("cpu_user"): RawPerformanceValue(value=10.0),
+                    MetricName("cpu_system"): RawPerformanceValue(value=20.0),
+                    MetricName("util"): RawPerformanceValue(value=30.0),
+                },
             )
         },
         time_series={
@@ -237,7 +233,7 @@ def test_update_reproduces_a_fallback_single_metric_graph() -> None:
         performance_data={
             _SERVICE: RawPerformanceData(
                 check_command="check_mk-cpu",
-                values=[RawPerformanceValue(metric_name=MetricName("temp"), value=42.0)],
+                values={MetricName("temp"): RawPerformanceValue(value=42.0)},
             )
         },
         time_series={_column("temp"): _ts(40.0, 41.0, 42.0, 43.0, 44.0, 45.0)},
@@ -263,7 +259,7 @@ def test_update_reproduces_a_renamed_and_scaled_metric() -> None:
         performance_data={
             _SERVICE: RawPerformanceData(
                 check_command="check_mk-cpu",
-                values=[RawPerformanceValue(metric_name=MetricName("temperature"), value=21.0)],
+                values={MetricName("temperature"): RawPerformanceValue(value=21.0)},
             )
         },
         time_series={_column("temperature"): _ts(10.0, 10.0, 10.0, 10.0, 10.0, 10.0)},
@@ -284,10 +280,10 @@ def test_update_reproduces_several_graphs_in_order() -> None:
         performance_data={
             _SERVICE: RawPerformanceData(
                 check_command="check_mk-cpu",
-                values=[
-                    RawPerformanceValue(metric_name=MetricName("cpu_user"), value=5.0),
-                    RawPerformanceValue(metric_name=MetricName("temp"), value=42.0),
-                ],
+                values={
+                    MetricName("cpu_user"): RawPerformanceValue(value=5.0),
+                    MetricName("temp"): RawPerformanceValue(value=42.0),
+                },
             )
         },
         time_series={
@@ -312,7 +308,7 @@ def test_update_reproduces_a_natively_gridded_series() -> None:
         performance_data={
             _SERVICE: RawPerformanceData(
                 check_command="check_mk-cpu",
-                values=[RawPerformanceValue(metric_name=MetricName("cpu_user"), value=1.0)],
+                values={MetricName("cpu_user"): RawPerformanceValue(value=1.0)},
             )
         },
         time_series={
@@ -333,10 +329,12 @@ def test_update_reproduces_a_natively_gridded_series() -> None:
 
 
 def _cpu_rrd(*, value: float, series: TimeSeries) -> _FakeRRD:
-    plugin_metric = RawPerformanceValue(metric_name=MetricName("cpu_user"), value=value)
     return _FakeRRD(
         performance_data={
-            _SERVICE: RawPerformanceData(check_command="check_mk-cpu", values=[plugin_metric])
+            _SERVICE: RawPerformanceData(
+                check_command="check_mk-cpu",
+                values={MetricName("cpu_user"): RawPerformanceValue(value=value)},
+            )
         },
         time_series={_column("cpu_user"): series},
     )
@@ -370,12 +368,12 @@ def test_refresh_picks_up_a_changed_title_scalar() -> None:
             performance_data={
                 _SERVICE: RawPerformanceData(
                     check_command="check_mk-cpu",
-                    values=[
-                        RawPerformanceValue(metric_name=MetricName("cpu_user"), value=3.0),
-                        RawPerformanceValue(
-                            metric_name=MetricName("cpu_cores"), value=cores_max, maximum=cores_max
+                    values={
+                        MetricName("cpu_user"): RawPerformanceValue(value=3.0),
+                        MetricName("cpu_cores"): RawPerformanceValue(
+                            value=cores_max, maximum=cores_max
                         ),
-                    ],
+                    },
                 )
             },
             time_series={_column("cpu_user"): _ts(1.0, 1.0, 1.0, 1.0, 1.0, 1.0)},
@@ -401,10 +399,10 @@ def test_refresh_drops_a_curve_whose_metric_disappeared() -> None:
         performance_data={
             _SERVICE: RawPerformanceData(
                 check_command="check_mk-cpu",
-                values=[
-                    RawPerformanceValue(metric_name=MetricName("cpu_user"), value=3.0),
-                    RawPerformanceValue(metric_name=MetricName("cpu_system"), value=4.0),
-                ],
+                values={
+                    MetricName("cpu_user"): RawPerformanceValue(value=3.0),
+                    MetricName("cpu_system"): RawPerformanceValue(value=4.0),
+                },
             )
         },
         time_series={
@@ -417,7 +415,7 @@ def test_refresh_drops_a_curve_whose_metric_disappeared() -> None:
         performance_data={
             _SERVICE: RawPerformanceData(
                 check_command="check_mk-cpu",
-                values=[RawPerformanceValue(metric_name=MetricName("cpu_user"), value=3.0)],
+                values={MetricName("cpu_user"): RawPerformanceValue(value=3.0)},
             )
         },
         time_series={_column("cpu_user"): _ts(3.0, 3.0, 3.0, 3.0, 3.0, 3.0)},

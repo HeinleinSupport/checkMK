@@ -12,5 +12,5 @@ def test_parse_performance_data_merges_rrd_only_metrics() -> None:
     parsed = EngineRRDSource.parse_performance_data(
         "live=5", "check_mk-foo", ["live", "rrd_only"], debug=False
     )
-    by_name = {value.metric_name: value.value for value in parsed.values}
+    by_name = {name: value.value for name, value in parsed.values.items()}
     assert by_name == {"live": 5.0, "rrd_only": 1.0}

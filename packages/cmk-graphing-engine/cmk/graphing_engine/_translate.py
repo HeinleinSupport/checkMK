@@ -102,12 +102,12 @@ def translate_performance_data(
     )
     originals_by_name: dict[MetricName, list[RRDOriginal]] = {}
     raw_value_by_name: dict[MetricName, tuple[RawPerformanceValue, float]] = {}
-    for raw_perf_value in raw_performance_data.values:
-        prefix, bare_name = _split_predict_prefix(raw_perf_value.metric_name)
+    for original_name, raw_perf_value in raw_performance_data.values.items():
+        prefix, bare_name = _split_predict_prefix(original_name)
         translation = _find_translation(MetricName(bare_name), command_translations)
         name = MetricName(f"{prefix}{translation.name}")
         originals_by_name.setdefault(name, []).append(
-            RRDOriginal(metric_name=raw_perf_value.metric_name, scale=translation.scale)
+            RRDOriginal(metric_name=original_name, scale=translation.scale)
         )
         raw_value_by_name[name] = (raw_perf_value, translation.scale)
 

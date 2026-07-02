@@ -122,9 +122,8 @@ def _perf(
     critical: float | None = None,
     minimum: float | None = None,
     maximum: float | None = None,
-) -> RawPerformanceValue:
-    return RawPerformanceValue(
-        metric_name=name,
+) -> tuple[MetricName, RawPerformanceValue]:
+    return name, RawPerformanceValue(
         value=1.0,
         lower_warning=lower_warning,
         lower_critical=lower_critical,
@@ -135,8 +134,8 @@ def _perf(
     )
 
 
-def _perf_data(*values: RawPerformanceValue) -> RawPerformanceData:
-    return RawPerformanceData(check_command="", values=list(values))
+def _perf_data(*values: tuple[MetricName, RawPerformanceValue]) -> RawPerformanceData:
+    return RawPerformanceData(check_command="", values=dict(values))
 
 
 class _FakeFetchRRD:
@@ -155,7 +154,7 @@ class _FakeFetchRRD:
         return {
             service: RawMetricNames(
                 check_command=raw.check_command,
-                metric_names=[value.metric_name for value in raw.values],
+                metric_names=list(raw.values),
             )
             for service, raw in self._performance_response.items()
         }

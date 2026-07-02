@@ -71,12 +71,12 @@ def _line(quantity: Quantity, *, inverse: bool = False) -> Line:
     return Line(curve=_curve(quantity), inverse=inverse)
 
 
-def _perf(name: str, *, value: float = 1.0) -> RawPerformanceValue:
-    return RawPerformanceValue(metric_name=MetricName(name), value=value)
+def _perf(name: str, *, value: float = 1.0) -> tuple[MetricName, RawPerformanceValue]:
+    return MetricName(name), RawPerformanceValue(value=value)
 
 
-def _perf_data(*values: RawPerformanceValue) -> RawPerformanceData:
-    return RawPerformanceData(check_command="check_mk-test", values=list(values))
+def _perf_data(*values: tuple[MetricName, RawPerformanceValue]) -> RawPerformanceData:
+    return RawPerformanceData(check_command="check_mk-test", values=dict(values))
 
 
 def _ts(*values: float | None) -> TimeSeries:
@@ -351,7 +351,7 @@ def test_resolves_a_title_expression_against_a_non_drawn_metric() -> None:
         performance_response={
             _service(): _perf_data(
                 _perf("load"),
-                RawPerformanceValue(metric_name=MetricName("cores"), value=4.0, maximum=8.0),
+                (MetricName("cores"), RawPerformanceValue(value=4.0, maximum=8.0)),
             )
         },
         time_series_response={_source("load"): _ts(1.0)},

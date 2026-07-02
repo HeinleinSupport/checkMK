@@ -3,7 +3,7 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from typing import NewType, Self
 
@@ -62,7 +62,6 @@ class TimeSeries:
 
 @dataclass(frozen=True, kw_only=True)
 class RawPerformanceValue:
-    metric_name: MetricName
     value: float
     warning: float | None = None
     critical: float | None = None
@@ -75,7 +74,7 @@ class RawPerformanceValue:
 @dataclass(frozen=True, kw_only=True)
 class RawPerformanceData:
     check_command: str
-    values: Sequence[RawPerformanceValue]
+    values: Mapping[MetricName, RawPerformanceValue]
 
 
 @dataclass(frozen=True, kw_only=True)

@@ -96,7 +96,7 @@ def _parse_check_command(check_command: str) -> str:
 
 def _parse_perf_data(
     perf_data_string: str, check_command: str, *, debug: bool
-) -> tuple[Sequence[RawPerformanceValue], str]:
+) -> tuple[Mapping[MetricName, RawPerformanceValue], str]:
     check_command = _parse_check_command(check_command)
 
     parts = shlex.split(perf_data_string)
@@ -105,7 +105,7 @@ def _parse_perf_data(
         del parts[-1]
     check_command = check_command.replace(".", "_")
 
-    perf_data: list[RawPerformanceValue] = []
+    perf_data: dict[MetricName, RawPerformanceValue] = {}
     for part in parts:
         try:
             varname, value_text, value_parts = _parse_perf_values(part)
@@ -114,17 +114,14 @@ def _parse_perf_data(
                 continue
             warn_lower, warn = _parse_range(value_parts[0])
             crit_lower, crit = _parse_range(value_parts[1])
-            perf_data.append(
-                RawPerformanceValue(
-                    metric_name=MetricName(varname),
-                    value=value,
-                    warning=warn,
-                    critical=crit,
-                    lower_warning=warn_lower,
-                    lower_critical=crit_lower,
-                    minimum=_float_or_int(value_parts[2]),
-                    maximum=_float_or_int(value_parts[3]),
-                )
+            perf_data[MetricName(varname)] = RawPerformanceValue(
+                value=value,
+                warning=warn,
+                critical=crit,
+                lower_warning=warn_lower,
+                lower_critical=crit_lower,
+                minimum=_float_or_int(value_parts[2]),
+                maximum=_float_or_int(value_parts[3]),
             )
         except Exception as exc:
             logger.exception("Failed to parse perfdata '%s'", perf_data_string)
@@ -166,11 +163,10 @@ class EngineRRDSource:
                 check_command,
                 debug=debug,
             )
-            present = {value.metric_name for value in perf_data}
-            perf_data = [
-                *perf_data,
-                *(value for value in rrd_only if value.metric_name not in present),
-            ]
+            perf_data = {
+                **perf_data,
+                **{name: value for name, value in rrd_only.items() if name not in perf_data},
+            }
         return RawPerformanceData(check_command=normalized_check_command, values=perf_data)
 
     def fetch_available_metric_names(
@@ -197,7 +193,7 @@ class EngineRRDSource:
                 )
                 result[Service(host_name=host_name, service_name=description)] = RawMetricNames(
                     check_command=raw.check_command,
-                    metric_names=[value.metric_name for value in raw.values],
+                    metric_names=list(raw.values),
                 )
         return {service: result[service] for service in unique if service in result}
 

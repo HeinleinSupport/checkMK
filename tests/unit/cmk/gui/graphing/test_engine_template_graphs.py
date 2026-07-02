@@ -52,7 +52,7 @@ class _FakeRRD:
         return {
             service: RawPerformanceData(
                 check_command="check_mk-foo",
-                values=[RawPerformanceValue(metric_name=MetricName(_METRIC), value=1.0)],
+                values={MetricName(_METRIC): RawPerformanceValue(value=1.0)},
             )
             for service in services
         }
@@ -63,7 +63,7 @@ class _FakeRRD:
         return {
             service: RawMetricNames(
                 check_command=raw.check_command,
-                metric_names=[value.metric_name for value in raw.values],
+                metric_names=list(raw.values),
             )
             for service, raw in self._data(services).items()
         }
