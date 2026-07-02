@@ -105,7 +105,7 @@ def _parse_perf_data(
         del parts[-1]
     check_command = check_command.replace(".", "_")
 
-    perf_data: dict[MetricName, RawPerformanceValue] = {}
+    raw_perf_data: dict[MetricName, RawPerformanceValue] = {}
     for part in parts:
         try:
             varname, value_text, value_parts = _parse_perf_values(part)
@@ -114,7 +114,7 @@ def _parse_perf_data(
                 continue
             lower_warning, warning = _parse_range(value_parts[0])
             lower_critical, critical = _parse_range(value_parts[1])
-            perf_data[MetricName(varname)] = RawPerformanceValue(
+            raw_perf_data[MetricName(varname)] = RawPerformanceValue(
                 value=value,
                 warning=warning,
                 critical=critical,
@@ -127,7 +127,7 @@ def _parse_perf_data(
             logger.exception("Failed to parse perfdata '%s'", perf_data_string)
             if debug:
                 raise exc
-    return perf_data, check_command
+    return raw_perf_data, check_command
 
 
 def _service_or_filter(services: Sequence[Service]) -> str:
@@ -154,7 +154,7 @@ class EngineRRDSource:
         *,
         debug: bool,
     ) -> RawPerformanceData:
-        perf_data, normalized_check_command = _parse_perf_data(
+        raw_perf_data, normalized_check_command = _parse_perf_data(
             perf_data_string, check_command, debug=debug
         )
         if rrd_metrics:
@@ -163,11 +163,11 @@ class EngineRRDSource:
                 check_command,
                 debug=debug,
             )
-            perf_data = {
-                **perf_data,
-                **{name: value for name, value in rrd_only.items() if name not in perf_data},
+            raw_perf_data = {
+                **raw_perf_data,
+                **{name: value for name, value in rrd_only.items() if name not in raw_perf_data},
             }
-        return RawPerformanceData(check_command=normalized_check_command, values=perf_data)
+        return RawPerformanceData(check_command=normalized_check_command, values=raw_perf_data)
 
     def fetch_raw_metric_names(
         self, services: Sequence[Service]
