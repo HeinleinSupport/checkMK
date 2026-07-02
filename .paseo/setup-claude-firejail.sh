@@ -40,8 +40,19 @@ else
     exit 1
 fi
 
-# --- 2. Register the "claude-firejail" provider (idempotent) -----------------
-# Always write the config as ${user} so it stays owned by them even under sudo.
+# --- 2. Install the launcher + register the "claude-firejail" provider --------
+# Point the provider at an absolute ~/.paseo/bin path, not this checkout: paseo
+# probes "<command> --version" from its daemon's cwd, so a worktree-local path
+# resolves to nothing and the provider silently vanishes once the worktree is
+# pruned. Written as ${user} so the copy stays user-owned even under sudo.
+install_launcher() {
+    local launcher_source="$1" home="$2" installed_launcher
+    installed_launcher="${home}/.paseo/bin/$(basename "${launcher_source}")"
+    install -D -m 755 "${launcher_source}" "${installed_launcher}"
+    echo "Installed launcher to ${installed_launcher}." >&2
+    printf '%s\n' "${installed_launcher}"
+}
+
 register_provider() {
     local config="$1" cmd="$2" tmp
     mkdir -p "$(dirname "${config}")"
@@ -57,11 +68,19 @@ register_provider() {
 }
 
 if [[ ${EUID} -eq 0 && "${user}" != "root" ]]; then
+    launcher="$(sudo -u "${user}" bash -c \
+        "$(declare -f install_launcher); install_launcher \"\$1\" \"\$2\"" \
+        _ "${script_dir}/claude-firejail" "${home}")"
+else
+    launcher="$(install_launcher "${script_dir}/claude-firejail" "${home}")"
+fi
+
+if [[ ${EUID} -eq 0 && "${user}" != "root" ]]; then
     sudo -u "${user}" bash -c \
         "$(declare -f register_provider); register_provider \"\$1\" \"\$2\"" \
-        _ "${config}" "${script_dir}/claude-firejail"
+        _ "${config}" "${launcher}"
 else
-    register_provider "${config}" "${script_dir}/claude-firejail"
+    register_provider "${config}" "${launcher}"
 fi
 
 echo "Registered the \"Claude (firejail)\" provider in ${config}."
