@@ -184,7 +184,7 @@ def _special_agents_ipmi_sensors_vs_ipmitool() -> Dictionary:
                 parameter_form=SingleChoice(
                     title=Title("IPMI interface"),
                     help_text=Help(
-                        "IPMI Interface to be used. If not specified, the default interface as set "
+                        "IPMI interface to be used. If not specified, the default interface as set "
                         "at compile time will be used."
                     ),
                     elements=[
@@ -209,7 +209,7 @@ def _parameter_form() -> Dictionary:
     return Dictionary(
         title=Title("IPMI sensors via Freeipmi or IPMItool"),
         help_text=Help(
-            "This rule selects the Agent IPMI Sensors instead of the normal Checkmk Agent "
+            "This rule selects the agent IPMI Sensors instead of the normal Checkmk agent "
             "which collects the data through the FreeIPMI resp. IPMItool command"
         ),
         elements={

@@ -29,7 +29,7 @@ def _valuespec_agent_config_mk_logins() -> Dictionary:
     return Dictionary(
         help_text=Help(
             "Hosts configured via this rule get the <tt>mk_logins</tt> plug-in deployed."
-            " This plug-in counts the number of logged in users on Linux hosts."
+            " This plug-in counts the number of logged-in users on Linux hosts."
         ),
         elements={
             "deployment": DictElement(
