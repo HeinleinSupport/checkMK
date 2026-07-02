@@ -195,7 +195,7 @@ def load_object_from_file(path: Path, *, default: Any, lock: bool = False) -> An
         try:
             return ObjectStore(path, serializer=DimSerializer()).read_obj(default=default)
         except (SyntaxError, ValueError):
-            logger.warning("Failed to deserialize %s, returning default", path)
+            logger.warning("Failed to deserialize %(path)s, returning default", {"path": path})
             return default
 
 

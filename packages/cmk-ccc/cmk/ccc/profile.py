@@ -81,7 +81,7 @@ class Profile:
         if not self._profile:
             return
         self._profile.dump_stats(str(self._profile_file))
-        logger.info("Created profile file: %s", self._profile_file)
+        logger.info("Created profile file: %(profile_file)s", {"profile_file": self._profile_file})
 
     def _write_dump_script(self) -> None:
         if not self._profile_file:
@@ -96,7 +96,7 @@ class Profile:
                 "stats.sort_stats('cumtime').print_stats()\n"
             )
         script_path.chmod(0o755)
-        logger.info("Created profile dump script: %s", script_path)
+        logger.info("Created profile dump script: %(script_path)s", {"script_path": script_path})
 
 
 P = ParamSpec("P")

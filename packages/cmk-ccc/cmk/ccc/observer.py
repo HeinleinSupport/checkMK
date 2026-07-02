@@ -45,10 +45,14 @@ class ABCResourceObserver(abc.ABC):
         return f'[cycle {self._num_check_cycles}, host "{self._hint}"]'
 
     def _warning(self, message: str) -> None:
-        self._logger.warning("%s %s", self._context(), message)
+        self._logger.warning(
+            "%(context)s %(message)s", {"context": self._context(), "message": message}
+        )
 
     def _error(self, message: str) -> None:
-        self._logger.error("%s %s", self._context(), message)
+        self._logger.error(
+            "%(context)s %(message)s", {"context": self._context(), "message": message}
+        )
 
     def _verbose_output_enabled(self) -> bool:
         return self._logger.isEnabledFor(DEBUG)

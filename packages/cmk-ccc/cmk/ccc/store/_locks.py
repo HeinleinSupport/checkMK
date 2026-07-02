@@ -169,7 +169,7 @@ def acquire_lock(path: Path, blocking: bool = True) -> bool:
     if have_lock(path):
         return False
 
-    logger.debug("Trying to acquire lock on %s", path)
+    logger.debug("Trying to acquire lock on %(path)s", {"path": path})
     # Create file (and base dir) for locking if not existent yet
     path.parent.mkdir(mode=0o770, exist_ok=True, parents=True)
     flags = fcntl.LOCK_EX | (0 if blocking else fcntl.LOCK_NB)
@@ -181,7 +181,7 @@ def acquire_lock(path: Path, blocking: bool = True) -> bool:
             with _open_lock_file(path) as fd_new:
                 if os.path.sameopenfile(fd, fd_new):
                     _set_lock(path, os.dup(fd))
-                    logger.debug("Got lock on %s", path)
+                    logger.debug("Got lock on %(path)s", {"path": path})
                     return True
 
 
@@ -219,7 +219,7 @@ def release_lock(path: Path) -> None:
     if (fd := _get_lock(path)) is None:
         return
 
-    logger.debug("Releasing lock on %s", path)
+    logger.debug("Releasing lock on %(path)s", {"path": path})
     try:
         os.close(fd)
     except OSError as e:
@@ -227,11 +227,11 @@ def release_lock(path: Path) -> None:
             raise
     finally:
         _del_lock(path)
-        logger.debug("Released lock on %s", path)
+        logger.debug("Released lock on %(path)s", {"path": path})
 
 
 def release_all_locks() -> None:
-    logger.debug("Releasing all acquired locks: %r", _acquired_locks())
+    logger.debug("Releasing all acquired locks: %(locks)r", {"locks": _acquired_locks()})
     for path in _get_lock_keys():
         release_lock(path)
 
