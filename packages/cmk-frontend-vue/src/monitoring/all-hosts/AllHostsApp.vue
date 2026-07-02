@@ -37,7 +37,10 @@ import RefreshCountdown from '../shared/components/RefreshCountdown.vue'
 import ActionFeedback from '../shared/components/action/ActionFeedback.vue'
 import MonitoringActionBar from '../shared/components/action/MonitoringActionBar.vue'
 import MonitoringActionPane from '../shared/components/action/MonitoringActionPane.vue'
-import { useAcknowledgeAction } from '../shared/components/action/actions/acknowledge'
+import {
+  ACK_ACTION_ID,
+  useAcknowledgeAction
+} from '../shared/components/action/actions/acknowledge'
 import { useRescheduleAction } from '../shared/components/action/actions/reschedule'
 import { createActionRegistry } from '../shared/components/action/registry'
 import { useMonitoringActions } from '../shared/services/useMonitoringActions'
@@ -49,7 +52,9 @@ const { _t } = usei18n()
 
 const props = defineProps<MonitoringAllHostsApp>()
 
-const ACTION_ICONS: Record<string, SimpleIcons> = {}
+const ACTION_ICONS: Record<string, SimpleIcons> = {
+  [ACK_ACTION_ID]: 'ack'
+}
 
 const hostActions: CellAction[] = (props.actions ?? []).map((action) => ({
   id: action.ident,
@@ -214,7 +219,7 @@ const columns: ColumnDef<HostEntry>[] = [
     ? [
         {
           id: 'actions',
-          header: '',
+          header: 'Actions',
           enableSorting: false,
           minSize: 96,
           maxSize: 120,
