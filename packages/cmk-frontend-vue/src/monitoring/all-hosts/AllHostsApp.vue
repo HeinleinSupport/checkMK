@@ -48,6 +48,8 @@ const { _t } = usei18n()
 
 const props = defineProps<MonitoringAllHostsApp>()
 
+const ACTION_ICONS: Record<string, SimpleIcons> = {}
+
 const hostActions: CellAction[] = (props.actions ?? []).map((action) => ({
   id: action.ident,
   label: action.title as TranslatedString,
@@ -223,7 +225,7 @@ const columns: ColumnDef<HostEntry>[] = [
     ? [
         {
           id: 'actions',
-          header: 'Actions',
+          header: '',
           enableSorting: false,
           minSize: 96,
           maxSize: 120,
@@ -264,10 +266,6 @@ const hostService = new HostService(new HostApi(), getKeyShortcutServiceInstance
 const searchInput = useTemplateRef<{ focus: () => void }>('searchInput')
 
 const rowSelection = ref<RowSelectionState>({})
-
-const ACTION_ICONS: Record<string, SimpleIcons> = {
-  ACK_ACTION_ID: 'ack'
-}
 
 const actionRegistry = createActionRegistry([useAcknowledgeAction()])
 const {
