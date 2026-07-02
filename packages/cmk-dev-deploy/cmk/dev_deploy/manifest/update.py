@@ -297,7 +297,7 @@ def _discover_config_specs(
         # Drop entries from external Bazel repos — unpatchable from the local checkout
         editable_entries = [e for e in entries if not _is_external_src(e[2])]
         if not editable_entries:
-            logger.debug("Skipping %s: only external sources", target_label)
+            logger.debug("Skipping %(target)s: only external sources", {"target": target_label})
             continue
 
         # Group by source-tree root so heterogeneous targets (e.g. //bin:bin_755,
@@ -334,7 +334,10 @@ def _discover_config_specs(
             common_dest = _common_directory(dest_paths)
 
             if not common_dest:
-                logger.debug("Skipping %s group %r: no common site_dest", target_label, root)
+                logger.debug(
+                    "Skipping %(target)s group %(root)r: no common site_dest",
+                    {"target": target_label, "root": root},
+                )
                 continue
 
             files: list[dict[str, Any]] = sorted(
@@ -432,15 +435,16 @@ def _run_bazel_query(
             timeout=timeout,
         )
     except subprocess.TimeoutExpired:
-        logger.warning("Bazel query timed out after %ds for: %s", timeout, args)
+        logger.warning(
+            "Bazel query timed out after %(timeout)ds for: %(args)s",
+            {"timeout": timeout, "args": args},
+        )
         return None
 
     if result.returncode not in (0, 3):
         logger.warning(
-            "Bazel query failed (exit %d) for: %s -- %s",
-            result.returncode,
-            args,
-            result.stderr.strip(),
+            "Bazel query failed (exit %(exit_code)d) for: %(args)s -- %(stderr)s",
+            {"exit_code": result.returncode, "args": args, "stderr": result.stderr.strip()},
         )
         return None
 
@@ -737,9 +741,8 @@ def _enrich_config_specs(
         rule_elem = rule_attrs.get(pt)
         if rule_elem is None:
             logger.warning(
-                "No PackageFilesInfo or rule attributes for package_target %s (spec %s)",
-                pt,
-                spec.get("name", "?"),
+                "No PackageFilesInfo or rule attributes for package_target %(package_target)s (spec %(spec)s)",
+                {"package_target": pt, "spec": spec.get("name", "?")},
             )
             continue
 
@@ -812,9 +815,8 @@ def _enrich_install_specs(
         entries = pkg_data.get(pt)
         if not entries:
             logger.warning(
-                "No PackageFilesInfo for package_target %s (spec %s)",
-                pt,
-                spec.get("name", "?"),
+                "No PackageFilesInfo for package_target %(package_target)s (spec %(spec)s)",
+                {"package_target": pt, "spec": spec.get("name", "?")},
             )
             continue
 
@@ -1061,9 +1063,8 @@ def _compute_categorization_rules(
         extensions = install_spec_extensions.get(source_prefix, frozenset())
         if not extensions:
             logger.debug(
-                "No source extensions found for install spec %s (%s); skipping",
-                spec.get("name", "?"),
-                source_prefix,
+                "No source extensions found for install spec %(spec)s (%(source_prefix)s); skipping",
+                {"spec": spec.get("name", "?"), "source_prefix": source_prefix},
             )
             continue
 
@@ -1073,9 +1074,8 @@ def _compute_categorization_rules(
         )
         if category is None:
             logger.debug(
-                "Cannot determine category for install spec %s (extensions: %s); skipping",
-                spec.get("name", "?"),
-                extensions,
+                "Cannot determine category for install spec %(spec)s (extensions: %(extensions)s); skipping",
+                {"spec": spec.get("name", "?"), "extensions": extensions},
             )
             continue
 

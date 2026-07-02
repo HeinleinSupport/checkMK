@@ -132,9 +132,8 @@ def _parse_categorization_rule(raw: dict[str, Any]) -> CategorizationRule | None
         category = ChangeCategory(raw["category"])
     except ValueError:
         logger.warning(
-            "Skipping categorization rule with unknown category %r (prefix: %s)",
-            raw["category"],
-            raw.get("prefix", "?"),
+            "Skipping categorization rule with unknown category %(category)r (prefix: %(prefix)s)",
+            {"category": raw["category"], "prefix": raw.get("prefix", "?")},
         )
         return None
 
