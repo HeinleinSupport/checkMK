@@ -8,7 +8,7 @@ from collections.abc import Iterable, Mapping, Sequence
 from pathlib import Path
 from typing import Any, Literal, NewType
 
-from livestatus import SiteConfigurations
+from livestatus import AuthenticationConnectionEntry, SiteConfigurations
 
 from cmk.ccc.site import SiteId
 from cmk.ccc.version import Edition
@@ -27,7 +27,7 @@ from cmk.gui.page_menu import (
     PageMenuSearch,
     PageMenuTopic,
 )
-from cmk.gui.site_config import wato_site_ids
+from cmk.gui.site_config import site_is_local, wato_site_ids
 from cmk.gui.table import table_element
 from cmk.gui.type_defs import ActionResult, IconNames, StaticIcon
 from cmk.gui.user_connection_config_types import ConfigurableUserConnectionSpec
@@ -220,6 +220,49 @@ def get_affected_sites(
         assert customer is not None
         return list(_customer_api.get_sites_of_customer(customer).keys())
     return wato_site_ids(site_configs)
+
+
+def _references_connection(entry: AuthenticationConnectionEntry, connection_id: str) -> bool:
+    if entry[0] == "ldap":
+        return entry[1] == connection_id
+    return entry[1]["connection_id"] == connection_id
+
+
+def sites_with_dangling_login_reference(
+    site_configs: SiteConfigurations,
+    connection_id: str,
+    customer: str | None,
+) -> list[SiteId]:
+    """Sites that reference the connection for login but would no longer receive it.
+
+    In the ultimatemt edition a connection is only synchronized to the sites of its
+    customer (or to all sites if it is scoped globally). A remote site that explicitly
+    lists the connection in its ``authentication_connections`` but belongs to a
+    different customer would be left with a dead login reference. The central site is
+    exempt: as the configuration master it always has every connection.
+
+    Sites without an explicit ``authentication_connections`` value inherit the central
+    site's selection, which is resolved dynamically and simply skips connections that
+    are not available on the site — those are not reported here.
+
+    Outside the ultimatemt edition the customer API stub treats every scope as global,
+    so this always returns an empty list.
+    """
+    _customer_api = customer_api()
+    if _customer_api.is_global(customer):
+        return []
+    assert customer is not None
+    receiving_sites = set(_customer_api.get_sites_of_customer(customer))
+    return [
+        site_id
+        for site_id, site_config in site_configs.items()
+        if site_id not in receiving_sites
+        and not site_is_local(site_config)
+        and any(
+            _references_connection(entry, connection_id)
+            for entry in site_config.get("authentication_connections") or []
+        )
+    ]
 
 
 def _delete_connection(

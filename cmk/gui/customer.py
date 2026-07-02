@@ -16,7 +16,9 @@ from cmk.ccc.site import SiteId
 from cmk.ccc.version import edition
 from cmk.gui.groups import GroupSpec
 from cmk.gui.hooks import request_memoize
+from cmk.gui.type_defs import UserSpec
 from cmk.gui.valuespec import DropdownChoice, ValueSpec
+from cmk.rulesets.v1.form_specs import FormSpec
 from cmk.utils import paths
 
 CustomerId = str
@@ -73,6 +75,12 @@ class ABCCustomerAPI(ABC):
 
     @classmethod
     @abstractmethod
+    def customer_choice_form_spec(
+        cls, deflt: CustomerId | None = None, with_global: bool = True
+    ) -> list[tuple[str, FormSpec]]: ...
+
+    @classmethod
+    @abstractmethod
     def is_provider(cls, customer_id: CustomerIdOrGlobal) -> bool: ...
 
     @classmethod
@@ -82,6 +90,16 @@ class ABCCustomerAPI(ABC):
     @classmethod
     @abstractmethod
     def customer_collection(cls) -> list[CustomerIdOrGlobal]: ...
+
+    @classmethod
+    @abstractmethod
+    def set_customer_for_user(cls, user: UserSpec, customer_id: CustomerId | None) -> None:
+        """Scope a user created by a connection to the connection's customer.
+
+        The user's customer decides which sites the user is synchronized to. Users of a
+        globally scoped connection (``customer_id`` is ``None``) are assigned the
+        provider customer. Editions without multi-tenancy leave the user untouched.
+        """
 
 
 class CustomerAPIStub(ABCCustomerAPI):
@@ -136,6 +154,13 @@ class CustomerAPIStub(ABCCustomerAPI):
 
     @override
     @classmethod
+    def customer_choice_form_spec(
+        cls, deflt: CustomerId | None = None, with_global: bool = True
+    ) -> list[tuple[str, FormSpec]]:
+        return []
+
+    @override
+    @classmethod
     def is_provider(cls, customer_id: CustomerIdOrGlobal) -> bool:
         return False
 
@@ -148,6 +173,11 @@ class CustomerAPIStub(ABCCustomerAPI):
     @classmethod
     def customer_collection(cls) -> list[CustomerIdOrGlobal]:
         return []
+
+    @override
+    @classmethod
+    def set_customer_for_user(cls, user: UserSpec, customer_id: CustomerId | None) -> None:
+        pass
 
 
 @request_memoize()

@@ -75,7 +75,6 @@ from ldap.controls import (
     SimplePagedResultsControl,  # type: ignore[import-untyped,unused-ignore]
 )
 
-import cmk.ccc.version as cmk_version
 import cmk.utils.paths
 from cmk.ccc import store
 from cmk.ccc.exceptions import MKGeneralException
@@ -396,13 +395,6 @@ def _load_copy_of_existing_user(
     return None
 
 
-def _set_customer_for_user(user: UserSpec, customer_id: str | None) -> None:
-    if cmk_version.edition(cmk.utils.paths.omd_root) is cmk_version.Edition.ULTIMATEMT:
-        user["customer"] = (
-            customer_api().default_customer_id() if customer_id is None else customer_id
-        )
-
-
 def _create_checkmk_user_for_this_ldap_connection(
     new_user_id: UserId,
     existing_users: Users,
@@ -416,7 +408,7 @@ def _create_checkmk_user_for_this_ldap_connection(
             _("The user ID '%s' already exists") % new_user_id,
         )
     new_user_spec = new_user_template(ldap_connector_id, default_user_profile)
-    _set_customer_for_user(user=new_user_spec, customer_id=ldap_connector_customer_id)
+    customer_api().set_customer_for_user(new_user_spec, ldap_connector_customer_id)
     new_user_spec.setdefault("alias", new_user_id)
     add_internal_attributes(new_user_spec)
     return new_user_spec
