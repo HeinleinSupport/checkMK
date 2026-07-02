@@ -105,7 +105,7 @@ class _FakeRRDSource:
     ) -> Mapping[Service, RawMetricNames]:
         return self._available_response
 
-    def fetch_performance_data(
+    def fetch_raw_performance_data(
         self, rrd_metrics: Sequence[RRDMetric]
     ) -> Mapping[Service, RawPerformanceData]:
         self.performance_data_calls.append(tuple(rrd_metrics))

@@ -159,7 +159,7 @@ class _FakeFetchRRD:
             for service, raw in self._performance_response.items()
         }
 
-    def fetch_performance_data(
+    def fetch_raw_performance_data(
         self,
         rrd_metrics: Sequence[RRDMetric],  # noqa: ARG002
     ) -> Mapping[Service, RawPerformanceData]:

@@ -92,7 +92,7 @@ class _FakeRRD:
             if service in self._performance_data
         }
 
-    def fetch_performance_data(
+    def fetch_raw_performance_data(
         self, rrd_metrics: Sequence[RRDMetric]
     ) -> Mapping[Service, RawPerformanceData]:
         services = {

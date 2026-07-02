@@ -33,7 +33,7 @@ class RRDSource(Protocol):
         self, services: Sequence[Service]
     ) -> Mapping[Service, RawMetricNames]: ...
 
-    def fetch_performance_data(
+    def fetch_raw_performance_data(
         self, rrd_metrics: Sequence[RRDMetric]
     ) -> Mapping[Service, RawPerformanceData]: ...
 
@@ -152,7 +152,7 @@ def fetch_performance_data(
 ) -> Mapping[Service, Mapping[MetricName, PerformanceData]]:
     parsed_translations = parse_translations_from_api(translations)
     rrd_metrics = list(dict.fromkeys(metric for graph in graphs for metric in graph.rrd_metrics()))
-    raw_performance_data = rrd.fetch_performance_data(rrd_metrics)
+    raw_performance_data = rrd.fetch_raw_performance_data(rrd_metrics)
     performance_data = {
         service: dict(translate_performance_data(raw, parsed_translations))
         for service, raw in raw_performance_data.items()

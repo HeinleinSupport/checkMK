@@ -197,7 +197,7 @@ class EngineRRDSource:
                 )
         return {service: result[service] for service in unique if service in result}
 
-    def fetch_performance_data(
+    def fetch_raw_performance_data(
         self, rrd_metrics: Sequence[RRDMetric]
     ) -> Mapping[Service, RawPerformanceData]:
         services = list(
