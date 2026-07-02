@@ -144,9 +144,6 @@ py_library(
     data = ["cmk/rulesets/py.typed"],
     imports = ["."],
     visibility = ["//visibility:public"],
-    deps = [
-        "//packages/cmk-shared-typing:cmk_shared_typing_py",
-    ],
 )
 
 py_library(
