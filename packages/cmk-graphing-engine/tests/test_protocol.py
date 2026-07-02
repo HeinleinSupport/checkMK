@@ -15,6 +15,7 @@ from cmk.graphing_engine import (
     CurveAttributes,
     DecimalNotation,
     EvaluatedCurve,
+    EvaluatedQuantity,
     Graph,
     HostName,
     Line,
@@ -59,18 +60,16 @@ class Negated:
     def rrd_metrics(self) -> Iterable[RRDMetric]:
         yield from self.operand.rrd_metrics()
 
-    def is_present(self, context: EvaluationContext) -> bool:
-        return self.operand.is_present(context)
-
-    def evaluate_value(self, context: EvaluationContext) -> float | None:
-        value = self.operand.evaluate_value(context)
-        return None if value is None else -value
-
-    def evaluate_time_series(self, context: EvaluationContext) -> TimeSeries:
-        evaluated = self.operand.evaluate_time_series(context)
-        return TimeSeries(
-            time_range=context.time_range,
-            values=[None if v is None else -v for v in evaluated.values],
+    def evaluate(self, context: EvaluationContext) -> EvaluatedQuantity | None:
+        evaluated = self.operand.evaluate(context)
+        if evaluated is None:
+            return None
+        return EvaluatedQuantity(
+            value=None if evaluated.value is None else -evaluated.value,
+            time_series=TimeSeries(
+                time_range=context.time_range,
+                values=[None if v is None else -v for v in evaluated.time_series.values],
+            ),
         )
 
 

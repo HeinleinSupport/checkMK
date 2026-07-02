@@ -83,9 +83,10 @@ def _evaluate_value(
     quantity: Quantity,
     metric_data: Mapping[RRDMetric, PerformanceData],
 ) -> float | None:
-    return quantity.evaluate_value(
+    evaluated = quantity.evaluate(
         EvaluationContext(performance_data=_perf(metric_data), time_series={}, time_range=_TR)
     )
+    return None if evaluated is None else evaluated.value
 
 
 def _evaluate_time_series(
@@ -93,12 +94,13 @@ def _evaluate_time_series(
     metric_data: Mapping[RRDMetric, PerformanceData],
     time_series: Mapping[RRDMetric, TimeSeries],
     time_range: TimeRange,
-) -> TimeSeries:
-    return quantity.evaluate_time_series(
+) -> TimeSeries | None:
+    evaluated = quantity.evaluate(
         EvaluationContext(
             performance_data=_perf(metric_data), time_series=time_series, time_range=time_range
         )
     )
+    return None if evaluated is None else evaluated.time_series
 
 
 # --- evaluate_value -----------------------------------------------------------------------------
@@ -178,11 +180,11 @@ def test_evaluate_value_of_a_fraction_by_zero_is_none() -> None:
 def test_evaluate_time_series_of_a_metric_returns_the_fetched_time_series() -> None:
     a = _metric("a")
     time_series = _time_series(1.0, 2.0, 3.0)
-    assert _evaluate_time_series(a, {}, {a: time_series}, _TR) == time_series
+    assert _evaluate_time_series(a, {a: _data(value=1.0)}, {a: time_series}, _TR) == time_series
 
 
-def test_evaluate_time_series_of_a_missing_metric_is_all_none() -> None:
-    assert _evaluate_time_series(_metric("a"), {}, {}, _TR) == _time_series(None, None, None)
+def test_evaluate_time_series_of_a_missing_metric_is_none() -> None:
+    assert _evaluate_time_series(_metric("a"), {}, {}, _TR) is None
 
 
 def test_evaluate_time_series_of_a_constant() -> None:
@@ -199,29 +201,35 @@ def test_evaluate_time_series_of_a_scalar_reference_is_a_constant_line() -> None
 
 def test_evaluate_time_series_of_a_sum_drops_none_points() -> None:
     a, b = _metric("a"), _metric("b")
+    metric_data = {a: _data(value=1.0), b: _data(value=1.0)}
     time_series = {a: _time_series(1.0, None, 3.0), b: _time_series(10.0, 20.0, None)}
-    result = _evaluate_time_series(Sum(summands=[a, b]), {}, time_series, _TR)
+    result = _evaluate_time_series(Sum(summands=[a, b]), metric_data, time_series, _TR)
     assert result == _time_series(11.0, 20.0, 3.0)
 
 
 def test_evaluate_time_series_of_a_product_is_none_at_points_with_a_gap() -> None:
     a, b = _metric("a"), _metric("b")
+    metric_data = {a: _data(value=1.0), b: _data(value=1.0)}
     time_series = {a: _time_series(2.0, None, 4.0), b: _time_series(3.0, 5.0, None)}
-    result = _evaluate_time_series(Product(factors=[a, b]), {}, time_series, _TR)
+    result = _evaluate_time_series(Product(factors=[a, b]), metric_data, time_series, _TR)
     assert result == _time_series(6.0, None, None)
 
 
 def test_evaluate_time_series_of_a_difference() -> None:
     a, b = _metric("a"), _metric("b")
+    metric_data = {a: _data(value=1.0), b: _data(value=1.0)}
     time_series = {a: _time_series(10.0, None, 4.0), b: _time_series(3.0, 5.0, 1.0)}
-    result = _evaluate_time_series(Difference(minuend=a, subtrahend=b), {}, time_series, _TR)
+    result = _evaluate_time_series(
+        Difference(minuend=a, subtrahend=b), metric_data, time_series, _TR
+    )
     assert result == _time_series(7.0, None, 3.0)
 
 
 def test_evaluate_time_series_of_a_fraction_guards_zero_and_gaps() -> None:
     a, b = _metric("a"), _metric("b")
+    metric_data = {a: _data(value=1.0), b: _data(value=1.0)}
     time_series = {a: _time_series(10.0, 6.0, 4.0), b: _time_series(2.0, 0.0, None)}
-    result = _evaluate_time_series(Fraction(dividend=a, divisor=b), {}, time_series, _TR)
+    result = _evaluate_time_series(Fraction(dividend=a, divisor=b), metric_data, time_series, _TR)
     assert result == _time_series(5.0, None, None)
 
 

@@ -89,7 +89,8 @@ def _evaluate_bound(bound: Bound | None, context: EvaluationContext) -> float | 
         return None
     if isinstance(bound, int | float):
         return float(bound)
-    return bound.evaluate_value(context)
+    evaluated = bound.evaluate(context)
+    return None if evaluated is None else evaluated.value
 
 
 def _evaluate_vertical_range(
@@ -129,26 +130,25 @@ def _drawable_id(quantity: Quantity, *, inverse: bool, seen: Counter[str]) -> st
 def _evaluate_curve(
     curve: Curve, curve_id: str, context: EvaluationContext
 ) -> EvaluatedCurve | None:
-    if not curve.quantity.is_present(context):
+    evaluated = curve.quantity.evaluate(context)
+    if evaluated is None:
         return None
     return EvaluatedCurve(
         id=curve_id,
         attributes=curve.attributes,
-        value=curve.quantity.evaluate_value(context),
-        time_series=curve.quantity.evaluate_time_series(context),
+        value=evaluated.value,
+        time_series=evaluated.time_series,
     )
 
 
 def _evaluate_rule(rule: Rule, rule_id: str, context: EvaluationContext) -> EvaluatedRule | None:
-    if not rule.curve.quantity.is_present(context):
-        return None
-    value = rule.curve.quantity.evaluate_value(context)
-    if value is None:
+    evaluated = rule.curve.quantity.evaluate(context)
+    if evaluated is None or evaluated.value is None:
         return None
     return EvaluatedRule(
         id=rule_id,
         attributes=rule.curve.attributes,
-        value=value,
+        value=evaluated.value,
         inverse=rule.inverse,
     )
 

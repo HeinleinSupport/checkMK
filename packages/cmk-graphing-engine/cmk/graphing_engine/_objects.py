@@ -144,6 +144,12 @@ class EvaluationContext:
         return self.performance_data.get(service, {}).get(metric.metric_name)
 
 
+@dataclass(frozen=True, kw_only=True)
+class EvaluatedQuantity:
+    value: float | None
+    time_series: TimeSeries
+
+
 class Quantity(Protocol):
     def ident(self) -> str:
         # A stable, structural identifier of the quantity — derived from its shape and operands, never
@@ -153,11 +159,7 @@ class Quantity(Protocol):
 
     def rrd_metrics(self) -> Iterable[RRDMetric]: ...
 
-    def is_present(self, context: EvaluationContext) -> bool: ...
-
-    def evaluate_value(self, context: EvaluationContext) -> float | None: ...
-
-    def evaluate_time_series(self, context: EvaluationContext) -> TimeSeries: ...
+    def evaluate(self, context: EvaluationContext) -> EvaluatedQuantity | None: ...
 
 
 type _Operator = Callable[[Sequence[float | None]], float | None]
@@ -203,26 +205,22 @@ def _constant_time_series(value: float | None, time_range: TimeRange) -> TimeSer
     return TimeSeries(time_range=time_range, values=[value] * _num_points(time_range))
 
 
-def _operands_value(
+def _combine(
     operator: _Operator,
-    operands: Sequence[Quantity],
+    operands: Sequence[EvaluatedQuantity | None],
     context: EvaluationContext,
-) -> float | None:
-    values = [operand.evaluate_value(context) for operand in operands]
-    if any(value is None for value in values):
-        return None
-    return operator(values)
-
-
-def _operands_time_series(
-    operator: _Operator,
-    operands: Sequence[Quantity],
-    context: EvaluationContext,
-) -> TimeSeries:
-    evaluated = [operand.evaluate_time_series(context) for operand in operands]
-    return TimeSeries(
-        time_range=context.time_range,
-        values=[_apply(operator, point) for point in zip(*(ts.values for ts in evaluated))],
+) -> EvaluatedQuantity:
+    values = [None if operand is None else operand.value for operand in operands]
+    series = [
+        _constant_time_series(None, context.time_range) if operand is None else operand.time_series
+        for operand in operands
+    ]
+    return EvaluatedQuantity(
+        value=None if any(value is None for value in values) else operator(values),
+        time_series=TimeSeries(
+            time_range=context.time_range,
+            values=[_apply(operator, point) for point in zip(*(ts.values for ts in series))],
+        ),
     )
 
 
@@ -240,14 +238,10 @@ class Constant:
     def rrd_metrics(self) -> Iterable[RRDMetric]:
         return ()
 
-    def is_present(self, context: EvaluationContext) -> bool:  # noqa: ARG002
-        return True
-
-    def evaluate_value(self, context: EvaluationContext) -> float | None:  # noqa: ARG002
-        return self.value
-
-    def evaluate_time_series(self, context: EvaluationContext) -> TimeSeries:
-        return _constant_time_series(self.value, context.time_range)
+    def evaluate(self, context: EvaluationContext) -> EvaluatedQuantity:
+        return EvaluatedQuantity(
+            value=self.value, time_series=_constant_time_series(self.value, context.time_range)
+        )
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -267,16 +261,18 @@ class RRDMetric:
     def rrd_metrics(self) -> Iterable[RRDMetric]:
         yield self
 
-    def is_present(self, context: EvaluationContext) -> bool:
-        return context.data_of(self) is not None
-
-    def evaluate_value(self, context: EvaluationContext) -> float | None:
-        data = context.data_of(self)
-        return None if data is None else data.value
-
-    def evaluate_time_series(self, context: EvaluationContext) -> TimeSeries:
+    def evaluate(self, context: EvaluationContext) -> EvaluatedQuantity | None:
+        if (data := context.data_of(self)) is None:
+            return None
         existing = context.time_series.get(self)
-        return existing if existing is not None else _constant_time_series(None, context.time_range)
+        return EvaluatedQuantity(
+            value=data.value,
+            time_series=(
+                existing
+                if existing is not None
+                else _constant_time_series(None, context.time_range)
+            ),
+        )
 
 
 class ScalarType(enum.StrEnum):
@@ -315,15 +311,13 @@ class ScalarOf:
     def rrd_metrics(self) -> Iterable[RRDMetric]:
         yield self.metric
 
-    def is_present(self, context: EvaluationContext) -> bool:
-        return context.data_of(self.metric) is not None
-
-    def evaluate_value(self, context: EvaluationContext) -> float | None:
-        data = context.data_of(self.metric)
-        return None if data is None else _SCALAR_VALUE[self.scalar_type](data)
-
-    def evaluate_time_series(self, context: EvaluationContext) -> TimeSeries:
-        return _constant_time_series(self.evaluate_value(context), context.time_range)
+    def evaluate(self, context: EvaluationContext) -> EvaluatedQuantity | None:
+        if (data := context.data_of(self.metric)) is None:
+            return None
+        value = _SCALAR_VALUE[self.scalar_type](data)
+        return EvaluatedQuantity(
+            value=value, time_series=_constant_time_series(value, context.time_range)
+        )
 
 
 @dataclass(frozen=True)
@@ -339,14 +333,11 @@ class Sum:
         for summand in self.summands:
             yield from summand.rrd_metrics()
 
-    def is_present(self, context: EvaluationContext) -> bool:
-        return bool(self.summands) and self.summands[0].is_present(context)
-
-    def evaluate_value(self, context: EvaluationContext) -> float | None:
-        return _operands_value(_op_sum, self.summands, context)
-
-    def evaluate_time_series(self, context: EvaluationContext) -> TimeSeries:
-        return _operands_time_series(_op_sum, self.summands, context)
+    def evaluate(self, context: EvaluationContext) -> EvaluatedQuantity | None:
+        evaluated = [summand.evaluate(context) for summand in self.summands]
+        if not evaluated or evaluated[0] is None:
+            return None
+        return _combine(_op_sum, evaluated, context)
 
 
 @dataclass(frozen=True)
@@ -362,14 +353,8 @@ class Product:
         for factor in self.factors:
             yield from factor.rrd_metrics()
 
-    def is_present(self, context: EvaluationContext) -> bool:  # noqa: ARG002
-        return True
-
-    def evaluate_value(self, context: EvaluationContext) -> float | None:
-        return _operands_value(_op_product, self.factors, context)
-
-    def evaluate_time_series(self, context: EvaluationContext) -> TimeSeries:
-        return _operands_time_series(_op_product, self.factors, context)
+    def evaluate(self, context: EvaluationContext) -> EvaluatedQuantity:
+        return _combine(_op_product, [factor.evaluate(context) for factor in self.factors], context)
 
 
 @dataclass(frozen=True)
@@ -387,14 +372,11 @@ class Difference:
         yield from self.minuend.rrd_metrics()
         yield from self.subtrahend.rrd_metrics()
 
-    def is_present(self, context: EvaluationContext) -> bool:
-        return self.minuend.is_present(context)
-
-    def evaluate_value(self, context: EvaluationContext) -> float | None:
-        return _operands_value(_op_difference, [self.minuend, self.subtrahend], context)
-
-    def evaluate_time_series(self, context: EvaluationContext) -> TimeSeries:
-        return _operands_time_series(_op_difference, [self.minuend, self.subtrahend], context)
+    def evaluate(self, context: EvaluationContext) -> EvaluatedQuantity | None:
+        minuend = self.minuend.evaluate(context)
+        if minuend is None:
+            return None
+        return _combine(_op_difference, [minuend, self.subtrahend.evaluate(context)], context)
 
 
 @dataclass(frozen=True)
@@ -412,14 +394,10 @@ class Fraction:
         yield from self.dividend.rrd_metrics()
         yield from self.divisor.rrd_metrics()
 
-    def is_present(self, context: EvaluationContext) -> bool:  # noqa: ARG002
-        return True
-
-    def evaluate_value(self, context: EvaluationContext) -> float | None:
-        return _operands_value(_op_fraction, [self.dividend, self.divisor], context)
-
-    def evaluate_time_series(self, context: EvaluationContext) -> TimeSeries:
-        return _operands_time_series(_op_fraction, [self.dividend, self.divisor], context)
+    def evaluate(self, context: EvaluationContext) -> EvaluatedQuantity:
+        return _combine(
+            _op_fraction, [self.dividend.evaluate(context), self.divisor.evaluate(context)], context
+        )
 
 
 type Bound = int | float | Quantity
