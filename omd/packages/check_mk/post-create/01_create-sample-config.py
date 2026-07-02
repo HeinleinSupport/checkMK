@@ -38,7 +38,9 @@ def main(args: list[str]) -> int:
     main_modules.register(edition(paths.omd_root))
 
     if errors := main_modules.get_failed_plugins():
-        log.logger.error("The following errors occurred during plug-in loading: %r", errors)
+        log.logger.error(
+            "The following errors occurred during plug-in loading: %(errors)r", {"errors": errors}
+        )
         return 1
 
     with gui_context(), SuperUserContext():
