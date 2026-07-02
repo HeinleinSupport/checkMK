@@ -22,7 +22,6 @@ py_cmk_test(
         requirement("fastapi"),
         requirement("httpx"),
         requirement("pytest-asyncio"),
-        requirement("pytest-xdist"),
         requirement("pytest-socket"),
         requirement("pytest-random-order"),
         requirement("pytest-mock"),
@@ -43,7 +42,6 @@ py_cmk_test(
     ],
     deps = [
         "//packages/cmk-agent-receiver:testlib",
-        requirement("pytest-xdist"),
         requirement("httpx"),
         requirement("pytest-random-order"),
     ],

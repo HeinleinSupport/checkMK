@@ -270,7 +270,7 @@ test-gui-crawl() {
 test-xss-crawl() {
     prepare-playwright
     XSS_CRAWL=1 _pytest "${PYTEST_SYSTEM_TEST_ARGS[@]}" \
-        "$(realpath "$SCRIPT_DIR/gui_crawl")/test_gui_crawl.py" --numprocesses=0
+        "$(realpath "$SCRIPT_DIR/gui_crawl")/test_gui_crawl.py"
 }
 
 test-gui-e2e() {
@@ -280,8 +280,7 @@ test-gui-e2e() {
         --output="${RESULT_PATH:-/tmp}/" \
         --tracing=retain-on-failure \
         "${PYTEST_SYSTEM_TEST_ARGS[@]}" \
-        "$(realpath "$SCRIPT_DIR/gui_e2e")" \
-        --numprocesses=0
+        "$(realpath "$SCRIPT_DIR/gui_e2e")"
 }
 
 test-gui-e2e-pro() { test-gui-e2e; }
@@ -293,8 +292,7 @@ test-gui-e2e-non-free() {
         --tracing=retain-on-failure \
         "${PYTEST_SYSTEM_TEST_ARGS[@]}" \
         --cmk-edition "$EDITION" \
-        "$(realpath "$SCRIPT_DIR/gui_e2e")/nonfree" \
-        --numprocesses=0
+        "$(realpath "$SCRIPT_DIR/gui_e2e")/nonfree"
 }
 
 test-gui-e2e-ultimate() { EDITION=ultimate test-gui-e2e-non-free; }

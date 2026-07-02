@@ -40,7 +40,6 @@ pytest-cov  # used to generate coverage reports (run with pytest --cov)
 pytest-html  # used to generate HTML reports for test suites
 pytest-mock  # used by quite a few unit/integration tests via the mocker fixture
 pytest-random-order  # used to test resiliency
-pytest-xdist # used to limit number of procs in e2e tests
 pytest-check # used to queue failed assertions and continue test execution
 pytest-opentelemetry # instrument pytest runs
 pytest-playwright # used for gui_e2e tests

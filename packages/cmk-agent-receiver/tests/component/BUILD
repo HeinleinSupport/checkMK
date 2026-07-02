@@ -21,7 +21,6 @@ py_cmk_test(
         "//packages/cmk-agent-receiver",
         "//packages/cmk-agent-receiver:testlib",
         "//packages/cmk-crypto",
-        requirement("pytest-xdist"),
         requirement("pytest-socket"),
         requirement("pytest-random-order"),
         requirement("fastapi"),

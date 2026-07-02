@@ -23,11 +23,7 @@ py_cmk_test(
         include = ["**/*.py"],
         exclude = ["**/conftest.py"],
     ),
-    args = [
-        "--random-order-bucket=global",
-        "--dist=loadfile",
-        "--numprocesses=4",
-    ],
+    args = ["--random-order-bucket=global"],
     env = {"EDITION": "community"},
     use_project_pytest_config = True,
     visibility = ["//visibility:private"],
@@ -40,6 +36,5 @@ py_cmk_test(
         requirement("flask"),
         requirement("pytest-mock"),
         requirement("pytest-random-order"),
-        requirement("pytest-xdist"),
     ],
 )

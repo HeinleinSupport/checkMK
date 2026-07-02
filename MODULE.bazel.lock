@@ -4417,10 +4417,6 @@
             "https://files.pythonhosted.org/packages/79/80/9b4ceca48c3b8b7f33cd8164e0a03ae2410fb313309ac681850dc46bc502/exchangelib-5.6.0.tar.gz": "a65cffba3b4d1166347059e88b1f11eae9a9d70119c3ad9b33389d7258f6181c",
             "https://files.pythonhosted.org/packages/8a/ae/d99bf36bcf539f6ee270a1b6c478ad8f40f6469a77d9c0986f8def646369/exchangelib-5.6.0-py3-none-any.whl": "7d843ff56f41f3a1eaff73e4bbb4ecce21957aa52b65bef01440414ffbba377e"
           },
-          "execnet": {
-            "https://files.pythonhosted.org/packages/ab/84/02fc1827e8cdded4aa65baef11296a9bbe595c474f0d6d758af082d849fd/execnet-2.1.2-py3-none-any.whl": "67fba928dd5a544b783f6056f449e5e3931a5c378b128bc18501f7ea79e296ec",
-            "https://files.pythonhosted.org/packages/bf/89/780e11f9588d9e7128a3f87788354c7946a9cbb1401ad38a48c4db9a4f07/execnet-2.1.2.tar.gz": "63d83bfdd9a23e35b9c6a3261412324f964c2ec8dcd8d3c6916ee9373e0befcd"
-          },
           "faker": {
             "https://files.pythonhosted.org/packages/ac/63/58efa67c10fb27810d34351b7a10f85f109a7f7e2a07dc3773952459c47b/faker-40.4.0-py3-none-any.whl": "486d43c67ebbb136bc932406418744f9a0bdf2c07f77703ea78b58b77e9aa443",
             "https://files.pythonhosted.org/packages/fc/7e/dccb7013c9f3d66f2e379383600629fec75e4da2698548bdbf2041ea4b51/faker-40.4.0.tar.gz": "76f8e74a3df28c3e2ec2caafa956e19e37a132fdc7ea067bc41783affcfee364"
@@ -7293,10 +7289,6 @@
             "https://files.pythonhosted.org/packages/05/ff/90c7e1e746baf3d62ce864c479fd53410b534818b9437413903596f81580/pytest_socket-0.7.0.tar.gz": "71ab048cbbcb085c15a4423b73b619a8b35d6a307f46f78ea46be51b1b7e11b3",
             "https://files.pythonhosted.org/packages/19/58/5d14cb5cb59409e491ebe816c47bf81423cd03098ea92281336320ae5681/pytest_socket-0.7.0-py3-none-any.whl": "7e0f4642177d55d317bbd58fc68c6bd9048d6eadb2d46a89307fa9221336ce45"
           },
-          "pytest-xdist": {
-            "https://files.pythonhosted.org/packages/78/b4/439b179d1ff526791eb921115fca8e44e596a13efeda518b9d845a619450/pytest_xdist-3.8.0.tar.gz": "7e578125ec9bc6050861aa93f2d59f1d8d085595d6551c2c90b6f4fad8d3a9f1",
-            "https://files.pythonhosted.org/packages/ca/31/d4e37e9e550c2b92a9cbc2e4d0b7420a27224968580b5a447f420847c975/pytest_xdist-3.8.0-py3-none-any.whl": "202ca578cfeb7370784a8c33d6d05bc6e13b4f25b5053c30a152269fd10f0b88"
-          },
           "python-active-directory": {
             "https://files.pythonhosted.org/packages/00/a1/edf6a4e6a354b71a390902d7f096b974398850914024df10431f0d8358df/python_active_directory-2.0.1-cp311-cp311-musllinux_1_1_x86_64.whl": "550b6c399b8134f0bcbd23e3a8f1f49c680b23b4bdb659c1d75d93a99cb2c5e3",
             "https://files.pythonhosted.org/packages/04/23/0daf696f809e8b16d50450d56f8c1bdacaedf26facbd949e118855008874/python_active_directory-2.0.1-cp37-cp37m-musllinux_1_1_i686.whl": "e65b3345cac28e0764628190ed46749411569438a5c30f6a99253ec626473344",
@@ -9067,7 +9059,6 @@
           "elementpath": "/simple/elementpath/",
           "exceptiongroup": "/simple/exceptiongroup/",
           "exchangelib": "/simple/exchangelib/",
-          "execnet": "/simple/execnet/",
           "faker": "/simple/faker/",
           "fakeredis": "/simple/fakeredis/",
           "fastapi": "/simple/fastapi/",
@@ -9272,7 +9263,6 @@
           "pytest_recording": "/simple/pytest-recording/",
           "pytest_repeat": "/simple/pytest-repeat/",
           "pytest_socket": "/simple/pytest-socket/",
-          "pytest_xdist": "/simple/pytest-xdist/",
           "python_active_directory": "/simple/python-active-directory/",
           "python_dateutil": "/simple/python-dateutil/",
           "python_docx": "/simple/python-docx/",
