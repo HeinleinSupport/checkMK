@@ -24,6 +24,10 @@ from ._graph import (
     Stack,
     VerticalRange,
 )
+from ._matching import (
+    build_service_graphs,
+    match_graph_for_services,
+)
 from ._options import (
     ConsolidationFunction,
     TimeRange,
@@ -55,10 +59,6 @@ from ._quantities import (
 from ._source import (
     fetch_available_metric_names,
     RRDSource,
-)
-from ._template import (
-    build_service_graphs,
-    match_graph_for_services,
 )
 from ._units import (
     AutoPrecision,
