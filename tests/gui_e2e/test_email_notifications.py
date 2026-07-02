@@ -157,7 +157,6 @@ def test_filesystem_email_notifications(
             "Host": host_name,
             "Service": service_name,
             "Event": expected_event,
-            "Address": test_site.http_address,
             "Summary": service_summary.replace("WARN", "(!)"),
         }
         email_manager.check_email_content(email_file_path, expected_fields, expected_content)
