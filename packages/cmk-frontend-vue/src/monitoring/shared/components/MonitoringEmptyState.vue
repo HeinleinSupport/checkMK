@@ -15,18 +15,36 @@ const { _t } = usei18n()
 const monitoringService = inject(MONITORING_SERVICE)
 
 const hasSearchQuery = computed(() => (monitoringService?.searchQuery.value ?? '') !== '')
+const hasActiveFilter = computed(() => (monitoringService?.filters.activeFilterCount ?? 0) > 0)
 
-const title = computed(() =>
-  hasSearchQuery.value ? _t('No results found for your search.') : _t('No results found.')
-)
+const title = computed(() => {
+  if (hasActiveFilter.value && hasSearchQuery.value) {
+    return _t('No results for your combination of search and filter settings.')
+  }
+  if (hasActiveFilter.value) {
+    return _t('No results found for your active filters.')
+  }
+  if (hasSearchQuery.value) {
+    return _t('No results found for your search.')
+  }
+  return _t('No results found.')
+})
+
+const hint = computed(() => {
+  if (hasActiveFilter.value && hasSearchQuery.value) {
+    return _t('Adjust or clear search and filters to start fresh.')
+  }
+  if (hasSearchQuery.value) {
+    return _t('Check for typing errors or try a broader term.')
+  }
+  return null
+})
 </script>
 
 <template>
   <div class="monitoring-empty-state" aria-live="polite">
     <p class="monitoring-empty-state__title">{{ title }}</p>
-    <p v-if="hasSearchQuery" class="monitoring-empty-state__hint">
-      {{ _t('Check for typing errors or try a broader term.') }}
-    </p>
+    <p v-if="hint" class="monitoring-empty-state__hint">{{ hint }}</p>
   </div>
 </template>
 
