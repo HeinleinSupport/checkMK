@@ -69,7 +69,7 @@ def build_template_graphs(
         registered_graphs=registered_graphs,
         metrics=registered_metrics,
         localizer=translate_to_current_language,
-        available=available,
+        metric_names=available,
         graph_type="template",
     )
     for graph in graphs:

@@ -136,7 +136,7 @@ def _discover(
         registered_graphs=registered_graphs,
         metrics=_METRICS,
         localizer=_id,
-        available=available.get(_SERVICE, frozenset()),
+        metric_names=available.get(_SERVICE, frozenset()),
         graph_type="test",
     )
 

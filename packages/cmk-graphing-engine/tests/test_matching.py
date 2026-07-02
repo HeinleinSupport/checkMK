@@ -197,7 +197,7 @@ def _discover(
         metrics=_METRICS,
         localizer=_id,
         graph_type=_KIND,
-        available=available.get(service, frozenset()),
+        metric_names=available.get(service, frozenset()),
     )
 
 
@@ -543,7 +543,7 @@ def test_build_matched_graphs_per_service_adds_predictive_lines() -> None:
         metrics=_METRICS,
         localizer=_id,
         graph_type=_KIND,
-        available={with_predict: {cpu_user, predict}, without_predict: {cpu_user}},
+        metric_names={with_predict: {cpu_user, predict}, without_predict: {cpu_user}},
     )
 
     assert len(graphs) == 2
@@ -583,7 +583,7 @@ def test_build_matched_graphs_builds_threshold_rules_for_fallback_graphs() -> No
         metrics=_METRICS,
         localizer=_id,
         graph_type=_KIND,
-        available=available,
+        metric_names=available,
     )
     # The fallback single-metric graph carries the four warn / crit (and lower) threshold rules as
     # ScalarOf quantities, their labels / colours resolved from the scalar type.

@@ -132,12 +132,12 @@ def build_matched_graphs_per_service(
     graph: _GraphPlugin,
     metrics: Mapping[str, metrics_v1.Metric],
     localizer: Callable[[str], str],
-    available: Mapping[Service, Container[MetricName]],
+    metric_names: Mapping[Service, Container[MetricName]],
     graph_type: str,
 ) -> Sequence[Graph]:
     matched_graphs: list[Graph] = []
     for service in services:
-        service_available = available.get(service, frozenset())
+        service_available = metric_names.get(service, frozenset())
         if not _walk(graph, service_available).matched:
             continue
         with_predictive, _names = _add_predictive_lines(
@@ -157,7 +157,7 @@ def build_matched_graphs(
     registered_graphs: Sequence[_GraphPlugin],
     metrics: Mapping[str, metrics_v1.Metric],
     localizer: Callable[[str], str],
-    available: Collection[MetricName],
+    metric_names: Collection[MetricName],
     graph_type: str,
 ) -> Sequence[Graph]:
     matched_graphs: list[Graph] = []
@@ -165,19 +165,19 @@ def build_matched_graphs(
 
     def _collect(base: Graph) -> None:
         graph, predictive_names = _add_predictive_lines(
-            base, service, available, metrics, localizer
+            base, service, metric_names, metrics, localizer
         )
         claimed.update(predictive_names)
         matched_graphs.append(graph)
 
     for plugin in registered_graphs:
-        walk = _walk(plugin, available)
+        walk = _walk(plugin, metric_names)
         if not walk.matched:
             continue
         claimed.update(walk.metric_names)
         _collect(parse_graph_from_api(plugin, service, metrics, localizer, graph_type=graph_type))
 
-    for name in available:
+    for name in metric_names:
         if name in claimed or name.startswith(_PREDICT_PREFIX):
             continue
         rrd_metric = RRDMetric(
