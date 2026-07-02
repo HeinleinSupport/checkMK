@@ -31,5 +31,5 @@ def create_spool_file(
 ) -> None:
     spool_dir.mkdir(parents=True, exist_ok=True)
     file_path = spool_dir / str(uuid.uuid4())
-    logger_.info("Creating spoolfile: %s", file_path)
+    logger_.info("Creating spoolfile: %(file_path)s", {"file_path": file_path})
     store.save_object_to_file(file_path, data, pprint_value=True)

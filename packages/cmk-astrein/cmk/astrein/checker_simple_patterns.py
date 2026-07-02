@@ -100,7 +100,6 @@ _EXCLUDED_PREFIXES = (
     "packages/cmk-check-engine",
     "packages/cmk-dev-deploy",
     "packages/cmk-ec",
-    "packages/cmk-events",
     "packages/cmk-mkp-tool",
     "packages/cmk-plugins",
     "packages/cmk-werks",

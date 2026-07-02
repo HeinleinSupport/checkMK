@@ -42,7 +42,7 @@ logger = logging.getLogger(__name__)
 
 
 def log_to_history(message: SanitizedLivestatusLogStr) -> None:
-    logger.info("sending command LOG;%s", message)
+    logger.info("sending command LOG;%(message)s", {"message": message})
     timeout = 2
     try:
         connection = livestatus.LocalConnection()
@@ -50,8 +50,10 @@ def log_to_history(message: SanitizedLivestatusLogStr) -> None:
         livestatus_client = LivestatusClient(connection)
         livestatus_client.command(Log(message=message))
     except livestatus.MKLivestatusException:
-        logger.exception("Cannot send livestatus command (Timeout: %d sec)", timeout)
-        logger.info("Command was: LOG;%s", message)
+        logger.exception(
+            "Cannot send livestatus command (Timeout: %(timeout)d sec)", {"timeout": timeout}
+        )
+        logger.info("Command was: LOG;%(message)s", {"message": message})
 
 
 def _format_notification_message(
