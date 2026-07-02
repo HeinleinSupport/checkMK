@@ -47,6 +47,8 @@ trace = ["cmk.trace"]
 
 metric_backend = ["cmk.metric_backend"]
 
+network_flow = ["cmk.network_flow"]
+
 telemetry = ["cmk.telemetry"]
 
 livestatus_client = ["cmk.livestatus_client"]
@@ -655,6 +657,18 @@ allows = ["@ccc", "@messaging", "cmk.utils"]
 
 [components."cmk.metric_backend"]
 allows = ["@ccc", "@plugin_apis", "cmk.discover_plugins"]
+
+[components."cmk.network_flow"]
+allows = ["@ccc"]
+
+[components."cmk.network_flow.gui"]
+allows = [
+  "@ccc",
+  "@network_flow",
+  "cmk.gui",
+  "cmk.gui_plugins.internal",
+  "cmk.utils",
+]
 
 [components."cmk.telemetry"]
 allows = [
