@@ -103,7 +103,7 @@ def _evaluate_vertical_range(
             assert_never(vertical_range)
 
 
-def _drawable_id(quantity: Quantity, *, inverse: bool, seen: Counter[str]) -> str:
+def _create_id(quantity: Quantity, *, inverse: bool, seen: Counter[str]) -> str:
     base = ("-" if inverse else "") + quantity.ident()
     seen[base] += 1
     return base if seen[base] == 1 else f"{base}#{seen[base]}"
@@ -171,7 +171,7 @@ def evaluate_graph(
             if (
                 curve := _evaluate_curve(
                     member,
-                    _drawable_id(member.quantity, inverse=group.inverse, seen=seen),
+                    _create_id(member.quantity, inverse=group.inverse, seen=seen),
                     context,
                 )
             )
@@ -182,7 +182,7 @@ def evaluate_graph(
             if group.reference is None
             else _evaluate_curve(
                 group.reference,
-                _drawable_id(group.reference.quantity, inverse=group.inverse, seen=seen),
+                _create_id(group.reference.quantity, inverse=group.inverse, seen=seen),
                 context,
             )
         )
@@ -196,7 +196,7 @@ def evaluate_graph(
         if (
             curve := _evaluate_curve(
                 line.curve,
-                _drawable_id(line.curve.quantity, inverse=line.inverse, seen=seen),
+                _create_id(line.curve.quantity, inverse=line.inverse, seen=seen),
                 context,
             )
         )
@@ -208,7 +208,7 @@ def evaluate_graph(
         if (
             evaluated := _evaluate_rule(
                 rule,
-                _drawable_id(rule.curve.quantity, inverse=rule.inverse, seen=seen),
+                _create_id(rule.curve.quantity, inverse=rule.inverse, seen=seen),
                 context,
             )
         )
