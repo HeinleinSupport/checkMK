@@ -394,7 +394,7 @@ def _sort_tags(
 
 SorterHostTags = Sorter(
     ident="host",
-    title=_l("Host tags"),
+    title=_l("Host Tags"),
     columns=["host_tags"],
     sort_function=partial(_sort_tags, object_type="host"),
 )

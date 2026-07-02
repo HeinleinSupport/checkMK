@@ -173,7 +173,7 @@ def register_host_and_service_basic_filters(filter_registry: FilterRegistry) -> 
 
     filter_registry.register(
         RegexFilter(
-            title=_l("Host alias (regex)"),
+            title=_l("Hostalias (regex)"),
             sort_index=102,
             info="host",
             query_filter=query_filters.TextQuery(
@@ -466,7 +466,7 @@ def register_host_and_service_group_filters(filter_registry: FilterRegistry) -> 
     )
     filter_registry.register(
         FilterGroupCombo(
-            title=_l("Host is in group"),
+            title=_l("Host is in Group"),
             sort_index=104,
             description=_l("Optional selection of host group"),
             autocompleter=GroupAutocompleterConfig(ident="allgroups", group_type="host"),
@@ -504,7 +504,7 @@ def register_host_and_service_group_filters(filter_registry: FilterRegistry) -> 
 def register_contact_filters(filter_registry: FilterRegistry) -> None:
     filter_registry.register(
         FilterGroupCombo(
-            title=_l("Host contact group"),
+            title=_l("Host Contact Group"),
             sort_index=106,
             description=_l("Optional selection of host contact group"),
             autocompleter=GroupAutocompleterConfig(ident="allgroups", group_type="contact"),
@@ -540,7 +540,7 @@ def register_contact_filters(filter_registry: FilterRegistry) -> None:
 
     filter_registry.register(
         InputTextFilter(
-            title=_l("Host contact"),
+            title=_l("Host Contact"),
             sort_index=107,
             info="host",
             query_filter=query_filters.TextQuery(ident="host_ctc", column="host_contacts", op=">="),
@@ -1696,7 +1696,7 @@ def register_starred_filters(filter_registry: FilterRegistry) -> None:
     filter_starred_with_register(
         filter_registry=filter_registry,
         what="host",
-        title=_l("Favorite hosts"),
+        title=_l("Favorite Hosts"),
         sort_index=501,
         group=FilterGroup.OTHER,
     )
@@ -1704,7 +1704,7 @@ def register_starred_filters(filter_registry: FilterRegistry) -> None:
     filter_starred_with_register(
         filter_registry=filter_registry,
         what="service",
-        title=_l("Favorite services"),
+        title=_l("Favorite Services"),
         sort_index=501,
     )
 

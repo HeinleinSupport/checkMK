@@ -4511,7 +4511,7 @@ class PainterDowntimeDuration(Painter):
         return _("Downtime duration (if flexible)")
 
     def short_title(self, cell: Cell) -> str:
-        return _("Flex. duration")
+        return _("Flex. Duration")
 
     @property
     def columns(self) -> Sequence[ColumnName]:
@@ -4697,7 +4697,7 @@ class PainterLogWhat(Painter):
         return _("Log: host or service")
 
     def short_title(self, cell: Cell) -> str:
-        return _("Host/service")
+        return _("Host/Service")
 
     @property
     def columns(self) -> Sequence[ColumnName]:
@@ -5118,7 +5118,7 @@ class PainterAlertStatsOk(Painter):
         return "alert_stats_ok"
 
     def title(self, cell: Cell) -> str:
-        return _("Alert statistics: number of recoveries")
+        return _("Alert statistics: Number of recoveries")
 
     def short_title(self, cell: Cell) -> str:
         return _("OK")
@@ -5140,7 +5140,7 @@ class PainterAlertStatsWarn(Painter):
         return "alert_stats_warn"
 
     def title(self, cell: Cell) -> str:
-        return _("Alert statistics: number of warnings")
+        return _("Alert statistics: Number of warnings")
 
     def short_title(self, cell: Cell) -> str:
         return _("WARN")
@@ -5162,7 +5162,7 @@ class PainterAlertStatsCrit(Painter):
         return "alert_stats_crit"
 
     def title(self, cell: Cell) -> str:
-        return _("Alert statistics: number of critical alerts")
+        return _("Alert statistics: Number of critical alerts")
 
     def short_title(self, cell: Cell) -> str:
         return _("CRIT")
@@ -5184,7 +5184,7 @@ class PainterAlertStatsUnknown(Painter):
         return "alert_stats_unknown"
 
     def title(self, cell: Cell) -> str:
-        return _("Alert statistics: number of unknown alerts")
+        return _("Alert statistics: Number of unknown alerts")
 
     def short_title(self, cell: Cell) -> str:
         return _("UNKN")
@@ -5206,7 +5206,7 @@ class PainterAlertStatsProblem(Painter):
         return "alert_stats_problem"
 
     def title(self, cell: Cell) -> str:
-        return _("Alert statistics: number of problem alerts")
+        return _("Alert statistics: Number of problem alerts")
 
     def short_title(self, cell: Cell) -> str:
         return _("Problems")

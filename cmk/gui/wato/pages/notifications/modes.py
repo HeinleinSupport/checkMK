@@ -728,7 +728,7 @@ class ABCNotificationsMode(ABCEventsMode[EventRule]):
                 ("service", _("Service name")),
                 ("sl", _("Service level")),
                 ("check_type", _("Check type")),
-                ("state", _("Host/service state")),
+                ("state", _("Host/Service state")),
             ]
             + (
                 [
@@ -1678,7 +1678,7 @@ class ModeAnalyzeNotifications(ModeNotifications):
 
         with table_element(
             table_id="backlog",
-            title=_("Analysis: recent notifications"),
+            title=_("Analysis: Recent notifications"),
             limit=table_row_limit,
         ) as table:
             for nr, context in enumerate(backlog):
@@ -2159,7 +2159,7 @@ class ModeTestNotifications(ModeNotifications):
 
         with table_element(
             table_id="notification_test",
-            title=_("Analysis: test notifications"),
+            title=_("Analysis: Test notifications"),
             limit=table_row_limit,
         ) as table:
             table.row()
@@ -3242,7 +3242,7 @@ class ABCEditNotificationRuleMode(ABCNotificationsMode):
                             "selected contact groups. If you select more than one contact group here then "
                             "the user must be member of <i>all</i> these groups."
                         ),
-                        add_label=_("Add group"),
+                        add_label=_("Add Group"),
                         movable=False,
                     ),
                 ),

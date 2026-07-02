@@ -528,7 +528,7 @@ def render_context_specs(
         return
 
     forms.header(
-        _("Context / search filters"),
+        _("Context / Search Filters"),
         isopen=isopen,
         show_more_toggle=any(vs.has_show_more() for _title, vs in context_specs if vs is not None),
         help_text=help_text,
