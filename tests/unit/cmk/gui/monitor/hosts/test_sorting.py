@@ -75,6 +75,24 @@ def test_multi_column_sorting() -> None:
     assert value == expected
 
 
+def test_host_sorter_uses_natural_sort_for_string_columns() -> None:
+    hosts = [
+        HostFactory.build(name="host10"),
+        HostFactory.build(name="Host2"),
+        HostFactory.build(name="host1"),
+    ]
+    sorters = [HostSort(column=HostSortColumn.NAME, direction=HostSortDirection.ASC)]
+
+    value = [host.name for host in sorted(hosts, key=host_sorter(sorters))]
+    expected = [
+        "host1",
+        "Host2",
+        "host10",
+    ]
+
+    assert value == expected
+
+
 @pytest.mark.parametrize(
     "a, b",
     [

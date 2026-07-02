@@ -39,11 +39,15 @@ def host_sorter(sorters: Sequence[HostSort]) -> Callable[[Host], Any]:
         for sorter in sorters:
             val_a = _get_value(a, sorter.column)
             val_b = _get_value(b, sorter.column)
-            if val_a < val_b:
+            if sorter.column.natural_sort:
+                result = sort_naturally(val_a, val_b)
+            elif val_a < val_b:
                 result = -1
             elif val_a > val_b:
                 result = 1
             else:
+                result = 0
+            if result == 0:
                 continue
             return result if sorter.direction == HostSortDirection.ASC else -result
         return 0
