@@ -67,7 +67,8 @@ def test_get_average_active_metric_series_returns_none_and_logs_on_exception(
     assert result is None
     retriever_function.assert_called_once_with()
     logger_mock.assert_called_once_with(
-        "Error when retrieving the active metric series count (%s): %s", "ValueError", exception
+        "Error when retrieving the active metric series count (%(error_type)s): %(error)s",
+        {"error_type": "ValueError", "error": exception},
     )
 
 

@@ -35,7 +35,8 @@ def get_average_active_metric_series(omd_root: Path, log_dir: Path) -> int | Non
             )
         except Exception as e:
             _get_logger(log_dir).error(
-                "Error when retrieving the active metric series count (%s): %s", type(e).__name__, e
+                "Error when retrieving the active metric series count (%(error_type)s): %(error)s",
+                {"error_type": type(e).__name__, "error": e},
             )
     elif edition(omd_root) in [Edition.ULTIMATE, Edition.ULTIMATEMT, Edition.CLOUD]:
         _get_logger(log_dir).error(
