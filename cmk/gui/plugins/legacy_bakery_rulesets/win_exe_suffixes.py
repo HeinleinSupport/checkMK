@@ -27,12 +27,12 @@ def _valuespec_agent_config_win_exe_suffixes() -> Optional[Sequence[str]]:
         title=_("Limit script types to execute"),
         help=_(
             "If you want to run your own custom agent plug-ins on Windows, "
-            "simply put them into the subdirectory <tt>plugins</tt> "
+            "simply put them into the subdirectory <tt>plug-ins</tt> "
             "of your agent's installation directory. <i>Local checks</i> work just the "
             "same, but are installed in <tt>local</tt>. Plug-ins that are deployed "
             "with the Agent Bakery are installed by the MSI installer into the same "
-            "directory. This ruleset limits the file extensions that the agent "
-            "will run. This for example avoids starting a Notepad when a file with "
+            "directory. This rule set limits the file extensions that the agent "
+            "will run. This for example avoids starting a notepad when a file with "
             "the extension <tt>.txt</tt> is found. <b>Note:</b> If you remove some "
             "of the default extensions, not all of the shipped agent plug-ins will "
             "continue to work!<br><br>Specify the extensions in lower case and without "

@@ -31,7 +31,7 @@ def _form_spec() -> Dictionary:
             "Checkmk agent uninstallation. Note: Uninstallation also happens on every "
             "agent update. Setting 'Remove all files and subdirectories' will break "
             "automatic agent updates and TLS encrypted agent communication, since the "
-            "removed files include the agent updater and agent controller registrations."
+            "removed files include the agent updater and Agent Controller registrations."
         ),
         elements={
             "cleanup_mode": DictElement(

@@ -51,8 +51,8 @@ def _make_form(summary_form: bool) -> Callable[[], Dictionary]:
                         prefill_fixed_levels=DefaultValue((0, 0)),
                         help_text=Help(
                             "This checks consecutive sync failures within the last 8 attempts by "
-                            "monitoring the 8-bit 'Reachability' register within the Windows Time "
-                            "Service. It triggers a Warning or Critical alert when the <b>number of "
+                            "monitoring the 8-bit 'reachability' register within the Windows Time "
+                            "service. It triggers a WARNING or CRITICAL alert when the <b>number of "
                             "consecutive failed attempts</b> exceeds the defined threshold. For "
                             "example, setting a threshold of 4 means that Checkmk will alert if the "
                             "<b>last</b> 4 of 8 attempts have consecutively failed."
@@ -69,8 +69,8 @@ def _make_form(summary_form: bool) -> Callable[[], Dictionary]:
                         prefill_fixed_levels=DefaultValue((0, 0)),
                         help_text=Help(
                             "This checks consecutive sync failures within the last 8 attempts by "
-                            "monitoring the 8-bit 'Reachability' register within the Windows Time "
-                            "Service. It triggers a Warning or Critical alert when the <b>number of "
+                            "monitoring the 8-bit 'reachability' register within the Windows Time "
+                            "service. It triggers a WARNING or CRITICAL alert when the <b>number of "
                             "total failed attempts</b> exceeds the defined threshold. For "
                             "example, setting a threshold of 4 means that Checkmk will alert if "
                             "<b>any</b> 4 of the last 8 attempts have failed."

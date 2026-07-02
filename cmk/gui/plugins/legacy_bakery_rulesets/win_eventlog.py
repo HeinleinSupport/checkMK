@@ -65,17 +65,17 @@ def _logfiles_element() -> tuple[str, ListOf[tuple[str, list[str], list[str]]]]:
             movable=True,
             title=_("Configuration of individual event logs"),
             help=_(
-                "Here you can configure which messages should be discovered and "
-                "reported from which Eventlog. When you set the severity to <i>disabled</i> "
-                "then this Eventlog will totally be ignored. The switch <i>without context</i> "
+                "Here, you can configure which messages should be discovered and "
+                "reported from which event log. When you set the severity to <i>disabled</i> "
+                "then this event log will totally be ignored. The switch <i>without context</i> "
                 "will disable sending so-called context messages. When at least one new relevant "
-                "message is being found in an Eventlog, the agent usually sends <i>all</i> "
+                "message is being found in an event log, the agent usually sends <i>all</i> "
                 "new messages from that check cycle. This makes it more convenient when viewing "
-                "the messages in Checkmk. In high-volume logfiles it might be necessary "
+                "the messages in Checkmk. In high-volume log files it might be necessary "
                 "to switch the context off in order to save networking and disk resources. "
-                "<b>Note</b>: When several configuration tuning entries match for a logfile "
+                "<b>Note</b>: When several configuration tuning entries match for a log file "
                 "then only the first one is being executed. So it does not make sense to "
-                "create more then one entry for <i>All Eventlogs</i>."
+                "create more then one entry for <i>All event logs</i>."
             ),
             add_label=_("Add tuning configuration"),
         ),

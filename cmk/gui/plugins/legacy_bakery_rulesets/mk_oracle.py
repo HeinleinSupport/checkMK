@@ -106,8 +106,8 @@ def _agent_config_mk_oracle_oracle_sections() -> Sequence[Section | SectionWithH
             _(
                 "Warning: This section will increase the load of your Checkmk server and "
                 "may increase the load of your database. "
-                "To see results, you also have to activate 'Create additional service for IO stats bytes' or "
-                "'Create additional service for IO stats requests' in 'Oracle performance discovery'."
+                "To see results, you also have to activate 'Create additional service for I/O "
+                "stats bytes' or 'Create additional service for I/O stats requests' in 'Oracle performance discovery'."
             ),
         ),
         Section("processes", "sync", _("Current number of processes")),
@@ -217,8 +217,8 @@ def _valuespec_agent_config_mk_oracle() -> Dictionary:
         help=_(
             "This will deploy the agent plug-in <tt>mk_oracle</tt> on your target system. "
             "Currently not all options are available in all operating systems.<br>"
-            "<b>Note:</b> This plugin cannot be used together with the "
-            "'Unified Oracle Plugin (Beta)'. Please configure only one of the two."
+            "<b>Note:</b> This plug-in cannot be used together with the "
+            "'Unified Oracle plug-in (Beta)'. Please configure only one of the two."
         ),
         elements=[
             (
@@ -516,7 +516,7 @@ def _valuespec_agent_config_mk_oracle() -> Dictionary:
                     title=_("<tt>ORACLE_HOME</tt> to use for remote access %(UNIX_ONLY)s")
                     % {"UNIX_ONLY": UNIX_ONLY},
                     help=_(
-                        "Here you can specify an <tt>ORACLE_HOME</tt> for the access to the "
+                        "Here, you can specify an <tt>ORACLE_HOME</tt> for the access to the "
                         "remote databases. Omitting this empty will fall back to the system "
                         "<tt>ORACLE_HOME</tt>."
                     ),
@@ -531,7 +531,7 @@ def _valuespec_agent_config_mk_oracle() -> Dictionary:
                     )
                     % {"UNIX_ONLY": UNIX_ONLY},
                     help=_(
-                        "Here you can specify an <tt>TNS_ADMIN</tt> for the access to the "
+                        "Here, you can specify an <tt>TNS_ADMIN</tt> for the access to the "
                         "configuration files <tt>sqlnet.ora</tt> and <tt>tnsnames.ora</tt>. "
                         "Omitting this empty will fall back to <tt>/etc/check_mk</tt>."
                     ),

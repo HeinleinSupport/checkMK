@@ -18,7 +18,7 @@ def _valuespec_agent_config_win_runas() -> Alternative:
         help=_(
             "The rule gives the possibility to run any script "
             "using a given user account. There are two modes of the rule: "
-            "<i>group mode</i>, in the case Windows Agent provides its own internal "
+            "<i>group mode</i>, in this case Windows agent provides its own internal "
             "user in the requested group to run the script, or <i>user mode</i>, "
             "in this case you should specify the full credentials. The <i>group "
             "mode</i> is more secure, because no credentials need to be stored anywhere, "

@@ -469,8 +469,8 @@ def _discovery() -> Dictionary:
     return Dictionary(
         title=Title("Instance discovery"),
         help_text=Help(
-            "When enabled, the plugin will automatically discover local Oracle database instances. "
-            "This feature only works when the plugin is installed on the same machine where the "
+            "When enabled, the plug-in will automatically discover local Oracle database instances. "
+            "This feature only works when the plug-in is installed on the same machine where the "
             "Oracle database instances are running."
         ),
         elements={
@@ -521,7 +521,7 @@ def _oracle_client_library_options() -> Dictionary:
                 parameter_form=CascadingSingleChoice(
                     title=Title("Oracle Instant Client usage"),
                     help_text=Help(
-                        "Controls which Oracle Instant Client the plugin uses to connect to databases. "
+                        "Controls which Oracle Instant Client the plug-in uses to connect to databases. "
                         "Two sources are available: "
                         "the <b>agent-local client</b> — Oracle Instant Client libraries manually installed "
                         "alongside the Checkmk agent under "
@@ -748,7 +748,7 @@ rule_spec_oracle_bakelet = AgentConfig(
     help_text=Help(
         "This will deploy the agent plug-in <tt>mk_oracle</tt> on your target system.<br>"
         "ARM architecture is not supported.<br>"
-        "<b>Note:</b> This plugin cannot be used together with "
+        "<b>Note:</b> This plug-in cannot be used together with "
         "'Oracle databases (Linux, Solaris, AIX, Windows)'. "
         "Please configure only one of the two."
     ),
