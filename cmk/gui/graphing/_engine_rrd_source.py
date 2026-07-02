@@ -169,7 +169,7 @@ class EngineRRDSource:
             }
         return RawPerformanceData(check_command=normalized_check_command, values=perf_data)
 
-    def fetch_available_metric_names(
+    def fetch_raw_metric_names(
         self, services: Sequence[Service]
     ) -> Mapping[Service, RawMetricNames]:
         unique = list(dict.fromkeys(services))

@@ -29,7 +29,7 @@ from ._translate import (
 
 
 class RRDSource(Protocol):
-    def fetch_available_metric_names(
+    def fetch_raw_metric_names(
         self, services: Sequence[Service]
     ) -> Mapping[Service, RawMetricNames]: ...
 
@@ -137,7 +137,7 @@ def fetch_available_metric_names(
     rrd: RRDSource,
 ) -> Mapping[Service, frozenset[MetricName]]:
     parsed_translations = parse_translations_from_api(translations)
-    available = rrd.fetch_available_metric_names(list(dict.fromkeys(services)))
+    available = rrd.fetch_raw_metric_names(list(dict.fromkeys(services)))
     return {
         service: translate_metric_names(raw_metrics, parsed_translations)
         for service, raw_metrics in available.items()

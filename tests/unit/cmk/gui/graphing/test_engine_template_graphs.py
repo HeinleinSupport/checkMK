@@ -57,7 +57,7 @@ class _FakeRRD:
             for service in services
         }
 
-    def fetch_available_metric_names(
+    def fetch_raw_metric_names(
         self, services: Sequence[Service]
     ) -> Mapping[Service, RawMetricNames]:
         return {

@@ -147,7 +147,7 @@ class _FakeFetchRRD:
         self._performance_response = performance_response or {}
         self._time_series_response = time_series_response or {}
 
-    def fetch_available_metric_names(
+    def fetch_raw_metric_names(
         self,
         services: Sequence[Service],  # noqa: ARG002
     ) -> Mapping[Service, RawMetricNames]:

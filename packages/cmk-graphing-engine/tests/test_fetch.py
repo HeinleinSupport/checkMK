@@ -99,7 +99,7 @@ class _FakeRRDSource:
             tuple[tuple[RRDMetric, ...], TimeRange, ConsolidationFunction]
         ] = []
 
-    def fetch_available_metric_names(
+    def fetch_raw_metric_names(
         self,
         services: Sequence[Service],  # noqa: ARG002
     ) -> Mapping[Service, RawMetricNames]:

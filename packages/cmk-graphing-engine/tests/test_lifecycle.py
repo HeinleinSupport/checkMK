@@ -80,7 +80,7 @@ class _FakeRRD:
         # drove the source.
         self.time_series_requests: list[tuple[TimeRange, ConsolidationFunction]] = []
 
-    def fetch_available_metric_names(
+    def fetch_raw_metric_names(
         self, services: Sequence[Service]
     ) -> Mapping[Service, RawMetricNames]:
         return {
