@@ -619,7 +619,7 @@ class ModeBackup(WatoMode[object]):
                             ("_job", job.ident),
                         ],
                     ),
-                    title=_("Delete job #%d") % nr,
+                    title=_("Delete job #%(nr)d") % {"nr": nr},
                     suffix=job.title,
                     message=_("ID: %s") % job.ident,
                 )
@@ -1617,21 +1617,30 @@ def _validate_remote_target[TRemoteParams: Mapping[str, object], TRemoteStorage:
         except Exception as e:
             raise MKUserError(
                 "",
-                _("File upload test for remote storage failed. Original error message: %s") % e,
+                _(
+                    "File upload test for remote storage failed. Original error message: %(exception)s"
+                )
+                % {"exception": e},
             )
         try:
             remote_target.remote_storage.download(remote_key, remote_target.local_target.path)
         except Exception as e:
             raise MKUserError(
                 "",
-                _("File download test for remote storage failed. Original error message: %s") % e,
+                _(
+                    "File download test for remote storage failed. Original error message: %(exception)s"
+                )
+                % {"exception": e},
             )
         try:
             remote_target.remote_storage.remove(remote_key)
         except Exception as e:
             raise MKUserError(
                 "",
-                _("File removal test for remote storage failed. Original error message: %s") % e,
+                _(
+                    "File removal test for remote storage failed. Original error message: %(exception)s"
+                )
+                % {"exception": e},
             )
 
 
@@ -1744,7 +1753,7 @@ def _show_target_list(
                         transactions,
                         [("mode", "backup_targets"), ("target", target.ident)],
                     ),
-                    title=_("Delete target #%d") % nr,
+                    title=_("Delete target #%(nr)d") % {"nr": nr},
                     suffix=target.title,
                     message=_("ID: %s") % target.ident,
                 )
@@ -2033,7 +2042,7 @@ class ModeBackupKeyManagement(key_mgmt.ModeKeyManagement):
         )
 
     def _delete_confirm_title(self, nr: int) -> str:
-        return _("Delete backup key #%d") % nr
+        return _("Delete backup key #%(nr)d") % {"nr": nr}
 
     @property
     def component_name(self) -> CertManagementEvent.ComponentType:
@@ -2322,10 +2331,10 @@ class ModeBackupRestore(WatoMode[object]):
             raise MKUserError(
                 None,
                 _(
-                    "The key with the fingerprint %s which is needed to decrypt "
+                    "The key with the fingerprint %(key_digest)s which is needed to decrypt "
                     "the backup is misssing."
                 )
-                % key_digest,
+                % {"key_digest": key_digest},
             )
 
         key_field_id = "_key"
@@ -2450,7 +2459,7 @@ class ModeBackupRestore(WatoMode[object]):
                         [("_action", "delete"), ("_backup", backup_ident)],
                     ),
                     title=_("Delete backup"),
-                    message=_("From: %s") % from_info,
+                    message=_("From: %(from_info)s") % {"from_info": from_info},
                     suffix=backup_ident,
                 )
 
@@ -2464,7 +2473,7 @@ class ModeBackupRestore(WatoMode[object]):
                     ),
                     title=_("Start restore of backup"),
                     suffix=backup_ident,
-                    message=_("From: %s") % from_info,
+                    message=_("From: %(from_info)s") % {"from_info": from_info},
                     confirm_button=_("Start"),
                     cancel_button=_("Cancel"),
                 )

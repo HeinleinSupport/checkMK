@@ -48,7 +48,9 @@ def _validate_oracle_password(forbidden_chars: str) -> Callable[[tuple[str, str]
             # Only validate direct password entry, not password store references
             for char in forbidden_chars:
                 if char in password:
-                    raise ValueError(_("The password contains forbidden character: %s") % char)
+                    raise ValueError(
+                        _("The password contains forbidden character: %(char)s") % {"char": char}
+                    )
 
     return _validate
 
@@ -195,7 +197,7 @@ def _agent_config_mk_oracle_oracle_auth_choices(title: str, asm: bool) -> Dictio
             (
                 "tnsalias",
                 TextInput(
-                    title=_("TNS Alias %s") % UNIX_ONLY,
+                    title=_("TNS Alias %(UNIX_ONLY)s") % {"UNIX_ONLY": UNIX_ONLY},
                     allow_empty=True,
                 ),
             ),
@@ -241,7 +243,7 @@ def _valuespec_agent_config_mk_oracle() -> Dictionary:
             (
                 "xinetd_or_systemd",
                 CascadingDropdown(
-                    title=_("Host uses xinetd or systemd %s") % UNIX_ONLY,
+                    title=_("Host uses xinetd or systemd %(UNIX_ONLY)s") % {"UNIX_ONLY": UNIX_ONLY},
                     choices=[
                         ("xinetd", _("xinetd"), FixedValue(None, totext="")),
                         (
@@ -323,7 +325,8 @@ def _valuespec_agent_config_mk_oracle() -> Dictionary:
             (
                 "tnsalias_pre_postfix",
                 CascadingDropdown(
-                    title=_("Add pre or postfix to TNSALIASes %s") % UNIX_ONLY,
+                    title=_("Add pre or postfix to TNSALIASes %(UNIX_ONLY)s")
+                    % {"UNIX_ONLY": UNIX_ONLY},
                     choices=[
                         (
                             "all_sids",
@@ -488,13 +491,13 @@ def _valuespec_agent_config_mk_oracle() -> Dictionary:
                             (
                                 "tnsalias",
                                 TextInput(
-                                    title=_("TNS Alias %s") % UNIX_ONLY,
+                                    title=_("TNS Alias %(UNIX_ONLY)s") % {"UNIX_ONLY": UNIX_ONLY},
                                     allow_empty=True,
                                 ),
                             ),
                         ],
                     ),
-                    title=_("Remote sites %s") % UNIX_ONLY,
+                    title=_("Remote sites %(UNIX_ONLY)s") % {"UNIX_ONLY": UNIX_ONLY},
                     help=_(
                         "You can monitor database instances that are hosted on another server. This can be "
                         "helpful if you want to monitoring Oracle databases on Windows without deploying the "
@@ -510,7 +513,8 @@ def _valuespec_agent_config_mk_oracle() -> Dictionary:
             (
                 "remote_oracle_home",
                 AbsoluteDirname(
-                    title=_("<tt>ORACLE_HOME</tt> to use for remote access %s") % UNIX_ONLY,
+                    title=_("<tt>ORACLE_HOME</tt> to use for remote access %(UNIX_ONLY)s")
+                    % {"UNIX_ONLY": UNIX_ONLY},
                     help=_(
                         "Here you can specify an <tt>ORACLE_HOME</tt> for the access to the "
                         "remote databases. Omitting this empty will fall back to the system "
@@ -523,9 +527,9 @@ def _valuespec_agent_config_mk_oracle() -> Dictionary:
                 "tns_admin",
                 AbsoluteDirname(
                     title=_(
-                        "<tt>TNS_ADMIN</tt> to use for <tt>sqlnet.ora</tt> and <tt>tnsnames.ora</tt> %s"
+                        "<tt>TNS_ADMIN</tt> to use for <tt>sqlnet.ora</tt> and <tt>tnsnames.ora</tt> %(UNIX_ONLY)s"
                     )
-                    % UNIX_ONLY,
+                    % {"UNIX_ONLY": UNIX_ONLY},
                     help=_(
                         "Here you can specify an <tt>TNS_ADMIN</tt> for the access to the "
                         "configuration files <tt>sqlnet.ora</tt> and <tt>tnsnames.ora</tt>. "
@@ -537,7 +541,8 @@ def _valuespec_agent_config_mk_oracle() -> Dictionary:
             (
                 "sqlnet_ora_group",
                 TextInput(
-                    title=_("<tt>sqlnet.ora</tt> permission group %s") % UNIX_ONLY,
+                    title=_("<tt>sqlnet.ora</tt> permission group %(UNIX_ONLY)s")
+                    % {"UNIX_ONLY": UNIX_ONLY},
                     help=_(
                         "mk_oracle for Linux will change to an unprivileged user before executing any "
                         "Oracle binaries. This means that <tt>sqlnet.ora</tt> (which is created by the Bakery) "
@@ -552,7 +557,8 @@ def _valuespec_agent_config_mk_oracle() -> Dictionary:
             (
                 "validate_permissions",
                 CascadingDropdown(
-                    title=_("Oracle binaries permissions check %s") % WINDOWS_ONLY,
+                    title=_("Oracle binaries permissions check %(WINDOWS_ONLY)s")
+                    % {"WINDOWS_ONLY": WINDOWS_ONLY},
                     help=_(
                         "Due to security reasons the plug-in being executed as admin will check "
                         "permissions for Oracle executables. If the modification of Oracle binaries "

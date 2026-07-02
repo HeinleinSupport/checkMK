@@ -283,7 +283,9 @@ class LegacyDeprecatedMixin:
 
 def mandatory_parameter[T](varname: str, value: T | None) -> T:
     if value is None:
-        raise MKUserError(varname, _('The parameter "%s" is missing.') % varname)
+        raise MKUserError(
+            varname, _('The parameter "%(varname)s" is missing.') % {"varname": varname}
+        )
     return value
 
 
@@ -365,7 +367,9 @@ class Request(
         try:
             return model.model_validate_json(mandatory_parameter(varname, self.var(varname)))
         except ValueError as exception:
-            raise MKUserError(varname, _("The value is not valid: '%s'") % exception)
+            raise MKUserError(
+                varname, _("The value is not valid: '%(exception)s'") % {"exception": exception}
+            )
 
     @overload
     def get_validated_type_input[Validation_T: ValidatedClass](
@@ -423,7 +427,9 @@ class Request(
         try:
             return type_(raw_value)
         except ValueError as exception:
-            raise MKUserError(varname, _("The value is not valid: '%s'") % exception)
+            raise MKUserError(
+                varname, _("The value is not valid: '%(exception)s'") % {"exception": exception}
+            )
 
     def get_validated_type_input_mandatory[Validation_T: ValidatedClass](
         self,
@@ -474,7 +480,9 @@ class Request(
         try:
             return int(value)
         except ValueError:
-            raise MKUserError(varname, _('The parameter "%s" is not an integer.') % varname)
+            raise MKUserError(
+                varname, _('The parameter "%(varname)s" is not an integer.') % {"varname": varname}
+            )
 
     def get_integer_input_mandatory(self, varname: str, deflt: int | None = None) -> int:
         return mandatory_parameter(varname, self.get_integer_input(varname, deflt))
@@ -487,7 +495,9 @@ class Request(
         try:
             return float(value)
         except ValueError:
-            raise MKUserError(varname, _('The parameter "%s" is not a float.') % varname)
+            raise MKUserError(
+                varname, _('The parameter "%(varname)s" is not a float.') % {"varname": varname}
+            )
 
     def get_float_input_mandatory(self, varname: str, deflt: float | None = None) -> float:
         return mandatory_parameter(varname, self.get_float_input(varname, deflt))
@@ -499,7 +509,9 @@ class Request(
         Raises a MKUserError() in case the requested item is not available."""
         item = self.get_ascii_input(varname)
         if item not in collection:
-            raise MKUserError(varname, _("The requested item %s does not exist") % item)
+            raise MKUserError(
+                varname, _("The requested item %(item)s does not exist") % {"item": item}
+            )
         assert item is not None
         return collection[item], item
 
@@ -519,7 +531,9 @@ class Request(
         if not self.has_var(varname):
             if deflt is not None:
                 return deflt
-            raise MKUserError(varname, _('The parameter "%s" is missing.') % varname)
+            raise MKUserError(
+                varname, _('The parameter "%(varname)s" is missing.') % {"varname": varname}
+            )
 
         url = self.var(varname)
         assert url is not None
@@ -527,7 +541,9 @@ class Request(
         if not is_allowed_url(url):
             if deflt:
                 return deflt
-            raise MKUserError(varname, _('The parameter "%s" is not a valid URL.') % varname)
+            raise MKUserError(
+                varname, _('The parameter "%(varname)s" is not a valid URL.') % {"varname": varname}
+            )
 
         return url
 
@@ -588,7 +604,9 @@ class Request(
                 request_ = ast.literal_eval(python_request)
             except (SyntaxError, ValueError) as e:
                 raise MKUserError(
-                    "request", _("Failed to parse Python request: '%s': %s") % (python_request, e)
+                    "request",
+                    _("Failed to parse Python request: '%(python_request)s': %(exception)s")
+                    % {"python_request": python_request, "exception": e},
                 )
         else:
             json_request = self.var("request", "{}")
@@ -598,7 +616,9 @@ class Request(
                 request_["request_format"] = "json"
             except ValueError as e:  # Python3: json.JSONDecodeError
                 raise MKUserError(
-                    "request", _("Failed to parse JSON request: '%s': %s") % (json_request, e)
+                    "request",
+                    _("Failed to parse JSON request: '%(json_request)s': %(exception)s")
+                    % {"json_request": json_request, "exception": e},
                 )
 
         for key, val in self.itervars():

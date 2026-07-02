@@ -785,7 +785,7 @@ class ParentChildDataGenerator(ABCTopologyNodeDataGenerator):
                 continue
             self._topology_nodes[internal_site_id] = TopologyNode(
                 id=internal_site_id,
-                name=_("Site %s") % site_id,
+                name=_("Site %(site_id)s") % {"site_id": site_id},
                 mesh_depth=0,
                 type=NodeType.TOPOLOGY_SITE,
             )

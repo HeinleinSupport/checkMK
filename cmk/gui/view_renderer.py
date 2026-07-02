@@ -688,7 +688,7 @@ class GUIViewRenderer(ABCViewRenderer):
                 if is_own_view:
                     title = _("Edit my view")
                 else:
-                    title = _("Edit view of user %s") % view_owner
+                    title = _("Edit view of user %(view_owner)s") % {"view_owner": view_owner}
                     url_vars += [("owner", view_owner)]
 
                 yield PageMenuEntry(

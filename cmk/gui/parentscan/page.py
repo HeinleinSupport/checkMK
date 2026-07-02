@@ -238,7 +238,8 @@ class ModeParentScan(WatoMode):
             num_selected = len(get_hosts_from_checkboxes(self._folder))
             html.static_icon(StaticIcon(IconNames.toggle_details))
             html.write_text_permissive(
-                _("You have selected <b>%d</b> hosts for parent scan. ") % num_selected
+                _("You have selected <b>%(num_selected)d</b> hosts for parent scan. ")
+                % {"num_selected": num_selected}
             )
         html.help(
             _(
@@ -277,8 +278,10 @@ class ModeParentScan(WatoMode):
             user_file = f"{profile_dir}/{user.id}/parentscan.mk"
             raise MKUserError(
                 None,
-                _("Error reading parent scan settings. Please delete the file ''%s' and try again.")
-                % user_file,
+                _(
+                    "Error reading parent scan settings. Please delete the file ''%(user_file)s' and try again."
+                )
+                % {"user_file": user_file},
             )
 
         self._settings = parent_scan_settings

@@ -169,7 +169,7 @@ def _hex_color_to_rgb_color(color: str) -> tuple[int, int, int]:
     try:
         return int(full_color[1:3], 16), int(full_color[3:5], 16), int(full_color[5:7], 16)
     except Exception:
-        raise MKGeneralException(_("Invalid color specification '%s'") % color)
+        raise MKGeneralException(_("Invalid color specification '%(color)s'") % {"color": color})
 
 
 def get_palette_color_by_index(

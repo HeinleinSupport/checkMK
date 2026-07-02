@@ -209,7 +209,7 @@ def handle_acknowledgement(request: Request) -> None:
     elif request.var("_ack_all"):
         num = len(unacknowledged_incompatible_werks())
         acknowledge_all_werks()
-        html.show_message(_("%d incompatible Werks have been acknowledged.") % num)
+        html.show_message(_("%(num)d incompatible Werks have been acknowledged.") % {"num": num})
 
 
 def _page_menu_entries_ack_all_werks(request: Request) -> Iterator[PageMenuEntry]:

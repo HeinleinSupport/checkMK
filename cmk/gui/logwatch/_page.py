@@ -223,7 +223,7 @@ def show_host_log_list(
     table_row_limit: int,
 ) -> None:
     """Shows all problematic logfiles of a host"""
-    title = _("Log files of host %s") % host_name
+    title = _("Log files of host %(host_name)s") % {"host_name": host_name}
     breadcrumb = _host_log_list_breadcrumb(host_name, title, user_permissions)
     make_header(
         html,
@@ -382,7 +382,10 @@ def show_file(
 ) -> None:
     int_filename = form_file_to_int(file_name)
 
-    title = _("Log files of host %s: %s") % (host_name, int_filename)
+    title = _("Log files of host %(host_name)s: %(int_filename)s") % {
+        "host_name": host_name,
+        "int_filename": int_filename,
+    }
     breadcrumb = _show_file_breadcrumb(request, host_name, title, user_permissions)
     make_header(
         html,
@@ -415,7 +418,7 @@ def show_file(
     except Exception as e:
         if debug:
             raise
-        html.show_error(_("Unable to show log file: <b>%s</b>") % e)
+        html.show_error(_("Unable to show log file: <b>%(exception)s</b>") % {"exception": e})
         html.footer()
         return
 
@@ -463,7 +466,7 @@ def _show_file_breadcrumb(
     breadcrumb = make_host_breadcrumb(host_name, user_permissions)
     breadcrumb.append(
         BreadcrumbItem(
-            title=_("Log files of host %s") % host_name,
+            title=_("Log files of host %(host_name)s") % {"host_name": host_name},
             url=makeuri(request, [("file", "")]),
             id="logfiles_of_host",
         )
@@ -495,7 +498,8 @@ def _show_file_page_menu(
                         title=_("Log files"),
                         entries=[
                             PageMenuEntry(
-                                title=_("Log files of host %s") % host_name,
+                                title=_("Log files of host %(host_name)s")
+                                % {"host_name": host_name},
                                 icon_name=StaticIcon(IconNames.logwatch),
                                 item=make_simple_link(makeuri(request, [("file", "")])),
                             ),
@@ -660,7 +664,10 @@ def do_log_ack(
 
     if not user.may("general.act"):
         html.h1(_("Permission denied"), class_=["error"])
-        html.div(_("You are not allowed to acknowledge %s") % ack_msg, class_=["error"])
+        html.div(
+            _("You are not allowed to acknowledge %(ack_msg)s") % {"ack_msg": ack_msg},
+            class_=["error"],
+        )
         html.footer()
         return
 
@@ -673,16 +680,18 @@ def do_log_ack(
             acknowledge_logfile(this_site, this_host, int_filename, display_name)
         except Exception as e:
             html.show_error(
-                _("The log file <tt>%s</tt> of host <tt>%s</tt> could not be deleted: %s.")
-                % (display_name, this_host, e)
+                _(
+                    "The log file <tt>%(display_name)s</tt> of host <tt>%(host_name)s</tt> could not be deleted: %(exception)s."
+                )
+                % {"display_name": display_name, "host_name": this_host, "exception": e}
             )
             html.footer()
             return
 
     html.show_message(
         "<b>{}</b><p>{}</p>".format(
-            _("Acknowledged %s") % ack_msg,
-            _("Acknowledged all messages in %s.") % ack_msg,
+            _("Acknowledged %(ack_msg)s") % {"ack_msg": ack_msg},
+            _("Acknowledged all messages in %(ack_msg)s.") % {"ack_msg": ack_msg},
         )
     )
     html.footer()
@@ -693,12 +702,15 @@ def _get_ack_msg(host_name: HostName | None, file_name: str | None) -> str:
         return _("all log files on all hosts")
 
     if host_name and not file_name:  # all logs on one host
-        return _("all log files of host %s") % host_name
+        return _("all log files of host %(host_name)s") % {"host_name": host_name}
 
     if host_name and file_name:  # one log on one host
-        return _("the log file %s on host %s") % (file_name, host_name)
+        return _("the log file %(file_name)s on host %(host_name)s") % {
+            "file_name": file_name,
+            "host_name": host_name,
+        }
 
-    return _("log file %s on all hosts") % file_name
+    return _("log file %(file_name)s on all hosts") % {"file_name": file_name}
 
 
 def acknowledge_logfile(
@@ -810,7 +822,10 @@ def parse_file(
     except Exception as e:
         if debug:
             raise
-        raise MKGeneralException(_("Cannot parse log file %s: %s") % (file_name, e))
+        raise MKGeneralException(
+            _("Cannot parse log file %(file_name)s: %(exception)s")
+            % {"file_name": file_name, "exception": e}
+        )
 
     return log_chunks
 

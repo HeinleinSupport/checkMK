@@ -25,12 +25,12 @@ def validate_id(
             if existing_entries.get(name):
                 raise MKUserError(
                     varprefix + "_p_name",
-                    _("You already have an element with the ID <b>%s</b>") % name,
+                    _("You already have an element with the ID <b>%(name)s</b>") % {"name": name},
                 )
             if reserved_unique_ids is not None and name in reserved_unique_ids:
                 raise MKUserError(
                     varprefix + "_p_name",
-                    _("ID <b>%s</b> is reserved for internal use.") % name,
+                    _("ID <b>%(name)s</b> is reserved for internal use.") % {"name": name},
                 )
 
     return _validate

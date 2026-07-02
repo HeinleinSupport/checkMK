@@ -124,7 +124,8 @@ def _make_default_page_state(
         icon_name=StaticIcon(IconNames.trans),
         css_classes=["reload"],
         url="javascript:document.location.reload()",
-        tooltip_text=_("Automatic page reload in %d seconds.") % browser_reload
+        tooltip_text=_("Automatic page reload in %(browser_reload)d seconds.")
+        % {"browser_reload": browser_reload}
         + "\n"
         + _("Click for instant reload."),
     )

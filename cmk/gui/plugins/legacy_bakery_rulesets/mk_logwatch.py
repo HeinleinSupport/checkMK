@@ -39,7 +39,9 @@ def _validate_patterns(value: tuple[str, str], varprefix: str) -> None:
     try:
         re.compile(pattern)
     except re.error as e:
-        raise MKUserError(varprefix, _("Invalid regular expression: %s") % e)
+        raise MKUserError(
+            varprefix, _("Invalid regular expression: %(exception)s") % {"exception": e}
+        )
 
 
 def _validate_ip_address_or_network(value: str, varprefix: str) -> None:
@@ -107,7 +109,11 @@ def validate_python_encoding(encoding_name: str, varprefix: str) -> None:
     try:
         "".encode(encoding_name)
     except (LookupError, UnicodeEncodeError):
-        raise MKUserError(varprefix, _('"%s" is not a valid python encoding.') % encoding_name)
+        raise MKUserError(
+            varprefix,
+            _('"%(encoding_name)s" is not a valid python encoding.')
+            % {"encoding_name": encoding_name},
+        )
 
 
 def _agent_config_mk_logwatch_valuespec_file_section() -> Dictionary:

@@ -184,15 +184,12 @@ class _ACTestResultProblem:
     def _create_error_box_message(self, version: str, state: ACResultState) -> str:
         match state:
             case ACResultState.CRIT:
-                return _("This does not work in Checkmk %s.") % version
+                return _("This does not work in Checkmk %(version)s.") % {"version": version}
             case ACResultState.WARN:
-                return (
-                    _(
-                        "This may partially work in Checkmk %s but might not work from the"
-                        " next major version onwards."
-                    )
-                    % version
-                )
+                return _(
+                    "This may partially work in Checkmk %(version)s but might not work from the"
+                    " next major version onwards."
+                ) % {"version": version}
             case _:
                 return ""
 
@@ -265,14 +262,11 @@ class _ACTestResultProblemMKP(_ACTestResultProblem):
 
     @override
     def _create_info(self, version: str) -> str:
-        return (
-            _(
-                "The extension package uses APIs which are deprecated or removed in"
-                " Checkmk %s so that this extension will not work anymore once you upgrade"
-                " your site to next major version."
-            )
-            % version
-        )
+        return _(
+            "The extension package uses APIs which are deprecated or removed in"
+            " Checkmk %(version)s so that this extension will not work anymore once you upgrade"
+            " your site to next major version."
+        ) % {"version": version}
 
     @override
     def _create_recommendation(self) -> HTML | str:
@@ -290,14 +284,11 @@ class _ACTestResultProblemFile(_ACTestResultProblem):
 
     @override
     def _create_info(self, version: str) -> str:
-        return (
-            _(
-                "The plug-in uses APIs which are deprecated or removed in"
-                " Checkmk %s, so that this extension will not work anymore once you upgrade"
-                " your site to next major version."
-            )
-            % version
-        )
+        return _(
+            "The plug-in uses APIs which are deprecated or removed in"
+            " Checkmk %(version)s, so that this extension will not work anymore once you upgrade"
+            " your site to next major version."
+        ) % {"version": version}
 
     @override
     def _create_recommendation(self) -> HTML | str:

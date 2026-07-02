@@ -52,7 +52,10 @@ class JobSchedulerClient:
             )
         except requests.RequestException as e:
             return result.Error(
-                StartupError(_("Communication with ui-job-scheduler failed: %s") % e)
+                StartupError(
+                    _("Communication with ui-job-scheduler failed: %(exception)s")
+                    % {"exception": e}
+                )
             )
 
         if response.status_code != 200:

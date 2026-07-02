@@ -268,7 +268,7 @@ class Base[T_BaseConfig: BaseConfig](abc.ABC):
     # moment we use dedicated methods, wrong usage will be found by linters.
     @classmethod
     def phrase(cls, phrase: PagetypePhrase) -> str:
-        return _("MISSING '%s'") % phrase
+        return _("MISSING '%(phrase)s'") % {"phrase": phrase}
 
     @classmethod
     def parameters(
@@ -754,7 +754,7 @@ class Overridable[T_OverridableConfig: OverridableConfig](Base[T_OverridableConf
             Permission(
                 section=PERMISSION_SECTION_GENERAL,
                 name="edit_" + cls.type_name(),
-                title=_l("Customize and use %s") % title_lower,
+                title=_l("Customize and use %(title_lower)s") % {"title_lower": title_lower},
                 description=_l("Allows to create own %s, customize built-in %s and use them.")
                 % (title_lower, title_lower),
                 defaults=["admin", "user"],
@@ -765,8 +765,9 @@ class Overridable[T_OverridableConfig: OverridableConfig](Base[T_OverridableConf
             Permission(
                 section=PERMISSION_SECTION_GENERAL,
                 name="publish_" + cls.type_name(),
-                title=_l("Publish %s") % title_lower,
-                description=_l("Make %s visible and usable for all users.") % title_lower,
+                title=_l("Publish %(title_lower)s") % {"title_lower": title_lower},
+                description=_l("Make %(title_lower)s visible and usable for all users.")
+                % {"title_lower": title_lower},
                 defaults=["admin", "user"],
             )
         )
@@ -775,11 +776,12 @@ class Overridable[T_OverridableConfig: OverridableConfig](Base[T_OverridableConf
             Permission(
                 section=PERMISSION_SECTION_GENERAL,
                 name="publish_to_groups_" + cls.type_name(),
-                title=_l("Publish %s to allowed contact groups") % title_lower,
+                title=_l("Publish %(title_lower)s to allowed contact groups")
+                % {"title_lower": title_lower},
                 description=_l(
-                    "Make %s visible and usable for users of contact groups the publishing user is a member of."
+                    "Make %(title_lower)s visible and usable for users of contact groups the publishing user is a member of."
                 )
-                % title_lower,
+                % {"title_lower": title_lower},
                 defaults=["admin", "user"],
             )
         )
@@ -788,11 +790,12 @@ class Overridable[T_OverridableConfig: OverridableConfig](Base[T_OverridableConf
             Permission(
                 section=PERMISSION_SECTION_GENERAL,
                 name="publish_to_foreign_groups_" + cls.type_name(),
-                title=_l("Publish %s to foreign contact groups") % title_lower,
+                title=_l("Publish %(title_lower)s to foreign contact groups")
+                % {"title_lower": title_lower},
                 description=_l(
-                    "Make %s visible and usable for users of contact groups the publishing user is not a member of."
+                    "Make %(title_lower)s visible and usable for users of contact groups the publishing user is not a member of."
                 )
-                % title_lower,
+                % {"title_lower": title_lower},
                 defaults=["admin"],
             )
         )
@@ -801,12 +804,13 @@ class Overridable[T_OverridableConfig: OverridableConfig](Base[T_OverridableConf
             Permission(
                 section=PERMISSION_SECTION_GENERAL,
                 name="publish_to_sites_" + cls.type_name(),
-                title=_l("Publish %s to users of selected sites") % title_lower,
+                title=_l("Publish %(title_lower)s to users of selected sites")
+                % {"title_lower": title_lower},
                 description=_l(
-                    "Make %s visible and usable for users of sites the "
+                    "Make %(title_lower)s visible and usable for users of sites the "
                     "publishing user has selected."
                 )
-                % title_lower,
+                % {"title_lower": title_lower},
                 defaults=["admin"],
             )
         )
@@ -816,9 +820,11 @@ class Overridable[T_OverridableConfig: OverridableConfig](Base[T_OverridableConf
             Permission(
                 section=PERMISSION_SECTION_GENERAL,
                 name="see_user_" + cls.type_name(),
-                title=_l("See user %s") % title_lower,
-                description=_l("Is needed for seeing %s that other users have created.")
-                % title_lower,
+                title=_l("See user %(title_lower)s") % {"title_lower": title_lower},
+                description=_l(
+                    "Is needed for seeing %(title_lower)s that other users have created."
+                )
+                % {"title_lower": title_lower},
                 defaults=default_authorized_builtin_role_ids,
             )
         )
@@ -827,7 +833,7 @@ class Overridable[T_OverridableConfig: OverridableConfig](Base[T_OverridableConf
             Permission(
                 section=PERMISSION_SECTION_GENERAL,
                 name="force_" + cls.type_name(),
-                title=_l("Modify built-in %s") % title_lower,
+                title=_l("Modify built-in %(title_lower)s") % {"title_lower": title_lower},
                 description=_l("Make own published %s override built-in %s for all users.")
                 % (title_lower, title_lower),
                 defaults=["admin"],
@@ -838,8 +844,9 @@ class Overridable[T_OverridableConfig: OverridableConfig](Base[T_OverridableConf
             Permission(
                 section=PERMISSION_SECTION_GENERAL,
                 name="edit_foreign_" + cls.type_name(),
-                title=_l("Edit foreign %s") % title_lower,
-                description=_("Allows to view and edit %s created by other users.") % title_lower,
+                title=_l("Edit foreign %(title_lower)s") % {"title_lower": title_lower},
+                description=_("Allows to view and edit %(title_lower)s created by other users.")
+                % {"title_lower": title_lower},
                 defaults=["admin"],
             )
         )
@@ -848,8 +855,9 @@ class Overridable[T_OverridableConfig: OverridableConfig](Base[T_OverridableConf
             Permission(
                 section=PERMISSION_SECTION_GENERAL,
                 name="delete_foreign_" + cls.type_name(),
-                title=_l("Delete foreign %s") % title_lower,
-                description=_l("Allows to delete %s created by other users.") % title_lower,
+                title=_l("Delete foreign %(title_lower)s") % {"title_lower": title_lower},
+                description=_l("Allows to delete %(title_lower)s created by other users.")
+                % {"title_lower": title_lower},
                 defaults=["admin"],
             )
         )
@@ -1074,7 +1082,8 @@ class ListPage[T: Overridable](Page):
             except KeyError:
                 raise MKUserError(
                     "_delete",
-                    _("The %s you are trying to delete does not exist.") % pagetype_title,
+                    _("The %(pagetype_title)s you are trying to delete does not exist.")
+                    % {"pagetype_title": pagetype_title},
                 )
 
             if not instance.may_delete():
@@ -1083,7 +1092,10 @@ class ListPage[T: Overridable](Page):
             try:
                 instances.remove_instance((owner, delname))
                 self._type.save_user_instances(instances, user_permissions, owner)
-                flash(_("Your %s has been deleted.") % pagetype_title)
+                flash(
+                    _("Your %(pagetype_title)s has been deleted.")
+                    % {"pagetype_title": pagetype_title}
+                )
                 html.reload_whole_page()
             except MKUserError as e:
                 html.user_error(e)
@@ -1562,11 +1574,11 @@ def PublishTo(
                     rows=15,
                     size=80,
                     help=_(
-                        "Select sites the %s should be avalable on. It will "
+                        "Select sites the %(type_title)s should be avalable on. It will "
                         "become available for all users of that sites on the "
                         "next activation of changes for the selected sites."
                     )
-                    % type_title,
+                    % {"type_title": type_title},
                 ),
             )
         )
@@ -1605,7 +1617,7 @@ def make_edit_form_page_menu(
                         ),
                     ),
                     PageMenuTopic(
-                        title=_("For this %s") % type_title,
+                        title=_("For this %(type_title)s") % {"type_title": type_title},
                         entries=list(
                             _page_menu_entries_sub_pages(
                                 mode, sub_pages, ident_attr_name, visualname
@@ -1662,7 +1674,7 @@ def _page_menu_entries_save(
             is_list_entry=True,
             is_shortcut=True,
             is_suggested=True,
-            shortcut_title=_("Save & go to %s") % type_title,
+            shortcut_title=_("Save & go to %(type_title)s") % {"type_title": type_title},
         )
 
     parent_item = breadcrumb[-2]

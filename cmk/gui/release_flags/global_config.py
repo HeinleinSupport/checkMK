@@ -118,9 +118,9 @@ def _make_flag_config_variable(name: str, field_info: FieldInfo) -> ConfigVariab
     description = str(extra.get("description", ""))
     remove_after = str(extra.get("remove_after", ""))
     help_text = _(
-        "%s<br><br>This is a temporary release flag. It is scheduled for removal "
-        "in version %s and must not be relied on for permanent configuration."
-    ) % (description, remove_after)
+        "%(description)s<br><br>This is a temporary release flag. It is scheduled for removal "
+        "in version %(remove_after)s and must not be relied on for permanent configuration."
+    ) % {"description": description, "remove_after": remove_after}
     return ConfigVariable(
         group=ConfigVariableGroupReleaseFlags,
         primary_domain=ConfigDomainReleaseFlags,

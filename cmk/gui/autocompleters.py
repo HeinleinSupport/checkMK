@@ -73,7 +73,7 @@ class PageVsAutocomplete(AjaxPage):
 
         completer = autocompleter_registry.get(ident)
         if completer is None:
-            raise MKUserError("ident", _("Invalid ident: %s") % ident)
+            raise MKUserError("ident", _("Invalid ident: %(ident)s") % {"ident": ident})
 
         result_data = completer(ctx.config, api_request["value"], api_request["params"])
 

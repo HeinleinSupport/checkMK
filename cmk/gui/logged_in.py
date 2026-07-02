@@ -488,9 +488,9 @@ class LoggedInUser:
                     "We are sorry, but you lack the permission "
                     "for this operation. If you do not like this "
                     "then please ask your administrator to provide you with "
-                    "the following permission: '<b>%s</b>'."
+                    "the following permission: '<b>%(title)s</b>'."
                 )
-                % title
+                % {"title": title}
             )
 
     def load_file(

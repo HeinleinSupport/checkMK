@@ -170,7 +170,8 @@ def page_graph(ctx: PageContext) -> None:
     breadcrumb = make_service_breadcrumb(host_name, service_name, user_permissions)
     make_header(
         html,
-        _("Prediction for %s - %s - %s") % (host_name, service_name, metric_name),
+        _("Prediction for %(host_name)s - %(service_name)s - %(metric_name)s")
+        % {"host_name": host_name, "service_name": service_name, "metric_name": metric_name},
         breadcrumb,
         debug=ctx.config.debug,
         lang=user.language,

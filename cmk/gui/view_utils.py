@@ -230,7 +230,9 @@ def row_limit_exceeded(row_count: int, limit: int | None) -> bool:
 
 def query_limit_exceeded_warn(limit: int | None, user_config: LoggedInUser) -> None:
     """Compare query reply against limits, warn in the GUI about incompleteness"""
-    text = HTML.with_escaping(_("Your query produced more than %d results. ") % limit)
+    text = HTML.with_escaping(
+        _("Your query produced more than %(limit)d results. ") % {"limit": limit}
+    )
 
     ignore_limit_link = None
     if request.get_ascii_input("limit", "soft") == "soft" and user_config.may(

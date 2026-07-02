@@ -145,7 +145,10 @@ def _load_config_file_to(path: str, raw_config: dict[str, Any]) -> None:
     except FileNotFoundError:
         pass
     except Exception as e:
-        raise MKConfigError(_("Cannot read configuration file %s: %s:") % (path, e))
+        raise MKConfigError(
+            _("Cannot read configuration file %(path)s: %(exception)s:")
+            % {"path": path, "exception": e}
+        )
 
 
 def load_config() -> Config:

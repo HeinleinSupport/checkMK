@@ -508,7 +508,9 @@ def _process_message(msg: Message, multisite_user_ids: Set[str]) -> None:
     if errors:
         error_message = HTML.empty()
         for method, method_errors in errors.items():
-            error_message += _("Failed to send %s messages to the following users:") % method
+            error_message += _("Failed to send %(method)s messages to the following users:") % {
+                "method": method
+            }
             table_rows = HTML.empty()
             for user_id, exception in method_errors:
                 table_rows += HTMLWriter.render_tr(
@@ -625,7 +627,7 @@ def _message_mail(user_id: UserId, msg: Message) -> bool:
             from_address=MailString(default_from_address()),
         )
     except Exception as exc:
-        raise MKInternalError(_("Mail could not be delivered: '%s'") % exc) from exc
+        raise MKInternalError(_("Mail could not be delivered: '%(exc)s'") % {"exc": exc}) from exc
 
     return True
 

@@ -476,7 +476,11 @@ class Table:
         search_term: str | None,
     ) -> None:
         if not self.options["omit_update_header"]:
-            row_info = _("1 row") if len(rows) == 1 else _("%d rows") % num_rows_unlimited
+            row_info = (
+                _("1 row")
+                if len(rows) == 1
+                else _("%(num_rows_unlimited)d rows") % {"num_rows_unlimited": num_rows_unlimited}
+            )
             html.javascript("cmk.utils.update_row_info(%s);" % json.dumps(row_info))
 
         if request.var("search") is not None:
