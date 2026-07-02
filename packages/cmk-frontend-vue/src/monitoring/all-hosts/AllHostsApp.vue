@@ -358,10 +358,7 @@ function onRightPaneCollapse(collapsed: boolean): void {
     >
       <template #left>
         <div class="monitoring-all-hosts-app__left-pane">
-          <MonitoringResultsCount
-            class="monitoring-all-hosts-app__results-count"
-            :active-filter-count="hostService.filters.activeFilterCount"
-          />
+          <MonitoringResultsCount class="monitoring-all-hosts-app__results-count" />
           <ActionFeedback
             v-if="feedback"
             v-model:open="feedbackOpen"

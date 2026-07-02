@@ -19,12 +19,8 @@ function makeServiceStub(matched = 0, total = 0, committedSearchQuery = '', acti
   }
 }
 
-function renderCount(
-  stub: ReturnType<typeof makeServiceStub>,
-  props: { activeFilterCount?: number } = {}
-) {
+function renderCount(stub: ReturnType<typeof makeServiceStub>) {
   return render(MonitoringResultsCount, {
-    props,
     global: {
       provide: { [MONITORING_SERVICE as symbol]: stub as unknown as MonitoringService<unknown> }
     }
@@ -85,7 +81,7 @@ test('shows the criteria wording when a filter is active', () => {
 })
 
 test('shows the criteria wording when both a filter and a search are active', () => {
-  renderCount(makeServiceStub(3, 10, 'web'), { activeFilterCount: 1 })
+  renderCount(makeServiceStub(3, 10, 'web', 2))
 
   expect(screen.getByText('Rows matching your criteria: 3 | Total rows: 10')).toBeInTheDocument()
 })
