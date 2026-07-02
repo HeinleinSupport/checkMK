@@ -13,7 +13,7 @@ from ._evaluate import (
     EvaluatedVerticalRange,
     VerticalRangeType,
 )
-from ._from_api import build_curve, metric_display_attributes
+from ._from_api import build_curve
 from ._graph import (
     Curve,
     FixedRange,
@@ -125,7 +125,6 @@ __all__ = [
     "build_matched_graphs",
     "fetch_available_metric_names",
     "build_matched_graphs_per_service",
-    "metric_display_attributes",
     "build_curve",
     "evaluate_graphs",
 ]

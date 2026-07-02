@@ -141,7 +141,7 @@ _RULE_DISPLAY: Mapping[ScalarType, tuple[str, str | None]] = {
 }
 
 
-def metric_display_attributes(
+def _metric_display_attributes(
     metric_name: str,
     metrics: Mapping[str, metrics_v1.Metric],
     localizer: Callable[[str], str],
@@ -177,7 +177,7 @@ class _ParseContext:
 def _curve_display(quantity: _ApiQuantity, context: _ParseContext) -> CurveAttributes:
     match quantity:
         case str():
-            return metric_display_attributes(quantity, context.metrics, context.localizer)
+            return _metric_display_attributes(quantity, context.metrics, context.localizer)
         case metrics_v1.Constant():
             return CurveAttributes(
                 title=quantity.title.localize(context.localizer),
@@ -190,7 +190,7 @@ def _curve_display(quantity: _ApiQuantity, context: _ParseContext) -> CurveAttri
             | metrics_v1.WarningOf()
             | metrics_v1.CriticalOf()
         ):
-            metric = metric_display_attributes(
+            metric = _metric_display_attributes(
                 quantity.metric_name, context.metrics, context.localizer
             )
             return CurveAttributes(
@@ -199,7 +199,7 @@ def _curve_display(quantity: _ApiQuantity, context: _ParseContext) -> CurveAttri
                 color=context.metric_color(quantity.metric_name),
             )
         case metrics_v1.MinimumOf() | metrics_v1.MaximumOf():
-            metric = metric_display_attributes(
+            metric = _metric_display_attributes(
                 quantity.metric_name, context.metrics, context.localizer
             )
             return CurveAttributes(
@@ -420,9 +420,9 @@ def _attributes_for(
 ) -> CurveAttributes:
     match quantity:
         case RRDMetric():
-            return metric_display_attributes(quantity.metric_name, metrics, localizer)
+            return _metric_display_attributes(quantity.metric_name, metrics, localizer)
         case ScalarOf():
-            metric = metric_display_attributes(quantity.metric.metric_name, metrics, localizer)
+            metric = _metric_display_attributes(quantity.metric.metric_name, metrics, localizer)
             label, type_color = _RULE_DISPLAY[quantity.scalar_type]
             return CurveAttributes(
                 title=localizer(label),
