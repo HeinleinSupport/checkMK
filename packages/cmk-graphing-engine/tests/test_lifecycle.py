@@ -24,7 +24,7 @@ from cmk.graphing_engine import (
     ConsolidationFunction,
     evaluate_graphs,
     EvaluatedGraph,
-    fetch_available_metric_names,
+    fetch_metric_names,
     Graph,
     HostName,
     MetricName,
@@ -126,7 +126,7 @@ def _discover(
     *,
     translations: Sequence[translations_v1.Translation] = (),
 ) -> Sequence[Graph]:
-    available = fetch_available_metric_names(
+    available = fetch_metric_names(
         services=[_SERVICE],
         translations=translations,
         rrd=rrd,

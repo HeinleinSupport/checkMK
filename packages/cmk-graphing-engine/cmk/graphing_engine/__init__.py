@@ -57,7 +57,7 @@ from ._quantities import (
     Sum,
 )
 from ._source import (
-    fetch_available_metric_names,
+    fetch_metric_names,
     RRDSource,
 )
 from ._units import (
@@ -123,7 +123,7 @@ __all__ = [
     "VerticalRange",
     "VerticalRangeType",
     "build_matched_graphs",
-    "fetch_available_metric_names",
+    "fetch_metric_names",
     "build_matched_graphs_per_service",
     "build_curve",
     "evaluate_graphs",

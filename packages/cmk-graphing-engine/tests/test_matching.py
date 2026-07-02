@@ -17,7 +17,7 @@ from cmk.graphing_engine import (
     ConsolidationFunction,
     evaluate_graphs,
     EvaluatedGraph,
-    fetch_available_metric_names,
+    fetch_metric_names,
     Graph,
     HostName,
     Line,
@@ -190,7 +190,7 @@ def _discover(
     *,
     rrd: _FakeFetchRRD,
 ) -> Sequence[Graph]:
-    available = fetch_available_metric_names(services=[service], translations=[], rrd=rrd)
+    available = fetch_metric_names(services=[service], translations=[], rrd=rrd)
     return build_matched_graphs(
         service=service,
         registered_graphs=registered_graphs,
@@ -573,7 +573,7 @@ def test_build_matched_graphs_builds_threshold_rules_for_fallback_graphs() -> No
     service = _service()
     cpu_user = MetricName("cpu_user")
     rrd = _FakeFetchRRD(performance_response={service: _perf_data(_perf(cpu_user, warning=80.0))})
-    available = fetch_available_metric_names(services=[service], translations=[], rrd=rrd).get(
+    available = fetch_metric_names(services=[service], translations=[], rrd=rrd).get(
         service, frozenset()
     )
 

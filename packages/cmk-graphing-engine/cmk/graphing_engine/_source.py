@@ -130,7 +130,7 @@ def fetch_time_series(
     return result
 
 
-def fetch_available_metric_names(
+def fetch_metric_names(
     *,
     services: Iterable[Service],
     translations: Iterable[translations_v1.Translation],

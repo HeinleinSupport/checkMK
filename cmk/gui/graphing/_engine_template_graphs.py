@@ -16,7 +16,7 @@ from cmk.graphing_engine import (
     ConsolidationFunction,
     evaluate_graphs,
     EvaluatedGraph,
-    fetch_available_metric_names,
+    fetch_metric_names,
     Graph,
     RRDSource,
     Service,
@@ -59,7 +59,7 @@ def build_template_graphs(
     registered_metrics: Mapping[str, metrics_v1.Metric],
     registered_translations: Sequence[translations_v1.Translation],
 ) -> Sequence[Graph]:
-    available = fetch_available_metric_names(
+    available = fetch_metric_names(
         services=[service],
         translations=registered_translations,
         rrd=rrd,
