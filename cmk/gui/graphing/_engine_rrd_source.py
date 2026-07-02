@@ -112,12 +112,12 @@ def _parse_perf_data(
             value, unit_name = _split_unit(value_text)
             if value is None or unit_name is None:
                 continue
-            lower_warning, warn = _parse_range(value_parts[0])
-            lower_critical, crit = _parse_range(value_parts[1])
+            lower_warning, warning = _parse_range(value_parts[0])
+            lower_critical, critical = _parse_range(value_parts[1])
             perf_data[MetricName(varname)] = RawPerformanceValue(
                 value=value,
-                warning=warn,
-                critical=crit,
+                warning=warning,
+                critical=critical,
                 lower_warning=lower_warning,
                 lower_critical=lower_critical,
                 minimum=_float_or_int(value_parts[2]),
