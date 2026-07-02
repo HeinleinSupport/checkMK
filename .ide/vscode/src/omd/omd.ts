@@ -282,9 +282,11 @@ export async function createSite(): Promise<void> {
       : await vscode.window.showQuickPick(editionChoices, { placeHolder: 'Select edition' })
   if (!edition) return
 
+  const siteNameDefault = versionToSiteName(version)
   const name = await vscode.window.showInputBox({
     prompt: 'Site name (leave empty for auto-generated)',
-    placeHolder: `e.g. v${version.replace(/\./g, '').replace(/-.*/, '')}`,
+    value: siteNameDefault,
+    placeHolder: `e.g. ${siteNameDefault}`,
     validateInput: (v) =>
       !v || /^[a-zA-Z0-9_-]+$/.test(v)
         ? null
@@ -318,9 +320,15 @@ export async function createSite(): Promise<void> {
 
 async function detectBranchVersion(): Promise<string> {
   const branch = await safeExecAsync('git rev-parse --abbrev-ref HEAD 2>/dev/null')
-  if (!branch) return ''
+  if (!branch) return '3.0'
   const m = branch.match(/(\d+\.\d+(?:\.\d+)?)/)
-  return m ? m[1] : ''
+  return m ? m[1] : '3.0'
+}
+
+function versionToSiteName(version: string): string {
+  const parts = version.split('.').map((p) => p.replace(/\D.*$/, ''))
+  while (parts.length < 3) parts.push('0')
+  return 'v' + parts.slice(0, 3).join('')
 }
 
 // ── Registration ──
