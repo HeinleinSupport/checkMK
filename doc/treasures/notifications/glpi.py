@@ -83,7 +83,10 @@ class Incident:
             "ACKNOWLEDGEMENT": Incident.Type.Acknowledgement,
         }.get(env["NOTIFY_NOTIFICATIONTYPE"], Incident.Type.Other)
         if res.__type == Incident.Type.Other:
-            log.info("Unhandled notification type %s", env["NOTIFY_NOTIFICATIONTYPE"])
+            log.info(
+                "Unhandled notification type %(notification_type)s",
+                {"notification_type": env["NOTIFY_NOTIFICATIONTYPE"]},
+            )
 
         if env["NOTIFY_WHAT"] == "HOST":
             res.__what = Incident.What.Host
@@ -156,17 +159,17 @@ class Incident:
                 self.__render_comment(),
             ]
         self.__live_status.execute(";".join(query))
-        log.debug("store ticket id: %s", ";".join(query))
+        log.debug("store ticket id: %(query)s", {"query": ";".join(query)})
 
     def __remove_incident_id_notification(self):
         now = int(time.time())
-        log.debug("tracking id: %s", self.__tracking_id)
+        log.debug("tracking id: %(tracking_id)s", {"tracking_id": self.__tracking_id})
         if self.__service is not None:
             query = ["COMMAND [%s] DEL_SVC_COMMENT" % now, str(self.__tracking_id)]
         else:
             query = ["COMMAND [%s] DEL_HOST_COMMENT" % now, str(self.__tracking_id)]
         self.__live_status.execute(";".join(query))
-        log.debug("remove ticket id: %s", ";".join(query))
+        log.debug("remove ticket id: %(query)s", {"query": ";".join(query)})
 
     def __retrieve_incident_id_ec(self, comment):
         return self.__parse_comment(comment)
@@ -182,7 +185,7 @@ class Incident:
         ]
 
         self.__live_status.execute(";".join(query))
-        log.debug("store ticket id (ec): %s", ";".join(query))
+        log.debug("store ticket id (ec): %(query)s", {"query": ";".join(query)})
 
     def __render_comment(self):
         return "[Incident ID: %s]" % self.__id
@@ -443,14 +446,20 @@ class InterfaceGLPI(TicketInterface):
                 {"login_name": self.__username, "login_password": self.__password}
             )
         except InterfaceGLPI.Fault as f:
-            log.error("GLPI fault code %s, details: %s", f.faultCode, f.faultString)
+            log.error(
+                "GLPI fault code %(fault_code)s, details: %(fault_string)s",
+                {"fault_code": f.faultCode, "fault_string": f.faultString},
+            )
             raise
         except InterfaceGLPI.ResponseError:
             # response error seems to hold no data?
             log.exception("response error on login. Is host and port configured correctly?")
             raise
         except InterfaceGLPI.ProtocolError as e:
-            log.error("protocol error %s on login. Headers: %s", e.errcode, e.headers)
+            log.error(
+                "protocol error %(errcode)s on login. Headers: %(headers)s",
+                {"errcode": e.errcode, "headers": e.headers},
+            )
             raise
 
         if "session" in response and "name" in response:
@@ -473,7 +482,7 @@ class InterfaceGLPI(TicketInterface):
                 "urgancy": InterfaceGLPI.urgency_map[urgency],
             }
         )
-        log.debug("create ticket response: %s", response)
+        log.debug("create ticket response: %(response)s", {"response": response})
         return response["id"]
 
     # def __resolve_id(self, ticket_id):
@@ -489,7 +498,10 @@ class InterfaceGLPI(TicketInterface):
     #             return ticket['id']
 
     def add_ticket_comment(self, ticket_id, message):
-        log.info("sess %s, tick %s, cont %s", self.__session, ticket_id, message)
+        log.info(
+            "sess %(session)s, tick %(ticket_id)s, cont %(message)s",
+            {"session": self.__session, "ticket_id": ticket_id, "message": message},
+        )
         self.__server.glpi.addTicketFollowup(
             {"session": self.__session, "ticket": ticket_id, "content": message}
         )
@@ -498,7 +510,7 @@ class InterfaceGLPI(TicketInterface):
         response = self.__server.glpi.setTicketSolution(
             {"session": self.__session, "ticket": ticket_id, "type": 1, "solution": message}
         )
-        log.debug("set solution response: %s", response)
+        log.debug("set solution response: %(response)s", {"response": response})
 
 
 TicketInterface.register("glpi", InterfaceGLPI)
@@ -571,11 +583,14 @@ def handle_problem(renderer, ticket_interface, settings, incident):
     message = renderer.render_message(incident)
     if incident.identifier() is None:
         urgency = determine_urgency(settings, incident)
-        log.info("Creating ticket: title=%s, urgency=%s", title, urgency)
+        log.info(
+            "Creating ticket: title=%(title)s, urgency=%(urgency)s",
+            {"title": title, "urgency": urgency},
+        )
         ticket_id = ticket_interface.create_ticket(title, message, urgency)
         incident.set_identifier(ticket_id)
     else:
-        log.info("Adding to ticket %s", incident.identifier())
+        log.info("Adding to ticket %(ticket_id)s", {"ticket_id": incident.identifier()})
         ticket_interface.add_ticket_comment(incident.identifier(), message)
 
 
@@ -584,15 +599,13 @@ def handle_recovery(renderer, ticket_interface, settings, incident):
 
     if incident.identifier() is None:
         log.error(
-            'Failed to close ticket regarding host "%s", service "%s" as the '
+            'Failed to close ticket regarding host "%(host)s", service "%(service)s" as the '
             "ticket id was not found in comments. "
-            'Message would have been: "%s"',
-            incident.host(),
-            incident.service(),
-            message,
+            'Message would have been: "%(message)s"',
+            {"host": incident.host(), "service": incident.service(), "message": message},
         )
     else:
-        log.info("Closing ticket %s", incident.identifier())
+        log.info("Closing ticket %(ticket_id)s", {"ticket_id": incident.identifier()})
         ticket_interface.close_ticket(incident.identifier(), message)
         incident.close()
 
@@ -613,7 +626,7 @@ def main():
         incident = Incident.from_notification(os.environ, live_status)
 
     if incident.identifier():
-        log.info("incident has an id: %s", incident.identifier())
+        log.info("incident has an id: %(ticket_id)s", {"ticket_id": incident.identifier()})
 
     handlers = {
         Incident.Type.Problem: handle_problem,
@@ -628,7 +641,7 @@ def main():
         handlers[incident.event_type()](renderer, ticket_interface, settings, incident)
         ticket_interface.logout()  # nop if there was no login
     else:
-        log.info("Not handling event type %s", incident.event_type())
+        log.info("Not handling event type %(event_type)s", {"event_type": incident.event_type()})
 
 
 if __name__ == "__main__":

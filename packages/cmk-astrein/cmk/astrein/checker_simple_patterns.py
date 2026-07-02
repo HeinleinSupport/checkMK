@@ -92,7 +92,6 @@ _EXCLUDED_PREFIXES = (
     "agents",
     "buildscripts",
     "cmk",
-    "doc",
     "non-free",
     "tests",
     "packages/cmk-agent-receiver",

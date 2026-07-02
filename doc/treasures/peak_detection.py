@@ -118,7 +118,7 @@ def _get_query(query_args: QueryArgs) -> str:
     query_lines.append(f"Columns: host_name description {' '.join(metric_columns)}")
     query_lines.append("")
 
-    logging.debug("Query: %s", "\n".join(query_lines))
+    logging.debug("Query: %(query)s", {"query": "\n".join(query_lines)})
     return "\n".join(query_lines)
 
 
@@ -202,16 +202,22 @@ def _detect_anomalies_simple(
     anomalies = []
 
     for host_data in data:
-        logging.debug("Host data: %s", host_data)
+        logging.debug("Host data: %(host_data)s", {"host_data": host_data})
         try:
             median = statistics.median(host_data.avg_data.values)
         except statistics.StatisticsError:
-            logging.exception("Error calculating median, ignoring host '%s'", host_data.host_name)
+            logging.exception(
+                "Error calculating median, ignoring host '%(host_name)s'",
+                {"host_name": host_data.host_name},
+            )
             continue
         try:
             mean = statistics.mean(host_data.avg_data.values)
         except statistics.StatisticsError:
-            logging.exception("Error calculating mean, ignoring host '%s'", host_data.host_name)
+            logging.exception(
+                "Error calculating mean, ignoring host '%(host_name)s'",
+                {"host_name": host_data.host_name},
+            )
             continue
 
         match direction:
@@ -343,7 +349,7 @@ def main() -> None:
     anomalies = _detect_anomalies_simple(queried_data, args.simple_thresh, args.direction)
 
     output = _format_output(anomalies, args.formatter)
-    logging.info("Incidents: %s", output)
+    logging.info("Incidents: %(output)s", {"output": output})
 
 
 if __name__ == "__main__":
