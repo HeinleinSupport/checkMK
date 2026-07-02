@@ -4,6 +4,7 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 import functools
+import re
 from collections.abc import Callable, Sequence
 from typing import Any
 
@@ -48,3 +49,20 @@ def host_sorter(sorters: Sequence[HostSort]) -> Callable[[Host], Any]:
         return 0
 
     return functools.cmp_to_key(_compare)
+
+
+_DIGIT_REGEX = re.compile(r"(\d+)")
+type NaturalSortChunk = int | str
+
+
+def sort_naturally(a: str, b: str) -> int:
+    keys_a, keys_b = _natural_sort_keys(a), _natural_sort_keys(b)
+    return (keys_a > keys_b) - (keys_a < keys_b)
+
+
+def _natural_sort_keys(s: str) -> tuple[tuple[NaturalSortChunk, ...], tuple[NaturalSortChunk, ...]]:
+    # Split into alternating text/digit chunks, e.g. "Host07x" -> ["Host", "07", "x"].
+    chunks = [int(chunk) if chunk.isdigit() else str(chunk) for chunk in _DIGIT_REGEX.split(s)]
+    sort_key = tuple(chunk.lower() if isinstance(chunk, str) else chunk for chunk in chunks)
+    tiebreak_key = tuple(chunks)
+    return sort_key, tiebreak_key
