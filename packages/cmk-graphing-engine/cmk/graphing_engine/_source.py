@@ -8,19 +8,18 @@ from typing import Protocol
 
 from cmk.graphing.v1 import translations as translations_v1
 
-from ._evaluate import evaluate_graph, EvaluatedGraph
 from ._from_api import parse_translations_from_api
-from ._objects import (
-    Graph,
+from ._graph import Graph
+from ._options import ConsolidationFunction, TimeRange
+from ._perfdata import (
     MetricName,
     PerformanceData,
     RawMetricNames,
     RawPerformanceData,
-    RRDMetric,
     Service,
     TimeSeries,
 )
-from ._options import ConsolidationFunction, TimeRange
+from ._quantities import RRDMetric
 from ._resample import resample
 from ._translate import (
     originals_for_metric_name,
@@ -76,7 +75,7 @@ def _merge(series: Sequence[TimeSeries], time_range: TimeRange) -> TimeSeries:
     )
 
 
-def _fetch_time_series(
+def fetch_time_series(
     *,
     graph: Graph,
     performance_data: Mapping[Service, Mapping[MetricName, PerformanceData]],
@@ -170,29 +169,3 @@ def fetch_performance_data(
                 ),
             )
     return performance_data
-
-
-def evaluate_graphs(
-    *,
-    graphs: Sequence[Graph],
-    translations: Iterable[translations_v1.Translation],
-    consolidation_function: ConsolidationFunction,
-    time_range: TimeRange,
-    rrd: RRDSource,
-) -> Sequence[EvaluatedGraph]:
-    performance_data = fetch_performance_data(graphs=graphs, translations=translations, rrd=rrd)
-    return [
-        evaluate_graph(
-            graph,
-            performance_data,
-            _fetch_time_series(
-                graph=graph,
-                performance_data=performance_data,
-                consolidation_function=consolidation_function,
-                time_range=time_range,
-                rrd=rrd,
-            ),
-            time_range,
-        )
-        for graph in graphs
-    ]

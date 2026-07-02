@@ -13,36 +13,30 @@ from cmk.graphing.v1 import translations as translations_v1
 from cmk.graphing.v2_unstable import graphs as graphs_v2_unstable
 from cmk.graphing.v2_unstable import metrics as metrics_v2_unstable
 
-from ._objects import (
-    AutoPrecision,
-    Bound,
+from ._graph import Bound, Curve, Graph, Line, MinimalRange, Rule, Stack
+from ._perfdata import MetricName, MetricTranslation, Service
+from ._quantities import (
     Constant,
-    Curve,
-    CurveAttributes,
-    DecimalNotation,
     Difference,
-    EngineeringScientificNotation,
     Fraction,
-    Graph,
-    IECNotation,
-    Line,
-    MetricName,
-    MetricTranslation,
-    MinimalRange,
-    Notation,
-    Precision,
     Product,
     Quantity,
     RRDMetric,
-    Rule,
     ScalarOf,
     ScalarType,
-    Service,
+    Sum,
+)
+from ._units import (
+    AutoPrecision,
+    CurveAttributes,
+    DecimalNotation,
+    EngineeringScientificNotation,
+    IECNotation,
+    Notation,
+    Precision,
     SINotation,
-    Stack,
     StandardScientificNotation,
     StrictPrecision,
-    Sum,
     TimeNotation,
     Unit,
 )
@@ -424,8 +418,6 @@ def _attributes_for(
     metrics: Mapping[str, metrics_v1.Metric],
     localizer: Callable[[str], str],
 ) -> CurveAttributes:
-    """The display of a discovered quantity: plain metrics from the registry, scalar rules from their
-    kind, operations / constants from the intrinsic display they carry."""
     match quantity:
         case RRDMetric():
             return metric_display_attributes(quantity.metric_name, metrics, localizer)
@@ -491,8 +483,6 @@ def parse_graph_from_api(
     *,
     graph_type: str,
 ) -> Graph:
-    """Build a service's graph from an API plugin, resolving each curve's display inline — discovery
-    returns the display-resolved Graph directly (no separate structure / resolution step)."""
     context = _ParseContext(
         service=service,
         metrics=metrics,

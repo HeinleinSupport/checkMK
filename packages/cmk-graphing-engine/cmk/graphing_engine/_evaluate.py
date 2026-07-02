@@ -5,29 +5,19 @@
 
 import enum
 from collections import Counter
-from collections.abc import Mapping, Sequence
+from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass
 from typing import assert_never
 
-from ._objects import (
-    Bound,
-    Curve,
-    CurveAttributes,
-    EvaluationContext,
-    FixedRange,
-    Graph,
-    MetricName,
-    MinimalRange,
-    PerformanceData,
-    Quantity,
-    RRDMetric,
-    Rule,
-    Service,
-    TimeSeries,
-    VerticalRange,
-)
-from ._options import TimeRange
+from cmk.graphing.v1 import translations as translations_v1
+
+from ._graph import Bound, Curve, FixedRange, Graph, MinimalRange, Rule, VerticalRange
+from ._options import ConsolidationFunction, TimeRange
+from ._perfdata import MetricName, PerformanceData, Service, TimeSeries
+from ._quantities import EvaluationContext, Quantity, RRDMetric
+from ._source import fetch_performance_data, fetch_time_series, RRDSource
 from ._title import evaluate_title
+from ._units import CurveAttributes
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -232,3 +222,29 @@ def evaluate_graph(
         lines=lines,
         rules=rules,
     )
+
+
+def evaluate_graphs(
+    *,
+    graphs: Sequence[Graph],
+    translations: Iterable[translations_v1.Translation],
+    consolidation_function: ConsolidationFunction,
+    time_range: TimeRange,
+    rrd: RRDSource,
+) -> Sequence[EvaluatedGraph]:
+    performance_data = fetch_performance_data(graphs=graphs, translations=translations, rrd=rrd)
+    return [
+        evaluate_graph(
+            graph,
+            performance_data,
+            fetch_time_series(
+                graph=graph,
+                performance_data=performance_data,
+                consolidation_function=consolidation_function,
+                time_range=time_range,
+                rrd=rrd,
+            ),
+            time_range,
+        )
+        for graph in graphs
+    ]

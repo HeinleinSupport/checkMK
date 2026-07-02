@@ -40,7 +40,8 @@ from cmk.graphing_engine import (
     VerticalRangeType,
 )
 from cmk.graphing_engine._evaluate import evaluate_graph
-from cmk.graphing_engine._objects import EvaluationContext, PerformanceData, Quantity
+from cmk.graphing_engine._perfdata import PerformanceData
+from cmk.graphing_engine._quantities import EvaluationContext, Quantity
 
 
 def _perf(

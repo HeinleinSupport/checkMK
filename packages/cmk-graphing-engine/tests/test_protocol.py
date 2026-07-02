@@ -28,11 +28,8 @@ from cmk.graphing_engine import (
     Unit,
 )
 from cmk.graphing_engine._evaluate import evaluate_graph
-from cmk.graphing_engine._objects import (
-    EvaluationContext,
-    PerformanceData,
-    Quantity,
-)
+from cmk.graphing_engine._perfdata import PerformanceData
+from cmk.graphing_engine._quantities import EvaluationContext, Quantity
 
 _UNIT = Unit(notation=DecimalNotation(""), precision=AutoPrecision(2))
 _TR = TimeRange(start=0, end=30, step=10)  # three data points

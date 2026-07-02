@@ -4,6 +4,7 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 from ._evaluate import (
+    evaluate_graphs,
     EvaluatedCurve,
     EvaluatedGraph,
     EvaluatedLine,
@@ -13,58 +14,63 @@ from ._evaluate import (
     VerticalRangeType,
 )
 from ._from_api import build_curve, metric_display_attributes
-from ._objects import (
-    AutoPrecision,
-    Constant,
+from ._graph import (
     Curve,
-    CurveAttributes,
-    DecimalNotation,
-    Difference,
-    EngineeringScientificNotation,
-    EvaluatedQuantity,
-    EvaluationContext,
     FixedRange,
-    Fraction,
     Graph,
-    HostName,
-    IECNotation,
     Line,
-    MetricName,
     MinimalRange,
-    PerformanceData,
-    Product,
-    Quantity,
-    RawMetricNames,
-    RawPerformanceData,
-    RawPerformanceValue,
-    RRDMetric,
     Rule,
-    ScalarOf,
-    ScalarType,
-    Service,
-    ServiceName,
-    SINotation,
     Stack,
-    StandardScientificNotation,
-    StrictPrecision,
-    Sum,
-    TimeNotation,
-    TimeSeries,
-    Unit,
     VerticalRange,
 )
 from ._options import (
     ConsolidationFunction,
     TimeRange,
 )
+from ._perfdata import (
+    HostName,
+    MetricName,
+    PerformanceData,
+    RawMetricNames,
+    RawPerformanceData,
+    RawPerformanceValue,
+    Service,
+    ServiceName,
+    TimeSeries,
+)
+from ._quantities import (
+    Constant,
+    Difference,
+    EvaluatedQuantity,
+    EvaluationContext,
+    Fraction,
+    Product,
+    Quantity,
+    RRDMetric,
+    ScalarOf,
+    ScalarType,
+    Sum,
+)
 from ._source import (
-    evaluate_graphs,
     fetch_available_metric_names,
     RRDSource,
 )
 from ._template import (
     build_service_graphs,
     match_graph_for_services,
+)
+from ._units import (
+    AutoPrecision,
+    CurveAttributes,
+    DecimalNotation,
+    EngineeringScientificNotation,
+    IECNotation,
+    SINotation,
+    StandardScientificNotation,
+    StrictPrecision,
+    TimeNotation,
+    Unit,
 )
 
 __all__ = [

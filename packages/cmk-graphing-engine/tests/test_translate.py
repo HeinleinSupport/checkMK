@@ -8,7 +8,7 @@ from cmk.graphing_engine import (
     RawPerformanceData,
     RawPerformanceValue,
 )
-from cmk.graphing_engine._objects import MetricTranslation, PerformanceData, RRDOriginal
+from cmk.graphing_engine._perfdata import MetricTranslation, PerformanceData, RRDOriginal
 from cmk.graphing_engine._translate import translate_performance_data
 
 

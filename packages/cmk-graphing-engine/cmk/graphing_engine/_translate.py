@@ -6,7 +6,7 @@
 import re
 from collections.abc import Mapping, Sequence
 
-from ._objects import (
+from ._perfdata import (
     MetricName,
     MetricTranslation,
     PerformanceData,

@@ -6,8 +6,8 @@
 from collections.abc import Sequence
 from statistics import fmean
 
-from ._objects import TimeSeries
 from ._options import ConsolidationFunction, TimeRange
+from ._perfdata import TimeSeries
 
 
 def _timestamps(time_range: TimeRange) -> Sequence[int]:

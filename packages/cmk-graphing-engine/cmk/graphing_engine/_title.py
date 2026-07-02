@@ -7,7 +7,7 @@ import json
 import re
 from collections.abc import Callable, Mapping
 
-from ._objects import MetricName, PerformanceData
+from ._perfdata import MetricName, PerformanceData
 
 _TITLE_EXPRESSION_PREFIX = "_EXPRESSION:"
 _TITLE_EXPRESSION_PATTERN = re.compile(re.escape(_TITLE_EXPRESSION_PREFIX) + r"\{.*?\}")

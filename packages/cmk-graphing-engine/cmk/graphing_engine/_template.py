@@ -15,17 +15,9 @@ from ._from_api import (
     drawn_metric_names_of_graph,
     parse_graph_from_api,
 )
-from ._objects import (
-    Graph,
-    Line,
-    MetricName,
-    RRDMetric,
-    Rule,
-    ScalarOf,
-    ScalarType,
-    Service,
-    Stack,
-)
+from ._graph import Graph, Line, Rule, Stack
+from ._perfdata import MetricName, Service
+from ._quantities import RRDMetric, ScalarOf, ScalarType
 
 _PREDICT_PREFIX = "predict_"
 
