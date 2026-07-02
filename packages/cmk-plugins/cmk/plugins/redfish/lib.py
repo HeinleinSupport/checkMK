@@ -27,27 +27,27 @@ class Section:
 
 
 REDFISH_SECTIONS = (
-    Section(name="Memory", title=Title("Memory modules")),
-    Section(name="Power", title=Title("Power supply")),
+    Section(name="Memory", title=Title("Memory Modules")),
+    Section(name="Power", title=Title("Powers Supply")),
     Section(name="Processors", title=Title("CPUs")),
-    Section(name="Thermal", title=Title("Fan and temperatures")),
+    Section(name="Thermal", title=Title("Fan and Temperatures")),
     Section(
         name="FirmwareInventory",
-        title=Title("Firmware versions"),
+        title=Title("Firmware Versions"),
     ),
-    Section(name="NetworkAdapters", title=Title("Network cards")),
+    Section(name="NetworkAdapters", title=Title("Network Cards")),
     Section(
         name="NetworkInterfaces",
-        title=Title("Network interfaces 1"),
+        title=Title("Network Interfaces 1"),
     ),
     Section(
         name="EthernetInterfaces",
-        title=Title("Network interfaces 2"),
+        title=Title("Network Interfaces 2"),
     ),
     Section(name="Storage", title=Title("Storage")),
     Section(
         name="ArrayControllers",
-        title=Title("Array controllers"),
+        title=Title("Array Controllers"),
     ),
     Section(
         name="SmartStorage",
@@ -66,9 +66,9 @@ REDFISH_SECTIONS = (
         title=Title("Simple Storage Collection (tbd)"),
     ),
     Section(name="Sensors", title=Title("Sensors")),
-    Section(name="ThermalSubsystem", title=Title("Thermal subsystem")),
-    Section(name="PowerSubsystem", title=Title("Power subsystem")),
-    Section(name="EnvironmentMetrics", title=Title("Environment metrics")),
+    Section(name="ThermalSubsystem", title=Title("Thermal Subsystem")),
+    Section(name="PowerSubsystem", title=Title("Power Subsystem")),
+    Section(name="EnvironmentMetrics", title=Title("Environment Metrics")),
 )
 
 
