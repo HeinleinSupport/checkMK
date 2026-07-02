@@ -12,7 +12,7 @@ from cmk.ccc.exceptions import MKGeneralException
 from cmk.graphing.v1 import metrics as metrics_v1
 from cmk.graphing.v1 import translations as translations_v1
 from cmk.graphing_engine import (
-    build_service_graphs,
+    build_matched_graphs,
     ConsolidationFunction,
     evaluate_graphs,
     EvaluatedGraph,
@@ -64,7 +64,7 @@ def build_template_graphs(
         translations=registered_translations,
         rrd=rrd,
     ).get(service, frozenset())
-    graphs = build_service_graphs(
+    graphs = build_matched_graphs(
         service=service,
         registered_graphs=registered_graphs,
         metrics=registered_metrics,

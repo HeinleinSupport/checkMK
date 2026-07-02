@@ -151,7 +151,7 @@ def match_graph_for_services(
     return discovered
 
 
-def build_service_graphs(
+def build_matched_graphs(
     *,
     service: Service,
     registered_graphs: Sequence[_GraphPlugin],

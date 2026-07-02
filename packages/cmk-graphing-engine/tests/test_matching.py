@@ -12,7 +12,7 @@ from cmk.graphing.v2_unstable import graphs as graphs_v2_unstable
 from cmk.graphing.v2_unstable import metrics as metrics_v2_unstable
 from cmk.graphing_engine import (
     build_curve,
-    build_service_graphs,
+    build_matched_graphs,
     ConsolidationFunction,
     evaluate_graphs,
     EvaluatedGraph,
@@ -192,7 +192,7 @@ def _discover(
     rrd: _FakeFetchRRD,
 ) -> Sequence[Graph]:
     available = fetch_available_metric_names(services=[service], translations=[], rrd=rrd)
-    return build_service_graphs(
+    return build_matched_graphs(
         service=service,
         registered_graphs=registered_graphs,
         metrics=_METRICS,
@@ -570,7 +570,7 @@ def test_match_graph_for_services_adds_predictive_lines_per_service() -> None:
     )
 
 
-def test_build_service_graphs_builds_threshold_rules_for_fallback_graphs() -> None:
+def test_build_matched_graphs_builds_threshold_rules_for_fallback_graphs() -> None:
     service = _service()
     cpu_user = MetricName("cpu_user")
     rrd = _FakeFetchRRD(performance_response={service: _perf_data(_perf(cpu_user, warning=80.0))})
@@ -578,7 +578,7 @@ def test_build_service_graphs_builds_threshold_rules_for_fallback_graphs() -> No
         service, frozenset()
     )
 
-    graphs = build_service_graphs(
+    graphs = build_matched_graphs(
         service=service,
         registered_graphs=[],
         metrics=_METRICS,

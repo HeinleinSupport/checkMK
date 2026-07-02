@@ -25,7 +25,7 @@ from ._graph import (
     VerticalRange,
 )
 from ._matching import (
-    build_service_graphs,
+    build_matched_graphs,
     match_graph_for_services,
 )
 from ._options import (
@@ -122,7 +122,7 @@ __all__ = [
     "Unit",
     "VerticalRange",
     "VerticalRangeType",
-    "build_service_graphs",
+    "build_matched_graphs",
     "fetch_available_metric_names",
     "match_graph_for_services",
     "metric_display_attributes",

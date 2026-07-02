@@ -6,7 +6,7 @@
 """End-to-end tests of the discover -> update lifecycle, exercising the entry points
 together.
 
-Discovery (build_service_graphs) builds the display-resolved Graph; evaluate_graphs
+Discovery (build_matched_graphs) builds the display-resolved Graph; evaluate_graphs
 fetches the performance data and time series afresh
 and evaluates each into an EvaluatedGraph. Discovery stores no data, so a refresh always re-fetches.
 Each test fakes a different shape of performance / time series data to cover the pipeline from
@@ -20,7 +20,7 @@ from cmk.graphing.v1 import metrics as metrics_v1
 from cmk.graphing.v1 import Title
 from cmk.graphing.v1 import translations as translations_v1
 from cmk.graphing_engine import (
-    build_service_graphs,
+    build_matched_graphs,
     ConsolidationFunction,
     evaluate_graphs,
     EvaluatedGraph,
@@ -133,7 +133,7 @@ def _discover(
         translations=translations,
         rrd=rrd,
     )
-    return build_service_graphs(
+    return build_matched_graphs(
         service=_SERVICE,
         registered_graphs=registered_graphs,
         metrics=_METRICS,
