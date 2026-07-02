@@ -33,10 +33,10 @@ def _aggregate(
 
 def _downsample(
     time_series: TimeSeries,
-    target: TimeRange,
+    time_range: TimeRange,
     consolidation_function: ConsolidationFunction,
 ) -> Sequence[float | None]:
-    desired = _timestamps(target)
+    desired = _timestamps(time_range)
     resampled: list[float | None] = []
     bucket: list[float | None] = []
     index = 0
@@ -52,27 +52,27 @@ def _downsample(
     return resampled
 
 
-def _forward_fill(time_series: TimeSeries, target: TimeRange) -> Sequence[float | None]:
+def _forward_fill(time_series: TimeSeries, time_range: TimeRange) -> Sequence[float | None]:
     source = time_series.time_range
     last = len(time_series.values) - 1
     return [
         time_series.values[max(0, min((timestamp - source.start) // source.step, last))]
-        for timestamp in range(target.start, target.end, target.step)
+        for timestamp in range(time_range.start, time_range.end, time_range.step)
     ]
 
 
 def resample(
     time_series: TimeSeries,
-    target: TimeRange,
+    time_range: TimeRange,
     consolidation_function: ConsolidationFunction,
 ) -> TimeSeries:
-    if time_series.time_range == target:
+    if time_series.time_range == time_range:
         return time_series
     if not time_series.values or time_series.time_range.step <= 0:
-        return TimeSeries(time_range=target, values=[None] * len(_timestamps(target)))
+        return TimeSeries(time_range=time_range, values=[None] * len(_timestamps(time_range)))
     values = (
-        _downsample(time_series, target, consolidation_function)
-        if target.step >= time_series.time_range.step
-        else _forward_fill(time_series, target)
+        _downsample(time_series, time_range, consolidation_function)
+        if time_range.step >= time_series.time_range.step
+        else _forward_fill(time_series, time_range)
     )
-    return TimeSeries(time_range=target, values=values)
+    return TimeSeries(time_range=time_range, values=values)
