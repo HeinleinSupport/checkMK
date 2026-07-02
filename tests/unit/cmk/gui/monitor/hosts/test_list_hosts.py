@@ -8,7 +8,7 @@ from collections.abc import Sequence
 from polyfactory.factories import DataclassFactory
 
 from cmk.gui.monitor.hosts._api._list_hosts import _handle_list_hosts
-from cmk.gui.monitor.hosts._models import Host, HostFilter, HostSort, RescheduleTarget
+from cmk.gui.monitor.hosts._models import Host, HostFilter, HostSort
 from cmk.gui.monitor.hosts._repositories import HostRepository
 
 
@@ -33,9 +33,6 @@ def get_fake_host_repository(*, n_hosts: int) -> HostRepository:
 
         def count(self, *, query: str, filters: HostFilter) -> int:
             return len(self._hosts)
-
-        def reschedule(self, targets: Sequence[RescheduleTarget]) -> None:
-            pass
 
     return HostFakeRepository()
 

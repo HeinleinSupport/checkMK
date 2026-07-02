@@ -21,9 +21,9 @@ from cmk.gui.openapi.framework.versioned_endpoint import (
 )
 from cmk.gui.utils import permission_verification as permissions
 
-from .._impl import LiveStatusHostRepository
+from .._commands import HostRescheduler
+from .._impl import LiveStatusHostActions
 from .._models import RescheduleTarget
-from .._repositories import HostRepository
 from ._family import MONITOR_HOSTS_FAMILY
 
 
@@ -60,15 +60,15 @@ def reschedule_checks(body: RescheduleRequestBody) -> RescheduleResponse:
     user.need_permission("general.act")
     user.need_permission("action.reschedule")
 
-    host_repo: HostRepository = LiveStatusHostRepository(connection=sites.live())
+    host_actions = LiveStatusHostActions(connection=sites.live())
 
     return _handle_reschedule_checks(
-        host_repo, hosts=body.hosts, spread_minutes=body.spread_minutes
+        host_actions, hosts=body.hosts, spread_minutes=body.spread_minutes
     )
 
 
 def _handle_reschedule_checks(
-    host_repo: HostRepository,
+    host_actions: HostRescheduler,
     *,
     hosts: list[RescheduleHostRef],
     spread_minutes: int,
@@ -85,7 +85,7 @@ def _handle_reschedule_checks(
         )
         for index, host in enumerate(hosts)
     ]
-    host_repo.reschedule(targets)
+    host_actions.reschedule(targets)
 
     return RescheduleResponse(rescheduled=len(targets))
 

@@ -105,6 +105,11 @@ class LiveStatusHostRepository:
         )
         return sum(int(row[-1]) for row in self._connection.query(stats_query))
 
+
+class LiveStatusHostActions:
+    def __init__(self, *, connection: MultiSiteConnection) -> None:
+        self._connection = connection
+
     def reschedule(self, targets: Sequence[RescheduleTarget]) -> None:
         client = LivestatusClient(self._connection)
         for target in targets:
