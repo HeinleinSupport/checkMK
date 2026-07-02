@@ -11,7 +11,7 @@ from typing import Literal
 from pydantic import PlainValidator
 
 from cmk.ccc.hostaddress import HostAddress, HostName
-from cmk.ccc.regex import regex, REGEX_ID
+from cmk.ccc.regex import GROUP_NAME_PATTERN, regex, REGEX_ID
 from cmk.ccc.site import omd_site, SiteId
 from cmk.ccc.user import UserId
 from cmk.gui import sites, userdb
@@ -202,6 +202,17 @@ class HostConverter:
 @dataclass(slots=True)
 class GroupConverter:
     group_type: GroupType
+
+    @staticmethod
+    def is_valid_name(group: GroupName) -> GroupName:
+        # GROUP_NAME_PATTERN uses a lookahead, which pydantic's default regex engine
+        # does not support, so it cannot be used as a field pattern
+        if regex(GROUP_NAME_PATTERN).match(group) is None:
+            raise ValueError(
+                f"{group!r} does not match pattern. A group name must only consist of letters, "
+                "digits, dash, underscore and dot and it must not be '.' or '..'."
+            )
+        return group
 
     def exists(
         self,
