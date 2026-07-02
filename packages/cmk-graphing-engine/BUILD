@@ -16,11 +16,11 @@ py_library(
     srcs = [
         "cmk/graphing_engine/__init__.py",
         "cmk/graphing_engine/_evaluate.py",
-        "cmk/graphing_engine/_fetch.py",
         "cmk/graphing_engine/_from_api.py",
         "cmk/graphing_engine/_objects.py",
         "cmk/graphing_engine/_options.py",
         "cmk/graphing_engine/_resample.py",
+        "cmk/graphing_engine/_source.py",
         "cmk/graphing_engine/_template.py",
         "cmk/graphing_engine/_title.py",
         "cmk/graphing_engine/_translate.py",

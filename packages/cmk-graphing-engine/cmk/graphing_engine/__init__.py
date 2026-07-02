@@ -12,11 +12,6 @@ from ._evaluate import (
     EvaluatedVerticalRange,
     VerticalRangeType,
 )
-from ._fetch import (
-    evaluate_graphs,
-    fetch_available_metric_names,
-    RRDSource,
-)
 from ._from_api import build_curve, metric_display_attributes
 from ._objects import (
     AutoPrecision,
@@ -61,6 +56,11 @@ from ._objects import (
 from ._options import (
     ConsolidationFunction,
     TimeRange,
+)
+from ._source import (
+    evaluate_graphs,
+    fetch_available_metric_names,
+    RRDSource,
 )
 from ._template import (
     build_service_graphs,
