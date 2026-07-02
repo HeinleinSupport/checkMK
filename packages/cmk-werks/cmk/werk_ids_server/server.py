@@ -59,5 +59,8 @@ def reserve_ids() -> Response:
         return jsonify({"reserved_werk_ids": []})
 
     reserved = reserve(current_app.config["db"], to_be_reserved)
-    _logger.info("Client IP: %r, reserved IDs: %r", request.remote_addr, reserved)
+    _logger.info(
+        "Client IP: %(client_ip)r, reserved IDs: %(reserved)r",
+        {"client_ip": request.remote_addr, "reserved": reserved},
+    )
     return jsonify({"reserved_werk_ids": reserved})

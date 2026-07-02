@@ -102,7 +102,6 @@ _EXCLUDED_PREFIXES = (
     "packages/cmk-ec",
     "packages/cmk-mkp-tool",
     "packages/cmk-plugins",
-    "packages/cmk-werks",
 )
 
 #: Repo-relative paths force-checked even when they sit below an ``_EXCLUDED_PREFIXES``

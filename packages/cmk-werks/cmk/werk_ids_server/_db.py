@@ -25,9 +25,9 @@ def init_db(db: Path, start: int) -> None:
                 (start,),
             )
     if table_exists:
-        _logger.info("Database %r already exists", db)
+        _logger.info("Database %(db)r already exists", {"db": db})
     else:
-        _logger.info("Init database: %r, start ID: %r", db, start)
+        _logger.info("Init database: %(db)r, start ID: %(start)r", {"db": db, "start": start})
 
 
 def reserve(db: Path, to_be_reserved: int) -> Sequence[int]:

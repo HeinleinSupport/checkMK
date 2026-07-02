@@ -57,7 +57,7 @@ def branch_name_to_sort(branch_name: str) -> tuple[str | int, ...]:
         return (99, 99, 99, 99, branch_name)
     result = re.match(r"(\d+)\.(\d+)\.(\d+)(i(\d))?$", branch_name)
     if not result:
-        logger.info("can not sort branch %s", branch_name)
+        logger.info("can not sort branch %(branch)s", {"branch": branch_name})
         return (0, 0, 0, 0, branch_name)
     major, minor, patch, _, innovation = result.groups()
     if innovation is None:
@@ -80,12 +80,16 @@ def _get_branches(
 
     for ref in r.remote().refs:  # type: ignore[assignment]
         if not ref.name.startswith("origin/"):  # type: ignore[attr-defined]
-            logger.info("ignoring ref %s (only considering one from remote origin)", ref)
+            logger.info(
+                "ignoring ref %(ref)s (only considering one from remote origin)", {"ref": ref}
+            )
             continue
 
         branch_name = ref.name.removeprefix("origin/")  # type: ignore[attr-defined]
         if not re.match(c.branch_regex, branch_name):
-            logger.info("ignoring branch %s (does not match regex)", branch_name)
+            logger.info(
+                "ignoring branch %(branch)s (does not match regex)", {"branch": branch_name}
+            )
             continue
         yield branch_name, ref  # type: ignore[misc]
 
@@ -101,7 +105,7 @@ def main(config: Config, repo_path: Path, branches: Mapping[str, str]) -> None:
         try:
             werks = tree[".werks"]
         except KeyError:
-            logger.warning("no .werks folder in branch %s", branch_name)
+            logger.warning("no .werks folder in branch %(branch)s", {"branch": branch_name})
             continue
 
         for werk_file in werks.blobs:
