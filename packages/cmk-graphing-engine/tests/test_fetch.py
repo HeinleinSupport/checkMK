@@ -23,8 +23,8 @@ from cmk.graphing_engine import (
     RawPerformanceData,
     RawPerformanceValue,
     RRDMetric,
+    Service,
     ServiceName,
-    ServiceRef,
     TimeRange,
     TimeSeries,
     Unit,
@@ -33,8 +33,8 @@ from cmk.graphing_engine import (
 _UNIT = Unit(notation=DecimalNotation(""), precision=AutoPrecision(2))
 
 
-def _service() -> ServiceRef:
-    return ServiceRef(host_name=HostName("h"), service_name=ServiceName("svc"))
+def _service() -> Service:
+    return Service(host_name=HostName("h"), service_name=ServiceName("svc"))
 
 
 def _time_range() -> TimeRange:
@@ -87,8 +87,8 @@ class _FakeRRDSource:
     def __init__(
         self,
         *,
-        available_response: Mapping[ServiceRef, RawMetricNames] | None = None,
-        performance_response: Mapping[ServiceRef, RawPerformanceData] | None = None,
+        available_response: Mapping[Service, RawMetricNames] | None = None,
+        performance_response: Mapping[Service, RawPerformanceData] | None = None,
         time_series_response: Mapping[RRDMetric, TimeSeries] | None = None,
     ) -> None:
         self._available_response = available_response or {}
@@ -101,13 +101,13 @@ class _FakeRRDSource:
 
     def fetch_available_metric_names(
         self,
-        services: Sequence[ServiceRef],  # noqa: ARG002
-    ) -> Mapping[ServiceRef, RawMetricNames]:
+        services: Sequence[Service],  # noqa: ARG002
+    ) -> Mapping[Service, RawMetricNames]:
         return self._available_response
 
     def fetch_performance_data(
         self, rrd_metrics: Sequence[RRDMetric]
-    ) -> Mapping[ServiceRef, RawPerformanceData]:
+    ) -> Mapping[Service, RawPerformanceData]:
         self.performance_data_calls.append(tuple(rrd_metrics))
         return self._performance_response
 

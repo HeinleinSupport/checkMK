@@ -22,7 +22,7 @@ from ._objects import (
     Quantity,
     RRDMetric,
     Rule,
-    ServiceRef,
+    Service,
     TimeSeries,
     VerticalRange,
 )
@@ -147,10 +147,10 @@ def _evaluate_rule(rule: Rule, rule_id: str, context: EvaluationContext) -> Eval
 
 def _title_metrics(
     graph: Graph,
-    translated_metrics: Mapping[ServiceRef, Mapping[MetricName, PerformanceData]],
+    translated_metrics: Mapping[Service, Mapping[MetricName, PerformanceData]],
 ) -> Mapping[MetricName, PerformanceData]:
     services = {
-        ServiceRef(host_name=metric.host_name, service_name=metric.service_name)
+        Service(host_name=metric.host_name, service_name=metric.service_name)
         for metric in graph.rrd_metrics()
     }
     return {
@@ -163,7 +163,7 @@ def _title_metrics(
 
 def evaluate_graph(
     graph: Graph,
-    performance_data: Mapping[ServiceRef, Mapping[MetricName, PerformanceData]],
+    performance_data: Mapping[Service, Mapping[MetricName, PerformanceData]],
     time_series: Mapping[RRDMetric, TimeSeries],
     time_range: TimeRange,
 ) -> EvaluatedGraph:

@@ -21,8 +21,8 @@ from cmk.graphing_engine import (
     Line,
     MetricName,
     RRDMetric,
+    Service,
     ServiceName,
-    ServiceRef,
     TimeRange,
     TimeSeries,
     Unit,
@@ -94,7 +94,7 @@ def test_engine_evaluates_a_custom_quantity_without_engine_changes() -> None:
     result = evaluate_graph(
         graph,
         {
-            ServiceRef(host_name=HostName("h"), service_name=ServiceName("svc")): {
+            Service(host_name=HostName("h"), service_name=ServiceName("svc")): {
                 MetricName("a"): _data(value=3.0)
             }
         },

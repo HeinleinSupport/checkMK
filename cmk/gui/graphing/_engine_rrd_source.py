@@ -22,7 +22,7 @@ from cmk.graphing_engine import (
     RawPerformanceData,
     RawPerformanceValue,
     RRDMetric,
-    ServiceRef,
+    Service,
     TimeRange,
 )
 from cmk.graphing_engine import (
@@ -133,7 +133,7 @@ def _parse_perf_data(
     return perf_data, check_command
 
 
-def _service_or_filter(services: Sequence[ServiceRef]) -> str:
+def _service_or_filter(services: Sequence[Service]) -> str:
     query = ""
     for service in services:
         query += f"Filter: host_name = {lqencode(service.host_name)}\n"
@@ -174,8 +174,8 @@ class EngineRRDSource:
         return RawPerformanceData(check_command=normalized_check_command, values=perf_data)
 
     def fetch_available_metric_names(
-        self, services: Sequence[ServiceRef]
-    ) -> Mapping[ServiceRef, RawMetricNames]:
+        self, services: Sequence[Service]
+    ) -> Mapping[Service, RawMetricNames]:
         unique = list(dict.fromkeys(services))
         if not unique:
             return {}
@@ -183,7 +183,7 @@ class EngineRRDSource:
             "GET services\nColumns: host_name description perf_data metrics check_command\n"
             + _service_or_filter(unique)
         )
-        result: dict[ServiceRef, RawMetricNames] = {}
+        result: dict[Service, RawMetricNames] = {}
         with sites.only_sites(self.site_id):
             for (
                 host_name,
@@ -195,7 +195,7 @@ class EngineRRDSource:
                 raw = self.parse_performance_data(
                     perf_data_string, check_command, rrd_metrics, debug=self.debug
                 )
-                result[ServiceRef(host_name=host_name, service_name=description)] = RawMetricNames(
+                result[Service(host_name=host_name, service_name=description)] = RawMetricNames(
                     check_command=raw.check_command,
                     metric_names=[value.metric_name for value in raw.values],
                 )
@@ -203,10 +203,10 @@ class EngineRRDSource:
 
     def fetch_performance_data(
         self, rrd_metrics: Sequence[RRDMetric]
-    ) -> Mapping[ServiceRef, RawPerformanceData]:
+    ) -> Mapping[Service, RawPerformanceData]:
         services = list(
             dict.fromkeys(
-                ServiceRef(host_name=metric.host_name, service_name=metric.service_name)
+                Service(host_name=metric.host_name, service_name=metric.service_name)
                 for metric in rrd_metrics
             )
         )
@@ -216,12 +216,12 @@ class EngineRRDSource:
             "GET services\nColumns: host_name description perf_data check_command\n"
             + _service_or_filter(services)
         )
-        result: dict[ServiceRef, RawPerformanceData] = {}
+        result: dict[Service, RawPerformanceData] = {}
         with sites.only_sites(self.site_id):
             for host_name, description, perf_data_string, check_command in sites.live().query(
                 query
             ):
-                result[ServiceRef(host_name=host_name, service_name=description)] = (
+                result[Service(host_name=host_name, service_name=description)] = (
                     self.parse_performance_data(perf_data_string, check_command, debug=self.debug)
                 )
         return {service: result[service] for service in services if service in result}
@@ -233,12 +233,12 @@ class EngineRRDSource:
         time_range: TimeRange,
         consolidation_function: ConsolidationFunction,
     ) -> Mapping[RRDMetric, EngineTimeSeries]:
-        metrics_by_service: dict[ServiceRef, list[RRDMetric]] = {}
+        metrics_by_service: dict[Service, list[RRDMetric]] = {}
         for metric in rrd_metrics:
-            ref = ServiceRef(host_name=metric.host_name, service_name=metric.service_name)
+            ref = Service(host_name=metric.host_name, service_name=metric.service_name)
             metrics_by_service.setdefault(ref, []).append(metric)
 
-        services_by_metric_names: dict[tuple[str, ...], list[ServiceRef]] = {}
+        services_by_metric_names: dict[tuple[str, ...], list[Service]] = {}
         for ref, metrics in metrics_by_service.items():
             names = tuple(sorted(str(metric.metric_name) for metric in metrics))
             services_by_metric_names.setdefault(names, []).append(ref)
@@ -260,7 +260,7 @@ class EngineRRDSource:
                 query += f"Or: {len(refs)}\n"
             with sites.only_sites(self.site_id), contextlib.suppress(MKLivestatusNotFoundError):
                 for row in sites.live().query(query):
-                    ref = ServiceRef(host_name=row[0], service_name=row[1])
+                    ref = Service(host_name=row[0], service_name=row[1])
                     for metric in metrics_by_service.get(ref, []):
                         column = row[2 + column_of[str(metric.metric_name)]]
                         if not column:

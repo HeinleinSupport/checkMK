@@ -30,8 +30,8 @@ from cmk.graphing_engine import (
     Rule,
     ScalarOf,
     ScalarType,
+    Service,
     ServiceName,
-    ServiceRef,
     Stack,
     TimeRange,
     TimeSeries,
@@ -64,8 +64,8 @@ def _time_range() -> TimeRange:
     return TimeRange(start=0, end=60, step=10)
 
 
-def _service() -> ServiceRef:
-    return ServiceRef(host_name=HostName("h"), service_name=ServiceName("svc"))
+def _service() -> Service:
+    return Service(host_name=HostName("h"), service_name=ServiceName("svc"))
 
 
 def _rrd(name: MetricName) -> RRDMetric:
@@ -142,7 +142,7 @@ def _perf_data(*values: RawPerformanceValue) -> RawPerformanceData:
 class _FakeFetchRRD:
     def __init__(
         self,
-        performance_response: Mapping[ServiceRef, RawPerformanceData] | None = None,
+        performance_response: Mapping[Service, RawPerformanceData] | None = None,
         time_series_response: Mapping[RRDMetric, TimeSeries] | None = None,
     ) -> None:
         self._performance_response = performance_response or {}
@@ -150,8 +150,8 @@ class _FakeFetchRRD:
 
     def fetch_available_metric_names(
         self,
-        services: Sequence[ServiceRef],  # noqa: ARG002
-    ) -> Mapping[ServiceRef, RawMetricNames]:
+        services: Sequence[Service],  # noqa: ARG002
+    ) -> Mapping[Service, RawMetricNames]:
         return {
             service: RawMetricNames(
                 check_command=raw.check_command,
@@ -163,7 +163,7 @@ class _FakeFetchRRD:
     def fetch_performance_data(
         self,
         rrd_metrics: Sequence[RRDMetric],  # noqa: ARG002
-    ) -> Mapping[ServiceRef, RawPerformanceData]:
+    ) -> Mapping[Service, RawPerformanceData]:
         return self._performance_response
 
     def fetch_time_series(
@@ -181,7 +181,7 @@ class _FakeFetchRRD:
 
 
 def _discover(
-    service: ServiceRef,
+    service: Service,
     registered_graphs: Sequence[
         graphs_v1.Graph
         | graphs_v1.Bidirectional
@@ -534,8 +534,8 @@ def test_match_graph_for_services_adds_predictive_lines_per_service() -> None:
     # adds a predictive line wherever predict_* exists for that service, and only there.
     cpu_user = MetricName("cpu_user")
     predict = MetricName("predict_cpu_user")
-    with_predict = ServiceRef(host_name=HostName("h1"), service_name=ServiceName("svc"))
-    without_predict = ServiceRef(host_name=HostName("h2"), service_name=ServiceName("svc"))
+    with_predict = Service(host_name=HostName("h1"), service_name=ServiceName("svc"))
+    without_predict = Service(host_name=HostName("h2"), service_name=ServiceName("svc"))
     plugin = graphs_v1.Graph(name="cpu", title=Title("CPU"), simple_lines=["cpu_user"])
 
     graphs = match_graph_for_services(

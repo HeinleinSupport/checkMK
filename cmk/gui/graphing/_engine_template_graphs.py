@@ -19,7 +19,7 @@ from cmk.graphing_engine import (
     fetch_available_metric_names,
     Graph,
     RRDSource,
-    ServiceRef,
+    Service,
     TimeRange,
 )
 from cmk.gui.i18n import _, translate_to_current_language
@@ -43,7 +43,7 @@ def _assert_uniform_unit(graph: Graph) -> None:
 
 def build_template_graphs(
     *,
-    service: ServiceRef,
+    service: Service,
     rrd: RRDSource,
     registered_graphs: Sequence[GraphFromAPI],
     registered_metrics: Mapping[str, metrics_v1.Metric],

@@ -32,13 +32,13 @@ from cmk.graphing_engine import (
     RawPerformanceData,
     RawPerformanceValue,
     RRDMetric,
+    Service,
     ServiceName,
-    ServiceRef,
     TimeRange,
     TimeSeries,
 )
 
-_SERVICE = ServiceRef(host_name=HostName("h"), service_name=ServiceName("svc"))
+_SERVICE = Service(host_name=HostName("h"), service_name=ServiceName("svc"))
 _TIME_RANGE = TimeRange(start=0, end=60, step=10)
 _METRICS = {
     name: metrics_v1.Metric(
@@ -71,7 +71,7 @@ class _FakeRRD:
     def __init__(
         self,
         *,
-        performance_data: Mapping[ServiceRef, RawPerformanceData],
+        performance_data: Mapping[Service, RawPerformanceData],
         time_series: Mapping[RRDMetric, TimeSeries],
     ) -> None:
         self._performance_data = performance_data
@@ -81,8 +81,8 @@ class _FakeRRD:
         self.time_series_requests: list[tuple[TimeRange, ConsolidationFunction]] = []
 
     def fetch_available_metric_names(
-        self, services: Sequence[ServiceRef]
-    ) -> Mapping[ServiceRef, RawMetricNames]:
+        self, services: Sequence[Service]
+    ) -> Mapping[Service, RawMetricNames]:
         return {
             service: RawMetricNames(
                 check_command=self._performance_data[service].check_command,
@@ -96,9 +96,9 @@ class _FakeRRD:
 
     def fetch_performance_data(
         self, rrd_metrics: Sequence[RRDMetric]
-    ) -> Mapping[ServiceRef, RawPerformanceData]:
+    ) -> Mapping[Service, RawPerformanceData]:
         services = {
-            ServiceRef(host_name=metric.host_name, service_name=metric.service_name)
+            Service(host_name=metric.host_name, service_name=metric.service_name)
             for metric in rrd_metrics
         }
         return {

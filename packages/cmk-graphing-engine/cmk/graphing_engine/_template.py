@@ -23,7 +23,7 @@ from ._objects import (
     Rule,
     ScalarOf,
     ScalarType,
-    ServiceRef,
+    Service,
     Stack,
 )
 
@@ -74,7 +74,7 @@ def _walk(
 
 def _add_predictive_lines(
     graph: Graph,
-    service: ServiceRef,
+    service: Service,
     available: Container[MetricName],
     metrics: Mapping[str, metrics_v1.Metric],
     localizer: Callable[[str], str],
@@ -136,11 +136,11 @@ type _GraphPlugin = (
 
 def match_graph_for_services(
     *,
-    services: Sequence[ServiceRef],
+    services: Sequence[Service],
     graph: _GraphPlugin,
     metrics: Mapping[str, metrics_v1.Metric],
     localizer: Callable[[str], str],
-    available: Mapping[ServiceRef, Container[MetricName]],
+    available: Mapping[Service, Container[MetricName]],
     graph_type: str,
 ) -> Sequence[Graph]:
     discovered: list[Graph] = []
@@ -161,7 +161,7 @@ def match_graph_for_services(
 
 def build_service_graphs(
     *,
-    service: ServiceRef,
+    service: Service,
     registered_graphs: Sequence[_GraphPlugin],
     metrics: Mapping[str, metrics_v1.Metric],
     localizer: Callable[[str], str],

@@ -28,8 +28,8 @@ from cmk.graphing_engine import (
     Rule,
     ScalarOf,
     ScalarType,
+    Service,
     ServiceName,
-    ServiceRef,
     SINotation,
     Stack,
     StrictPrecision,
@@ -44,7 +44,7 @@ def _id(s: str) -> str:
     return s
 
 
-_SERVICE = ServiceRef(host_name=HostName("host"), service_name=ServiceName("svc"))
+_SERVICE = Service(host_name=HostName("host"), service_name=ServiceName("svc"))
 
 _KIND = "test"
 
@@ -168,7 +168,7 @@ def test_parse_graph_from_api_builds_the_rrd_metric_of_a_curve() -> None:
     graph = graphs_v1.Graph(name="g", title=Title("t"), simple_lines=["a"])
     parsed = parse_graph_from_api(
         graph,
-        ServiceRef(host_name=HostName("my-host"), service_name=ServiceName("my-service")),
+        Service(host_name=HostName("my-host"), service_name=ServiceName("my-service")),
         _METRICS,
         _id,
         graph_type=_KIND,

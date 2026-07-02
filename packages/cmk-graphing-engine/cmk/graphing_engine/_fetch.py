@@ -17,7 +17,7 @@ from ._objects import (
     RawMetricNames,
     RawPerformanceData,
     RRDMetric,
-    ServiceRef,
+    Service,
     TimeSeries,
 )
 from ._options import ConsolidationFunction, TimeRange
@@ -31,12 +31,12 @@ from ._translate import (
 
 class RRDSource(Protocol):
     def fetch_available_metric_names(
-        self, services: Sequence[ServiceRef]
-    ) -> Mapping[ServiceRef, RawMetricNames]: ...
+        self, services: Sequence[Service]
+    ) -> Mapping[Service, RawMetricNames]: ...
 
     def fetch_performance_data(
         self, rrd_metrics: Sequence[RRDMetric]
-    ) -> Mapping[ServiceRef, RawPerformanceData]: ...
+    ) -> Mapping[Service, RawPerformanceData]: ...
 
     def fetch_time_series(
         self,
@@ -79,7 +79,7 @@ def _merge(series: Sequence[TimeSeries], time_range: TimeRange) -> TimeSeries:
 def _fetch_time_series(
     *,
     graph: Graph,
-    performance_data: Mapping[ServiceRef, Mapping[MetricName, PerformanceData]],
+    performance_data: Mapping[Service, Mapping[MetricName, PerformanceData]],
     consolidation_function: ConsolidationFunction,
     time_range: TimeRange,
     rrd: RRDSource,
@@ -89,7 +89,7 @@ def _fetch_time_series(
     ] = {}
     rrd_metrics_per_function: dict[ConsolidationFunction, list[RRDMetric]] = {}
     for metric in graph.rrd_metrics():
-        service = ServiceRef(host_name=metric.host_name, service_name=metric.service_name)
+        service = Service(host_name=metric.host_name, service_name=metric.service_name)
         if (data := performance_data.get(service, {}).get(metric.metric_name)) is None:
             continue
         function = _consolidation_function(metric, consolidation_function)
@@ -133,10 +133,10 @@ def _fetch_time_series(
 
 def fetch_available_metric_names(
     *,
-    services: Iterable[ServiceRef],
+    services: Iterable[Service],
     translations: Iterable[translations_v1.Translation],
     rrd: RRDSource,
-) -> Mapping[ServiceRef, frozenset[MetricName]]:
+) -> Mapping[Service, frozenset[MetricName]]:
     parsed_translations = parse_translations_from_api(translations)
     available = rrd.fetch_available_metric_names(list(dict.fromkeys(services)))
     return {
@@ -150,7 +150,7 @@ def fetch_performance_data(
     graphs: Sequence[Graph],
     translations: Iterable[translations_v1.Translation],
     rrd: RRDSource,
-) -> Mapping[ServiceRef, Mapping[MetricName, PerformanceData]]:
+) -> Mapping[Service, Mapping[MetricName, PerformanceData]]:
     parsed_translations = parse_translations_from_api(translations)
     rrd_metrics = list(dict.fromkeys(metric for graph in graphs for metric in graph.rrd_metrics()))
     raw_performance_data = rrd.fetch_performance_data(rrd_metrics)
@@ -159,7 +159,7 @@ def fetch_performance_data(
         for service, raw in raw_performance_data.items()
     }
     for metric in rrd_metrics:
-        service = ServiceRef(host_name=metric.host_name, service_name=metric.service_name)
+        service = Service(host_name=metric.host_name, service_name=metric.service_name)
         if (raw := raw_performance_data.get(service)) is None:
             continue
         if metric.metric_name not in performance_data[service]:

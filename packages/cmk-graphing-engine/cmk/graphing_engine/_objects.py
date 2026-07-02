@@ -103,7 +103,7 @@ class MetricName(str):
 
 
 @dataclass(frozen=True, kw_only=True)
-class ServiceRef:
+class Service:
     host_name: HostName
     service_name: ServiceName
 
@@ -134,12 +134,12 @@ class TimeSeries:
 
 @dataclass(frozen=True, kw_only=True)
 class EvaluationContext:
-    performance_data: Mapping[ServiceRef, Mapping[MetricName, PerformanceData]]
+    performance_data: Mapping[Service, Mapping[MetricName, PerformanceData]]
     time_series: Mapping[RRDMetric, TimeSeries]
     time_range: TimeRange
 
     def data_of(self, metric: RRDMetric) -> PerformanceData | None:
-        service = ServiceRef(host_name=metric.host_name, service_name=metric.service_name)
+        service = Service(host_name=metric.host_name, service_name=metric.service_name)
         return self.performance_data.get(service, {}).get(metric.metric_name)
 
 

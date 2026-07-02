@@ -30,8 +30,8 @@ from cmk.graphing_engine import (
     Rule,
     ScalarOf,
     ScalarType,
+    Service,
     ServiceName,
-    ServiceRef,
     Stack,
     Sum,
     TimeRange,
@@ -45,10 +45,10 @@ from cmk.graphing_engine._objects import EvaluationContext, PerformanceData, Qua
 
 def _perf(
     metric_data: Mapping[RRDMetric, PerformanceData],
-) -> Mapping[ServiceRef, Mapping[MetricName, PerformanceData]]:
-    result: dict[ServiceRef, dict[MetricName, PerformanceData]] = {}
+) -> Mapping[Service, Mapping[MetricName, PerformanceData]]:
+    result: dict[Service, dict[MetricName, PerformanceData]] = {}
     for metric, data in metric_data.items():
-        service = ServiceRef(host_name=metric.host_name, service_name=metric.service_name)
+        service = Service(host_name=metric.host_name, service_name=metric.service_name)
         result.setdefault(service, {})[metric.metric_name] = data
     return result
 

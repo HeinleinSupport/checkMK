@@ -26,8 +26,8 @@ from cmk.graphing_engine import (
     RRDMetric,
     ScalarOf,
     ScalarType,
+    Service,
     ServiceName,
-    ServiceRef,
     TimeRange,
     TimeSeries,
     Unit,
@@ -38,7 +38,7 @@ from cmk.gui.graphing._engine_template_graphs import (
     evaluate_template_graphs,
 )
 
-_SERVICE = ServiceRef(host_name=HostName("h"), service_name=ServiceName("svc"))
+_SERVICE = Service(host_name=HostName("h"), service_name=ServiceName("svc"))
 _METRIC = "x"
 _DISCOVERY_RANGE = TimeRange(start=0, end=60, step=10)
 
@@ -48,7 +48,7 @@ class _FakeRRD:
     requested_ranges: list[TimeRange] = field(default_factory=list)
 
     @staticmethod
-    def _data(services: Iterable[ServiceRef]) -> Mapping[ServiceRef, RawPerformanceData]:
+    def _data(services: Iterable[Service]) -> Mapping[Service, RawPerformanceData]:
         return {
             service: RawPerformanceData(
                 check_command="check_mk-foo",
@@ -58,8 +58,8 @@ class _FakeRRD:
         }
 
     def fetch_available_metric_names(
-        self, services: Sequence[ServiceRef]
-    ) -> Mapping[ServiceRef, RawMetricNames]:
+        self, services: Sequence[Service]
+    ) -> Mapping[Service, RawMetricNames]:
         return {
             service: RawMetricNames(
                 check_command=raw.check_command,
@@ -70,9 +70,9 @@ class _FakeRRD:
 
     def fetch_performance_data(
         self, rrd_metrics: Sequence[RRDMetric]
-    ) -> Mapping[ServiceRef, RawPerformanceData]:
+    ) -> Mapping[Service, RawPerformanceData]:
         return self._data(
-            ServiceRef(host_name=metric.host_name, service_name=metric.service_name)
+            Service(host_name=metric.host_name, service_name=metric.service_name)
             for metric in rrd_metrics
         )
 

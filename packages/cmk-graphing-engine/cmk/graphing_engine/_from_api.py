@@ -37,7 +37,7 @@ from ._objects import (
     Rule,
     ScalarOf,
     ScalarType,
-    ServiceRef,
+    Service,
     SINotation,
     Stack,
     StandardScientificNotation,
@@ -163,7 +163,7 @@ def metric_display_attributes(
 
 @dataclass(frozen=True)
 class _ParseContext:
-    service: ServiceRef
+    service: Service
     metrics: Mapping[str, metrics_v1.Metric]
     localizer: Callable[[str], str]
 
@@ -485,7 +485,7 @@ def parse_graph_from_api(
         | graphs_v2_unstable.Graph
         | graphs_v2_unstable.Bidirectional
     ),
-    service: ServiceRef,
+    service: Service,
     metrics: Mapping[str, metrics_v1.Metric],
     localizer: Callable[[str], str],
     *,
