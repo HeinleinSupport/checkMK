@@ -59,7 +59,7 @@ def build_template_graphs(
     registered_metrics: Mapping[str, metrics_v1.Metric],
     registered_translations: Sequence[translations_v1.Translation],
 ) -> Sequence[Graph]:
-    available = fetch_metric_names(
+    metric_names = fetch_metric_names(
         services=[service],
         translations=registered_translations,
         rrd=rrd,
@@ -69,7 +69,7 @@ def build_template_graphs(
         registered_graphs=registered_graphs,
         metrics=registered_metrics,
         localizer=translate_to_current_language,
-        metric_names=available,
+        metric_names=metric_names,
         graph_type="template",
     )
     for graph in graphs:
