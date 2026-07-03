@@ -9,16 +9,12 @@ from dataclasses import dataclass, field
 import pytest
 
 from cmk.ccc.exceptions import MKGeneralException
+from cmk.graphing.v1 import graphs as graphs_v1
+from cmk.graphing.v1 import metrics as metrics_v1
+from cmk.graphing.v1 import Title
 from cmk.graphing_engine import (
-    AutoPrecision,
     ConsolidationFunction,
-    Constant,
-    Curve,
-    CurveAttributes,
-    DecimalNotation,
-    Graph,
     HostName,
-    Line,
     MetricName,
     RawMetricNames,
     RawPerformanceData,
@@ -30,10 +26,8 @@ from cmk.graphing_engine import (
     ServiceName,
     TimeRange,
     TimeSeries,
-    Unit,
 )
 from cmk.gui.graphing._engine_template_graphs import (
-    _assert_uniform_unit,
     build_template_graphs,
     evaluate_template_graphs,
 )
@@ -45,14 +39,16 @@ _DISCOVERY_RANGE = TimeRange(start=0, end=60, step=10)
 
 @dataclass
 class _FakeRRD:
+    values: Mapping[str, RawPerformanceValue] = field(
+        default_factory=lambda: {_METRIC: RawPerformanceValue(value=1.0)}
+    )
     requested_ranges: list[TimeRange] = field(default_factory=list)
 
-    @staticmethod
-    def _data(services: Iterable[Service]) -> Mapping[Service, RawPerformanceData]:
+    def _data(self, services: Iterable[Service]) -> Mapping[Service, RawPerformanceData]:
         return {
             service: RawPerformanceData(
                 check_command="check_mk-foo",
-                values={MetricName(_METRIC): RawPerformanceValue(value=1.0)},
+                values={MetricName(name): value for name, value in self.values.items()},
             )
             for service in services
         }
@@ -130,35 +126,38 @@ def test_template_lifecycle_discover_and_update() -> None:
     assert rrd.requested_ranges
     assert all(time_range == _DISCOVERY_RANGE for time_range in rrd.requested_ranges)
 
-
-def test_discovery_rejects_mixed_units() -> None:
-    # A template graph has a single value axis, so curves of different units cannot share it — discovery
-    # rejects them (legacy parity). Two curves with distinct intrinsic units trigger the guard without
-    # depending on the metric registry.
-    bytes_curve = CurveAttributes(
-        title="bytes",
-        unit=Unit(notation=DecimalNotation("B"), precision=AutoPrecision(2)),
-        color="#111111",
-    )
-    seconds_curve = CurveAttributes(
-        title="seconds",
-        unit=Unit(notation=DecimalNotation("s"), precision=AutoPrecision(2)),
-        color="#222222",
-    )
-    mixed = Graph(
-        name="mixed",
-        title="Mixed",
-        graph_type="template",
-        lines=[
-            Line(
-                curve=Curve(quantity=Constant(1, bytes_curve), attributes=bytes_curve),
-                inverse=False,
-            ),
-            Line(
-                curve=Curve(quantity=Constant(2, seconds_curve), attributes=seconds_curve),
-                inverse=False,
-            ),
-        ],
+    # A template graph has a single value axis, so a plugin drawing curves of different units cannot
+    # share it — discovery rejects it (legacy parity).
+    mixed_rrd = _FakeRRD(
+        values={
+            "bytes_metric": RawPerformanceValue(value=1.0),
+            "seconds_metric": RawPerformanceValue(value=2.0),
+        }
     )
     with pytest.raises(MKGeneralException, match="different units"):
-        _assert_uniform_unit(mixed)
+        build_template_graphs(
+            service=_SERVICE,
+            rrd=mixed_rrd,
+            registered_graphs=[
+                graphs_v1.Graph(
+                    name="mixed",
+                    title=Title("Mixed"),
+                    simple_lines=["bytes_metric", "seconds_metric"],
+                )
+            ],
+            registered_metrics={
+                "bytes_metric": metrics_v1.Metric(
+                    name="bytes_metric",
+                    title=Title("Bytes"),
+                    unit=metrics_v1.Unit(metrics_v1.DecimalNotation("B")),
+                    color=metrics_v1.Color.BLUE,
+                ),
+                "seconds_metric": metrics_v1.Metric(
+                    name="seconds_metric",
+                    title=Title("Seconds"),
+                    unit=metrics_v1.Unit(metrics_v1.DecimalNotation("s")),
+                    color=metrics_v1.Color.GREEN,
+                ),
+            },
+            registered_translations=[],
+        )
