@@ -23,7 +23,7 @@ from cmk.graphing_engine import (
     TimeNotation,
     Unit,
 )
-from cmk.gui.graphing._engine_template_graphs import serialize_template_graphs
+from cmk.gui.graphing._engine_dispatch import serialize_graphs
 from cmk.gui.graphing._frontend import to_cmk_time_series_graph
 from cmk.shared_typing.cmk_time_series_graph import GraphHeader, GraphOptions, Interaction, Size
 
@@ -80,4 +80,4 @@ def test_to_cmk_time_series_graph_shell() -> None:
     assert result.time_range is None
     assert result.graph_type == "template"
     # The internal field is the opaque JSON serialization of the graph definition envelope.
-    assert result.internal == json.dumps(serialize_template_graphs([graph]))
+    assert result.internal == json.dumps(serialize_graphs([graph]))

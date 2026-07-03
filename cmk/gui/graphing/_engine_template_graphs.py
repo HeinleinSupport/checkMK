@@ -27,7 +27,7 @@ from cmk.gui.i18n import _, translate_to_current_language
 
 from ._engine_dispatch import (
     consolidation_function_of,
-    EngineGraphEvaluator,
+    EngineGraphDispatcher,
     GraphDataRequest,
     time_range_of,
 )
@@ -83,7 +83,7 @@ def build_template_graphs(
     return graphs
 
 
-def serialize_template_graphs(graphs: Sequence[Graph]) -> Json:
+def _serialize_template_graphs(graphs: Sequence[Graph]) -> Json:
     codec = engine_quantity_codec()
     return {"graphs": [serialize_graph(graph, codec) for graph in graphs]}
 
@@ -120,6 +120,8 @@ def _dispatched_evaluate_template_graphs(request: GraphDataRequest) -> Sequence[
     )
 
 
-TEMPLATE_GRAPH_EVALUATOR = EngineGraphEvaluator(
-    graph_type="template", evaluate=_dispatched_evaluate_template_graphs
+TEMPLATE_GRAPH_DISPATCHER = EngineGraphDispatcher(
+    graph_type="template",
+    serialize=_serialize_template_graphs,
+    evaluate=_dispatched_evaluate_template_graphs,
 )

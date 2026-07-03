@@ -23,7 +23,7 @@ from cmk.shared_typing.cmk_time_series_graph import (
 )
 from cmk.shared_typing.global_time_picker import CustomGraphTimeRange, GlobalTimePickerProps
 
-from ._engine_template_graphs import serialize_template_graphs
+from ._engine_dispatch import serialize_graphs
 
 _DEFAULT_INTERACTION = Interaction(
     burger="enabled",
@@ -57,7 +57,7 @@ def to_cmk_time_series_graph(
         ),
         interaction=interaction,
         graph_type=graph.graph_type,
-        internal=json.dumps(serialize_template_graphs([graph])),
+        internal=json.dumps(serialize_graphs([graph])),
     )
 
 

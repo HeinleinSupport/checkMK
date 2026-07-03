@@ -10,9 +10,9 @@ from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field
 
 from cmk.ccc.plugin_registry import Registry
-from cmk.graphing_engine import ConsolidationFunction, EvaluatedGraph, TimeRange
+from cmk.graphing_engine import ConsolidationFunction, EvaluatedGraph, Graph, TimeRange
 
-from ._engine_serialization import ensure_type
+from ._engine_serialization import ensure_type, Json
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -23,21 +23,33 @@ class GraphDataRequest:
 
 
 @dataclass(frozen=True)
-class EngineGraphEvaluator:
+class EngineGraphDispatcher:
     graph_type: str
+    serialize: Callable[[Sequence[Graph]], Json]
     evaluate: Callable[[GraphDataRequest], Sequence[EvaluatedGraph]]
 
 
-class EngineGraphEvaluatorRegistry(Registry[EngineGraphEvaluator]):
-    def plugin_name(self, instance: EngineGraphEvaluator) -> str:
+class EngineGraphDispatcherRegistry(Registry[EngineGraphDispatcher]):
+    def plugin_name(self, instance: EngineGraphDispatcher) -> str:
         return instance.graph_type
 
 
-engine_graph_evaluator_registry = EngineGraphEvaluatorRegistry()
+engine_graph_dispatcher_registry = EngineGraphDispatcherRegistry()
+
+
+def serialize_graphs(graphs: Sequence[Graph]) -> Json:
+    by_graph_type: dict[str, list[Graph]] = {}
+    for graph in graphs:
+        by_graph_type.setdefault(graph.graph_type, []).append(graph)
+    serialized: list[object] = []
+    for graph_type, batch in by_graph_type.items():
+        dispatcher = engine_graph_dispatcher_registry[graph_type]
+        serialized.extend(ensure_type(dispatcher.serialize(batch)["graphs"], list))
+    return {"graphs": serialized}
 
 
 def evaluate_graphs(request: GraphDataRequest) -> Sequence[EvaluatedGraph]:
-    return engine_graph_evaluator_registry[request.graph_type].evaluate(request)
+    return engine_graph_dispatcher_registry[request.graph_type].evaluate(request)
 
 
 def consolidation_function_of(request: GraphDataRequest) -> ConsolidationFunction:

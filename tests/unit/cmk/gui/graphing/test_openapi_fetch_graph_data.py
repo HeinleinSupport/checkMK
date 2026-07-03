@@ -10,7 +10,7 @@ import pytest
 from livestatus import MKLivestatusSocketError
 
 from cmk.graphing_engine import ConsolidationFunction, Graph
-from cmk.gui.graphing._engine_template_graphs import serialize_template_graphs
+from cmk.gui.graphing._engine_dispatch import serialize_graphs
 from cmk.gui.graphing.openapi import fetch_graph_data as fetch_graph_data_module
 from cmk.gui.graphing.openapi.fetch_graph_data import _consolidation_function, fetch_graph_data_v1
 from cmk.gui.graphing.openapi.models import ApiTimeRange, GraphFetchRequest
@@ -40,7 +40,7 @@ def test_fetch_graph_data_empty_graph_runs_end_to_end() -> None:
     graph = Graph(name="g", title="t", graph_type="template")
     request = GraphFetchRequest(
         graph_type="template",
-        internal=serialize_template_graphs([graph]),
+        internal=serialize_graphs([graph]),
         requested_time_range=ApiTimeRange(start=0, end=60, step=10),
         consolidation_function="avg",
     )
@@ -68,7 +68,7 @@ def test_fetch_graph_data_invalid_internal_raises_500() -> None:
 def test_fetch_graph_data_unknown_graph_type_raises_500() -> None:
     request = GraphFetchRequest(
         graph_type="does-not-exist",
-        internal=serialize_template_graphs([Graph(name="g", title="t", graph_type="template")]),
+        internal=serialize_graphs([Graph(name="g", title="t", graph_type="template")]),
         requested_time_range=ApiTimeRange(start=0, end=60, step=10),
         consolidation_function="avg",
     )
@@ -87,7 +87,7 @@ def test_fetch_graph_data_livestatus_failure_raises_503(
     monkeypatch.setattr(fetch_graph_data_module, "evaluate_graphs", _raise)
     request = GraphFetchRequest(
         graph_type="template",
-        internal=serialize_template_graphs([Graph(name="g", title="t", graph_type="template")]),
+        internal=serialize_graphs([Graph(name="g", title="t", graph_type="template")]),
         requested_time_range=ApiTimeRange(start=0, end=60, step=10),
         consolidation_function="avg",
     )
@@ -105,7 +105,7 @@ def test_fetch_graph_data_multiple_internal_graphs_raises_500() -> None:
     ]
     request = GraphFetchRequest(
         graph_type="template",
-        internal=serialize_template_graphs(graphs),
+        internal=serialize_graphs(graphs),
         requested_time_range=ApiTimeRange(start=0, end=60, step=10),
         consolidation_function="avg",
     )
