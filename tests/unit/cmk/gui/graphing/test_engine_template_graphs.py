@@ -94,10 +94,10 @@ def test_template_lifecycle_discover_and_update() -> None:
     rrd = _FakeRRD()
     graphs = build_template_graphs(
         service=_SERVICE,
-        rrd=rrd,
         registered_graphs=[],
         registered_metrics={},
         registered_translations=[],
+        rrd=rrd,
     )
     [fallback] = [graph for graph in graphs if graph.name == _METRIC]
     assert [
@@ -117,8 +117,8 @@ def test_template_lifecycle_discover_and_update() -> None:
         graphs=graphs,
         consolidation_function=ConsolidationFunction.MAX,
         time_range=_DISCOVERY_RANGE,
-        rrd=rrd,
         registered_translations=[],
+        rrd=rrd,
     )
 
     assert len(evaluated) == len(graphs)
@@ -137,7 +137,6 @@ def test_template_lifecycle_discover_and_update() -> None:
     with pytest.raises(MKGeneralException, match="different units"):
         build_template_graphs(
             service=_SERVICE,
-            rrd=mixed_rrd,
             registered_graphs=[
                 graphs_v1.Graph(
                     name="mixed",
@@ -160,4 +159,5 @@ def test_template_lifecycle_discover_and_update() -> None:
                 ),
             },
             registered_translations=[],
+            rrd=mixed_rrd,
         )

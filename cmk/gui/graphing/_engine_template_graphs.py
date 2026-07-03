@@ -60,10 +60,10 @@ def _assert_uniform_unit(graph: Graph) -> None:
 def build_template_graphs(
     *,
     service: Service,
-    rrd: RRDSource,
     registered_graphs: Sequence[GraphFromAPI],
     registered_metrics: Mapping[str, metrics_v1.Metric],
     registered_translations: Sequence[translations_v1.Translation],
+    rrd: RRDSource,
 ) -> Sequence[Graph]:
     metric_names = fetch_metric_names(
         services=[service],
@@ -98,8 +98,8 @@ def evaluate_template_graphs(
     graphs: Sequence[Graph],
     consolidation_function: ConsolidationFunction,
     time_range: TimeRange,
-    rrd: RRDSource,
     registered_translations: Sequence[translations_v1.Translation],
+    rrd: RRDSource,
 ) -> Sequence[EvaluatedGraph]:
     return evaluate_graphs(
         graphs=graphs,
@@ -115,8 +115,8 @@ def _dispatched_evaluate_template_graphs(request: GraphDataRequest) -> Sequence[
         graphs=_deserialize_template_graphs(request.definition),
         consolidation_function=consolidation_function_of(request.options),
         time_range=time_range_of(request.options),
-        rrd=EngineRRDSource(site_id=None, debug=active_config.debug),
         registered_translations=registered_translations(),
+        rrd=EngineRRDSource(site_id=None, debug=active_config.debug),
     )
 
 
