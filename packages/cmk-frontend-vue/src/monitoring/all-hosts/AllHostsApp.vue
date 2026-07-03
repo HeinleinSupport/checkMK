@@ -41,7 +41,10 @@ import {
   ACK_ACTION_ID,
   useAcknowledgeAction
 } from '../shared/components/action/actions/acknowledge'
-import { useRescheduleAction } from '../shared/components/action/actions/reschedule'
+import {
+  RESCHEDULE_ACTION_ID,
+  useRescheduleAction
+} from '../shared/components/action/actions/reschedule'
 import {
   SCHEDULE_DOWNTIME_ACTION_ID,
   useScheduleDowntimeAction
@@ -58,6 +61,7 @@ const props = defineProps<MonitoringAllHostsApp>()
 
 const ACTION_ICONS: Record<string, SimpleIcons> = {
   [ACK_ACTION_ID]: 'ack',
+  [RESCHEDULE_ACTION_ID]: 'reload',
   [SCHEDULE_DOWNTIME_ACTION_ID]: 'downtime'
 }
 
