@@ -323,6 +323,9 @@ def test_update_reproduces_a_natively_gridded_series() -> None:
     # The fetched series is aligned to the six requested points.
     assert len(evaluated.lines[0].curve.time_series.values) == 6
     assert evaluated.lines[0].curve.time_series.time_range == _TIME_RANGE
+    # Discovery never fetched the series; the update drove the source exactly once, over the requested
+    # display range (not the native grid) and with the consolidation it was given.
+    assert rrd.time_series_requests == [(_TIME_RANGE, ConsolidationFunction.AVERAGE)]
 
 
 # --- the realistic case: data has moved on by the time the graph is refreshed -------------------
