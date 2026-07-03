@@ -24,7 +24,7 @@ from cmk.graphing_engine import (
     Sum,
     Unit,
 )
-from cmk.gui.graphing._engine_serialization import serialize_graphs
+from cmk.gui.graphing._engine_template_graphs import serialize_template_graphs
 from cmk.livestatus_client.testing import MockLiveStatusConnection
 from tests.testlib.rest_api_client import ClientRegistry
 
@@ -117,7 +117,7 @@ def test_fetch_graph_data_comprehensive_graph(
     with mock_livestatus():
         resp = clients.Graph.fetch_data(
             graph_type="template",
-            internal=serialize_graphs([_comprehensive_graph()]),
+            internal=serialize_template_graphs([_comprehensive_graph()]),
             requested_time_range={"start": 0, "end": 60, "step": 10},
             consolidation_function="avg",
         )

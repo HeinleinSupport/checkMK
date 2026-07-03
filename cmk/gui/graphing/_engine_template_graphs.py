@@ -33,7 +33,13 @@ from ._engine_dispatch import (
 )
 from ._engine_plugins import registered_translations
 from ._engine_rrd_source import EngineRRDSource
-from ._engine_serialization import deserialize_graphs
+from ._engine_serialization import (
+    deserialize_graph,
+    engine_quantity_codec,
+    ensure_type,
+    Json,
+    serialize_graph,
+)
 from ._from_api import GraphFromAPI
 
 
@@ -77,6 +83,16 @@ def build_template_graphs(
     return graphs
 
 
+def serialize_template_graphs(graphs: Sequence[Graph]) -> Json:
+    codec = engine_quantity_codec()
+    return {"graphs": [serialize_graph(graph, codec) for graph in graphs]}
+
+
+def _deserialize_template_graphs(data: Mapping[str, object]) -> Sequence[Graph]:
+    codec = engine_quantity_codec()
+    return [deserialize_graph(graph, codec) for graph in ensure_type(data["graphs"], list)]
+
+
 def evaluate_template_graphs(
     *,
     graphs: Sequence[Graph],
@@ -96,7 +112,7 @@ def evaluate_template_graphs(
 
 def _dispatched_evaluate_template_graphs(request: GraphDataRequest) -> Sequence[EvaluatedGraph]:
     return evaluate_template_graphs(
-        graphs=deserialize_graphs(request.definition),
+        graphs=_deserialize_template_graphs(request.definition),
         consolidation_function=consolidation_function_of(request),
         time_range=time_range_of(request),
         rrd=EngineRRDSource(site_id=None, debug=active_config.debug),

@@ -373,8 +373,7 @@ def _rule_from_json(data: object, codec: QuantityCodec) -> Rule:
     )
 
 
-def serialize_graph(graph: Graph, codec: QuantityCodec | None = None) -> Json:
-    codec = engine_quantity_codec(codec)
+def serialize_graph(graph: Graph, codec: QuantityCodec) -> Json:
     return {
         "name": graph.name,
         "title": graph.title,
@@ -403,8 +402,7 @@ def serialize_graph(graph: Graph, codec: QuantityCodec | None = None) -> Json:
     }
 
 
-def deserialize_graph(data: object, codec: QuantityCodec | None = None) -> Graph:
-    codec = engine_quantity_codec(codec)
+def deserialize_graph(data: object, codec: QuantityCodec) -> Graph:
     data = _as_mapping(data)
     vertical_range = data["vertical_range"]
     return Graph(
@@ -418,14 +416,3 @@ def deserialize_graph(data: object, codec: QuantityCodec | None = None) -> Graph
         lines=[_line_from_json(line, codec) for line in _as_list(data["lines"])],
         rules=[_rule_from_json(rule, codec) for rule in _as_list(data["rules"])],
     )
-
-
-def serialize_graphs(graphs: Sequence[Graph], codec: QuantityCodec | None = None) -> Json:
-    # Each resolved graph carries its own graph_type, so the envelope only holds the graph list.
-    return {"graphs": [serialize_graph(graph, codec) for graph in graphs]}
-
-
-def deserialize_graphs(
-    data: Mapping[str, object], codec: QuantityCodec | None = None
-) -> Sequence[Graph]:
-    return [deserialize_graph(graph, codec) for graph in _as_list(data["graphs"])]
