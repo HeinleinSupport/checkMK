@@ -65,24 +65,13 @@ def _ts(*values: float | None, time_range: TimeRange = _TIME_RANGE) -> TimeSerie
     return TimeSeries(time_range=time_range, values=list(values))
 
 
-class _FakeRRD:
-    """An RRDSource serving both performance data and time series for the whole lifecycle."""
+class _FakeRRDFetchRawMetricNames:
+    """The discovery source: reports which metrics exist per service."""
 
-    def __init__(
-        self,
-        *,
-        performance_data: Mapping[Service, RawPerformanceData],
-        time_series: Mapping[RRDMetric, TimeSeries],
-    ) -> None:
+    def __init__(self, performance_data: Mapping[Service, RawPerformanceData]) -> None:
         self._performance_data = performance_data
-        self._time_series = time_series
-        # The runtime parameters of every fetch_time_series call, so a test can assert how update
-        # drove the source.
-        self.time_series_requests: list[tuple[TimeRange, ConsolidationFunction]] = []
 
-    def fetch_raw_metric_names(
-        self, services: Sequence[Service]
-    ) -> Mapping[Service, RawMetricNames]:
+    def __call__(self, services: Sequence[Service]) -> Mapping[Service, RawMetricNames]:
         return {
             service: RawMetricNames(
                 check_command=self._performance_data[service].check_command,
@@ -92,6 +81,22 @@ class _FakeRRD:
             if service in self._performance_data
         }
 
+
+class _FakeRRDDataSource:
+    """The update source: serves performance data and time series for the whole lifecycle."""
+
+    def __init__(
+        self,
+        *,
+        performance_data: Mapping[Service, RawPerformanceData],
+        time_series: Mapping[RRDMetric, TimeSeries],
+    ) -> None:
+        self.performance_data = performance_data
+        self._time_series = time_series
+        # The runtime parameters of every fetch_time_series call, so a test can assert how update
+        # drove the source.
+        self.time_series_requests: list[tuple[TimeRange, ConsolidationFunction]] = []
+
     def fetch_raw_performance_data(
         self, rrd_metrics: Sequence[RRDMetric]
     ) -> Mapping[Service, RawPerformanceData]:
@@ -100,9 +105,9 @@ class _FakeRRD:
             for metric in rrd_metrics
         }
         return {
-            service: self._performance_data[service]
+            service: self.performance_data[service]
             for service in services
-            if service in self._performance_data
+            if service in self.performance_data
         }
 
     def fetch_time_series(
@@ -121,7 +126,7 @@ class _FakeRRD:
 
 
 def _discover(
-    rrd: _FakeRRD,
+    rrd: _FakeRRDDataSource,
     registered_graphs: Sequence[graphs_v1.Graph],
     *,
     translations: Sequence[translations_v1.Translation] = (),
@@ -129,7 +134,7 @@ def _discover(
     available = fetch_metric_names(
         services=[_SERVICE],
         translations=translations,
-        rrd=rrd,
+        fetch_raw_metric_names=_FakeRRDFetchRawMetricNames(rrd.performance_data),
     )
     return build_matched_graphs(
         service=_SERVICE,
@@ -142,7 +147,7 @@ def _discover(
 
 
 def _refresh(
-    rrd: _FakeRRD,
+    rrd: _FakeRRDDataSource,
     discovered: Sequence[Graph],
     *,
     translations: Sequence[translations_v1.Translation] = (),
@@ -159,7 +164,7 @@ def _refresh(
 
 def _evaluate(
     discovered: Graph,
-    rrd: _FakeRRD,
+    rrd: _FakeRRDDataSource,
     *,
     translations: Sequence[translations_v1.Translation] = (),
 ) -> EvaluatedGraph:
@@ -174,7 +179,7 @@ def test_update_reproduces_a_title_expression_for_a_non_drawn_metric() -> None:
         title=Title('CPU - _EXPRESSION:{"metric": "cpu_cores", "scalar": "max"} cores'),
         simple_lines=["cpu_user"],
     )
-    rrd = _FakeRRD(
+    rrd = _FakeRRDDataSource(
         performance_data={
             _SERVICE: RawPerformanceData(
                 check_command="check_mk-cpu",
@@ -202,7 +207,7 @@ def test_update_reproduces_a_compound_and_simple_line_graph() -> None:
         simple_lines=["util"],
         minimal_range=graphs_v1.MinimalRange(0, 100),
     )
-    rrd = _FakeRRD(
+    rrd = _FakeRRDDataSource(
         performance_data={
             _SERVICE: RawPerformanceData(
                 check_command="check_mk-cpu",
@@ -229,7 +234,7 @@ def test_update_reproduces_a_compound_and_simple_line_graph() -> None:
 
 def test_update_reproduces_a_fallback_single_metric_graph() -> None:
     # No registered plugin: every metric becomes its own single-metric fallback graph.
-    rrd = _FakeRRD(
+    rrd = _FakeRRDDataSource(
         performance_data={
             _SERVICE: RawPerformanceData(
                 check_command="check_mk-cpu",
@@ -255,7 +260,7 @@ def test_update_reproduces_a_renamed_and_scaled_metric() -> None:
             translations={"temperature": translations_v1.RenameToAndScaleBy("temp", 2.0)},
         )
     ]
-    rrd = _FakeRRD(
+    rrd = _FakeRRDDataSource(
         performance_data={
             _SERVICE: RawPerformanceData(
                 check_command="check_mk-cpu",
@@ -276,7 +281,7 @@ def test_update_reproduces_a_renamed_and_scaled_metric() -> None:
 def test_update_reproduces_several_graphs_in_order() -> None:
     # A matching plugin plus an unclaimed metric yields two graphs; refreshing keeps both in order.
     plugin = graphs_v1.Graph(name="cpu", title=Title("CPU"), simple_lines=["cpu_user"])
-    rrd = _FakeRRD(
+    rrd = _FakeRRDDataSource(
         performance_data={
             _SERVICE: RawPerformanceData(
                 check_command="check_mk-cpu",
@@ -304,7 +309,7 @@ def test_update_reproduces_a_natively_gridded_series() -> None:
     # 10).
     native = TimeRange(start=0, end=60, step=5)
     plugin = graphs_v1.Graph(name="cpu", title=Title("CPU"), simple_lines=["cpu_user"])
-    rrd = _FakeRRD(
+    rrd = _FakeRRDDataSource(
         performance_data={
             _SERVICE: RawPerformanceData(
                 check_command="check_mk-cpu",
@@ -331,8 +336,8 @@ def test_update_reproduces_a_natively_gridded_series() -> None:
 # --- the realistic case: data has moved on by the time the graph is refreshed -------------------
 
 
-def _cpu_rrd(*, value: float, series: TimeSeries) -> _FakeRRD:
-    return _FakeRRD(
+def _cpu_rrd(*, value: float, series: TimeSeries) -> _FakeRRDDataSource:
+    return _FakeRRDDataSource(
         performance_data={
             _SERVICE: RawPerformanceData(
                 check_command="check_mk-cpu",
@@ -366,8 +371,8 @@ def test_refresh_picks_up_a_changed_title_scalar() -> None:
         simple_lines=["cpu_user"],
     )
 
-    def _rrd(cores_max: float) -> _FakeRRD:
-        return _FakeRRD(
+    def _rrd(cores_max: float) -> _FakeRRDDataSource:
+        return _FakeRRDDataSource(
             performance_data={
                 _SERVICE: RawPerformanceData(
                     check_command="check_mk-cpu",
@@ -398,7 +403,7 @@ def test_refresh_drops_a_curve_whose_metric_disappeared() -> None:
     plugin = graphs_v1.Graph(
         name="cpu", title=Title("CPU"), simple_lines=["cpu_user", "cpu_system"]
     )
-    at_discovery = _FakeRRD(
+    at_discovery = _FakeRRDDataSource(
         performance_data={
             _SERVICE: RawPerformanceData(
                 check_command="check_mk-cpu",
@@ -414,7 +419,7 @@ def test_refresh_drops_a_curve_whose_metric_disappeared() -> None:
         },
     )
     # On refresh cpu_system no longer reports any data.
-    later = _FakeRRD(
+    later = _FakeRRDDataSource(
         performance_data={
             _SERVICE: RawPerformanceData(
                 check_command="check_mk-cpu",

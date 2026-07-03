@@ -141,37 +141,35 @@ def _service_or_filter(services: Sequence[Service]) -> str:
     return query
 
 
+def parse_performance_data(
+    perf_data_string: str,
+    check_command: str,
+    rrd_metrics: Sequence[str] = (),
+    *,
+    debug: bool,
+) -> RawPerformanceData:
+    raw_perf_data, normalized_check_command = _parse_perf_data(
+        perf_data_string, check_command, debug=debug
+    )
+    if rrd_metrics:
+        rrd_only, _command = _parse_perf_data(
+            " ".join(f'"{m}"=1' if " " in m else f"{m}=1" for m in rrd_metrics if "," not in m),
+            check_command,
+            debug=debug,
+        )
+        raw_perf_data = {
+            **raw_perf_data,
+            **{name: value for name, value in rrd_only.items() if name not in raw_perf_data},
+        }
+    return RawPerformanceData(check_command=normalized_check_command, values=raw_perf_data)
+
+
 @dataclass(frozen=True)
-class EngineRRDSource:
+class EngineRRDFetchRawMetricNames:
     site_id: SiteId | None
     debug: bool
 
-    @staticmethod
-    def parse_performance_data(
-        perf_data_string: str,
-        check_command: str,
-        rrd_metrics: Sequence[str] = (),
-        *,
-        debug: bool,
-    ) -> RawPerformanceData:
-        raw_perf_data, normalized_check_command = _parse_perf_data(
-            perf_data_string, check_command, debug=debug
-        )
-        if rrd_metrics:
-            rrd_only, _command = _parse_perf_data(
-                " ".join(f'"{m}"=1' if " " in m else f"{m}=1" for m in rrd_metrics if "," not in m),
-                check_command,
-                debug=debug,
-            )
-            raw_perf_data = {
-                **raw_perf_data,
-                **{name: value for name, value in rrd_only.items() if name not in raw_perf_data},
-            }
-        return RawPerformanceData(check_command=normalized_check_command, values=raw_perf_data)
-
-    def fetch_raw_metric_names(
-        self, services: Sequence[Service]
-    ) -> Mapping[Service, RawMetricNames]:
+    def __call__(self, services: Sequence[Service]) -> Mapping[Service, RawMetricNames]:
         unique = list(dict.fromkeys(services))
         if not unique:
             return {}
@@ -188,7 +186,7 @@ class EngineRRDSource:
                 rrd_metrics,
                 check_command,
             ) in sites.live().query(query):
-                raw = self.parse_performance_data(
+                raw = parse_performance_data(
                     perf_data_string, check_command, rrd_metrics, debug=self.debug
                 )
                 result[Service(host_name=host_name, service_name=description)] = RawMetricNames(
@@ -196,6 +194,12 @@ class EngineRRDSource:
                     metric_names=list(raw.values),
                 )
         return {service: result[service] for service in unique if service in result}
+
+
+@dataclass(frozen=True)
+class EngineRRDDataSource:
+    site_id: SiteId | None
+    debug: bool
 
     def fetch_raw_performance_data(
         self, rrd_metrics: Sequence[RRDMetric]
@@ -218,7 +222,7 @@ class EngineRRDSource:
                 query
             ):
                 result[Service(host_name=host_name, service_name=description)] = (
-                    self.parse_performance_data(perf_data_string, check_command, debug=self.debug)
+                    parse_performance_data(perf_data_string, check_command, debug=self.debug)
                 )
         return {service: result[service] for service in services if service in result}
 

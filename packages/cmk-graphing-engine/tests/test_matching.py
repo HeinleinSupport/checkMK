@@ -138,16 +138,11 @@ def _perf_data(*values: tuple[MetricName, RawPerformanceValue]) -> RawPerformanc
     return RawPerformanceData(check_command="", values=dict(values))
 
 
-class _FakeFetchRRD:
-    def __init__(
-        self,
-        performance_response: Mapping[Service, RawPerformanceData] | None = None,
-        time_series_response: Mapping[RRDMetric, TimeSeries] | None = None,
-    ) -> None:
-        self._performance_response = performance_response or {}
-        self._time_series_response = time_series_response or {}
+class _FakeRRDFetchRawMetricNames:
+    def __init__(self, performance_response: Mapping[Service, RawPerformanceData]) -> None:
+        self._performance_response = performance_response
 
-    def fetch_raw_metric_names(
+    def __call__(
         self,
         services: Sequence[Service],  # noqa: ARG002
     ) -> Mapping[Service, RawMetricNames]:
@@ -159,11 +154,21 @@ class _FakeFetchRRD:
             for service, raw in self._performance_response.items()
         }
 
+
+class _FakeRRDDataSource:
+    def __init__(
+        self,
+        performance_response: Mapping[Service, RawPerformanceData] | None = None,
+        time_series_response: Mapping[RRDMetric, TimeSeries] | None = None,
+    ) -> None:
+        self.performance_response = performance_response or {}
+        self._time_series_response = time_series_response or {}
+
     def fetch_raw_performance_data(
         self,
         rrd_metrics: Sequence[RRDMetric],  # noqa: ARG002
     ) -> Mapping[Service, RawPerformanceData]:
-        return self._performance_response
+        return self.performance_response
 
     def fetch_time_series(
         self,
@@ -188,9 +193,13 @@ def _discover(
         | graphs_v2_unstable.Bidirectional
     ],
     *,
-    rrd: _FakeFetchRRD,
+    rrd: _FakeRRDDataSource,
 ) -> Sequence[Graph]:
-    available = fetch_metric_names(services=[service], translations=[], rrd=rrd)
+    available = fetch_metric_names(
+        services=[service],
+        translations=[],
+        fetch_raw_metric_names=_FakeRRDFetchRawMetricNames(rrd.performance_response),
+    )
     return build_matched_graphs(
         service=service,
         registered_graphs=registered_graphs,
@@ -201,7 +210,7 @@ def _discover(
     )
 
 
-def _evaluate(discovered: Graph, rrd: _FakeFetchRRD) -> EvaluatedGraph:
+def _evaluate(discovered: Graph, rrd: _FakeRRDDataSource) -> EvaluatedGraph:
     # Resolve the structure's display, then run the sole update entry point over a fresh fetch.
     [evaluated] = evaluate_graphs(
         graphs=[discovered],
@@ -216,7 +225,7 @@ def _evaluate(discovered: Graph, rrd: _FakeFetchRRD) -> EvaluatedGraph:
 def test_discover_template_graphs_empty_service_returns_no_graphs() -> None:
     service = _service()
     registered_graphs = [graphs_v1.Graph(name="g", title=Title("t"), simple_lines=["x"])]
-    rrd = _FakeFetchRRD(performance_response={service: _perf_data()})
+    rrd = _FakeRRDDataSource(performance_response={service: _perf_data()})
 
     assert _discover(service, registered_graphs, rrd=rrd) == []
 
@@ -225,7 +234,7 @@ def test_discover_template_graphs_falls_back_to_single_metric_graph_for_unclaime
     service = _service()
     cpu_user = MetricName("cpu_user")
     registered_graphs: list[graphs_v1.Graph] = []
-    rrd = _FakeFetchRRD(
+    rrd = _FakeRRDDataSource(
         performance_response={service: _perf_data(_perf(cpu_user, warning=80.0, critical=90.0))}
     )
 
@@ -247,7 +256,7 @@ def test_discover_template_graphs_matching_plugin_claims_its_metrics() -> None:
         name="cpu", title=Title("CPU"), simple_lines=["cpu_user", "cpu_system"]
     )
     registered_graphs = [plugin]
-    rrd = _FakeFetchRRD(
+    rrd = _FakeRRDDataSource(
         performance_response={service: _perf_data(_perf(cpu_user, warning=80.0), _perf(cpu_system))}
     )
 
@@ -266,7 +275,9 @@ def test_discover_template_graphs_emits_default_graph_for_unclaimed_metrics() ->
     extra = MetricName("extra")
     plugin = graphs_v1.Graph(name="cpu", title=Title("CPU"), simple_lines=["cpu_user"])
     registered_graphs = [plugin]
-    rrd = _FakeFetchRRD(performance_response={service: _perf_data(_perf(cpu_user), _perf(extra))})
+    rrd = _FakeRRDDataSource(
+        performance_response={service: _perf_data(_perf(cpu_user), _perf(extra))}
+    )
 
     [matched, fallback] = _discover(service, registered_graphs, rrd=rrd)
 
@@ -281,7 +292,7 @@ def test_discover_template_graphs_rejects_plugin_when_required_metric_missing() 
         name="cpu", title=Title("CPU"), simple_lines=["cpu_user", "cpu_system"]
     )
     registered_graphs = [plugin]
-    rrd = _FakeFetchRRD(performance_response={service: _perf_data(_perf(cpu_user))})
+    rrd = _FakeRRDDataSource(performance_response={service: _perf_data(_perf(cpu_user))})
 
     [fallback] = _discover(service, registered_graphs, rrd=rrd)
 
@@ -298,7 +309,7 @@ def test_discover_template_graphs_optional_missing_metric_still_matches() -> Non
         optional=["cpu_iowait"],
     )
     registered_graphs = [plugin]
-    rrd = _FakeFetchRRD(performance_response={service: _perf_data(_perf(cpu_user))})
+    rrd = _FakeRRDDataSource(performance_response={service: _perf_data(_perf(cpu_user))})
 
     [discovered] = _discover(service, registered_graphs, rrd=rrd)
 
@@ -316,7 +327,9 @@ def test_discover_template_graphs_conflicting_metric_present_rejects_plugin() ->
         conflicting=["util"],
     )
     registered_graphs = [plugin]
-    rrd = _FakeFetchRRD(performance_response={service: _perf_data(_perf(cpu_user), _perf(util))})
+    rrd = _FakeRRDDataSource(
+        performance_response={service: _perf_data(_perf(cpu_user), _perf(util))}
+    )
 
     discovered = _discover(service, registered_graphs, rrd=rrd)
 
@@ -331,7 +344,7 @@ def test_discover_template_graphs_matches_v2_unstable_graph() -> None:
         name="cpu", title=Title("CPU"), simple_lines=["cpu_user", "cpu_system"]
     )
     registered_graphs = [plugin]
-    rrd = _FakeFetchRRD(
+    rrd = _FakeRRDDataSource(
         performance_response={service: _perf_data(_perf(cpu_user), _perf(cpu_system))}
     )
 
@@ -351,7 +364,7 @@ def test_discover_template_graphs_matches_v2_unstable_bidirectional() -> None:
         upper=graphs_v2_unstable.Graph(name="out", title=Title("Out"), simple_lines=["if_out"]),
     )
     registered_graphs = [plugin]
-    rrd = _FakeFetchRRD(performance_response={service: _perf_data(_perf(in_), _perf(out))})
+    rrd = _FakeRRDDataSource(performance_response={service: _perf_data(_perf(in_), _perf(out))})
 
     [discovered] = _discover(service, registered_graphs, rrd=rrd)
 
@@ -368,7 +381,7 @@ def test_discover_template_graphs_carries_scalars_for_v2_unstable_scalar_quantit
         simple_lines=["cpu_user", metrics_v2_unstable.LowerWarningOf("cpu_system")],
     )
     registered_graphs = [plugin]
-    rrd = _FakeFetchRRD(
+    rrd = _FakeRRDDataSource(
         performance_response={
             service: _perf_data(_perf(cpu_user), _perf(cpu_system, lower_warning=50.0))
         }
@@ -395,7 +408,7 @@ def test_discover_template_graphs_carries_scalars_for_scalar_referenced_metrics(
         simple_lines=["cpu_user", metrics_v1.WarningOf("cpu_system")],
     )
     registered_graphs = [plugin]
-    rrd = _FakeFetchRRD(
+    rrd = _FakeRRDDataSource(
         performance_response={service: _perf_data(_perf(cpu_user), _perf(cpu_system, warning=50.0))}
     )
 
@@ -419,7 +432,9 @@ def test_discover_template_graphs_evaluates_the_title_expression() -> None:
         simple_lines=["cpu_user"],
     )
     registered_graphs = [plugin]
-    rrd = _FakeFetchRRD(performance_response={service: _perf_data(_perf(cpu_user, maximum=8.0))})
+    rrd = _FakeRRDDataSource(
+        performance_response={service: _perf_data(_perf(cpu_user, maximum=8.0))}
+    )
 
     [discovered] = _discover(service, registered_graphs, rrd=rrd)
 
@@ -438,7 +453,7 @@ def test_discover_template_graphs_title_expression_falls_back_when_unresolvable(
     )
     registered_graphs = [plugin]
     # cpu_user is available (so the plugin matches) but carries no maximum scalar.
-    rrd = _FakeFetchRRD(performance_response={service: _perf_data(_perf(cpu_user))})
+    rrd = _FakeRRDDataSource(performance_response={service: _perf_data(_perf(cpu_user))})
 
     [discovered] = _discover(service, registered_graphs, rrd=rrd)
 
@@ -457,7 +472,7 @@ def test_discover_template_graphs_matches_despite_a_metric_referenced_only_in_th
     registered_graphs = [plugin]
     # cpu_user (referenced only by the title) is missing, but the title is not part of matching, so
     # the plugin still matches on its drawn metric util; the title expression falls back.
-    rrd = _FakeFetchRRD(performance_response={service: _perf_data(_perf(util))})
+    rrd = _FakeRRDDataSource(performance_response={service: _perf_data(_perf(util))})
 
     discovered = _discover(service, registered_graphs, rrd=rrd)
 
@@ -475,7 +490,7 @@ def test_discover_template_graphs_does_not_claim_a_metric_referenced_only_in_the
         simple_lines=["util"],
     )
     registered_graphs = [plugin]
-    rrd = _FakeFetchRRD(
+    rrd = _FakeRRDDataSource(
         performance_response={service: _perf_data(_perf(util), _perf(cpu_user, maximum=8.0))}
     )
 
@@ -494,7 +509,9 @@ def test_discover_template_graphs_adds_predictive_lines_to_a_matched_graph() -> 
     predict = MetricName("predict_cpu_user")
     plugin = graphs_v1.Graph(name="cpu", title=Title("CPU"), simple_lines=["cpu_user"])
     registered_graphs = [plugin]
-    rrd = _FakeFetchRRD(performance_response={service: _perf_data(_perf(cpu_user), _perf(predict))})
+    rrd = _FakeRRDDataSource(
+        performance_response={service: _perf_data(_perf(cpu_user), _perf(predict))}
+    )
 
     discovered = _discover(service, registered_graphs, rrd=rrd)
 
@@ -510,7 +527,9 @@ def test_discover_template_graphs_adds_predictive_lines_to_a_fallback_graph() ->
     cpu_user = MetricName("cpu_user")
     predict = MetricName("predict_cpu_user")
     registered_graphs: list[graphs_v1.Graph] = []
-    rrd = _FakeFetchRRD(performance_response={service: _perf_data(_perf(cpu_user), _perf(predict))})
+    rrd = _FakeRRDDataSource(
+        performance_response={service: _perf_data(_perf(cpu_user), _perf(predict))}
+    )
 
     discovered = _discover(service, registered_graphs, rrd=rrd)
 
@@ -523,7 +542,7 @@ def test_discover_template_graphs_ignores_a_predictive_metric_without_its_base()
     service = _service()
     predict = MetricName("predict_cpu_user")
     registered_graphs: list[graphs_v1.Graph] = []
-    rrd = _FakeFetchRRD(performance_response={service: _perf_data(_perf(predict))})
+    rrd = _FakeRRDDataSource(performance_response={service: _perf_data(_perf(predict))})
 
     assert _discover(service, registered_graphs, rrd=rrd) == []
 
@@ -572,10 +591,14 @@ def test_build_matched_graphs_per_service_adds_predictive_lines() -> None:
 def test_build_matched_graphs_builds_threshold_rules_for_fallback_graphs() -> None:
     service = _service()
     cpu_user = MetricName("cpu_user")
-    rrd = _FakeFetchRRD(performance_response={service: _perf_data(_perf(cpu_user, warning=80.0))})
-    available = fetch_metric_names(services=[service], translations=[], rrd=rrd).get(
-        service, frozenset()
+    rrd = _FakeRRDDataSource(
+        performance_response={service: _perf_data(_perf(cpu_user, warning=80.0))}
     )
+    available = fetch_metric_names(
+        services=[service],
+        translations=[],
+        fetch_raw_metric_names=_FakeRRDFetchRawMetricNames(rrd.performance_response),
+    ).get(service, frozenset())
 
     graphs = build_matched_graphs(
         service=service,

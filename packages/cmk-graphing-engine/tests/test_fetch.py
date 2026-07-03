@@ -19,7 +19,6 @@ from cmk.graphing_engine import (
     Line,
     MetricName,
     Quantity,
-    RawMetricNames,
     RawPerformanceData,
     RawPerformanceValue,
     RRDMetric,
@@ -87,23 +86,15 @@ class _FakeRRDSource:
     def __init__(
         self,
         *,
-        available_response: Mapping[Service, RawMetricNames] | None = None,
         performance_response: Mapping[Service, RawPerformanceData] | None = None,
         time_series_response: Mapping[RRDMetric, TimeSeries] | None = None,
     ) -> None:
-        self._available_response = available_response or {}
         self._performance_response = performance_response or {}
         self._time_series_response = time_series_response or {}
         self.performance_data_calls: list[tuple[RRDMetric, ...]] = []
         self.time_series_calls: list[
             tuple[tuple[RRDMetric, ...], TimeRange, ConsolidationFunction]
         ] = []
-
-    def fetch_raw_metric_names(
-        self,
-        services: Sequence[Service],  # noqa: ARG002
-    ) -> Mapping[Service, RawMetricNames]:
-        return self._available_response
 
     def fetch_raw_performance_data(
         self, rrd_metrics: Sequence[RRDMetric]

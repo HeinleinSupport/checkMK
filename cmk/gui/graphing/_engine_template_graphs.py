@@ -18,7 +18,8 @@ from cmk.graphing_engine import (
     EvaluatedGraph,
     fetch_metric_names,
     Graph,
-    RRDSource,
+    RRDDataSource,
+    RRDFetchRawMetricNames,
     Service,
     TimeRange,
 )
@@ -30,7 +31,7 @@ from ._engine_dispatch import (
     GraphDataRequest,
 )
 from ._engine_plugins import registered_translations
-from ._engine_rrd_source import EngineRRDSource
+from ._engine_rrd_source import EngineRRDDataSource
 from ._engine_serialization import (
     consolidation_function_of,
     deserialize_graph,
@@ -63,12 +64,12 @@ def build_template_graphs(
     registered_graphs: Sequence[GraphFromAPI],
     registered_metrics: Mapping[str, metrics_v1.Metric],
     registered_translations: Sequence[translations_v1.Translation],
-    rrd: RRDSource,
+    fetch_raw_metric_names: RRDFetchRawMetricNames,
 ) -> Sequence[Graph]:
     metric_names = fetch_metric_names(
         services=[service],
         translations=registered_translations,
-        rrd=rrd,
+        fetch_raw_metric_names=fetch_raw_metric_names,
     ).get(service, frozenset())
     graphs = build_matched_graphs(
         service=service,
@@ -99,7 +100,7 @@ def evaluate_template_graphs(
     consolidation_function: ConsolidationFunction,
     time_range: TimeRange,
     registered_translations: Sequence[translations_v1.Translation],
-    rrd: RRDSource,
+    rrd: RRDDataSource,
 ) -> Sequence[EvaluatedGraph]:
     return evaluate_graphs(
         graphs=graphs,
@@ -116,7 +117,7 @@ def _dispatched_evaluate_template_graphs(request: GraphDataRequest) -> Sequence[
         consolidation_function=consolidation_function_of(request.options),
         time_range=time_range_of(request.options),
         registered_translations=registered_translations(),
-        rrd=EngineRRDSource(site_id=None, debug=active_config.debug),
+        rrd=EngineRRDDataSource(site_id=None, debug=active_config.debug),
     )
 
 

@@ -58,7 +58,8 @@ from ._quantities import (
 )
 from ._source import (
     fetch_metric_names,
-    RRDSource,
+    RRDDataSource,
+    RRDFetchRawMetricNames,
 )
 from ._units import (
     AutoPrecision,
@@ -90,6 +91,7 @@ __all__ = [
     "EvaluatedStack",
     "EvaluatedVerticalRange",
     "EvaluationContext",
+    "RRDFetchRawMetricNames",
     "FixedRange",
     "Fraction",
     "HostName",
@@ -104,7 +106,7 @@ __all__ = [
     "Quantity",
     "RRDMetric",
     "PerformanceData",
-    "RRDSource",
+    "RRDDataSource",
     "Rule",
     "EngineeringScientificNotation",
     "SINotation",

@@ -15,7 +15,7 @@ from ._graph import Bound, Curve, FixedRange, Graph, MinimalRange, Rule, Vertica
 from ._options import ConsolidationFunction, TimeRange
 from ._perfdata import MetricName, PerformanceData, Service, TimeSeries
 from ._quantities import EvaluationContext, Quantity, RRDMetric
-from ._source import fetch_performance_data, fetch_time_series, RRDSource
+from ._source import fetch_performance_data, fetch_time_series, RRDDataSource
 from ._title import evaluate_title
 from ._units import CurveAttributes
 
@@ -230,7 +230,7 @@ def evaluate_graphs(
     translations: Iterable[translations_v1.Translation],
     consolidation_function: ConsolidationFunction,
     time_range: TimeRange,
-    rrd: RRDSource,
+    rrd: RRDDataSource,
 ) -> Sequence[EvaluatedGraph]:
     performance_data = fetch_performance_data(graphs=graphs, translations=translations, rrd=rrd)
     return [

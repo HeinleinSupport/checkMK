@@ -28,11 +28,11 @@ from ._translate import (
 )
 
 
-class RRDSource(Protocol):
-    def fetch_raw_metric_names(
-        self, services: Sequence[Service]
-    ) -> Mapping[Service, RawMetricNames]: ...
+class RRDFetchRawMetricNames(Protocol):
+    def __call__(self, services: Sequence[Service]) -> Mapping[Service, RawMetricNames]: ...
 
+
+class RRDDataSource(Protocol):
     def fetch_raw_performance_data(
         self, rrd_metrics: Sequence[RRDMetric]
     ) -> Mapping[Service, RawPerformanceData]: ...
@@ -50,10 +50,10 @@ def fetch_metric_names(
     *,
     services: Iterable[Service],
     translations: Iterable[translations_v1.Translation],
-    rrd: RRDSource,
+    fetch_raw_metric_names: RRDFetchRawMetricNames,
 ) -> Mapping[Service, frozenset[MetricName]]:
     parsed_translations = parse_translations_from_api(translations)
-    raw_metric_names = rrd.fetch_raw_metric_names(list(dict.fromkeys(services)))
+    raw_metric_names = fetch_raw_metric_names(list(dict.fromkeys(services)))
     return {
         service: translate_metric_names(raw_metrics, parsed_translations)
         for service, raw_metrics in raw_metric_names.items()
@@ -64,7 +64,7 @@ def fetch_performance_data(
     *,
     graphs: Sequence[Graph],
     translations: Iterable[translations_v1.Translation],
-    rrd: RRDSource,
+    rrd: RRDDataSource,
 ) -> Mapping[Service, Mapping[MetricName, PerformanceData]]:
     parsed_translations = parse_translations_from_api(translations)
     rrd_metrics = list(dict.fromkeys(metric for graph in graphs for metric in graph.rrd_metrics()))
@@ -122,7 +122,7 @@ def fetch_time_series(
     performance_data: Mapping[Service, Mapping[MetricName, PerformanceData]],
     consolidation_function: ConsolidationFunction,
     time_range: TimeRange,
-    rrd: RRDSource,
+    rrd: RRDDataSource,
 ) -> Mapping[RRDMetric, TimeSeries]:
     rrd_metrics_per_metric: dict[
         RRDMetric, tuple[ConsolidationFunction, list[tuple[RRDMetric, float]]]

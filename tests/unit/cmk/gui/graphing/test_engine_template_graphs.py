@@ -38,7 +38,21 @@ _DISCOVERY_RANGE = TimeRange(start=0, end=60, step=10)
 
 
 @dataclass
-class _FakeRRD:
+class _FakeRRDFetchRawMetricNames:
+    metric_names: Sequence[str] = (_METRIC,)
+
+    def __call__(self, services: Sequence[Service]) -> Mapping[Service, RawMetricNames]:
+        return {
+            service: RawMetricNames(
+                check_command="check_mk-foo",
+                metric_names=[MetricName(name) for name in self.metric_names],
+            )
+            for service in services
+        }
+
+
+@dataclass
+class _FakeRRDDataSource:
     values: Mapping[str, RawPerformanceValue] = field(
         default_factory=lambda: {_METRIC: RawPerformanceValue(value=1.0)}
     )
@@ -51,17 +65,6 @@ class _FakeRRD:
                 values={MetricName(name): value for name, value in self.values.items()},
             )
             for service in services
-        }
-
-    def fetch_raw_metric_names(
-        self, services: Sequence[Service]
-    ) -> Mapping[Service, RawMetricNames]:
-        return {
-            service: RawMetricNames(
-                check_command=raw.check_command,
-                metric_names=list(raw.values),
-            )
-            for service, raw in self._data(services).items()
         }
 
     def fetch_raw_performance_data(
@@ -91,13 +94,13 @@ def test_template_lifecycle_discover_and_update() -> None:
     # render parameters); the per-type update evaluates them over freshly fetched data for the range it is
     # given. The unclaimed metric becomes a fallback single-metric graph that carries the four threshold
     # rules the engine builds itself.
-    rrd = _FakeRRD()
+    rrd = _FakeRRDDataSource()
     graphs = build_template_graphs(
         service=_SERVICE,
         registered_graphs=[],
         registered_metrics={},
         registered_translations=[],
-        rrd=rrd,
+        fetch_raw_metric_names=_FakeRRDFetchRawMetricNames(),
     )
     [fallback] = [graph for graph in graphs if graph.name == _METRIC]
     assert [
@@ -128,12 +131,6 @@ def test_template_lifecycle_discover_and_update() -> None:
 
     # A template graph has a single value axis, so a plugin drawing curves of different units cannot
     # share it — discovery rejects it (legacy parity).
-    mixed_rrd = _FakeRRD(
-        values={
-            "bytes_metric": RawPerformanceValue(value=1.0),
-            "seconds_metric": RawPerformanceValue(value=2.0),
-        }
-    )
     with pytest.raises(MKGeneralException, match="different units"):
         build_template_graphs(
             service=_SERVICE,
@@ -159,5 +156,5 @@ def test_template_lifecycle_discover_and_update() -> None:
                 ),
             },
             registered_translations=[],
-            rrd=mixed_rrd,
+            fetch_raw_metric_names=_FakeRRDFetchRawMetricNames(("bytes_metric", "seconds_metric")),
         )
