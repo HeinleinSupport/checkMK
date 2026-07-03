@@ -10,7 +10,7 @@ from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field
 
 from cmk.ccc.plugin_registry import Registry
-from cmk.graphing_engine import ConsolidationFunction, EvaluatedGraph, Graph, TimeRange
+from cmk.graphing_engine import EvaluatedGraph, Graph
 
 from ._engine_serialization import ensure_type, Json
 
@@ -50,11 +50,3 @@ def serialize_graphs(graphs: Sequence[Graph]) -> Json:
 
 def evaluate_graphs(request: GraphDataRequest) -> Sequence[EvaluatedGraph]:
     return engine_graph_dispatcher_registry[request.graph_type].evaluate(request)
-
-
-def consolidation_function_of(request: GraphDataRequest) -> ConsolidationFunction:
-    return ensure_type(request.options["consolidation_function"], ConsolidationFunction)
-
-
-def time_range_of(request: GraphDataRequest) -> TimeRange:
-    return ensure_type(request.options["time_range"], TimeRange)

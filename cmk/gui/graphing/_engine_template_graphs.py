@@ -26,19 +26,19 @@ from cmk.gui.config import active_config
 from cmk.gui.i18n import _, translate_to_current_language
 
 from ._engine_dispatch import (
-    consolidation_function_of,
     EngineGraphDispatcher,
     GraphDataRequest,
-    time_range_of,
 )
 from ._engine_plugins import registered_translations
 from ._engine_rrd_source import EngineRRDSource
 from ._engine_serialization import (
+    consolidation_function_of,
     deserialize_graph,
     engine_quantity_codec,
     ensure_type,
     Json,
     serialize_graph,
+    time_range_of,
 )
 from ._from_api import GraphFromAPI
 
@@ -113,8 +113,8 @@ def evaluate_template_graphs(
 def _dispatched_evaluate_template_graphs(request: GraphDataRequest) -> Sequence[EvaluatedGraph]:
     return evaluate_template_graphs(
         graphs=_deserialize_template_graphs(request.definition),
-        consolidation_function=consolidation_function_of(request),
-        time_range=time_range_of(request),
+        consolidation_function=consolidation_function_of(request.options),
+        time_range=time_range_of(request.options),
         rrd=EngineRRDSource(site_id=None, debug=active_config.debug),
         registered_translations=registered_translations(),
     )

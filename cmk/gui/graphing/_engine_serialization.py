@@ -39,6 +39,7 @@ from cmk.graphing_engine import (
     StrictPrecision,
     Sum,
     TimeNotation,
+    TimeRange,
     Unit,
 )
 
@@ -416,3 +417,11 @@ def deserialize_graph(data: object, codec: QuantityCodec) -> Graph:
         lines=[_line_from_json(line, codec) for line in _as_list(data["lines"])],
         rules=[_rule_from_json(rule, codec) for rule in _as_list(data["rules"])],
     )
+
+
+def consolidation_function_of(options: Mapping[str, object]) -> ConsolidationFunction:
+    return ensure_type(options["consolidation_function"], ConsolidationFunction)
+
+
+def time_range_of(options: Mapping[str, object]) -> TimeRange:
+    return ensure_type(options["time_range"], TimeRange)
