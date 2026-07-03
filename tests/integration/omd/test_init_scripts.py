@@ -3,6 +3,8 @@
 # This file is part of Checkmk (https://checkmk.com). It is subject to the terms and
 # conditions defined in the file COPYING, which is part of this source code package.
 
+import os
+
 from tests.testlib.site import Site
 
 
@@ -34,7 +36,10 @@ def test_init_scripts(site: Site) -> None:
             "mknotifyd",
         }
     if site.edition.is_ultimate_edition() or site.edition.is_ultimatemt_edition():
-        scripts |= {"otel-collector", "network-flow"}
+        scripts |= {"otel-collector"}
+        # cmk-network-flow only ship on Ubuntu 24.04 for now.
+        if os.environ.get("DISTRO") == "ubuntu-24.04":
+            scripts |= {"network-flow"}
     if (
         site.edition.is_cloud_edition()
         or site.edition.is_ultimate_edition()
