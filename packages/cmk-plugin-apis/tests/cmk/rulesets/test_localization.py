@@ -12,6 +12,7 @@ from cmk.rulesets.v1._localize import _Localizable
 
 _TRANSLATABLE_STRINGS: Final = {
     "The ruleset '%s' has been replaced by '%s'": "%s heißt jetzt %s",
+    "The ruleset '%(old)s' has been replaced by '%(new)s'": "%(new)s heißt jetzt %(old)s",
     "Old rule": "Raider",
     "Fancy new rule": "Twix",
     "The host %r does not exist": "%r gibbet nich",
@@ -36,6 +37,16 @@ class TestLocalizable:
                 localizable("Fancy new rule"),
             )
         ).localize(_localizer) == "Raider heißt jetzt Twix"
+
+    @pytest.mark.parametrize(["localizable"], [(Title,), (Message,), (Label,), (Help,)])
+    def test_mod_mapping(self, localizable: type[_Localizable]) -> None:
+        assert (
+            localizable("The ruleset '%(old)s' has been replaced by '%(new)s'")
+            % {
+                "old": localizable("Old rule"),
+                "new": localizable("Fancy new rule"),
+            }
+        ).localize(_localizer) == "Twix heißt jetzt Raider"
 
     @pytest.mark.parametrize(["localizable"], [(Title,), (Message,), (Label,), (Help,)])
     def test_mod_string(self, localizable: type[_Localizable]) -> None:

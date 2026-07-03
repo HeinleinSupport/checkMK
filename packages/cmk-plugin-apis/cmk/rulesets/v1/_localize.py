@@ -7,7 +7,7 @@
 from __future__ import annotations
 
 import enum
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
 from typing import assert_never, override, Self
 
@@ -53,6 +53,11 @@ class _Localizable:
 
         >>> help = _Localizable("Please use '%s' for foo") % _Localizable("params for foo")
 
+        You can also use named params, which gives weblate more context and allows
+        translators to change the position of the params for other languages:
+
+        >>> help = _Localizable("Please use '%(bar)s' for foo") % {"bar": _Localizable("params for foo")}
+
         Be aware that this does *not* result in an instance of a `Localizable`:
 
         >>> "%s!" % _Localizable("hi")
@@ -61,7 +66,9 @@ class _Localizable:
     """
 
     _arg: str | Self
-    _modifier: tuple[_Operation, tuple[str | Self, ...]] | None = field(kw_only=True, default=None)
+    _modifier: tuple[_Operation, tuple[str | Self, ...] | Mapping[str, str | Self]] | None = field(
+        kw_only=True, default=None
+    )
 
     @override
     def __repr__(self) -> str:
@@ -80,6 +87,12 @@ class _Localizable:
 
         operation, operands = self._modifier
 
+        if isinstance(operands, Mapping):
+            local_mapping = {
+                k: v if isinstance(v, str) else v.localize(localizer) for k, v in operands.items()
+            }
+            return local_arg % local_mapping
+
         local_operands = tuple(v if isinstance(v, str) else v.localize(localizer) for v in operands)
 
         match operation:
@@ -93,10 +106,15 @@ class _Localizable:
     def __add__(self, other: Self) -> Self:
         return self.__class__(self, _modifier=(_Operation.ADD, (other,)))
 
-    def __mod__(self, other: str | Self | tuple[str | Self, ...]) -> Self:
+    def __mod__(
+        self, other: str | Self | tuple[str | Self, ...] | Mapping[str, str | Self]
+    ) -> Self:
         return self.__class__(
             self,
-            _modifier=(_Operation.MOD, other if isinstance(other, tuple) else (other,)),
+            _modifier=(
+                _Operation.MOD,
+                other if isinstance(other, tuple | Mapping) else (other,),
+            ),
         )
 
     def __rmod__(self, other: Self) -> Self:
