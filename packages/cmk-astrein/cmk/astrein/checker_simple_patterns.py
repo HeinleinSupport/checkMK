@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import ast
 import re
+from collections.abc import Sequence
 from pathlib import Path, PurePosixPath
 
 from cmk.astrein.framework import ASTVisitorChecker
@@ -122,6 +123,19 @@ class LoggingNamedPlaceholderChecker(ASTVisitorChecker):
     messages need to be inspected here.
     """
 
+    def __init__(
+        self,
+        file_path: Path,
+        repo_root: Path,
+        source_code: str,
+        *,
+        excluded_prefixes: Sequence[str] = _EXCLUDED_PREFIXES,
+        included_paths: Sequence[str] = _INCLUDED_PATHS,
+    ) -> None:
+        super().__init__(file_path, repo_root, source_code)
+        self._excluded_prefixes = excluded_prefixes
+        self._included_paths = included_paths
+
     def checker_id(self) -> str:
         return "logging-named-placeholder"
 
@@ -135,9 +149,9 @@ class LoggingNamedPlaceholderChecker(ASTVisitorChecker):
             relative_path = PurePosixPath(self.file_path.relative_to(self.repo_root))
         except ValueError:
             return False
-        if any(relative_path.is_relative_to(path) for path in _INCLUDED_PATHS):
+        if any(relative_path.is_relative_to(path) for path in self._included_paths):
             return False
-        return any(relative_path.is_relative_to(prefix) for prefix in _EXCLUDED_PREFIXES)
+        return any(relative_path.is_relative_to(prefix) for prefix in self._excluded_prefixes)
 
     def _check(self, node: ast.Call) -> None:
         func = node.func

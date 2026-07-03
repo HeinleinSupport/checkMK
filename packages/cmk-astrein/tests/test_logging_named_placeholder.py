@@ -4,9 +4,14 @@
 # conditions defined in the file COPYING, which is part of this source code package.
 
 import ast
+from collections.abc import Sequence
 from pathlib import Path
 
-from cmk.astrein.checker_simple_patterns import LoggingNamedPlaceholderChecker
+from cmk.astrein.checker_simple_patterns import (
+    _EXCLUDED_PREFIXES,
+    _INCLUDED_PATHS,
+    LoggingNamedPlaceholderChecker,
+)
 from cmk.astrein.framework import CheckerError
 
 
@@ -14,8 +19,16 @@ def _check_logging(
     code: str,
     file_path: Path = Path("/repo/packages/cmk-astrein/cmk/astrein/foo.py"),
     repo_root: Path = Path("/repo"),
+    excluded_prefixes: Sequence[str] = (),
+    included_paths: Sequence[str] = (),
 ) -> list[CheckerError]:
-    checker = LoggingNamedPlaceholderChecker(file_path, repo_root, code)
+    checker = LoggingNamedPlaceholderChecker(
+        file_path,
+        repo_root,
+        code,
+        excluded_prefixes=excluded_prefixes,
+        included_paths=included_paths,
+    )
     return checker.check(ast.parse(code))
 
 
@@ -99,38 +112,46 @@ def test_logging_respects_suppression_comment() -> None:
     assert _check_logging(code) == []
 
 
-def test_logging_skips_excluded_top_level_dir() -> None:
-    assert (
-        _check_logging(
-            'logger.info("%s", foo)',
-            file_path=Path("/repo/cmk/base/config.py"),
-        )
-        == []
+_POSITIONAL_LOG_CALL = 'logger.info("%s", foo)'
+_DUMMY_EXCLUDED_PREFIXES = ("excluded_top", "packages/excluded_pkg")
+_DUMMY_INCLUDED_PATHS = ("packages/excluded_pkg/migrated.py",)
+
+
+def _check_exclusion(file_path: Path) -> list[CheckerError]:
+    return _check_logging(
+        _POSITIONAL_LOG_CALL,
+        file_path=file_path,
+        excluded_prefixes=_DUMMY_EXCLUDED_PREFIXES,
+        included_paths=_DUMMY_INCLUDED_PATHS,
     )
 
 
-def test_logging_skips_excluded_sibling_package() -> None:
-    assert (
-        _check_logging(
-            'logger.info("%s", foo)',
-            file_path=Path("/repo/packages/cmk-ec/cmk/ec/main.py"),
-        )
-        == []
-    )
+def test_logging_skips_file_under_excluded_top_level_dir() -> None:
+    assert _check_exclusion(Path("/repo/excluded_top/mod.py")) == []
 
 
-def test_logging_enforced_for_astrein_package() -> None:
-    errors = _check_logging(
-        'logger.info("%s", foo)',
-        file_path=Path("/repo/packages/cmk-astrein/cmk/astrein/lsp.py"),
-    )
-    assert len(errors) == 1
+def test_logging_skips_file_under_excluded_package() -> None:
+    assert _check_exclusion(Path("/repo/packages/excluded_pkg/other.py")) == []
+
+
+def test_logging_enforced_for_path_outside_every_excluded_prefix() -> None:
+    assert len(_check_exclusion(Path("/repo/packages/other_pkg/mod.py"))) == 1
 
 
 def test_logging_enforced_for_force_included_path_below_excluded_prefix() -> None:
-    # cmk/ is excluded, but this file is force-included via _INCLUDED_PATHS.
-    errors = _check_logging(
-        'logger.info("%s", foo)',
-        file_path=Path("/repo/cmk/update_config/plugins/actions/validate_mk_files.py"),
+    assert len(_check_exclusion(Path("/repo/packages/excluded_pkg/migrated.py"))) == 1
+
+
+def test_logging_skips_sibling_of_force_included_file() -> None:
+    assert _check_exclusion(Path("/repo/packages/excluded_pkg/not_migrated.py")) == []
+
+
+def test_logging_defaults_to_production_exclusion_config() -> None:
+    # Defaults must reference the production tuples so real behavior is unchanged.
+    checker = LoggingNamedPlaceholderChecker(
+        file_path=Path("/repo/foo.py"),
+        repo_root=Path("/repo"),
+        source_code=_POSITIONAL_LOG_CALL,
     )
-    assert len(errors) == 1
+    assert checker._excluded_prefixes is _EXCLUDED_PREFIXES  # noqa: SLF001
+    assert checker._included_paths is _INCLUDED_PATHS  # noqa: SLF001
