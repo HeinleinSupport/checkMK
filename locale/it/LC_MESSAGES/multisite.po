@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Checkmk user interface translation 0.1\n"
-"Report-Msgid-Bugs-To: martin.hirschvogel@checkmk.com\n"
+"Report-Msgid-Bugs-To: feedback@checkmk.com\n"
 "POT-Creation-Date: 2011-05-13 09:42+0200\n"
 "PO-Revision-Date: 2026-07-03 11:03+0000\n"
 "Language-Team: Italian <https://translate.checkmk.com/projects/checkmk/dev/"
@@ -224,8 +224,8 @@ msgid ""
 "processes are instanced for every matching group. Thus enforce delimiters "
 "outside the group."
 msgstr ""
-"\"%(char)s\" non è permesso all'interno del gruppo di espressioni regolari %"
-"(match)s. I caratteri di delimitazione all'interno dei gruppi svaniranno "
+"\"%(char)s\" non è permesso all'interno del gruppo di espressioni regolari "
+"%(match)s. I caratteri di delimitazione all'interno dei gruppi svaniranno "
 "dopo la scoperta, perché i processi sono istanziati per ogni gruppo "
 "corrispondente. Per questo motivo è necessario applicare i delimitatori al "
 "di fuori del gruppo."
@@ -394,11 +394,16 @@ msgstr "%(job_title)s in esecuzione per %(duration_txt)s"
 
 #, python-format
 msgid "%(job_title)s was stopped after %(duration_txt)s at %(finished_txt)s."
-msgstr "%(job_title)s è stato fermato dopo %(duration_txt)s a %(finished_txt)s."
+msgstr ""
+"%(job_title)s è stato fermato dopo %(duration_txt)s a %(finished_txt)s."
 
 #, python-format
 msgid "%(name)s - Dependency missing"
 msgstr "%(name)s - Dipendenza mancante"
+
+#, fuzzy, python-format
+msgid "%(name)s: Cannot parse manual page: %(msg)s"
+msgstr "%s: Impossibile analizzare la pagina di manuale: %s"
 
 #, python-format
 msgid "%(nondescript_rule_count)d notification rule(s) "
@@ -484,8 +489,8 @@ msgid ""
 "%(removed_version)s (file: %(rel_path)s)."
 msgstr ""
 "%(title_entity)s utilizza una API (%(title_api)s) che è marcata come "
-"deprecata in Checkmk %(deprecated_version)s e verrà rimossa in Checkmk %"
-"(removed_version)s (File: %(rel_path)s)."
+"deprecata in Checkmk %(deprecated_version)s e verrà rimossa in Checkmk "
+"%(removed_version)s (File: %(rel_path)s)."
 
 #, python-format
 msgid ""
@@ -494,8 +499,8 @@ msgid ""
 "%(removed_version)s (file: %(rel_path)s)."
 msgstr ""
 "%(title_entity)s utilizza una API (%(title_api)s) che è marcata come "
-"deprecata in Checkmk %(deprecated_version)s ed è rimossa in Checkmk %"
-"(removed_version)s (File: %(rel_path)s)."
+"deprecata in Checkmk %(deprecated_version)s ed è rimossa in Checkmk "
+"%(removed_version)s (File: %(rel_path)s)."
 
 #, python-format
 msgid ""
@@ -504,8 +509,8 @@ msgid ""
 "%(removed_version)s (file: %(rel_path)s)."
 msgstr ""
 "%(title_entity)s Utilizza una API (%(title_api)s) che è marcata come "
-"deprecata in Checkmk %(deprecated_version)s e sarà rimossa in Checkmk %"
-"(removed_version)s (File: %(rel_path)s)."
+"deprecata in Checkmk %(deprecated_version)s e sarà rimossa in Checkmk "
+"%(removed_version)s (File: %(rel_path)s)."
 
 #, python-format
 msgid ""
@@ -520,8 +525,8 @@ msgid ""
 "%(used_slots)d of the configured maximum of %(total_slots)d processes have "
 "been started. This is a usage of %(usage)0.2f %%."
 msgstr ""
-"Sono stati avviati %(used_slots)d dei processi massimi configurati di %"
-"(total_slots)d. Questo è un utilizzo di %(usage)0.2f %%."
+"Sono stati avviati %(used_slots)d dei processi massimi configurati di "
+"%(total_slots)d. Questo è un utilizzo di %(usage)0.2f %%."
 
 #, python-format
 msgid "%(v)s is not an allowed value"
@@ -829,10 +834,6 @@ msgstr "%s%% OK"
 #, python-format
 msgid "%s: %s"
 msgstr "%s: %s"
-
-#, python-format
-msgid "%s: Cannot parse manual page: %s"
-msgstr "%s: Impossibile analizzare la pagina di manuale: %s"
 
 #, fuzzy, python-format
 msgid "%s: Download agent output"
@@ -1377,8 +1378,8 @@ msgid ""
 "Additional records are not included in this view. Sort order may not be "
 "correct."
 msgstr ""
-"<b>Limite di visualizzazione raggiunto:</b> Questa tabella mostra solo %"
-"(limit)s voci. I record aggiuntivi non sono inclusi in questa "
+"<b>Limite di visualizzazione raggiunto:</b> Questa tabella mostra solo "
+"%(limit)s voci. I record aggiuntivi non sono inclusi in questa "
 "visualizzazione. L'ordinamento potrebbe non essere corretto."
 
 msgid ""
@@ -2136,8 +2137,8 @@ msgid ""
 "<tt>TNS_ADMIN</tt> to use for <tt>sqlnet.ora</tt> and <tt>tnsnames.ora</tt> "
 "%(UNIX_ONLY)s"
 msgstr ""
-"<tt>TNS_ADMIN</tt> da usare per <tt>sqlnet.ora</tt> e <tt>tnsnames.ora</tt>%"
-"(UNIX_ONLY)s"
+"<tt>TNS_ADMIN</tt> da usare per <tt>sqlnet.ora</tt> e <tt>tnsnames.ora</"
+"tt>%(UNIX_ONLY)s"
 
 msgid "<tt>not</tt> is the abbreviation for <tt>and not</tt>"
 msgstr "<tt>not</tt> è l'abbreviazione di <tt>and not</tt>"
@@ -2894,12 +2895,28 @@ msgid "ASM - Processes"
 msgstr "ASM - Processi"
 
 #, fuzzy
+msgid "ASM Authentication"
+msgstr "Autenticazione SMTP"
+
+#, fuzzy
 msgid "ASM Disk Group"
 msgstr "Gruppo disco ASM"
 
 #, fuzzy
 msgid "ASM Disk Group (used space and growth)"
 msgstr "Gruppo di dischi ASM (spazio usato e crescita)"
+
+#, fuzzy
+msgid "ASM Password"
+msgstr "Password"
+
+#, fuzzy
+msgid "ASM Role"
+msgstr "Ruolo"
+
+#, fuzzy
+msgid "ASM Username"
+msgstr "Nome utente"
 
 msgid ""
 "ASM calculates the free space depending on free_mb or required mirror free "
@@ -7338,7 +7355,7 @@ msgid "Arguments:"
 msgstr "Argomenti:"
 
 #, fuzzy
-msgid "Array Controllers"
+msgid "Array controllers"
 msgstr "Array (Controllori)"
 
 #, fuzzy
@@ -8056,8 +8073,8 @@ msgstr "Automazione utente rifiutata"
 msgid "Autostart Services"
 msgstr "Servizi autostart"
 
-#, python-format
-msgid "Aux tag '%s' does not exist"
+#, fuzzy, python-format
+msgid "Aux tag '%(aux_tag_id)s' does not exist"
 msgstr "Il tag Aux '%s' non esiste"
 
 msgid "Auxiliary tags"
@@ -11979,9 +11996,9 @@ msgstr ""
 msgid "Cannot parse log file %(file_name)s: %(exception)s"
 msgstr "Impossibile analizzare il file di log %s: %s"
 
-#, python-format
-msgid "Cannot read configuration file \"%s\": %s"
-msgstr "Impossibile leggere il file di configurazione \"%s\": %s"
+#, fuzzy, python-format
+msgid "Cannot read configuration file \"%(path)s\": %(e)s"
+msgstr "Impossibile leggere il file di configurazione %(file_path)s: %(e)s"
 
 #, python-format
 msgid "Cannot read configuration file %(file_path)s: %(e)s"
@@ -12020,8 +12037,8 @@ msgid ""
 "found.\n"
 " %(exc)s"
 msgstr ""
-"Impossibile rendere il grafico: host %(host_name)s, servizio %"
-"(service_description)s non trovato.\n"
+"Impossibile rendere il grafico: host %(host_name)s, servizio "
+"%(service_description)s non trovato.\n"
 " %(exc)s"
 
 #, fuzzy, python-format
@@ -14023,8 +14040,8 @@ msgid ""
 "Click here to change the graphs consolidation function to "
 "\"%(scalar_type)s\"."
 msgstr ""
-"Clicca qui per cambiare la funzione di consolidamento dei grafici in \"%"
-"(scalar_type)s\"."
+"Clicca qui per cambiare la funzione di consolidamento dei grafici in "
+"\"%(scalar_type)s\"."
 
 #, fuzzy
 msgid "Click here to see the activation status per site."
@@ -14967,8 +14984,8 @@ msgid ""
 "Configuration files ('*.mk' or '*.conf') from etc/check_mk."
 "%(_CHECKMK_FILES_NOTE)s"
 msgstr ""
-"File di configurazione ('*.mk' o '*.conf') da etc/check_mk.%"
-"(_CHECKMK_FILES_NOTE)s"
+"File di configurazione ('*.mk' o '*.conf') da etc/check_mk."
+"%(_CHECKMK_FILES_NOTE)s"
 
 #, python-format
 msgid "Configuration files ('*.mk' or '*.conf') from etc/checkmk: %s"
@@ -15925,10 +15942,11 @@ msgstr ""
 "I gruppi di contatto sono usati per assegnare oggetti di monitoraggio agli "
 "utenti. Se non hai ancora definito alcun gruppo di contatto, allora prima <a "
 "href='%(groups_page_url)s'>fallo</a>. Gli host e i servizi possono essere "
-"assegnati ai gruppi di contatto usando questa <a href='%(hosts_assign_url)s'>"
-"regola per gli host</a> e questa <a href='%(services_assign_url)s'>regola "
-"per i servizi</a>.<br><br>Se non metti l'utente in nessun gruppo di contatto "
-"allora non verrà creato nessun contatto di monitoraggio per l'utente."
+"assegnati ai gruppi di contatto usando questa <a "
+"href='%(hosts_assign_url)s'>regola per gli host</a> e questa <a "
+"href='%(services_assign_url)s'>regola per i servizi</a>.<br><br>Se non metti "
+"l'utente in nessun gruppo di contatto allora non verrà creato nessun "
+"contatto di monitoraggio per l'utente."
 
 msgid "Contact groups are used to assign users to hosts and services"
 msgstr ""
@@ -16481,8 +16499,8 @@ msgid ""
 "the automatic cleanup found more than 200 crash reports below ~/var/check_mk/"
 "crashes and already deleted the requested crash report."
 msgstr ""
-"Impossibile trovare l'arresto anomalo richiesto %(crash_id)s sul sito %"
-"(site_id)s. Forse la pulizia automatica ha trovato più di 200 rapporti di "
+"Impossibile trovare l'arresto anomalo richiesto %(crash_id)s sul sito "
+"%(site_id)s. Forse la pulizia automatica ha trovato più di 200 rapporti di "
 "crash sotto ~/var/check_mk/crashes e ha già cancellato il rapporto di crash "
 "richiesto."
 
@@ -17032,7 +17050,7 @@ msgid "Created Quick Setup {bundle_id}"
 msgstr ""
 
 #, fuzzy, python-format
-msgid "Created Relay '%s'"
+msgid "Created Relay '%(relay_id)s'"
 msgstr "Creato nuovo ruolo '%s'"
 
 msgid "Created at"
@@ -18148,6 +18166,10 @@ msgstr "Risposte DNS di successo"
 
 msgid "DOWN"
 msgstr "GIÙ"
+
+#, fuzzy
+msgid "DOWN only"
+msgstr "Conta solo"
 
 msgid "DPI"
 msgstr "DPI"
@@ -19522,7 +19544,7 @@ msgid "Deleted Quick Setup {bundle_id}"
 msgstr ""
 
 #, fuzzy, python-format
-msgid "Deleted Relay '%s'"
+msgid "Deleted Relay '%(relay_id)s'"
 msgstr "Ruolo cancellato '%s'"
 
 #, python-format
@@ -20990,8 +21012,8 @@ msgid ""
 "Display long output in timeline (<a href=\"%(ruleset_search_url)s\">Enable "
 "in Setup</a>)"
 msgstr ""
-"Visualizza l'output lungo nella timeline (<a href=\"%(ruleset_search_url)s\">"
-"Abilita in Setup</a>)"
+"Visualizza l'output lungo nella timeline (<a "
+"href=\"%(ruleset_search_url)s\">Abilita in Setup</a>)"
 
 msgid "Display mode"
 msgstr "Modalità di visualizzazione"
@@ -21101,10 +21123,6 @@ msgstr "Visualizzazione dello stato dei siti Checkmk\n"
 msgid "Displaying the state of Checkmk sites of the given host\n"
 msgstr "Visualizzazione dello stato dei siti Checkmk dell'host indicato\n"
 
-#, fuzzy
-msgid "Displays Gauge"
-msgstr "Visualizza l'indicatore"
-
 msgid "Displays a bar chart for host and service alerts."
 msgstr "Visualizza un grafico a barre per gli avvisi su host e servizi."
 
@@ -21176,6 +21194,10 @@ msgstr "Visualizza i siti e gli stati o gli host e gli stati di un sito"
 #, fuzzy
 msgid "Displays entries from the log file of the monitoring core."
 msgstr "Visualizza le voci del logfile del core di monitoraggio."
+
+#, fuzzy
+msgid "Displays gauge"
+msgstr "Visualizza l'indicatore"
 
 msgid "Displays hosts and services producing the most notifications"
 msgstr "Visualizza gli host e i servizi che producono più notifiche"
@@ -21839,10 +21861,6 @@ msgstr "Giù"
 #, fuzzy
 msgid "Down hosts"
 msgstr "su host %s"
-
-#, fuzzy
-msgid "Down only"
-msgstr "Conta solo"
 
 msgid "Download"
 msgstr "Scaricare"
@@ -22848,7 +22866,7 @@ msgid "Edited Prometheus Quick Setup configuration bundle: '%s'"
 msgstr "Configurazione dello stile selezionato"
 
 #, fuzzy, python-format
-msgid "Edited Relay '%s'"
+msgid "Edited Relay '%(relay_id)s'"
 msgstr "Modifica la regola %s"
 
 #, python-format
@@ -23990,11 +24008,11 @@ msgstr "Voci per riga"
 msgid "Entry"
 msgstr "Ingresso"
 
-#, fuzzy
-msgid "Environment Metrics"
+msgid "Environment Variables"
 msgstr "Variabili d'ambiente"
 
-msgid "Environment Variables"
+#, fuzzy
+msgid "Environment metrics"
 msgstr "Variabili d'ambiente"
 
 #, fuzzy
@@ -24039,8 +24057,8 @@ msgstr "Errore durante la sincronizzazione"
 #, python-format
 msgid "Error executing GIT command <tt>%(debug_command)s</tt>:<br><br>%(e)s"
 msgstr ""
-"Errore nell'esecuzione del comando GIT <tt>%(debug_command)s</tt>:<br><br>%"
-"(e)s"
+"Errore nell'esecuzione del comando GIT <tt>%(debug_command)s</tt>:"
+"<br><br>%(e)s"
 
 #, python-format
 msgid "Error executing GIT command <tt>%s</tt>:<br><br>%s"
@@ -24437,6 +24455,10 @@ msgstr "Eventi dell'ospite e dei servizi"
 
 msgid "Events of monitored host"
 msgstr "Eventi dell'host monitorato"
+
+#, fuzzy
+msgid "Events of past 4 hours"
+msgstr "Eventi delle ultime 4 ore."
 
 msgid "Events of recent 4 hours"
 msgstr "Eventi delle ultime 4 ore"
@@ -25497,8 +25519,8 @@ msgid ""
 "Failed to contact ntop server '%(base_entrypoint)s' with user "
 "'%(ntop_user)s'. Please check your ntop connection settings."
 msgstr ""
-"Impossibile contattare il server ntop '%(base_entrypoint)s' con l'utente '%"
-"(ntop_user)s'. Si prega di controllare le impostazioni di connessione ntop."
+"Impossibile contattare il server ntop '%(base_entrypoint)s' con l'utente "
+"'%(ntop_user)s'. Si prega di controllare le impostazioni di connessione ntop."
 
 #, python-format
 msgid ""
@@ -25630,7 +25652,8 @@ msgstr ""
 
 #, python-format
 msgid "Failed to send %(method)s messages to the following users:"
-msgstr "Non è stato possibile inviare i messaggi %(method)s ai seguenti utenti:"
+msgstr ""
+"Non è stato possibile inviare i messaggi %(method)s ai seguenti utenti:"
 
 #, python-format
 msgid ""
@@ -25797,7 +25820,7 @@ msgid "Fan Name"
 msgstr "Nome del ventilatore"
 
 #, fuzzy
-msgid "Fan and Temperatures"
+msgid "Fan and temperatures"
 msgstr "Temperatura"
 
 msgid "Fan speed"
@@ -26432,7 +26455,7 @@ msgid "Firmware"
 msgstr "Firmware"
 
 #, fuzzy
-msgid "Firmware Versions"
+msgid "Firmware versions"
 msgstr "Versione del kernel"
 
 msgid "First"
@@ -27195,8 +27218,8 @@ msgid ""
 "Found no history entry at the time of '%(timestamp)s' for the host "
 "'%(hostname)s'"
 msgstr ""
-"Non è stata trovata alcuna voce di cronologia al momento dell''%(timestamp)"
-"s' per l'host '%(hostname)s'"
+"Non è stata trovata alcuna voce di cronologia al momento "
+"dell''%(timestamp)s' per l'host '%(hostname)s'"
 
 msgid "Found no matching alternative."
 msgstr "Non è stata trovata alcuna alternativa corrispondente."
@@ -28897,14 +28920,6 @@ msgstr ""
 "Qui potete definire un limite superiore per la durata dell'ultima esecuzione "
 "del lavoro."
 
-#, fuzzy
-msgid ""
-"Here you can deploy a plug-in for monitoring the quarantine queue, tasks and "
-"updates of Symantec Anti Virus."
-msgstr ""
-"Qui è possibile distribuire un plugin per monitorare la coda di quarantena, "
-"i compiti e gli aggiornamenti di Symantec Anti Virus."
-
 msgid ""
 "Here you can provide CA or self-signed certificates that will be sent to the "
 "contacting agent updater alongside the remote site's URL on registration or "
@@ -29440,6 +29455,14 @@ msgstr ""
 "Qui puoi definire quale descrizione del servizio (item) viene usata per il "
 "servizio creato. L'elemento risultante ha sempre il prefisso 'Elasticsearch "
 "Query'."
+
+#, fuzzy
+msgid ""
+"Here, you can deploy a plug-in for monitoring the quarantine queue, tasks "
+"and updates of Symantec Anti Virus."
+msgstr ""
+"Qui è possibile distribuire un plugin per monitorare la coda di quarantena, "
+"i compiti e gli aggiornamenti di Symantec Anti Virus."
 
 #, fuzzy
 msgid ""
@@ -33122,8 +33145,8 @@ msgstr ""
 
 #, fuzzy
 msgid ""
-"If sections can not be fetched or take a long time, you can configure them "
-"to be fetched not as often or not at all."
+"If sections cannot be fetched or take a long time, you can configure them to "
+"be fetched not as often or not at all."
 msgstr ""
 "Nel caso in cui la generazione del rapporto richieda molto tempo, è "
 "possibile configurare il rapporto per essere generato in modo asincrono in "
@@ -36371,8 +36394,8 @@ msgstr "Espressione regolare non valida: %s"
 msgid "Invalid regular expression"
 msgstr "Espressione regolare non valida"
 
-#, python-format
-msgid "Invalid regular expression '%s': %s"
+#, fuzzy, python-format
+msgid "Invalid regular expression '%(pattern)s': %(e)s"
 msgstr "Espressione regolare non valida '%s': %s"
 
 #, python-format
@@ -36539,8 +36562,8 @@ msgid ""
 "Invalid value in column %(col_num)d (%(attr_name)s) of row %(row_num)d: "
 "%(exc)s"
 msgstr ""
-"Valore non valido nella colonna %(col_num)d (%(attr_name)s) della riga %"
-"(row_num)d: %(exc)s"
+"Valore non valido nella colonna %(col_num)d (%(attr_name)s) della riga "
+"%(row_num)d: %(exc)s"
 
 #, python-format
 msgid "Invalid value, must be '%r' but is '%r'"
@@ -42178,10 +42201,6 @@ msgid "Memory (RAM)"
 msgstr "Memoria (RAM)"
 
 #, fuzzy
-msgid "Memory Modules"
-msgstr "Livelli di memoria"
-
-#, fuzzy
 msgid "Memory allocated to percpu"
 msgstr "Utilizzo della memoria in percentuale"
 
@@ -42225,6 +42244,10 @@ msgid "Memory levels for simple devices not running more complex OSs"
 msgstr ""
 "Livelli di memoria per dispositivi semplici che non eseguono sistemi "
 "operativi più complessi"
+
+#, fuzzy
+msgid "Memory modules"
+msgstr "Livelli di memoria"
 
 #, fuzzy
 msgid "Memory pages"
@@ -44700,10 +44723,6 @@ msgstr "Utilizzo della memoria di Netscaler"
 msgid "Network"
 msgstr "Rete"
 
-#, fuzzy
-msgid "Network Cards"
-msgstr "Indirizzo di rete"
-
 msgid "Network ID"
 msgstr "ID di rete"
 
@@ -44712,14 +44731,6 @@ msgstr "Rete IO"
 
 #, fuzzy
 msgid "Network IO (deprecated)"
-msgstr "Interfacce di rete"
-
-#, fuzzy
-msgid "Network Interfaces 1"
-msgstr "Interfacce di rete"
-
-#, fuzzy
-msgid "Network Interfaces 2"
 msgstr "Interfacce di rete"
 
 msgid "Network Load Balancer Listeners"
@@ -44744,6 +44755,10 @@ msgstr "Indirizzo di rete"
 
 msgid "Network address:"
 msgstr "Indirizzo di rete:"
+
+#, fuzzy
+msgid "Network cards"
+msgstr "Indirizzo di rete"
 
 #, fuzzy
 msgid "Network connections"
@@ -44775,6 +44790,14 @@ msgid "Network interface groups"
 msgstr "Gruppi di interfacce di rete"
 
 msgid "Network interfaces"
+msgstr "Interfacce di rete"
+
+#, fuzzy
+msgid "Network interfaces 1"
+msgstr "Interfacce di rete"
+
+#, fuzzy
+msgid "Network interfaces 2"
 msgstr "Interfacce di rete"
 
 msgid "Network interfaces and switch ports"
@@ -46174,10 +46197,10 @@ msgid ""
 "und thus make them monitoring contacts. Only monitoring contacts can receive "
 "notifications."
 msgstr ""
-"Nota: non hai ancora definito alcun gruppo di contatto. Se <a href='%(url)s'>"
-"crei dei gruppi di contatto</a> puoi assegnare degli utenti a questi gruppi "
-"e renderli così dei contatti di controllo. Solo i contatti di monitoraggio "
-"possono ricevere le notifiche."
+"Nota: non hai ancora definito alcun gruppo di contatto. Se <a "
+"href='%(url)s'>crei dei gruppi di contatto</a> puoi assegnare degli utenti a "
+"questi gruppi e renderli così dei contatti di controllo. Solo i contatti di "
+"monitoraggio possono ricevere le notifiche."
 
 msgid "Notes"
 msgstr "Note"
@@ -52525,7 +52548,7 @@ msgid "Port number for communicating with the PLC"
 msgstr "Numero di porta per comunicare con il PLC"
 
 #, fuzzy
-msgid "Port number for connection to the Rest API. Usually 443 (TLS)"
+msgid "Port number for connection to the REST API. Usually 443 (TLS)"
 msgstr "Numero di porta per la connessione HTTPS a vSphere"
 
 msgid "Port number that 3par is listening on. The default is 8080."
@@ -52623,10 +52646,6 @@ msgstr "STARTTLS"
 msgid "Power"
 msgstr "Potenza"
 
-#, fuzzy
-msgid "Power Subsystem"
-msgstr "Sistema di nodi"
-
 msgid "Power consumption draw"
 msgstr "Consumo di energia"
 
@@ -52645,7 +52664,15 @@ msgstr "Mappatura dello stato del peer BGP"
 msgid "Power state unknown"
 msgstr "Stato di alimentazione sconosciuto"
 
+#, fuzzy
+msgid "Power subsystem"
+msgstr "Sistema di nodi"
+
 msgid "Power supplies"
+msgstr "Alimentatori"
+
+#, fuzzy
+msgid "Power supply"
 msgstr "Alimentatori"
 
 #, fuzzy
@@ -52675,10 +52702,6 @@ msgstr "Spento"
 
 msgid "Powering on"
 msgstr "Accensione"
-
-#, fuzzy
-msgid "Powers Supply"
-msgstr "Alimentatori"
 
 msgid "Pre-/Postfix for TNSALIAS"
 msgstr "Prefisso/Postfisso per TNSALIAS"
@@ -53245,7 +53268,7 @@ msgid "Protocol Overview"
 msgstr "Panoramica del protocollo"
 
 #, fuzzy
-msgid "Protocol for the connection to the Rest API."
+msgid "Protocol for the connection to the REST API."
 msgstr "Numero di porta per la connessione HTTPS a vSphere"
 
 msgid "Protocol of Server"
@@ -54528,44 +54551,44 @@ msgid "Redfish"
 msgstr ""
 
 #, fuzzy
-msgid "Redfish Compatible Management Controller"
-msgstr "Disattivare il controllore"
-
-#, fuzzy
-msgid "Redfish Compatible Power Equipment (PDU)"
-msgstr "Disattivare il controllore"
-
-#, fuzzy
-msgid "Redfish Ethernet Interface"
+msgid "Redfish Ethernet interface"
 msgstr "Scoperta del servizio in sospeso"
 
 #, fuzzy
-msgid "Redfish Ethernet Interface discovery"
+msgid "Redfish Ethernet interface discovery"
 msgstr "Scoperta del servizio in sospeso"
 
 #, fuzzy
-msgid "Redfish Physical Drive discovery"
-msgstr "Stati delle porte fisiche da scoprire"
-
-#, fuzzy
-msgid "Redfish Power Consumption"
-msgstr "Consumo di energia"
-
-#, fuzzy
-msgid "Redfish Storage Controller"
+msgid "Redfish compatible management controller"
 msgstr "Disattivare il controllore"
 
 #, fuzzy
-msgid "Redfish Volume discovery"
-msgstr "Scoperta del contatore MSSQL"
+msgid "Redfish compatible power equipment (PDU)"
+msgstr "Disattivare il controllore"
 
 #, fuzzy
 msgid "Redfish outlet discovery"
 msgstr "Scoperta del contatore MSSQL"
 
 #, fuzzy
+msgid "Redfish physical drive discovery"
+msgstr "Stati delle porte fisiche da scoprire"
+
+#, fuzzy
 msgid "Redfish physical port discovery"
 msgstr "Stati delle porte fisiche da scoprire"
+
+#, fuzzy
+msgid "Redfish power consumption"
+msgstr "Consumo di energia"
+
+#, fuzzy
+msgid "Redfish storage controller"
+msgstr "Disattivare il controllore"
+
+#, fuzzy
+msgid "Redfish volume discovery"
+msgstr "Scoperta del contatore MSSQL"
 
 #, fuzzy
 msgid "Redirect URI"
@@ -54644,12 +54667,12 @@ msgstr "Aggiornare"
 msgid "Refreshed check configuration of host '%s'"
 msgstr "Aggiornata la configurazione di controllo dell'host '%s'"
 
-#, python-format
-msgid "Refusing to read file not owned by us: \"%s\""
+#, fuzzy, python-format
+msgid "Refusing to read file not owned by us: \"%(path)s\""
 msgstr "Rifiuto di leggere un file non di nostra proprietà: \"%s\""
 
-#, python-format
-msgid "Refusing to read world writable file: \"%s\""
+#, fuzzy, python-format
+msgid "Refusing to read world writable file: \"%(path)s\""
 msgstr "Rifiuto di leggere il file scrivibile del mondo: \"%s\""
 
 msgid "Regard required mirror space as free space"
@@ -55734,8 +55757,8 @@ msgid ""
 "Report generation started in background job <a "
 "href=\"%(detail_url)s\">%(job_id)s</a>"
 msgstr ""
-"La generazione del rapporto è iniziata nel lavoro in background <a href=\"%"
-"(detail_url)s\">%(job_id)s</a>"
+"La generazione del rapporto è iniziata nel lavoro in background <a "
+"href=\"%(detail_url)s\">%(job_id)s</a>"
 
 msgid "Report of host"
 msgstr "Relazione dell'ospite"
@@ -55781,8 +55804,8 @@ msgstr "Req. Versione"
 
 msgid ""
 "Request data from a RabbitMQ instance. This special agent queries the HTTP "
-"API provided by RabbitMQs 'Management Plugin'. You need to enable this "
-"plugin in your RabbitMQ instance."
+"API provided by RabbitMQ's 'Management Plug-in'. You need to enable this "
+"plug-in in your RabbitMQ instance."
 msgstr ""
 
 msgid "Request latencies"
@@ -59026,6 +59049,11 @@ msgstr "Aprire le notifiche di massa"
 
 msgid "Separate check"
 msgstr "Controllo separato"
+
+msgid ""
+"Separate credentials for accessing ASM. If omitted, the main authentication "
+"above is reused."
+msgstr ""
 
 msgid "Separator"
 msgstr "Separatore"
@@ -62512,7 +62540,7 @@ msgid ""
 msgstr ""
 
 #, fuzzy
-msgid "Specify if port state UP, DOWN or booth should be discovered"
+msgid "Specify if port state UP, DOWN or both should be discovered"
 msgstr "Specificare quali tipi di porta non devono essere scoperti"
 
 msgid "Specify input state evaluation"
@@ -64654,9 +64682,9 @@ msgid ""
 "href=\"%(inventory_url)s\">service discovery</a> in order to auto-configure "
 "all services to be checked on this host."
 msgstr ""
-"L'host è stato creato con successo. Ora dovresti fare un <a href=\"%"
-"(inventory_url)s\">service discovery</a> per autoconfigurare tutti i servizi "
-"da controllare su questo host."
+"L'host è stato creato con successo. Ora dovresti fare un <a "
+"href=\"%(inventory_url)s\">service discovery</a> per autoconfigurare tutti i "
+"servizi da controllare su questo host."
 
 #, python-format
 msgid "Successfully deleted %d hosts"
@@ -66893,8 +66921,8 @@ msgid ""
 "The active check services have an average check latency of "
 "%(check_latency_generic).3fs."
 msgstr ""
-"I servizi di controllo attivi hanno una latenza media di controllo di %"
-"(check_latency_generic).3fs."
+"I servizi di controllo attivi hanno una latenza media di controllo di "
+"%(check_latency_generic).3fs."
 
 #, fuzzy
 msgid ""
@@ -69777,9 +69805,6 @@ msgstr "La porta su cui l'istanza ntopng è raggiungibile."
 msgid "The port that is used for the API call."
 msgstr "La porta utilizzata per la chiamata api."
 
-msgid "The port that is used for the api call."
-msgstr "La porta utilizzata per la chiamata api."
-
 msgid "The port the DBMS listens to"
 msgstr "La porta che il DBMS ascolta"
 
@@ -70638,8 +70663,9 @@ msgstr ""
 "Il tag '%s' è selezionato più volte. Un tag può essere selezionato solo una "
 "volta."
 
-#, python-format
-msgid "The tag ID \"%s\" does already exist in the list of auxiliary tags."
+#, fuzzy, python-format
+msgid ""
+"The tag ID \"%(aux_tag)s\" does already exist in the list of auxiliary tags."
 msgstr "Il tag ID \"%s\" esiste già nella lista dei tag ausiliari."
 
 #, python-format
@@ -71282,12 +71308,12 @@ msgstr "È disponibile un solo connettore utente attivo"
 msgid "There job \"%s\" is not encrypted"
 msgstr "Il lavoro \"%s\" non è criptato"
 
-#, fuzzy
-msgid "Thermal Subsystem"
-msgstr "L'ID del sistema SAP."
-
 msgid "Thermal information"
 msgstr "Informazioni termiche"
+
+#, fuzzy
+msgid "Thermal subsystem"
+msgstr "L'ID del sistema SAP."
 
 msgid ""
 "These additional header lines will be used in the request. You may use any "
@@ -74364,15 +74390,15 @@ msgstr ""
 #, fuzzy
 msgid ""
 "This rule configures the Redfish integration to query PDUs via the Redfish "
-"REST API"
+"REST API."
 msgstr ""
 "Questa regola configura l'integrazione Redfish per interrogare il controller "
 "tramite le API REST di Redfish"
 
 #, fuzzy
 msgid ""
-"This rule configures the Redfish integration to query management controller "
-"via the Redfish REST API"
+"This rule configures the Redfish integration to query a management "
+"controller via the Redfish REST API."
 msgstr ""
 "Questa regola configura l'integrazione Redfish per interrogare il controller "
 "tramite le API REST di Redfish"
@@ -74875,8 +74901,8 @@ msgid ""
 "This rule set allows you to create downtimes for %(what_title)s that are "
 "repeated on a regular base."
 msgstr ""
-"Questo set di regole permette di creare tempi di inattività per %(what_title)"
-"s che si ripetono regolarmente."
+"Questo set di regole permette di creare tempi di inattività per "
+"%(what_title)s che si ripetono regolarmente."
 
 #, fuzzy
 msgid ""
@@ -80391,6 +80417,14 @@ msgstr "IRRAGGIUNGIBILE"
 msgid "UP"
 msgstr "SU"
 
+#, fuzzy
+msgid "UP & DOWN"
+msgstr "GIÙ"
+
+#, fuzzy
+msgid "UP only"
+msgstr "Solo IPv4"
+
 msgid "UPS Capacity"
 msgstr "Capacità UPS"
 
@@ -81099,7 +81133,7 @@ msgid "Unknown site (%s)"
 msgstr "Sito sconosciuto (%s)"
 
 #, fuzzy, python-format
-msgid "Unknown site: %s"
+msgid "Unknown site: %(raw_site)s"
 msgstr "Sito sconosciuto %s"
 
 #, python-format
@@ -81212,20 +81246,12 @@ msgstr "Spazio inutilizzato"
 msgid "Up"
 msgstr "Su"
 
-#, fuzzy
-msgid "Up & Down"
-msgstr "Giù"
-
 msgid "Up Down (long)"
 msgstr "Su Giù (lungo)"
 
 #, fuzzy
 msgid "Up hosts"
 msgstr "Padroni di casa UP"
-
-#, fuzzy
-msgid "Up only"
-msgstr "Solo IPv4"
 
 msgid "Up-to-date replicas"
 msgstr "Repliche aggiornate"
@@ -83408,10 +83434,6 @@ msgstr "ID utente per il web login (se il login è richiesto)"
 msgid "User ID must not be None"
 msgstr "Il valore deve essere una stringa"
 
-#, fuzzy
-msgid "User Label"
-msgstr "Nome utente"
-
 msgid "User agent"
 msgstr "Agente utente"
 
@@ -83461,6 +83483,10 @@ msgstr "Tema dell'interfaccia utente"
 
 msgid "User is locked"
 msgstr "L'utente è bloccato"
+
+#, fuzzy
+msgid "User label"
+msgstr "Nome utente"
 
 msgid "User management"
 msgstr "Gestione degli utenti"
@@ -93430,6 +93456,10 @@ msgstr "Larghezza dell'asse verticale"
 msgid "Graph styling"
 msgstr "Messa a punto del grafico"
 
+#, fuzzy
+msgid "Select presentation"
+msgstr "Connessioni rifiutate"
+
 msgid "Date and time stamp (right upper corner)"
 msgstr ""
 
@@ -94922,6 +94952,18 @@ msgid "Enter a quantile between 0 and 1"
 msgstr "Il valore di %s deve essere tra %d e %d"
 
 #, fuzzy
+msgid "Enter a threshold"
+msgstr "oltre la soglia"
+
+#, fuzzy
+msgid "Enter both thresholds"
+msgstr "oltre la soglia"
+
+#, fuzzy
+msgid "Lower threshold must be below the upper threshold"
+msgstr "Il cluster deve avere almeno un nodo"
+
+#, fuzzy
 msgid "Edit consolidation"
 msgstr "Modifica connessione"
 
@@ -94932,6 +94974,14 @@ msgstr "Funzioni di consolidamento"
 #, fuzzy
 msgid "Quantile (0 to 1)"
 msgstr "Fino a"
+
+#, fuzzy
+msgid "Lower threshold"
+msgstr "oltre la soglia"
+
+#, fuzzy
+msgid "Upper threshold"
+msgstr "oltre la soglia"
 
 #, fuzzy
 msgid "over last"
@@ -96267,6 +96317,10 @@ msgstr[0] "Riconoscere i problemi"
 msgstr[1] "Riconoscere i problemi"
 
 #, fuzzy
+msgid "Could not acknowledge the problems: %{detail}"
+msgstr "Riconoscere i problemi"
+
+#, fuzzy
 msgid "Enter a comment…"
 msgstr "Commento dell'evento"
 
@@ -96313,6 +96367,71 @@ msgstr ""
 msgid ""
 "Distributes the rescheduled checks across the specified number of minutes, "
 msgstr ""
+
+#, fuzzy
+msgid "Schedule host downtime"
+msgstr "Programmare un periodo di inattività?"
+
+#, fuzzy
+msgid "Please choose a downtime duration greater than zero."
+msgstr "Scegliete una destinazione da cui eseguire il ripristino."
+
+#, fuzzy
+msgid "Successfully scheduled a downtime for %{count} host"
+msgid_plural "Successfully scheduled a downtime for %{count} hosts"
+msgstr[0] "Riconoscere i problemi"
+msgstr[1] "Riconoscere i problemi"
+
+#, fuzzy
+msgid "Could not schedule the downtime for the selected hosts."
+msgstr "L'host/servizio deve avere uno dei contatti selezionati."
+
+#, fuzzy
+msgid "Ad hoc"
+msgstr "Aggiungere l'host"
+
+msgid "4 h"
+msgstr ""
+
+msgid "24 h"
+msgstr ""
+
+msgid "10 d"
+msgstr ""
+
+#, fuzzy
+msgid "Scheduled downtimes set the hosts in planned maintenance."
+msgstr "Programmare e rimuovere i tempi di inattività di host e servizi"
+
+#, fuzzy
+msgid "Alerts and notifications will be paused."
+msgstr "Notifiche di test"
+
+#, fuzzy
+msgid "Downtime time range"
+msgstr "Intervallo di tempo attivo"
+
+msgid "From now, for"
+msgstr ""
+
+msgid "Scheduled downtime has a duration of %{duration} starting now."
+msgstr ""
+
+#, fuzzy
+msgid "Advanced option"
+msgstr "Opzioni avanzate"
+
+#, fuzzy
+msgid "Only for hosts: Set child hosts in downtime."
+msgstr "Solo per gli host: Imposta gli host figlio in tempo di inattività"
+
+#, fuzzy
+msgid ""
+"Only start downtime if the host goes DOWN/UNREACHABLE during the defined "
+"start "
+msgstr ""
+"Avvia la manutenzione solamente se lo host o il servizio diventano DOWN/"
+"UNREACH tra l'orario di inizio e di fine definiti (flessibile)"
 
 #, fuzzy
 msgid "%{count} host selected"
@@ -96364,6 +96483,16 @@ msgid "None (=0)"
 msgstr "Nessuno (lineare)"
 
 #, fuzzy
+msgid "No results for your combination of search and filter settings."
+msgstr ""
+"Trovato nessun oggetto utente per la sincronizzazione. Per favore controlla "
+"le impostazioni del tuo filtro."
+
+#, fuzzy
+msgid "No results found for your active filters."
+msgstr "Nessun log trovato per questo host."
+
+#, fuzzy
 msgid "No results found for your search."
 msgstr "Nessun log trovato per questo host."
 
@@ -96371,25 +96500,19 @@ msgstr "Nessun log trovato per questo host."
 msgid "No results found."
 msgstr "Nessuna regola trovata."
 
+msgid "Adjust or clear search and filters to start fresh."
+msgstr ""
+
 msgid "Check for typing errors or try a broader term."
 msgstr ""
 
-msgid "Rows matching your filter and search: %{count}"
-msgid_plural "Rows matching your filters and search: %{count}"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "Rows matching your filter: %{count}"
-msgid_plural "Rows matching your filters: %{count}"
-msgstr[0] ""
-msgstr[1] ""
-
 #, fuzzy
-msgid "Rows matching your search: %{count}"
+msgid "Rows matching your criteria: %{count} | Total rows: %{total}"
 msgstr "Nessuna metrica corrispondente trovata"
 
-msgid "Rows found: %{count}"
-msgstr ""
+#, fuzzy
+msgid "Total rows: %{total}"
+msgstr "Dimensione totale"
 
 #, fuzzy
 msgid "Select all rows"
@@ -97319,6 +97442,25 @@ msgid ""
 msgstr ""
 
 #, python-format
+#~ msgid "Cannot read configuration file \"%s\": %s"
+#~ msgstr "Impossibile leggere il file di configurazione \"%s\": %s"
+
+#, fuzzy
+#~ msgid "Down only"
+#~ msgstr "Conta solo"
+
+#, fuzzy
+#~ msgid "Firmware Versions"
+#~ msgstr "Versione del kernel"
+
+#~ msgid "The port that is used for the api call."
+#~ msgstr "La porta utilizzata per la chiamata api."
+
+#, fuzzy
+#~ msgid "Up & Down"
+#~ msgstr "Giù"
+
+#, python-format
 #~ msgid " notification %s"
 #~ msgstr " notifica %s"
 
@@ -97377,10 +97519,6 @@ msgstr ""
 #~ msgid "DNS server"
 #~ msgstr "Server DNS 1"
 
-#, fuzzy
-#~ msgid "DOWN only"
-#~ msgstr "Conta solo"
-
 #, python-format
 #~ msgid "Delete role #%d"
 #~ msgstr "Regola cancellata #%d"
@@ -97404,14 +97542,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Determine the resources"
 #~ msgstr "Risorse pod terminate"
-
-#, fuzzy
-#~ msgid "Events of past 4 hours"
-#~ msgstr "Eventi delle ultime 4 ore."
-
-#, fuzzy
-#~ msgid "Firmware versions"
-#~ msgstr "Versione del kernel"
 
 #, python-format
 #~ msgid "From: %s"
@@ -97472,10 +97602,6 @@ msgstr ""
 #, python-format
 #~ msgid "The info %s does not exist."
 #~ msgstr "L'informazione %s non esiste."
-
-#, fuzzy
-#~ msgid "UP & DOWN"
-#~ msgstr "GIÙ"
 
 #, python-format
 #~ msgid "Upload %s"
@@ -99238,10 +99364,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Total connections upper limit"
 #~ msgstr "Connessioni totali Massimo"
-
-#, fuzzy
-#~ msgid "Total storage"
-#~ msgstr "Dimensione totale"
 
 #, fuzzy
 #~ msgid "Total throughput lower levels (/sec)"
